@@ -1,0 +1,660 @@
+{
+ "kind": "formula_pulse_cooccurrence",
+ "formula_nodes": [
+  "乾薑附子湯",
+  "五苓散",
+  "去桂加白朮湯",
+  "四逆加人參湯",
+  "四逆湯",
+  "大承氣湯",
+  "大陷胸湯",
+  "大青龍湯",
+  "大黃黃連瀉心湯",
+  "小建中湯",
+  "小承氣湯",
+  "小柴胡湯",
+  "小陷胸湯",
+  "抵當湯",
+  "桂枝二越婢一湯",
+  "桂枝二麻黃一湯",
+  "桂枝加芍藥生薑各一兩人參三兩新加湯",
+  "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+  "桂枝去芍藥湯",
+  "桂枝湯",
+  "桂枝附子湯",
+  "桂枝麻黃各半湯",
+  "梔子豉湯",
+  "炙甘草湯",
+  "烏梅丸",
+  "瓜蒂散",
+  "甘草乾薑湯",
+  "當歸四逆湯",
+  "白虎加人參湯",
+  "白虎湯",
+  "白通加豬膽汁湯",
+  "白通湯",
+  "芍藥甘草湯",
+  "茯苓桂枝白朮甘草湯",
+  "葛根黃芩黃連湯",
+  "調胃承氣湯",
+  "豬苓湯",
+  "通脈四逆加豬膽汁湯",
+  "通脈四逆湯",
+  "附子湯",
+  "麻子仁丸",
+  "麻黃升麻湯",
+  "麻黃湯",
+  "麻黃細辛附子湯",
+  "黃芩湯"
+ ],
+ "pulse_nodes": [
+  "不出",
+  "不至",
+  "促",
+  "反沉",
+  "實",
+  "寸脈微浮",
+  "弦",
+  "弱",
+  "微",
+  "微弱",
+  "微欲絕",
+  "微而沉",
+  "數",
+  "數滑",
+  "暴出",
+  "沉",
+  "沉實",
+  "沉微",
+  "沉結",
+  "沉緊",
+  "沉而緊",
+  "沉遲",
+  "洪大",
+  "浮",
+  "浮大",
+  "浮弦大短",
+  "浮弱",
+  "浮微",
+  "浮數",
+  "浮數動",
+  "浮滑",
+  "浮細",
+  "浮緊",
+  "浮緩",
+  "浮而數",
+  "浮而緊",
+  "浮而遲",
+  "浮虛",
+  "浮遲",
+  "浮遲弱",
+  "滑",
+  "滑疾",
+  "滑而數",
+  "滑而疾",
+  "細",
+  "細欲絕",
+  "結代",
+  "緊",
+  "緩微",
+  "趺陽脈",
+  "遲",
+  "遲弦",
+  "遲浮弱",
+  "陰陽俱停",
+  "陰陽俱虛",
+  "陽浮而陰弱"
+ ],
+ "edges": [
+  {
+   "formula": "麻黃湯",
+   "pulse": "浮",
+   "weight": 4
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "洪大",
+   "weight": 2
+  },
+  {
+   "formula": "甘草乾薑湯",
+   "pulse": "浮",
+   "weight": 2
+  },
+  {
+   "formula": "芍藥甘草湯",
+   "pulse": "浮",
+   "weight": 2
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "浮",
+   "weight": 2
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "浮",
+   "weight": 2
+  },
+  {
+   "formula": "麻黃湯",
+   "pulse": "浮緊",
+   "weight": 2
+  },
+  {
+   "formula": "調胃承氣湯",
+   "pulse": "微",
+   "weight": 2
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "弦",
+   "weight": 2
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "沉緊",
+   "weight": 2
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "陽浮而陰弱",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝去芍藥湯",
+   "pulse": "促",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "pulse": "微",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "pulse": "陰陽俱虛",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "pulse": "緩微",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "pulse": "洪大",
+   "weight": 1
+  },
+  {
+   "formula": "白虎加人參湯",
+   "pulse": "洪大",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "pulse": "微弱",
+   "weight": 1
+  },
+  {
+   "formula": "調胃承氣湯",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "甘草乾薑湯",
+   "pulse": "浮大",
+   "weight": 1
+  },
+  {
+   "formula": "芍藥甘草湯",
+   "pulse": "浮大",
+   "weight": 1
+  },
+  {
+   "formula": "葛根黃芩黃連湯",
+   "pulse": "促",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "浮細",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃湯",
+   "pulse": "浮細",
+   "weight": 1
+  },
+  {
+   "formula": "大青龍湯",
+   "pulse": "浮緊",
+   "weight": 1
+  },
+  {
+   "formula": "大青龍湯",
+   "pulse": "微弱",
+   "weight": 1
+  },
+  {
+   "formula": "大青龍湯",
+   "pulse": "浮緩",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "浮弱",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃湯",
+   "pulse": "浮而數",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃湯",
+   "pulse": "浮數",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "浮數",
+   "weight": 1
+  },
+  {
+   "formula": "乾薑附子湯",
+   "pulse": "沉微",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "pulse": "沉遲",
+   "weight": 1
+  },
+  {
+   "formula": "茯苓桂枝白朮甘草湯",
+   "pulse": "沉緊",
+   "weight": 1
+  },
+  {
+   "formula": "五苓散",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "五苓散",
+   "pulse": "浮數",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "反沉",
+   "weight": 1
+  },
+  {
+   "formula": "調胃承氣湯",
+   "pulse": "陰陽俱停",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "遲浮弱",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "浮遲弱",
+   "weight": 1
+  },
+  {
+   "formula": "小建中湯",
+   "pulse": "弦",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "抵當湯",
+   "pulse": "微而沉",
+   "weight": 1
+  },
+  {
+   "formula": "抵當湯",
+   "pulse": "沉微",
+   "weight": 1
+  },
+  {
+   "formula": "抵當湯",
+   "pulse": "沉結",
+   "weight": 1
+  },
+  {
+   "formula": "大陷胸湯",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "大陷胸湯",
+   "pulse": "浮數動",
+   "weight": 1
+  },
+  {
+   "formula": "大陷胸湯",
+   "pulse": "沉而緊",
+   "weight": 1
+  },
+  {
+   "formula": "大陷胸湯",
+   "pulse": "沉緊",
+   "weight": 1
+  },
+  {
+   "formula": "小陷胸湯",
+   "pulse": "浮滑",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "細",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "沉",
+   "weight": 1
+  },
+  {
+   "formula": "大黃黃連瀉心湯",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "瓜蒂散",
+   "pulse": "寸脈微浮",
+   "weight": 1
+  },
+  {
+   "formula": "瓜蒂散",
+   "pulse": "浮微",
+   "weight": 1
+  },
+  {
+   "formula": "白虎加人參湯",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝附子湯",
+   "pulse": "浮虛",
+   "weight": 1
+  },
+  {
+   "formula": "去桂加白朮湯",
+   "pulse": "浮虛",
+   "weight": 1
+  },
+  {
+   "formula": "白虎湯",
+   "pulse": "浮滑",
+   "weight": 1
+  },
+  {
+   "formula": "炙甘草湯",
+   "pulse": "結代",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "pulse": "遲",
+   "weight": 1
+  },
+  {
+   "formula": "小承氣湯",
+   "pulse": "遲",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "pulse": "弦",
+   "weight": 1
+  },
+  {
+   "formula": "小承氣湯",
+   "pulse": "滑而疾",
+   "weight": 1
+  },
+  {
+   "formula": "小承氣湯",
+   "pulse": "滑疾",
+   "weight": 1
+  },
+  {
+   "formula": "小承氣湯",
+   "pulse": "微",
+   "weight": 1
+  },
+  {
+   "formula": "梔子豉湯",
+   "pulse": "浮而緊",
+   "weight": 1
+  },
+  {
+   "formula": "梔子豉湯",
+   "pulse": "浮緊",
+   "weight": 1
+  },
+  {
+   "formula": "豬苓湯",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "浮而遲",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "浮遲",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "浮弦大短",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "遲",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "pulse": "實",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "pulse": "浮虛",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "實",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝湯",
+   "pulse": "浮虛",
+   "weight": 1
+  },
+  {
+   "formula": "麻子仁丸",
+   "pulse": "趺陽脈",
+   "weight": 1
+  },
+  {
+   "formula": "麻子仁丸",
+   "pulse": "浮",
+   "weight": 1
+  },
+  {
+   "formula": "小承氣湯",
+   "pulse": "弱",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "pulse": "弱",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "pulse": "滑而數",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "pulse": "數滑",
+   "weight": 1
+  },
+  {
+   "formula": "抵當湯",
+   "pulse": "浮數",
+   "weight": 1
+  },
+  {
+   "formula": "抵當湯",
+   "pulse": "數",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃細辛附子湯",
+   "pulse": "沉",
+   "weight": 1
+  },
+  {
+   "formula": "附子湯",
+   "pulse": "沉",
+   "weight": 1
+  },
+  {
+   "formula": "白通加豬膽汁湯",
+   "pulse": "微",
+   "weight": 1
+  },
+  {
+   "formula": "白通加豬膽汁湯",
+   "pulse": "暴出",
+   "weight": 1
+  },
+  {
+   "formula": "白通湯",
+   "pulse": "微",
+   "weight": 1
+  },
+  {
+   "formula": "白通湯",
+   "pulse": "暴出",
+   "weight": 1
+  },
+  {
+   "formula": "通脈四逆湯",
+   "pulse": "微欲絕",
+   "weight": 1
+  },
+  {
+   "formula": "通脈四逆湯",
+   "pulse": "不出",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "沉",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "弦",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "遲弦",
+   "weight": 1
+  },
+  {
+   "formula": "黃芩湯",
+   "pulse": "遲",
+   "weight": 1
+  },
+  {
+   "formula": "烏梅丸",
+   "pulse": "微",
+   "weight": 1
+  },
+  {
+   "formula": "白虎湯",
+   "pulse": "滑",
+   "weight": 1
+  },
+  {
+   "formula": "當歸四逆湯",
+   "pulse": "細欲絕",
+   "weight": 1
+  },
+  {
+   "formula": "瓜蒂散",
+   "pulse": "緊",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "pulse": "沉",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "pulse": "不至",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "pulse": "沉遲",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "弱",
+   "weight": 1
+  },
+  {
+   "formula": "四逆加人參湯",
+   "pulse": "微",
+   "weight": 1
+  },
+  {
+   "formula": "四逆湯",
+   "pulse": "微欲絕",
+   "weight": 1
+  },
+  {
+   "formula": "通脈四逆加豬膽汁湯",
+   "pulse": "微欲絕",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "pulse": "沉實",
+   "weight": 1
+  }
+ ]
+}

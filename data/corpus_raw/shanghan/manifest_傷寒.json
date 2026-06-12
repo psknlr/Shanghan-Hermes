@@ -1,0 +1,458 @@
+[
+  {
+    "category": "傷寒",
+    "title": "中寒論辯證廣注",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/中寒論辯證廣注"
+  },
+  {
+    "category": "傷寒",
+    "title": "仲景傷寒補亡論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 27,
+    "source_path": "/mnt/data/book_extract_all/仲景傷寒補亡論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒九十論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒九十論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒來蘇集",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 6,
+    "source_path": "/mnt/data/book_extract_all/傷寒來蘇集"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒六書",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 11,
+    "source_path": "/mnt/data/book_extract_all/傷寒六書"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒大白",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 8,
+    "source_path": "/mnt/data/book_extract_all/傷寒大白"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒審證表",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒審證表"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒尋源",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒尋源"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒心要_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒心要_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒心鏡別集",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒心鏡別集"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒恆論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 21,
+    "source_path": "/mnt/data/book_extract_all/傷寒恆論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒懸解",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒懸解"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒括要",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒括要"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒指掌",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 8,
+    "source_path": "/mnt/data/book_extract_all/傷寒指掌"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒捷訣",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒捷訣"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒明理論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒明理論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒明理論_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒明理論_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒標本心法類萃",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒標本心法類萃"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒標本心法類萃_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒標本心法類萃_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒法祖",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒法祖"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒溯源集",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 16,
+    "source_path": "/mnt/data/book_extract_all/傷寒溯源集"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒發微論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒發微論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒百證歌",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒百證歌"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒直格",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒直格"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒直格_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒直格_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒總病論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒總病論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒總病論_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒總病論_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒纘論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 6,
+    "source_path": "/mnt/data/book_extract_all/傷寒纘論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒纘論_傷寒緒論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 11,
+    "source_path": "/mnt/data/book_extract_all/傷寒纘論_傷寒緒論"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒舌鑑",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒舌鑑"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒補例",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒補例"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論_千金翼方版",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒論_千金翼方版"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論_宋本",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒論_宋本"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論_條文版",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒論_條文版"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論條辨",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 24,
+    "source_path": "/mnt/data/book_extract_all/傷寒論條辨"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論條辨_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 10,
+    "source_path": "/mnt/data/book_extract_all/傷寒論條辨_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論注",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 8,
+    "source_path": "/mnt/data/book_extract_all/傷寒論注"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論綱目",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 21,
+    "source_path": "/mnt/data/book_extract_all/傷寒論綱目"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論翼",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒論翼"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論輯義",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 12,
+    "source_path": "/mnt/data/book_extract_all/傷寒論輯義"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論辯證廣注",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 18,
+    "source_path": "/mnt/data/book_extract_all/傷寒論辯證廣注"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論類方",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒論類方"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒論類方_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒論類方_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒貫珠集",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒貫珠集"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒貫珠集_1",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒貫珠集_1"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒辨要箋記",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒辨要箋記"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒醫訣串解",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒醫訣串解"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒附翼",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒附翼"
+  },
+  {
+    "category": "傷寒",
+    "title": "傷寒雜病論_桂本",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒雜病論_桂本"
+  },
+  {
+    "category": "傷寒",
+    "title": "劉河間傷寒醫鑑",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/劉河間傷寒醫鑑"
+  },
+  {
+    "category": "傷寒",
+    "title": "張卿子傷寒論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 14,
+    "source_path": "/mnt/data/book_extract_all/張卿子傷寒論"
+  },
+  {
+    "category": "傷寒",
+    "title": "敖氏傷寒金鏡錄",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/敖氏傷寒金鏡錄"
+  },
+  {
+    "category": "傷寒",
+    "title": "河間傷寒心要",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/河間傷寒心要"
+  },
+  {
+    "category": "傷寒",
+    "title": "註解傷寒論",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 14,
+    "source_path": "/mnt/data/book_extract_all/註解傷寒論"
+  },
+  {
+    "category": "傷寒",
+    "title": "重訂通俗傷寒論",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/重訂通俗傷寒論"
+  },
+  {
+    "category": "傷寒",
+    "title": "類證活人書",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/類證活人書"
+  },
+  {
+    "category": "傷寒",
+    "title": "類證活人書_1",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/類證活人書_1"
+  }
+]

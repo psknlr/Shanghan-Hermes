@@ -1,0 +1,191 @@
+{
+ "families": [
+  {
+   "base": "四逆散",
+   "modifications": [
+    {
+     "modified_formula": "四逆加人參湯",
+     "relation": "加減方",
+     "added_herbs": "乾薑、人參、附子",
+     "removed_herbs": "枳實、柴胡、芍藥"
+    }
+   ]
+  },
+  {
+   "base": "四逆湯",
+   "modifications": [
+    {
+     "modified_formula": "四逆加人參湯",
+     "relation": "加減方",
+     "added_herbs": "人參",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "桂枝加芍藥湯",
+   "modifications": [
+    {
+     "modified_formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+     "relation": "加減方",
+     "added_herbs": "人參",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "桂枝去芍藥湯",
+   "modifications": [
+    {
+     "modified_formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+     "relation": "加減方",
+     "added_herbs": "牡蠣、蜀漆、龍骨",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝去芍藥加附子湯",
+     "relation": "加減方",
+     "added_herbs": "附子",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "桂枝湯",
+   "modifications": [
+    {
+     "modified_formula": "桂枝加厚朴杏子湯",
+     "relation": "加減方",
+     "added_herbs": "厚朴、杏仁",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝加大黃湯",
+     "relation": "加減方",
+     "added_herbs": "大黃",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝加桂湯",
+     "relation": "加減方",
+     "added_herbs": "",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝加芍藥湯",
+     "relation": "加減方",
+     "added_herbs": "",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+     "relation": "加減方",
+     "added_herbs": "人參",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝加葛根湯",
+     "relation": "加減方",
+     "added_herbs": "葛根、麻黃",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝加附子湯",
+     "relation": "加減方",
+     "added_herbs": "附子",
+     "removed_herbs": ""
+    },
+    {
+     "modified_formula": "桂枝去桂加茯苓白朮湯",
+     "relation": "加減方",
+     "added_herbs": "白朮、茯苓",
+     "removed_herbs": "桂枝"
+    },
+    {
+     "modified_formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+     "relation": "加減方",
+     "added_herbs": "牡蠣、蜀漆、龍骨",
+     "removed_herbs": "芍藥"
+    },
+    {
+     "modified_formula": "桂枝去芍藥加附子湯",
+     "relation": "加減方",
+     "added_herbs": "附子",
+     "removed_herbs": "芍藥"
+    },
+    {
+     "modified_formula": "桂枝去芍藥湯",
+     "relation": "加減方",
+     "added_herbs": "",
+     "removed_herbs": "芍藥"
+    }
+   ]
+  },
+  {
+   "base": "當歸四逆湯",
+   "modifications": [
+    {
+     "modified_formula": "當歸四逆加吳茱萸生薑湯",
+     "relation": "加減方",
+     "added_herbs": "吳茱萸、生薑",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "白虎湯",
+   "modifications": [
+    {
+     "modified_formula": "白虎加人參湯",
+     "relation": "加減方",
+     "added_herbs": "人參",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "白通湯",
+   "modifications": [
+    {
+     "modified_formula": "白通加豬膽汁湯",
+     "relation": "加減方",
+     "added_herbs": "人尿、豬膽汁",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "葛根湯",
+   "modifications": [
+    {
+     "modified_formula": "葛根加半夏湯",
+     "relation": "加減方",
+     "added_herbs": "半夏",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "通脈四逆湯",
+   "modifications": [
+    {
+     "modified_formula": "通脈四逆加豬膽汁湯",
+     "relation": "加減方",
+     "added_herbs": "豬膽汁",
+     "removed_herbs": ""
+    }
+   ]
+  },
+  {
+   "base": "黃芩湯",
+   "modifications": [
+    {
+     "modified_formula": "黃芩加半夏生薑湯",
+     "relation": "加減方",
+     "added_herbs": "半夏、生薑",
+     "removed_herbs": ""
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,2 @@
+{"query": "解釋第12條", "route": "explain_clause", "args": {"clause": 12}}
+{"query": "第317條講什麼？", "route": "explain_clause", "args": {"clause": 317}}

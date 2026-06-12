@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-shanghan"
+version = "0.1.0"
+description = "Hermes-Shanghanlun: autonomous rule mining and skill generation system for Shanghan Lun (Treatise on Cold Damage)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Shanghan-Hermes contributors" }]
+keywords = ["TCM", "Shanghan Lun", "knowledge mining", "classical Chinese medicine", "agents"]
+
+[project.scripts]
+hermes-shanghan = "hermes_shanghan.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["hermes_shanghan*"]

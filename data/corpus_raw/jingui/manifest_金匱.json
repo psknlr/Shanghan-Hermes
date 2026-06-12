@@ -1,0 +1,82 @@
+[
+  {
+    "category": "金匱",
+    "title": "傷寒兼證析義",
+    "classification_source": "book_metadata",
+    "is_dir": true,
+    "file_count": 1,
+    "source_path": "/mnt/data/book_extract_all/傷寒兼證析義"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱方歌括",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱方歌括"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱玉函經二注",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱玉函經二注"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱玉函要略輯義",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱玉函要略輯義"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱玉函要略述義",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱玉函要略述義"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱要略_條文版",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱要略_條文版"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱要略心典",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱要略心典"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱要略方論",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱要略方論"
+  },
+  {
+    "category": "金匱",
+    "title": "金匱要略淺註",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/金匱要略淺註"
+  },
+  {
+    "category": "金匱",
+    "title": "高注金匱要略",
+    "classification_source": "fallback_title_rule_no_index",
+    "is_dir": true,
+    "file_count": 0,
+    "source_path": "/mnt/data/book_extract_all/高注金匱要略"
+  }
+]

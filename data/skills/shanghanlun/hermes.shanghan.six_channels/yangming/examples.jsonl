@@ -1,0 +1,2 @@
+{"query": "幫我講清楚陽明病的內部結構。", "route": "teaching.lesson", "args": {"channel": "陽明病"}}
+{"query": "陽明病的提綱條文是哪一條？", "answer_outline": "SHL_SONGBEN_0180：陽明之為病，胃家實是也。"}

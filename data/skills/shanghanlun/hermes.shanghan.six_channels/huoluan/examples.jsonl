@@ -1,0 +1,2 @@
+{"query": "幫我講清楚霍亂病的內部結構。", "route": "teaching.lesson", "args": {"channel": "霍亂病"}}
+{"query": "霍亂病的提綱條文是哪一條？", "answer_outline": "SHL_SONGBEN_0382：問曰：病有霍亂者何？答曰：嘔吐而利，此名霍亂。"}

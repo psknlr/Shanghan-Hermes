@@ -1,0 +1,907 @@
+[
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "結胸",
+  "manifestations": [
+   "頭痛",
+   "發熱",
+   "微盜汗出",
+   "往來寒熱",
+   "無大熱",
+   "汗出",
+   "不大便",
+   "舌上燥",
+   "渴",
+   "意欲飲水"
+  ],
+  "rescue_formulas": [
+   "大陷胸湯",
+   "大陷胸丸"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0131",
+   "SHL_SONGBEN_0134",
+   "SHL_SONGBEN_0135",
+   "SHL_SONGBEN_0136",
+   "SHL_SONGBEN_0137",
+   "SHL_SONGBEN_0138",
+   "SHL_SONGBEN_0141",
+   "SHL_SONGBEN_0149"
+  ],
+  "release_level": "gold"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "痞證",
+  "manifestations": [
+   "嘔",
+   "發熱",
+   "汗出",
+   "惡寒",
+   "胃中不和",
+   "乾噫食臭",
+   "下利",
+   "穀不化",
+   "腹中雷鳴"
+  ],
+  "rescue_formulas": [
+   "半夏瀉心湯",
+   "甘草瀉心湯",
+   "大黃黃連瀉心湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0149",
+   "SHL_SONGBEN_0154",
+   "SHL_SONGBEN_0155",
+   "SHL_SONGBEN_0157",
+   "SHL_SONGBEN_0158",
+   "SHL_SONGBEN_0164"
+  ],
+  "release_level": "gold"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "協熱利",
+  "manifestations": [
+   "喘而汗出"
+  ],
+  "rescue_formulas": [
+   "葛根黃芩黃連湯",
+   "桂枝人參湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0034",
+   "SHL_SONGBEN_0163"
+  ],
+  "release_level": "gold"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "虛煩",
+  "manifestations": [
+   "虛煩不得眠",
+   "心中懊憹",
+   "嘔",
+   "胸中窒",
+   "身熱",
+   "心中結痛",
+   "口苦",
+   "腹滿",
+   "喘",
+   "手足溫"
+  ],
+  "rescue_formulas": [
+   "梔子豉湯",
+   "梔子生薑豉湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0076",
+   "SHL_SONGBEN_0077",
+   "SHL_SONGBEN_0078",
+   "SHL_SONGBEN_0221",
+   "SHL_SONGBEN_0228",
+   "SHL_SONGBEN_0375"
+  ],
+  "release_level": "gold"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "氣上衝",
+  "manifestations": [
+   "氣上衝",
+   "下利清穀",
+   "身疼痛",
+   "汗出",
+   "如瘧狀",
+   "發熱"
+  ],
+  "rescue_formulas": [
+   "桂枝湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0015",
+   "SHL_SONGBEN_0044",
+   "SHL_SONGBEN_0045",
+   "SHL_SONGBEN_0091",
+   "SHL_SONGBEN_0240"
+  ],
+  "release_level": "gold"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "亡陽厥逆",
+  "manifestations": [
+   "自汗出",
+   "小便數",
+   "心煩",
+   "晝日煩躁不得眠",
+   "夜而安靜",
+   "不渴"
+  ],
+  "rescue_formulas": [
+   "四逆湯",
+   "乾薑附子湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0029",
+   "SHL_SONGBEN_0061"
+  ],
+  "release_level": "gold"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "心陽虛悸",
+  "manifestations": [
+   "心下悸"
+  ],
+  "rescue_formulas": [
+   "桂枝甘草湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0064"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "奔豚/欲作奔豚",
+  "manifestations": [
+   "臍下悸"
+  ],
+  "rescue_formulas": [
+   "茯苓桂枝甘草大棗湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0065",
+   "SHL_SONGBEN_0117"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "胃中乾煩躁",
+  "manifestations": [
+   "大汗出",
+   "煩躁不得眠",
+   "小便不利"
+  ],
+  "rescue_formulas": [
+   "五苓散"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0071"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "虛煩",
+  "manifestations": [
+   "虛煩不得眠",
+   "心中懊憹",
+   "嘔",
+   "下利",
+   "心下濡",
+   "虛煩"
+  ],
+  "rescue_formulas": [
+   "梔子豉湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0076",
+   "SHL_SONGBEN_0375"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "火逆",
+  "resulting_pattern": "驚狂",
+  "manifestations": [
+   "驚狂",
+   "臥起不安"
+  ],
+  "rescue_formulas": [
+   "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0112"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "火逆",
+  "resulting_pattern": "煩躁",
+  "manifestations": [
+   "煩躁"
+  ],
+  "rescue_formulas": [
+   "桂枝甘草龍骨牡蠣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0118"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "火逆",
+  "resulting_pattern": "奔豚",
+  "manifestations": [],
+  "rescue_formulas": [
+   "桂枝加桂湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0117"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "火逆",
+  "resulting_pattern": "吐逆、譫語、煩躁",
+  "manifestations": [
+   "吐逆",
+   "譫語",
+   "煩躁",
+   "厥"
+  ],
+  "rescue_formulas": [
+   "四逆湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0029"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "火逆",
+  "resulting_pattern": "壞病、譫語",
+  "manifestations": [
+   "壞病",
+   "譫語"
+  ],
+  "rescue_formulas": [
+   "小柴胡湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0267"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "火逆",
+  "resulting_pattern": "客氣動膈、胃中空虛、心中懊憹",
+  "manifestations": [
+   "客氣動膈",
+   "胃中空虛",
+   "心中懊憹",
+   "譫語",
+   "懊憹",
+   "煩躁"
+  ],
+  "rescue_formulas": [
+   "梔子豉湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0221"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "火逆",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "附子湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0304"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "煩躁",
+  "manifestations": [
+   "煩躁"
+  ],
+  "rescue_formulas": [
+   "乾薑附子湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0061"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "乾薑黃芩黃連人參湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0359"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "心下痞、痞",
+  "manifestations": [
+   "心下痞",
+   "痞"
+  ],
+  "rescue_formulas": [
+   "五苓散"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0156",
+   "SHL_SONGBEN_0244"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "譫語、心中懊憹、懊憹",
+  "manifestations": [
+   "譫語",
+   "心中懊憹",
+   "懊憹"
+  ],
+  "rescue_formulas": [
+   "大承氣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0212",
+   "SHL_SONGBEN_0215",
+   "SHL_SONGBEN_0217",
+   "SHL_SONGBEN_0220",
+   "SHL_SONGBEN_0238",
+   "SHL_SONGBEN_0241",
+   "SHL_SONGBEN_0252",
+   "SHL_SONGBEN_0253",
+   "SHL_SONGBEN_0254",
+   "SHL_SONGBEN_0255",
+   "SHL_SONGBEN_0256",
+   "SHL_SONGBEN_0320",
+   "SHL_SONGBEN_0321",
+   "SHL_SONGBEN_0322",
+   "SHL_SONGBEN_AUX_0209",
+   "SHL_SONGBEN_AUX_0210",
+   "SHL_SONGBEN_AUX_0211",
+   "SHL_SONGBEN_AUX_0212",
+   "SHL_SONGBEN_AUX_0213",
+   "SHL_SONGBEN_AUX_0214",
+   "SHL_SONGBEN_AUX_0215",
+   "SHL_SONGBEN_AUX_0217"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "大柴胡湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0103"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "噦",
+  "manifestations": [
+   "噦"
+  ],
+  "rescue_formulas": [
+   "小柴胡湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0098",
+   "SHL_SONGBEN_0101"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "抵當丸"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0126"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "抵當湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0237",
+   "SHL_SONGBEN_0257"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "柴胡加芒消湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0104"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "譫語",
+  "manifestations": [
+   "譫語"
+  ],
+  "rescue_formulas": [
+   "柴胡加龍骨牡蠣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0107"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "柴胡桂枝乾薑湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0147"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "桂枝加厚朴杏子湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0043"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "桂枝加大黃湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0279"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "桂枝去桂加茯苓白朮湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0028"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "桂枝去芍藥湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0021"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "煩躁",
+  "manifestations": [
+   "煩躁"
+  ],
+  "rescue_formulas": [
+   "桂枝甘草龍骨牡蠣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0118"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "梔子乾薑湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0080"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "梔子厚朴湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0079"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "當歸四逆湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_AUX_0206"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "白虎加人參湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0168"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "譫語、厥",
+  "manifestations": [
+   "譫語",
+   "厥"
+  ],
+  "rescue_formulas": [
+   "白虎湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0219"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "煩躁",
+  "manifestations": [
+   "煩躁"
+  ],
+  "rescue_formulas": [
+   "茯苓四逆湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0069"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "茯苓桂枝白朮甘草湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0067"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "譫語、厥",
+  "manifestations": [
+   "譫語",
+   "厥"
+  ],
+  "rescue_formulas": [
+   "調胃承氣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0094",
+   "SHL_SONGBEN_0105"
+  ],
+  "release_level": "silver"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "下利不止、心下痞、痞",
+  "manifestations": [
+   "下利不止",
+   "心下痞",
+   "痞"
+  ],
+  "rescue_formulas": [
+   "赤石脂禹餘糧湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0159"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "厥逆、厥",
+  "manifestations": [
+   "厥逆",
+   "厥"
+  ],
+  "rescue_formulas": [
+   "麻黃升麻湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0357"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤下",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "麻黃杏仁甘草石膏湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0162"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "譫語",
+  "manifestations": [
+   "譫語"
+  ],
+  "rescue_formulas": [
+   "大承氣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0212"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "小承氣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0250"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "心下痞、痞",
+  "manifestations": [
+   "心下痞",
+   "痞"
+  ],
+  "rescue_formulas": [
+   "旋覆代赭湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0161"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "心中懊憹、虛煩、懊憹",
+  "manifestations": [
+   "心中懊憹",
+   "虛煩",
+   "懊憹"
+  ],
+  "rescue_formulas": [
+   "梔子生薑豉湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0076"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "白虎加人參湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0168"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "茯苓桂枝白朮甘草湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0067"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤吐",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "調胃承氣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0249"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "厚朴生薑半夏甘草人參湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0066"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "大陷胸湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0137"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "心下痞、痞",
+  "manifestations": [
+   "心下痞",
+   "痞"
+  ],
+  "rescue_formulas": [
+   "大黃黃連瀉心湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0164"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "小承氣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0250"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "桂枝加芍藥生薑各一兩人參三兩新加湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0062"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "心中懊憹、虛煩、懊憹",
+  "manifestations": [
+   "心中懊憹",
+   "虛煩",
+   "懊憹"
+  ],
+  "rescue_formulas": [
+   "梔子生薑豉湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0076"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "禹餘糧丸"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0088"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "調胃承氣湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0070"
+  ],
+  "release_level": "bronze"
+ },
+ {
+  "mistreatment": "誤汗",
+  "resulting_pattern": "變證",
+  "manifestations": [],
+  "rescue_formulas": [
+   "麻黃杏仁甘草石膏湯"
+  ],
+  "clauses": [
+   "SHL_SONGBEN_0063"
+  ],
+  "release_level": "bronze"
+ }
+]
