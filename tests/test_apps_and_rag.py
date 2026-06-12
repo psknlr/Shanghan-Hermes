@@ -123,10 +123,41 @@ class TestSkillsAndRules(unittest.TestCase):
                   "hermes.shanghan.formula_patterns/guizhi_tang",
                   "hermes.shanghan.formula_patterns/mahuang_tang",
                   "hermes.shanghan.formula_patterns/xiaochaihu_tang",
-                  "hermes.shanghan.formula_patterns/wumei_wan"]:
+                  "hermes.shanghan.formula_patterns/wumei_wan",
+                  "hermes.shanghan.therapy/sweating",
+                  "hermes.shanghan.therapy/purgation",
+                  "hermes.shanghan.therapy/harmonization",
+                  "hermes.shanghan.therapy/rescue_reverse"]:
             self.assertTrue((root / d / "SKILL.md").exists(), d)
             self.assertTrue((root / d / "rules.jsonl").exists(), d)
             self.assertTrue((root / d / "examples.jsonl").exists(), d)
+
+    def test_patient_visit_summary(self):
+        from hermes_shanghan.apps.patient import PatientEducator
+        edu = PatientEducator(self.art.six_channel_rules, self.art.clause_store())
+        out = edu.organize_symptoms(["怕冷", "頭痛"])
+        self.assertIn("visit_summary", out)
+        self.assertEqual(out["mode"], "patient")
+        # no diagnosis, no formula fields
+        self.assertNotIn("matched_formula_patterns", out)
+
+    def test_paper_assets(self):
+        from hermes_shanghan.paper.writer import PaperWriter
+        import tempfile
+        from pathlib import Path
+        writer = PaperWriter(self.art.clauses, self.art.initial_rules,
+                             self.art.formula_rules, self.art.six_channel_rules,
+                             self.art.mistreatment_rules, self.art.differential_rules)
+        with tempfile.TemporaryDirectory() as td:
+            path = writer.generate("formula_pattern", "桂枝湯類方證", Path(td))
+            self.assertTrue(path.exists())
+            text = path.read_text(encoding="utf-8")
+            for section in ("摘要", "方法", "結果", "討論", "結論",
+                            "參考文獻", "Cover Letter"):
+                self.assertIn(section, text)
+            assets = {p.name for p in Path(td).iterdir()}
+            self.assertIn("fig4_clause_topic_clusters.mmd.md", assets)
+            self.assertIn("table4_variant_comparison.csv", assets)
 
     def test_merged_rules_reference_not_replace(self):
         ir_ids = {r.initial_rule_id for r in self.art.initial_rules}

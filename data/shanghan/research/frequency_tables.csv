@@ -1,6 +1,6 @@
 table,term,count
 symptom_frequency,發熱,62
-symptom_frequency,汗出,49
+symptom_frequency,汗出,48
 symptom_frequency,下利,40
 symptom_frequency,惡寒,26
 symptom_frequency,厥,26
@@ -195,6 +195,7 @@ symptom_frequency,心動悸,1
 symptom_frequency,惡熱,1
 symptom_frequency,濈然微汗出,1
 symptom_frequency,額上微汗出,1
+symptom_frequency,盜汗,1
 symptom_frequency,面合色赤,1
 symptom_frequency,鄭聲,1
 symptom_frequency,獨語如見鬼狀,1

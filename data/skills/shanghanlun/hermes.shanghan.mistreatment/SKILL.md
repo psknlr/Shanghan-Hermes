@@ -22,9 +22,9 @@ description: 誤治傳變圖譜：誤汗/誤下/誤吐/火逆 → 變證 → 救
 | 火逆 | 驚狂 | 桂枝去芍藥加蜀漆牡蠣龍骨救逆湯 | SHL_SONGBEN_0112 | silver |
 | 火逆 | 煩躁 | 桂枝甘草龍骨牡蠣湯 | SHL_SONGBEN_0118 | silver |
 | 火逆 | 奔豚 | 桂枝加桂湯 | SHL_SONGBEN_0117 | silver |
-| 火逆 | 吐逆、煩躁、譫語 | 四逆湯 | SHL_SONGBEN_0029 | bronze |
-| 火逆 | 譫語、壞病 | 小柴胡湯 | SHL_SONGBEN_0267 | bronze |
-| 火逆 | 胃中空虛、客氣動膈、心中懊憹 | 梔子豉湯 | SHL_SONGBEN_0221 | bronze |
+| 火逆 | 吐逆、譫語、煩躁 | 四逆湯 | SHL_SONGBEN_0029 | bronze |
+| 火逆 | 壞病、譫語 | 小柴胡湯 | SHL_SONGBEN_0267 | bronze |
+| 火逆 | 客氣動膈、胃中空虛、心中懊憹 | 梔子豉湯 | SHL_SONGBEN_0221 | bronze |
 | 火逆 | 變證 | 附子湯 | SHL_SONGBEN_0304 | bronze |
 | 誤下 | 煩躁 | 乾薑附子湯 | SHL_SONGBEN_0061 | bronze |
 | 誤下 | 變證 | 乾薑黃芩黃連人參湯 | SHL_SONGBEN_0359 | bronze |
@@ -56,7 +56,7 @@ description: 誤治傳變圖譜：誤汗/誤下/誤吐/火逆 → 變證 → 救
 | 誤吐 | 譫語 | 大承氣湯 | SHL_SONGBEN_0212 | bronze |
 | 誤吐 | 變證 | 小承氣湯 | SHL_SONGBEN_0250 | bronze |
 | 誤吐 | 心下痞、痞 | 旋覆代赭湯 | SHL_SONGBEN_0161 | bronze |
-| 誤吐 | 心中懊憹、懊憹、虛煩 | 梔子生薑豉湯 | SHL_SONGBEN_0076 | bronze |
+| 誤吐 | 心中懊憹、虛煩、懊憹 | 梔子生薑豉湯 | SHL_SONGBEN_0076 | bronze |
 | 誤吐 | 變證 | 白虎加人參湯 | SHL_SONGBEN_0168 | bronze |
 | 誤吐 | 變證 | 茯苓桂枝白朮甘草湯 | SHL_SONGBEN_0067 | bronze |
 | 誤吐 | 變證 | 調胃承氣湯 | SHL_SONGBEN_0249 | bronze |
@@ -65,7 +65,7 @@ description: 誤治傳變圖譜：誤汗/誤下/誤吐/火逆 → 變證 → 救
 | 誤汗 | 心下痞、痞 | 大黃黃連瀉心湯 | SHL_SONGBEN_0164 | bronze |
 | 誤汗 | 變證 | 小承氣湯 | SHL_SONGBEN_0250 | bronze |
 | 誤汗 | 變證 | 桂枝加芍藥生薑各一兩人參三兩新加湯 | SHL_SONGBEN_0062 | bronze |
-| 誤汗 | 心中懊憹、懊憹、虛煩 | 梔子生薑豉湯 | SHL_SONGBEN_0076 | bronze |
+| 誤汗 | 心中懊憹、虛煩、懊憹 | 梔子生薑豉湯 | SHL_SONGBEN_0076 | bronze |
 | 誤汗 | 變證 | 禹餘糧丸 | SHL_SONGBEN_0088 | bronze |
 | 誤汗 | 變證 | 調胃承氣湯 | SHL_SONGBEN_0070 | bronze |
 | 誤汗 | 變證 | 麻黃杏仁甘草石膏湯 | SHL_SONGBEN_0063 | bronze |

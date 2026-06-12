@@ -125,9 +125,11 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 - Fig.1 六經-方劑分佈圖 (fig1_channel_formula.mmd.md)
 - Fig.2 誤治-變證路徑圖 (fig2_mistreatment_paths.dot)
 - Fig.3 方劑家族樹 (fig3_formula_family.dot)
+- Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)
 - Table 1 規則分級統計 (table1_rule_levels.csv)
 - Table 2 方劑頻次表 (table2_formula_frequency.csv)
 - Table 3 規則類型統計 (table3_rule_types.csv)
+- Table 4 版本異文對比表 (table4_variant_comparison.csv)
 
 ## 參考文獻
 

@@ -343,12 +343,29 @@ class SkillBuilder:
         return 1
 
     # ------------------------------------------------------------------
+    THERAPY_SUBSKILLS = {
+        "汗法": ("sweating", "汗法規則：邪在表者汗而發之；適應指徵、代表方與禁例。"),
+        "下法": ("purgation", "下法規則：實在裏者下之；承氣輩指徵、急下三證與禁下諸條。"),
+        "和法": ("harmonization", "和法規則：半表半裏樞機不利，小柴胡湯和解；瀉心輩辛開苦降。"),
+        "吐法": ("vomiting", "吐法規則：邪實胸中者越之，瓜蒂散主之；虛家禁用。"),
+        "溫法": ("warming", "溫法規則：裏虛寒者溫之，四逆輩、理中輩。"),
+        "清法": ("clearing", "清法規則：無形之熱清之，白虎輩、梔子豉輩、芩連柏輩。"),
+        "補法": ("tonifying", "補法規則：正虛者補之，小建中湯、炙甘草湯。"),
+        "救逆": ("rescue_reverse", "救逆規則：誤治壞病、陽亡陰竭之急救回逆法度。"),
+        "利水": ("water_regulation", "利水規則：水飲內停者利其小便，五苓散/豬苓湯/真武湯。"),
+    }
+
     def _build_therapy(self) -> int:
+        base = self.root / "hermes.shanghan.therapy"
         indicated = [t for t in self.therapy_rules if t.polarity == "indicated"]
         md = _frontmatter(
             "hermes.shanghan.therapy",
-            "治法規則：汗/吐/下/和/溫/清/補/救逆/利水的適應指徵與代表方。") + """
-# 治法 Skill
+            "治法規則總覽：汗/吐/下/和/溫/清/補/救逆/利水的適應指徵與代表方。") + """
+# 治法 Skill（總覽）
+
+各治法獨立子 Skill：hermes.shanghan.therapy.sweating / purgation /
+harmonization / vomiting / warming / clearing / tonifying /
+rescue_reverse / water_regulation。
 
 """ + "\n".join(
             f"## {t.therapy_method}\n{t.summary}\n- 指徵：{'、'.join(t.indications[:8]) or '—'}\n"
@@ -358,8 +375,41 @@ class SkillBuilder:
         examples = [
             {"query": "什麼情況當用下法？", "answer_outline": "潮熱、譫語、腹滿痛、不大便、燥屎內結——承氣輩；表未解者不可下。"},
         ]
-        _write_skill(self.root / "hermes.shanghan.therapy", md, self.therapy_rules, examples)
-        return 1
+        _write_skill(base, md, self.therapy_rules, examples)
+
+        n = 1
+        for method, (slug, desc) in self.THERAPY_SUBSKILLS.items():
+            group = [t for t in self.therapy_rules if t.therapy_method == method]
+            related_mist = {"汗法": "誤汗", "下法": "誤下", "吐法": "誤吐"}.get(method)
+            mist = [t for t in self.therapy_rules
+                    if related_mist and t.therapy_method == related_mist]
+            prohib = [t for t in self.therapy_rules
+                      if t.therapy_method == {"汗法": "禁汗", "下法": "禁下",
+                                              "吐法": "禁吐"}.get(method)]
+            if not group and not prohib:
+                continue
+            n += 1
+            body = []
+            for t in group:
+                clause_refs = "、".join(t.supporting_clauses[:6])
+                body.append(f"## 適應（{t.therapy_method}）\n{t.summary}\n"
+                            f"- 指徵：{'、'.join(t.indications[:10]) or '—'}\n"
+                            f"- 代表方：{'、'.join(t.representative_formulas) or '—'}\n"
+                            f"- 條文：{clause_refs}")
+            for t in prohib:
+                body.append(f"## 禁例（{t.therapy_method}）\n{t.summary}\n"
+                            + "\n".join(f"- {c}" for c in t.contraindication_conditions[:8]))
+            for t in mist:
+                body.append(f"## 誤施之變（{t.therapy_method}）\n{t.summary}\n"
+                            f"- 變證：{'、'.join(t.indications[:8]) or '—'}\n"
+                            f"- 救治方：{'、'.join(t.representative_formulas) or '—'}")
+            md_sub = _frontmatter(f"hermes.shanghan.therapy.{slug}", desc,
+                                  therapy_method=method) + \
+                f"# {method} Skill\n\n" + "\n\n".join(body) + CORE_PRINCIPLES
+            examples_sub = [{"query": f"{method}的適應證和禁忌？",
+                             "answer_outline": f"見本 Skill 適應/禁例/誤施之變三節，均帶條文證據。"}]
+            _write_skill(base / slug, md_sub, group + prohib + mist, examples_sub)
+        return n
 
     # ------------------------------------------------------------------
     def _build_transformation(self) -> int:

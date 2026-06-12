@@ -1,9 +1,13 @@
 ---
 name: hermes.shanghan.therapy
-description: 治法規則：汗/吐/下/和/溫/清/補/救逆/利水的適應指徵與代表方。
+description: 治法規則總覽：汗/吐/下/和/溫/清/補/救逆/利水的適應指徵與代表方。
 ---
 
-# 治法 Skill
+# 治法 Skill（總覽）
+
+各治法獨立子 Skill：hermes.shanghan.therapy.sweating / purgation /
+harmonization / vomiting / warming / clearing / tonifying /
+rescue_reverse / water_regulation。
 
 ## 下法
 實在裏者下之：潮熱、譫語、腹滿痛、不大便、燥屎內結為下法指徵，以承氣輩；下不厭遲，表未解者不可下。

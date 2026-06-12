@@ -16,7 +16,7 @@ from typing import Dict, List, Optional
 from .. import config
 from ..schemas import (DifferentialRule, FormulaPatternRule, InitialRule,
                        MistreatmentTransformationRule, ShanghanClause,
-                       SixChannelRule)
+                       SixChannelRule, VariantRule, read_jsonl)
 
 PAPER_TYPES = {
     "formula_pattern": "《傷寒論》方證規律挖掘",
@@ -259,6 +259,36 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
         dot.append("}")
         (out / "fig3_formula_family.dot").write_text("\n".join(dot), encoding="utf-8")
         figs.append("Fig.3 方劑家族樹 (fig3_formula_family.dot)")
+
+        # Fig4: clause topic clusters — channel × dominant theme grouping
+        clusters: Dict[str, Dict[str, List[int]]] = {}
+        for c in self.clauses:
+            if not c.six_channel:
+                continue
+            if c.mistreatment_terms:
+                theme = "誤治變證"
+            elif c.contraindication_terms:
+                theme = "禁忌法度"
+            elif c.contains_formula:
+                theme = "方證條文"
+            elif c.prognosis_terms:
+                theme = "預後判斷"
+            elif c.pulse:
+                theme = "脈證關係"
+            else:
+                theme = "病證界定"
+            clusters.setdefault(c.six_channel, {}).setdefault(theme, []).append(c.clause_number)
+        mer = ["```mermaid", "graph TD"]
+        for ch, themes in clusters.items():
+            chid = config.CHANNEL_PINYIN.get(ch, ch)
+            mer.append(f'  {chid}["{ch}"]')
+            for theme, nums in sorted(themes.items(), key=lambda kv: -len(kv[1])):
+                tid = f"{chid}_{abs(hash(theme)) % 999}"
+                sample = "、".join(str(n) for n in nums[:5])
+                mer.append(f'  {chid} --> {tid}["{theme} ({len(nums)}條，如{sample}…)"]')
+        mer.append("```")
+        (out / "fig4_clause_topic_clusters.mmd.md").write_text("\n".join(mer), encoding="utf-8")
+        figs.append("Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)")
         return figs
 
     def _emit_tables(self, out: Path, s: Dict) -> List[str]:
@@ -281,4 +311,23 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
             for k, v in sorted(s["rule_types"].items(), key=lambda kv: -kv[1]):
                 w.writerow([k, v])
         tables.append("Table 3 規則類型統計 (table3_rule_types.csv)")
+
+        # Table 4: version variant comparison (layer B alignments with diffs)
+        variants = [VariantRule.from_dict(d) for d in
+                    read_jsonl(config.RULES_VARIANT_DIR / "variant_rules.jsonl")]
+        with (out / "table4_variant_comparison.csv").open("w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(["clause_id", "variant_book", "similarity",
+                        "base_text", "variant_text", "notable_differences"])
+            n = 0
+            for v in variants:
+                if not v.notable_differences:
+                    continue
+                w.writerow([v.clause_id, v.variant_book, v.similarity,
+                            v.base_text[:80], v.variant_text[:80],
+                            "；".join(v.notable_differences)])
+                n += 1
+                if n >= 100:
+                    break
+        tables.append("Table 4 版本異文對比表 (table4_variant_comparison.csv)")
         return tables

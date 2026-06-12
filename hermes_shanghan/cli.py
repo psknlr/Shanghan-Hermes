@@ -278,6 +278,15 @@ def cmd_skills(args):
         print(f"{s['name']:48s} {s['description'][:60]}")
 
 
+def cmd_visit_summary(args):
+    _need_pipeline()
+    from .apps.patient import PatientEducator
+    from .orchestrator import Artifacts
+    art = Artifacts()
+    edu = PatientEducator(art.six_channel_rules, art.clause_store())
+    _print(edu.organize_symptoms(args.symptoms.split(",")))
+
+
 # ---------------------------------------------------------------------------
 def main(argv: Optional[List[str]] = None) -> int:
     p = argparse.ArgumentParser(prog="hermes-shanghan",
@@ -348,6 +357,10 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     sp = sub.add_parser("skills", help="列出已編譯 Skill")
     sp.set_defaults(func=cmd_skills)
+
+    sp = sub.add_parser("visit-summary", help="患者端：就診症狀清單整理（不做任何判斷）")
+    sp.add_argument("--symptoms", required=True, help="逗號分隔的自述症狀")
+    sp.set_defaults(func=cmd_visit_summary)
 
     args = p.parse_args(argv)
     args.func(args)

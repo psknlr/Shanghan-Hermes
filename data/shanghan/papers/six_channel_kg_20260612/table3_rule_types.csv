@@ -1,0 +1,16 @@
+rule_type,count
+formula_pattern_rule,274
+therapy_selection_rule,236
+prognosis_rule,212
+mistreatment_rule,134
+administration_rule,113
+formula_composition_rule,112
+dosage_processing_rule,112
+pulse_symptom_rule,88
+contraindication_rule,69
+disease_pattern_rule,36
+differential_rule,34
+rescue_reverse_rule,23
+transformation_rule,14
+recurrence_rule,8
+six_channel_definition_rule,6

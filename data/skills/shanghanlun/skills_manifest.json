@@ -7,7 +7,7 @@
   "formula_patterns": 109,
   "mistreatment": 1,
   "contraindications": 1,
-  "therapy": 1,
+  "therapy": 9,
   "transformation": 1,
   "differential": 1,
   "clause_explainer": 1,
@@ -15,5 +15,5 @@
   "paper_writer": 1,
   "patient_education": 1
  },
- "total_dirs": 127
+ "total_dirs": 135
 }

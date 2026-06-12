@@ -256,11 +256,11 @@
  },
  {
   "mistreatment": "火逆",
-  "resulting_pattern": "吐逆、煩躁、譫語",
+  "resulting_pattern": "吐逆、譫語、煩躁",
   "manifestations": [
    "吐逆",
-   "煩躁",
    "譫語",
+   "煩躁",
    "厥"
   ],
   "rescue_formulas": [
@@ -273,10 +273,10 @@
  },
  {
   "mistreatment": "火逆",
-  "resulting_pattern": "譫語、壞病",
+  "resulting_pattern": "壞病、譫語",
   "manifestations": [
-   "譫語",
-   "壞病"
+   "壞病",
+   "譫語"
   ],
   "rescue_formulas": [
    "小柴胡湯"
@@ -288,14 +288,14 @@
  },
  {
   "mistreatment": "火逆",
-  "resulting_pattern": "胃中空虛、客氣動膈、心中懊憹",
+  "resulting_pattern": "客氣動膈、胃中空虛、心中懊憹",
   "manifestations": [
-   "胃中空虛",
    "客氣動膈",
+   "胃中空虛",
    "心中懊憹",
-   "煩躁",
    "譫語",
-   "懊憹"
+   "懊憹",
+   "煩躁"
   ],
   "rescue_formulas": [
    "梔子豉湯"
@@ -739,11 +739,11 @@
  },
  {
   "mistreatment": "誤吐",
-  "resulting_pattern": "心中懊憹、懊憹、虛煩",
+  "resulting_pattern": "心中懊憹、虛煩、懊憹",
   "manifestations": [
    "心中懊憹",
-   "懊憹",
-   "虛煩"
+   "虛煩",
+   "懊憹"
   ],
   "rescue_formulas": [
    "梔子生薑豉湯"
@@ -854,11 +854,11 @@
  },
  {
   "mistreatment": "誤汗",
-  "resulting_pattern": "心中懊憹、懊憹、虛煩",
+  "resulting_pattern": "心中懊憹、虛煩、懊憹",
   "manifestations": [
    "心中懊憹",
-   "懊憹",
-   "虛煩"
+   "虛煩",
+   "懊憹"
   ],
   "rescue_formulas": [
    "梔子生薑豉湯"
