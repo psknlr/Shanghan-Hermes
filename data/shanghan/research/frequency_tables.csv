@@ -1,6 +1,6 @@
 table,term,count
 symptom_frequency,發熱,62
-symptom_frequency,汗出,48
+symptom_frequency,汗出,49
 symptom_frequency,下利,40
 symptom_frequency,惡寒,26
 symptom_frequency,厥,26
@@ -77,10 +77,10 @@ symptom_frequency,吐蚘,3
 symptom_frequency,頸項強,3
 symptom_frequency,下重,3
 symptom_frequency,反不惡寒,3
+symptom_frequency,欲嘔,3
 symptom_frequency,下血,3
 symptom_frequency,瘀熱在裏,3
 symptom_frequency,下利不止,3
-symptom_frequency,嘔吐,3
 symptom_frequency,口苦,3
 symptom_frequency,咽乾,3
 symptom_frequency,反能食,3
@@ -108,12 +108,12 @@ symptom_frequency,振慄,2
 symptom_frequency,不欲飲食,2
 symptom_frequency,日晡所發潮熱,2
 symptom_frequency,溫溫欲吐,2
-symptom_frequency,欲嘔,2
 symptom_frequency,小便少,2
 symptom_frequency,眩冒,2
 symptom_frequency,漐漐汗出,2
 symptom_frequency,腹中雷鳴,2
 symptom_frequency,虛煩,2
+symptom_frequency,嘔吐,2
 symptom_frequency,反惡熱,2
 symptom_frequency,不發熱,2
 symptom_frequency,手足自溫,2
@@ -195,7 +195,6 @@ symptom_frequency,心動悸,1
 symptom_frequency,惡熱,1
 symptom_frequency,濈然微汗出,1
 symptom_frequency,額上微汗出,1
-symptom_frequency,盜汗,1
 symptom_frequency,面合色赤,1
 symptom_frequency,鄭聲,1
 symptom_frequency,獨語如見鬼狀,1

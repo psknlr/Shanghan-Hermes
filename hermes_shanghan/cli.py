@@ -39,8 +39,86 @@ def _need_pipeline():
 # ---------------------------------------------------------------------------
 def cmd_pipeline(args):
     from .orchestrator import run_pipeline
-    stats = run_pipeline(verbose=not args.quiet)
+    stats = run_pipeline(verbose=not args.quiet,
+                         use_llm_extractor=getattr(args, "llm_extract", False),
+                         use_llm_critic=getattr(args, "llm_critic", False))
     _print(stats)
+
+
+def cmd_llm_status(args):
+    from .llm.client import get_client
+    from .llm.config import RECOMMENDED_MODELS
+    client = get_client()
+    st = client.status()
+    st["recommended_models"] = RECOMMENDED_MODELS
+    st["how_to_enable"] = ("pip install litellm 並設置 ANTHROPIC_API_KEY（或 OPENAI_API_KEY 等），"
+                           "可選 HERMES_LLM_MODEL 指定模型；無配置時自動使用 local 確定性後端。")
+    _print(st)
+
+
+def cmd_agent(args):
+    _need_pipeline()
+    from .agent.agent import ShanghanAgent
+    agent = ShanghanAgent(max_steps=args.max_steps)
+    out = agent.ask(args.question, role=args.role)
+    if args.answer_only:
+        print(out.get("answer", ""))
+    else:
+        _print(out)
+
+
+def cmd_llm_extract(args):
+    _need_pipeline()
+    from .rag.clause_rag import ClauseRAG
+    from .extract.llm_extractor import LLMRuleExtractor
+    from .review.pipeline import ReviewPipeline
+    from .llm.client import get_client
+    rag = ClauseRAG.load()
+    c = rag.get_clause(args.clause)
+    if c is None:
+        print(f"未找到條文: {args.clause}", file=sys.stderr)
+        sys.exit(1)
+    client = get_client()
+    candidates = LLMRuleExtractor(client).extract_clause(c)
+    store = {cc.clause_id: cc for cc in rag.clauses}
+    pipeline = ReviewPipeline(store)
+    reviewed = [pipeline.review_rule(r) for r in candidates]
+    _print({
+        "backend": client.backend,
+        "clause_id": c.clause_id, "text": c.clean_text,
+        "llm_candidate_rules": len(candidates),
+        "rules": [{"id": r.initial_rule_id, "type": r.rule_type,
+                   "if": r.if_conditions, "then": r.then_conclusions,
+                   "strength": r.prescription_strength,
+                   "release": r.autonomous_review.release_level,
+                   "evidence_verified": r.autonomous_review.evidence_verified,
+                   "critic_flags": r.autonomous_review.critic_flags}
+                  for r in reviewed],
+    })
+
+
+def cmd_tool_call(args):
+    _need_pipeline()
+    import json as _json
+    from .integrations.tool_specs import dispatch
+    try:
+        arguments = _json.loads(args.args) if args.args else {}
+    except _json.JSONDecodeError as exc:
+        print(f"--args 不是合法 JSON: {exc}", file=sys.stderr)
+        sys.exit(1)
+    _print(dispatch(args.name, arguments))
+
+
+def cmd_export_tools(args):
+    from pathlib import Path
+    from .integrations.tool_specs import export_specs
+    out = export_specs(Path(args.out))
+    print(f"tool specs: {out}")
+
+
+def cmd_serve_mcp(args):
+    from .integrations.mcp_server import serve
+    serve()
 
 
 def cmd_ingest(args):
@@ -295,7 +373,37 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     sp = sub.add_parser("pipeline", help="運行全部工作流")
     sp.add_argument("--quiet", action="store_true")
+    sp.add_argument("--llm-extract", action="store_true",
+                    help="啟用 LLM 抽取增強（候選規則仍過全部審核閘門）")
+    sp.add_argument("--llm-critic", action="store_true",
+                    help="啟用 LLM 對抗式批評器作為附加審核閘門")
     sp.set_defaults(func=cmd_pipeline)
+
+    sp = sub.add_parser("llm-status", help="查看 LLM 後端狀態與配置")
+    sp.set_defaults(func=cmd_llm_status)
+
+    sp = sub.add_parser("agent", help="智能體問答（工具調用+回源核驗+安全治理）")
+    sp.add_argument("question")
+    sp.add_argument("--role", choices=list(safety.ROLES))
+    sp.add_argument("--max-steps", type=int, default=5)
+    sp.add_argument("--answer-only", action="store_true")
+    sp.set_defaults(func=cmd_agent)
+
+    sp = sub.add_parser("llm-extract", help="LLM 抽取單條規則並過審核閘門")
+    sp.add_argument("clause", help="條文號或 clause_id")
+    sp.set_defaults(func=cmd_llm_extract)
+
+    sp = sub.add_parser("tool-call", help="直接調用一個工具（harness 分發目標）")
+    sp.add_argument("name")
+    sp.add_argument("--args", default="{}", help="JSON 參數")
+    sp.set_defaults(func=cmd_tool_call)
+
+    sp = sub.add_parser("export-tools", help="導出 OpenAI/Anthropic 工具規格")
+    sp.add_argument("--out", default="data/shanghan/tool_specs.json")
+    sp.set_defaults(func=cmd_export_tools)
+
+    sp = sub.add_parser("serve-mcp", help="啟動 MCP stdio 服務器（Claude Code 等）")
+    sp.set_defaults(func=cmd_serve_mcp)
 
     sp = sub.add_parser("ingest", help="語料導入與 manifest")
     sp.set_defaults(func=cmd_ingest)

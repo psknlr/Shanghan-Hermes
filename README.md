@@ -59,9 +59,48 @@ python3 -m hermes_shanghan paper --type mistreatment --topic 誤治傳變路徑
 # 列出已編譯 Skill
 python3 -m hermes_shanghan skills
 
-# 測試（43 項，含對抗性審核測試）
+# 智能體問答（工具取證 + 回源核驗 + 安全治理；離線可用）
+python3 -m hermes_shanghan agent "少陰病寒化與熱化怎麼區分？" --role student
+python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
+
+# 測試（54 項，含對抗性審核 + LLM/智能體測試）
 python3 -m unittest discover -s tests
 ```
+
+## LLM 接入與智能體（神經符號增益層）
+
+系統把確定性規則庫作為**可信底座**，LLM 作為**增益層**——但 LLM 產出的每一句話
+都要先過「引用核驗」才能到達用戶，即使接入大模型，`無證據鏈，不成回答` 依然成立。
+
+```bash
+# 啟用真實大模型（可選；不裝則自動用 local 確定性後端，離線可跑）
+pip install "litellm>=1.40"
+export ANTHROPIC_API_KEY=sk-...                       # 或 OPENAI_API_KEY 等
+export HERMES_LLM_MODEL=anthropic/claude-opus-4-8     # 經 LiteLLM，支持 100+ provider
+
+# 智能體：自動取證、回源 clause_id、安全治理
+python3 -m hermes_shanghan agent "病人往來寒熱、胸脅苦滿、口苦，考慮什麼方？" --role doctor
+
+# LLM 增強的規則挖掘（候選規則仍過全部審核閘門）
+python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
+python3 -m hermes_shanghan llm-extract 12
+
+# 直接調用工具 / 導出工具規格
+python3 -m hermes_shanghan tool-call shanghan_differential --args '{"formulas":["桂枝湯","麻黃湯"]}'
+python3 -m hermes_shanghan export-tools --out tools.json
+```
+
+**接入智能體框架**（8 個只讀回源工具 + 1 個智能體工具，三種 harness 共用同一能力面）：
+
+| Harness | 接入方式 |
+|---|---|
+| Claude Code / Desktop | `claude mcp add shanghan -- python3 -m hermes_shanghan serve-mcp`（MCP stdio） |
+| Codex CLI / OpenCode / openclaw | `export-tools` 導出 OpenAI/Anthropic 工具規格；`tool-call` 作分發目標 |
+| 任意 LiteLLM 智能體 | `from hermes_shanghan.agent import ShanghanAgent` |
+
+四項保證跨 harness 一致：**證據回源**（answer 引用 clause_id，guard 核驗）、
+**層級標註**（A/B/C/D/E）、**患者安全**（診斷/處方/劑量上游攔截）、
+**優雅降級**（無 litellm/key 自動用 local 後端）。詳見 [`docs/LLM_AGENT.md`](docs/LLM_AGENT.md)。
 
 ## 數據與版本分層
 
@@ -155,8 +194,11 @@ hermes_shanghan/
 ├─ skills/      builder（Skill編譯）· pinyin
 ├─ paper/       writer（6 類論文 + 圖表資產）
 ├─ memory/      store（7 個記憶模塊）
-├─ orchestrator.py（五大 Workflow 總調度）· cli.py
-tests/          43 項測試（含對抗性審核測試）
+├─ llm/         config · cache · prompts · providers(litellm/local/scripted) · client
+├─ agent/       tools(8 個回源工具) · citation_guard（引用核驗）· agent（ReAct 循環）
+├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
+├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
+tests/          54 項測試（對抗性審核 + LLM/智能體/MCP）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/論文）
 data/skills/       135 個編譯後 Skill

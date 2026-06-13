@@ -22,11 +22,14 @@ from . import validators
 
 
 class ReviewPipeline:
-    def __init__(self, clause_store: Dict[str, ShanghanClause]):
+    def __init__(self, clause_store: Dict[str, ShanghanClause], llm_critic=None):
         self.clauses = clause_store
         self.audits: List[AuditRecord] = []
         self._audit_n = 0
         self.critic_counter: Counter = Counter()
+        # Optional extra adversarial gate (advisory: can downgrade, never
+        # promote past the hard evidence gate). Defaults off for determinism.
+        self.llm_critic = llm_critic
 
     def _audit(self, rule_id: str, stage: str, result: str, flags: List[str], **details):
         self._audit_n += 1
@@ -85,6 +88,25 @@ class ReviewPipeline:
                 self._audit(rule.initial_rule_id, "reverify",
                             "pass" if (ok and crit_result != "fail") else "fail",
                             ev_flags + sem_flags + crit_flags)
+
+        # Stage 4b — optional LLM adversarial critic (advisory downgrade only)
+        if self.llm_critic is not None and ar.evidence_verified and crit_result != "fail":
+            try:
+                llm_verdict, llm_flags, rationale = self.llm_critic.review(rule, self.clauses)
+            except Exception as exc:
+                llm_verdict, llm_flags, rationale = "pass", [f"llm_critic:error:{type(exc).__name__}"], ""
+            if llm_flags:
+                ar.critic_flags = list(ar.critic_flags) + llm_flags
+            for f in llm_flags:
+                self.critic_counter[f.split(":", 1)[1] if ":" in f else f] += 1
+            # hostile LLM verdict downgrades, but cannot reject past evidence gate
+            if llm_verdict == "fail" and crit_result == "pass":
+                crit_result = "warn"
+            elif llm_verdict == "warn" and crit_result == "pass":
+                crit_result = "warn"
+            ar.critic_result = crit_result
+            self._audit(rule.initial_rule_id, "llm_critic", llm_verdict, llm_flags,
+                        rationale=rationale)
 
         # Stage 6 — consensus + release gate
         score = self._consensus(rule, ar.evidence_verified, sem_result, crit_result, repaired)
