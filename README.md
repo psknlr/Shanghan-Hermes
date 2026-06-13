@@ -19,6 +19,20 @@
 存在於對應條文；證據回源失敗的規則直接進入 `rejected/`；對抗性測試
 （`tests/test_review.py`）注入偽造證據並斷言其被拒絕。
 
+## Web 控制台（一站集成全部功能 + 多智能體）
+
+```bash
+python3 -m hermes_shanghan pipeline     # 首次生成規則庫
+python3 -m hermes_shanghan serve        # 打開 http://127.0.0.1:8765/
+```
+
+純標準庫實現（`http.server` + 原生 JS 單頁應用，無構建、無 CDN、離線可用）。
+11 個模塊：總覽 · **智能體（單/多智能體合議）** · 原文檢索 · 方證匹配 · 方證鑒別 ·
+六經教學 · 誤治傳變 · 科研挖掘 · 論文生成 · Skill 庫 · 接入。證據優先：答案中的
+`clause_id` 可點擊展開條文全息（A/B/C/D/E 五層色標）；多智能體合議把「規劃→取證→
+方證/鑒別/六經/誤治專家→批評→綜合」可視化為時間線，每步附證據與引用核驗。
+詳見 [`docs/WEB_UI.md`](docs/WEB_UI.md)。
+
 ## 快速開始
 
 純 Python 標準庫實現，無任何第三方依賴（Python ≥ 3.9）。
@@ -59,11 +73,14 @@ python3 -m hermes_shanghan paper --type mistreatment --topic 誤治傳變路徑
 # 列出已編譯 Skill
 python3 -m hermes_shanghan skills
 
+# Web 控制台（集成全部功能 + 多智能體）
+python3 -m hermes_shanghan serve                 # http://127.0.0.1:8765/
+
 # 智能體問答（工具取證 + 回源核驗 + 安全治理；離線可用）
 python3 -m hermes_shanghan agent "少陰病寒化與熱化怎麼區分？" --role student
 python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
 
-# 測試（54 項，含對抗性審核 + LLM/智能體測試）
+# 測試（67 項：對抗性審核 + LLM/智能體/多智能體 + Web/HTTP）
 python3 -m unittest discover -s tests
 ```
 
@@ -195,10 +212,11 @@ hermes_shanghan/
 ├─ paper/       writer（6 類論文 + 圖表資產）
 ├─ memory/      store（7 個記憶模塊）
 ├─ llm/         config · cache · prompts · providers(litellm/local/scripted) · client
-├─ agent/       tools(8 個回源工具) · citation_guard（引用核驗）· agent（ReAct 循環）
+├─ agent/       tools(8 個回源工具) · citation_guard · agent(ReAct) · multi_agent(議會)
 ├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
+├─ server/      service(API面) · http_server(stdlib) · static(SPA: index/css/js)
 ├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
-tests/          54 項測試（對抗性審核 + LLM/智能體/MCP）
+tests/          67 項測試（對抗性審核 + LLM/智能體/多智能體 + Web/HTTP）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/論文）
 data/skills/       135 個編譯後 Skill

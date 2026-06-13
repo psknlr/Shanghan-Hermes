@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>傷寒論 · Hermes 控制台</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="seal">傷</div>
+      <div class="brand-text">
+        <h1>傷寒論 · Hermes</h1>
+        <span class="subtitle">自主規則挖掘 · 證據回源 · 多智能體 控制台</span>
+      </div>
+    </div>
+    <div class="topbar-meta">
+      <span class="badge backend" id="backend-badge" title="LLM 後端">後端…</span>
+      <span class="badge stat" id="rules-badge">規則…</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" id="nav">
+      <button data-view="dashboard" class="active"><i>◰</i><span>總覽</span></button>
+      <button data-view="agent"><i>✦</i><span>智能體</span></button>
+      <button data-view="search"><i>⌕</i><span>原文檢索</span></button>
+      <button data-view="match"><i>⚕</i><span>方證匹配</span></button>
+      <button data-view="differential"><i>⇄</i><span>方證鑒別</span></button>
+      <button data-view="teach"><i>☰</i><span>六經教學</span></button>
+      <button data-view="mistreatment"><i>⚡</i><span>誤治傳變</span></button>
+      <button data-view="research"><i>⊹</i><span>科研挖掘</span></button>
+      <button data-view="paper"><i>✎</i><span>論文生成</span></button>
+      <button data-view="skills"><i>◳</i><span>Skill 庫</span></button>
+      <button data-view="about"><i>ⓘ</i><span>接入/關於</span></button>
+    </nav>
+
+    <main id="main"><div class="loading">載入中…</div></main>
+  </div>
+
+  <aside class="drawer" id="drawer">
+    <div class="drawer-head">
+      <span id="drawer-title">條文</span>
+      <button id="drawer-close">✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+  <div class="drawer-scrim" id="drawer-scrim"></div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

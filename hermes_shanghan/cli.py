@@ -121,6 +121,11 @@ def cmd_serve_mcp(args):
     serve()
 
 
+def cmd_serve(args):
+    from .server.http_server import serve
+    serve(host=args.host, port=args.port, warm=not args.no_warm)
+
+
 def cmd_ingest(args):
     from .corpus import downloader
     path = downloader.run()
@@ -404,6 +409,12 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     sp = sub.add_parser("serve-mcp", help="啟動 MCP stdio 服務器（Claude Code 等）")
     sp.set_defaults(func=cmd_serve_mcp)
+
+    sp = sub.add_parser("serve", help="啟動 Web 控制台 UI（集成全部功能）")
+    sp.add_argument("--host", default="127.0.0.1")
+    sp.add_argument("--port", type=int, default=8765)
+    sp.add_argument("--no-warm", action="store_true", help="不預熱（首個請求較慢）")
+    sp.set_defaults(func=cmd_serve)
 
     sp = sub.add_parser("ingest", help="語料導入與 manifest")
     sp.set_defaults(func=cmd_ingest)
