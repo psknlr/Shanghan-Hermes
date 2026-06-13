@@ -10,7 +10,15 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "Shanghan-Hermes contributors" }]
-keywords = ["TCM", "Shanghan Lun", "knowledge mining", "classical Chinese medicine", "agents"]
+keywords = ["TCM", "Shanghan Lun", "knowledge mining", "classical Chinese medicine", "agents", "litellm", "mcp"]
+
+# Core has ZERO runtime dependencies and works fully offline (local backend).
+dependencies = []
+
+[project.optional-dependencies]
+# Enables real LLMs via LiteLLM (100+ providers). Without it the system
+# transparently uses the deterministic `local` backend.
+llm = ["litellm>=1.40"]
 
 [project.scripts]
 hermes-shanghan = "hermes_shanghan.cli:main"

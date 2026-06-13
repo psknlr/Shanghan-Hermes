@@ -1,0 +1,337 @@
+{
+ "name": "hermes-shanghanlun",
+ "description": "《傷寒論》自主規則挖掘與證據回源工具集（只讀、回源 clause_id）。",
+ "openai_tools": [
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_search",
+    "description": "檢索《傷寒論》原文條文（BM25+結構化過濾+關係擴展）。返回帶 clause_id 的條文命中。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "症狀/方名/脈象/治法等檢索詞"
+      },
+      "top_k": {
+       "type": "integer",
+       "default": 6
+      },
+      "six_channel": {
+       "type": "string",
+       "description": "可選六經過濾，如 太陽病"
+      },
+      "formula": {
+       "type": "string",
+       "description": "可選方劑過濾"
+      },
+      "expand": {
+       "type": "boolean",
+       "default": false,
+       "description": "關係圖譜擴展"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_get_clause",
+    "description": "按條文號(1-398)或 clause_id 取條文全息：原文、實體標註、初始規則、條文關係。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "ref": {
+       "type": "string",
+       "description": "條文號或 SHL_SONGBEN_xxxx"
+      }
+     },
+     "required": [
+      "ref"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_match_formula",
+    "description": "醫師端方證匹配：依症狀/脈象返回候選方證規則與原文證據（輔助性質，不替代臨床）。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "symptoms": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "pulse": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "six_channel": {
+       "type": "string"
+      },
+      "top_k": {
+       "type": "integer",
+       "default": 5
+      }
+     },
+     "required": [
+      "symptoms"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_differential",
+    "description": "方證鑒別：給定 2-3 個方劑，返回多軸對比表與關鍵鑒別點及條文。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formulas": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "formulas"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_six_channel",
+    "description": "六經規則：返回某經提綱、總括、亞型、主方、欲解時與禁忌/誤治條文。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "channel": {
+       "type": "string",
+       "description": "太陽病/陽明病/少陽病/太陰病/少陰病/厥陰病"
+      }
+     },
+     "required": [
+      "channel"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_formula_rule",
+    "description": "方證規則：返回某方的核心證/兼證/脈象/組成/加減方/禁忌與支持條文。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_mistreatment",
+    "description": "誤治傳變圖譜：返回(誤治→變證→救治方→條文)路徑，可按關鍵詞過濾。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "可選，如 誤下/結胸/火逆"
+      }
+     }
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_list_formulas",
+    "description": "列出規則庫中可用的方劑名稱（用於消歧或選擇）。",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    }
+   }
+  }
+ ],
+ "anthropic_tools": [
+  {
+   "name": "shanghan_search",
+   "description": "檢索《傷寒論》原文條文（BM25+結構化過濾+關係擴展）。返回帶 clause_id 的條文命中。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "query": {
+      "type": "string",
+      "description": "症狀/方名/脈象/治法等檢索詞"
+     },
+     "top_k": {
+      "type": "integer",
+      "default": 6
+     },
+     "six_channel": {
+      "type": "string",
+      "description": "可選六經過濾，如 太陽病"
+     },
+     "formula": {
+      "type": "string",
+      "description": "可選方劑過濾"
+     },
+     "expand": {
+      "type": "boolean",
+      "default": false,
+      "description": "關係圖譜擴展"
+     }
+    },
+    "required": [
+     "query"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_get_clause",
+   "description": "按條文號(1-398)或 clause_id 取條文全息：原文、實體標註、初始規則、條文關係。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "ref": {
+      "type": "string",
+      "description": "條文號或 SHL_SONGBEN_xxxx"
+     }
+    },
+    "required": [
+     "ref"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_match_formula",
+   "description": "醫師端方證匹配：依症狀/脈象返回候選方證規則與原文證據（輔助性質，不替代臨床）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "symptoms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "pulse": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "six_channel": {
+      "type": "string"
+     },
+     "top_k": {
+      "type": "integer",
+      "default": 5
+     }
+    },
+    "required": [
+     "symptoms"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_differential",
+   "description": "方證鑒別：給定 2-3 個方劑，返回多軸對比表與關鍵鑒別點及條文。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "formulas": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    },
+    "required": [
+     "formulas"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_six_channel",
+   "description": "六經規則：返回某經提綱、總括、亞型、主方、欲解時與禁忌/誤治條文。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "channel": {
+      "type": "string",
+      "description": "太陽病/陽明病/少陽病/太陰病/少陰病/厥陰病"
+     }
+    },
+    "required": [
+     "channel"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_formula_rule",
+   "description": "方證規則：返回某方的核心證/兼證/脈象/組成/加減方/禁忌與支持條文。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "formula": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "formula"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_mistreatment",
+   "description": "誤治傳變圖譜：返回(誤治→變證→救治方→條文)路徑，可按關鍵詞過濾。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "query": {
+      "type": "string",
+      "description": "可選，如 誤下/結胸/火逆"
+     }
+    }
+   }
+  },
+  {
+   "name": "shanghan_list_formulas",
+   "description": "列出規則庫中可用的方劑名稱（用於消歧或選擇）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {}
+   }
+  }
+ ],
+ "invocation": {
+  "cli": "python3 -m hermes_shanghan tool-call <name> --args '<json>'",
+  "mcp": "python3 -m hermes_shanghan serve-mcp"
+ },
+ "safety": "患者語境禁止診斷/處方/劑量；所有結論回源條文編號。"
+}

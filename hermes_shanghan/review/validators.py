@@ -13,7 +13,7 @@ from .. import config, lexicon
 from ..schemas import InitialRule, RULE_TYPES, EVIDENCE_TYPES, INTERPRETATION_LEVELS, ShanghanClause
 from ..textutil import contains_verbatim
 
-RE_IR_ID = re.compile(r"^IR_SHL_[A-Z0-9_]+_\d{3}$")
+RE_IR_ID = re.compile(r"^IR_SHL_[A-Z0-9_]+_L?\d{2,3}$")  # _NNN det. / _LNN llm
 RE_CLAUSE_ID = re.compile(r"^SHL_SONGBEN_(AUX_)?\d{4}$")
 
 

@@ -89,8 +89,19 @@ class Artifacts:
         return {c.clause_id: c for c in self.clauses}
 
 
-def run_pipeline(verbose: bool = True) -> Dict:
-    """Run everything. Returns a stats summary."""
+def _rule_signature(r: InitialRule):
+    formulas = tuple(sorted(r.then_conclusions.get("formula", []) or []))
+    return (r.clause_id, r.rule_type, formulas)
+
+
+def run_pipeline(verbose: bool = True, use_llm_extractor: bool = False,
+                 use_llm_critic: bool = False) -> Dict:
+    """Run everything. Returns a stats summary.
+
+    use_llm_extractor: also mine candidate rules with the LLM (merged + deduped
+                       against deterministic rules, then reviewed identically).
+    use_llm_critic:    add the LLM adversarial critic as an extra review gate.
+    """
     t0 = time.time()
     log = (lambda *a: print(*a)) if verbose else (lambda *a: None)
     config.ensure_dirs()
@@ -125,9 +136,30 @@ def run_pipeline(verbose: bool = True) -> Dict:
     raw_rules = rule_extractor.extract_all(clauses)
     stats["initial_rules_raw"] = len(raw_rules)
 
+    # optional LLM-augmented mining: add only genuinely new candidate rules
+    # (in local backend the LLM mirrors the rule engine, so nothing new is
+    # added; with a real model it widens recall — every candidate is still
+    # reviewed by the same gates below).
+    if use_llm_extractor:
+        from .extract.llm_extractor import LLMRuleExtractor
+        from .llm.client import get_client
+        client = get_client()
+        log(f"      ↳ LLM 抽取增強（backend={client.backend}）…")
+        seen = {_rule_signature(r) for r in raw_rules}
+        llm_rules = LLMRuleExtractor(client, formula_names=formula_names).extract_all(clauses)
+        added = [r for r in llm_rules if _rule_signature(r) not in seen]
+        raw_rules.extend(added)
+        stats["initial_rules_llm_added"] = len(added)
+        stats["llm_backend"] = client.backend
+
     log("[4/8] 自主審核（Schema→證據回源→語義→批評→修復→共識分級）…")
     store = {c.clause_id: c for c in clauses}
-    pipeline = ReviewPipeline(store)
+    llm_critic = None
+    if use_llm_critic:
+        from .review.llm_critic import LLMCritic
+        from .llm.client import get_client
+        llm_critic = LLMCritic(get_client())
+    pipeline = ReviewPipeline(store, llm_critic=llm_critic)
     accepted, rejected = pipeline.run(raw_rules)
     counts = pipeline.persist(accepted, rejected)
     stats.update({"initial_rules_accepted": counts["accepted"],
