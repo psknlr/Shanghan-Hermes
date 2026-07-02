@@ -349,8 +349,9 @@ def cmd_paper(args):
     art = Artifacts()
     writer = PaperWriter(art.clauses, art.initial_rules, art.formula_rules,
                          art.six_channel_rules, art.mistreatment_rules,
-                         art.differential_rules)
-    path = writer.generate(paper_type=args.type, topic=args.topic or "")
+                         art.differential_rules, commentary_rules=art.commentary_rules)
+    path = writer.generate(paper_type=args.type, topic=args.topic or "",
+                           use_llm=not args.no_llm)
     print(f"manuscript: {path}")
 
 
@@ -472,6 +473,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                     choices=["formula_pattern", "six_channel_kg", "mistreatment",
                              "network_pharmacology", "commentary_compare", "methodology"])
     sp.add_argument("--topic", default="")
+    sp.add_argument("--no-llm", action="store_true",
+                    help="跳過增益層起草，只輸出確定性模板與數據表格")
     sp.set_defaults(func=cmd_paper)
 
     sp = sub.add_parser("skills", help="列出已編譯 Skill")

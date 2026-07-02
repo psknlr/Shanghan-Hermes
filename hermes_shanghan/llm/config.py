@@ -8,7 +8,9 @@ Environment variables
   HERMES_LLM_CACHE      1/0 — disk-cache responses (default 1)
   HERMES_LLM_TIMEOUT    seconds (default 60)
   HERMES_LLM_FALLBACK   local | none — fallback when a real call fails
-  plus the usual provider keys: ANTHROPIC_API_KEY / OPENAI_API_KEY / …
+  plus the usual provider keys: ANTHROPIC_API_KEY / OPENAI_API_KEY /
+  AZURE_API_KEY(+AZURE_API_BASE/AZURE_API_VERSION) / POE_API_KEY /
+  MINIMAX_API_KEY(+MINIMAX_API_BASE) / …
 
 `auto` resolves to `litellm` only when the `litellm` package is importable
 *and* a usable API key is present; otherwise it resolves to `local`.
@@ -28,6 +30,9 @@ RECOMMENDED_MODELS = {
     "anthropic/claude-haiku-4-5-20251001": "Claude Haiku 4.5 (快速/批量)",
     "openai/gpt-4.1": "OpenAI GPT-4.1 (via litellm)",
     "openai/o4-mini": "OpenAI o4-mini (via litellm)",
+    "azure/<deployment>": "Azure OpenAI（AZURE_API_KEY/AZURE_API_BASE/AZURE_API_VERSION）",
+    "poe/Claude-Sonnet-4.5": "Poe（POE_API_KEY，OpenAI 兼容端點）",
+    "minimax/MiniMax-M2": "MiniMax（MINIMAX_API_KEY，可用 MINIMAX_API_BASE 切換國內/國際站）",
 }
 
 # Env vars that, if present, indicate a usable provider key.
@@ -35,7 +40,29 @@ PROVIDER_KEY_ENV = [
     "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "AZURE_API_KEY", "GEMINI_API_KEY",
     "GROQ_API_KEY", "MISTRAL_API_KEY", "TOGETHER_API_KEY", "DEEPSEEK_API_KEY",
     "OPENROUTER_API_KEY", "COHERE_API_KEY", "XAI_API_KEY",
+    "POE_API_KEY", "MINIMAX_API_KEY",
 ]
+
+# OpenAI-compatible gateways routed by model-id prefix. litellm has no native
+# adapter for these, so we rewrite "<prefix>/<model>" → "openai/<model>" and
+# point api_base/api_key at the gateway.
+OPENAI_COMPATIBLE_ROUTES = {
+    "poe": {"api_base": "https://api.poe.com/v1", "key_env": "POE_API_KEY",
+            "base_env": "POE_API_BASE"},
+    "minimax": {"api_base": "https://api.minimax.io/v1", "key_env": "MINIMAX_API_KEY",
+                "base_env": "MINIMAX_API_BASE"},
+}
+
+# Per-task max_tokens floors. Long-form drafting (papers/reports) needs far
+# more room than rule extraction; the floor is max()-ed with the user's
+# HERMES_LLM_MAX_TOKENS so an explicit higher setting always wins.
+TASK_MAX_TOKENS_FLOOR = {
+    "paper": 8192,
+    "report": 8192,
+    "synthesize": 4096,
+    "extract_rule": 2048,
+    "critic": 2048,
+}
 
 
 def _env_bool(name: str, default: bool) -> bool:
@@ -74,6 +101,10 @@ class LLMSettings:
         if litellm_importable() and has_provider_key():
             return "litellm"
         return "local"
+
+    def max_tokens_for(self, task: Optional[str]) -> int:
+        """Task-tiered token budget: floor per task, user setting wins if higher."""
+        return max(self.max_tokens, TASK_MAX_TOKENS_FLOOR.get(task or "", 0))
 
     @property
     def reason(self) -> str:

@@ -206,12 +206,16 @@ class ServiceContext:
                               self.art.mistreatment_rules)
         return miner.run_topic(topic, outputs=outputs or ["rules", "network", "paper_outline"])
 
-    def paper(self, paper_type: str = "formula_pattern", topic: str = "") -> Dict:
+    def paper(self, paper_type: str = "formula_pattern", topic: str = "",
+              use_llm: bool = True) -> Dict:
         from ..paper.writer import PaperWriter
         writer = PaperWriter(self.art.clauses, self.art.initial_rules,
                              self.art.formula_rules, self.art.six_channel_rules,
-                             self.art.mistreatment_rules, self.art.differential_rules)
-        path = writer.generate(paper_type=paper_type, topic=topic or "")
+                             self.art.mistreatment_rules, self.art.differential_rules,
+                             commentary_rules=self.art.commentary_rules,
+                             llm_client=self.llm)
+        path = writer.generate(paper_type=paper_type, topic=topic or "",
+                               use_llm=use_llm)
         meta = {}
         meta_path = path.parent / "paper_meta.json"
         if meta_path.exists():

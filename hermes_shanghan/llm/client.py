@@ -14,6 +14,7 @@ from . import cache as cache_mod
 from .config import LLMSettings, load_settings
 from .prompts import (critic_system_prompt, critic_user_prompt,
                       extract_system_prompt, extract_user_prompt,
+                      paper_system_prompt, paper_user_prompt,
                       synth_system_prompt, synth_user_prompt)
 from .providers import (ChatResult, LiteLLMProvider, LocalProvider,
                         ScriptedProvider, ToolCall)
@@ -85,11 +86,15 @@ class LLMClient:
              task: Optional[str] = None, context: Optional[Dict] = None,
              use_cache: bool = True) -> ChatResult:
         temp = self.settings.temperature if temperature is None else temperature
+        # Batch mining (extract_rule/critic) is the most expensive path, so
+        # task-based calls are cached too — the clause/rule content is fully
+        # present in `messages`, which the key hashes.
         cacheable = (use_cache and self.settings.cache and self._backend == "litellm"
-                     and temp == 0.0 and task is None)
+                     and temp == 0.0)
         key = None
         if cacheable:
-            key = cache_mod.cache_key(self.settings.model, messages, tools, temp)
+            key = cache_mod.cache_key(self.settings.model, messages, tools, temp,
+                                      task=task, json_mode=json_mode)
             hit = cache_mod.load(key)
             if hit is not None:
                 self.usage["cache_hits"] += 1
@@ -151,14 +156,39 @@ class LLMClient:
                                json.dumps(rd, ensure_ascii=False)),
             task="critic", context={"clause": cd, "rule": rd})
 
-    def synthesize(self, question: str, evidence: List[Dict], role: str = "doctor") -> str:
-        block = "\n".join(
-            f"- [{e.get('clause_id','?')}|{e.get('layer_label','A 原文直述')}] "
-            f"{e.get('text', e.get('clean_text',''))[:80]}" for e in evidence)
+    def synthesize(self, question: str, evidence: List[Dict], role: str = "doctor",
+                   max_span: int = 500) -> str:
+        # full clause text (deduped by clause_id) — a truncated span starves
+        # the model of the very evidence it must reason over
+        seen: set = set()
+        rows: List[str] = []
+        for e in evidence:
+            cid = e.get("clause_id", "?")
+            if cid in seen:
+                continue
+            seen.add(cid)
+            rows.append(f"- [{cid}|{e.get('layer_label','A 原文直述')}] "
+                        f"{e.get('text', e.get('clean_text',''))[:max_span]}")
+        block = "\n".join(rows)
         return self.chat(
             [{"role": "system", "content": synth_system_prompt(role)},
              {"role": "user", "content": synth_user_prompt(question, block)}],
             task="synthesize", context={"question": question, "evidence": evidence}).content
+
+    def draft_paper(self, paper_type: str, title_root: str, topic: str,
+                    digest: Dict[str, Any]) -> Dict[str, Any]:
+        """引言/計量結果解讀/討論/結論 drafted from the research digest.
+
+        Returns {} on empty/unparseable output; the writer falls back to its
+        template sections. All prose must cite clause_ids and is citation-
+        guarded by the caller.
+        """
+        return self.json_complete(
+            paper_system_prompt(),
+            paper_user_prompt(paper_type, title_root, topic, digest),
+            task="paper",
+            context={"paper_type": paper_type, "title_root": title_root,
+                     "topic": topic, "digest": digest})
 
 
 # module-level singleton ----------------------------------------------------

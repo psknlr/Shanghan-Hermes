@@ -3,6 +3,14 @@
 Six paper types (per protocol). Every Results statement carries rule IDs /
 clause IDs; figures are emitted as DOT/Mermaid sources + CSV tables under
 data/shanghan/papers/<slug>/ so the manuscript is reproducible.
+
+Trusted-base + augmentation-layer split: templates own the structure and the
+data tables (deterministic, recomputable); the LLM reads the quantitative
+research assets (frequency tables, co-occurrence networks, mistreatment
+paths) and drafts 引言/計量結果解讀/討論/結論. Its prose passes the
+CitationGuard before landing in the manuscript — 無證據鏈，不成回答 holds
+for machine-written papers too. Offline, the `local` backend produces
+deterministic sections through the same code path.
 """
 from __future__ import annotations
 
@@ -14,9 +22,9 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from .. import config
-from ..schemas import (DifferentialRule, FormulaPatternRule, InitialRule,
-                       MistreatmentTransformationRule, ShanghanClause,
-                       SixChannelRule, VariantRule, read_jsonl)
+from ..schemas import (CommentaryRule, DifferentialRule, FormulaPatternRule,
+                       InitialRule, MistreatmentTransformationRule,
+                       ShanghanClause, SixChannelRule, VariantRule, read_jsonl)
 
 PAPER_TYPES = {
     "formula_pattern": "《傷寒論》方證規律挖掘",
@@ -34,13 +42,18 @@ class PaperWriter:
                  formula_rules: List[FormulaPatternRule],
                  six_channel_rules: List[SixChannelRule],
                  mistreatment_rules: List[MistreatmentTransformationRule],
-                 differential_rules: Optional[List[DifferentialRule]] = None):
+                 differential_rules: Optional[List[DifferentialRule]] = None,
+                 commentary_rules: Optional[List[CommentaryRule]] = None,
+                 llm_client=None):
+        self.all_clauses = list(clauses)          # incl. AUX — citation store
         self.clauses = [c for c in clauses if c.text_type == "original_clause"]
         self.initial_rules = initial_rules
         self.formula_rules = formula_rules
         self.six_channel_rules = six_channel_rules
         self.mistreatment_rules = mistreatment_rules
         self.differential_rules = differential_rules or []
+        self.commentary_rules = commentary_rules
+        self._llm_client = llm_client
 
     # ------------------------------------------------------------------
     def _stats(self) -> Dict:
@@ -63,8 +76,110 @@ class PaperWriter:
         }
 
     # ------------------------------------------------------------------
+    def _research_digest(self, s: Dict, topic: str) -> Dict:
+        """Compact digest of the quantitative research assets for the LLM.
+
+        Reads data/shanghan/research/ when present (the pipeline's canonical
+        outputs); otherwise recomputes the same statistics in-memory. Only
+        clause_ids listed here may be cited by the drafted prose.
+        """
+        rd = config.RESEARCH_DIR
+
+        def _load_json(name):
+            p = rd / name
+            if p.exists():
+                try:
+                    return json.loads(p.read_text(encoding="utf-8"))
+                except Exception:
+                    return None
+            return None
+
+        sym_net = _load_json("formula_symptom_network.json")
+        paths = _load_json("mistreatment_paths.json")
+        tree = _load_json("formula_family_tree.json")
+        if sym_net is None or paths is None or tree is None:
+            from ..apps.research import ResearchMiner
+            miner = ResearchMiner(self.clauses, self.formula_rules,
+                                  self.mistreatment_rules)
+            sym_net = sym_net or miner.cooccurrence("symptom")
+            paths = paths or miner.mistreatment_paths()
+            tree = tree or miner.family_tree()
+
+        edges = sym_net.get("edges", [])
+        degree: Counter = Counter()
+        for e in edges:
+            degree[e["formula"]] += 1
+        sym_freq: Counter = Counter()
+        pulse_freq: Counter = Counter()
+        for c in self.clauses:
+            sym_freq.update(c.symptoms)
+            pulse_freq.update(c.pulse)
+
+        topic_rules = [f for f in self.formula_rules
+                       if topic and (f.formula in topic or
+                                     (f.formula_family and f.formula_family in topic))]
+        sample_rules = (topic_rules or
+                        sorted(self.formula_rules,
+                               key=lambda f: -len(f.supporting_clauses)))[:6]
+        families = sorted(tree.get("families", []),
+                          key=lambda fam: -len(fam.get("modifications", [])))
+        return {
+            "n_clauses": s["n_clauses"],
+            "n_initial_rules": s["n_initial_rules"],
+            "release_levels": s["levels"],
+            "n_formula_rules": s["n_formula_rules"],
+            "n_mistreatment": s["n_mistreatment"],
+            "n_differential": s["n_differential"],
+            "channel_clauses": s["channel_clauses"].most_common(),
+            "top_formulas": s["formula_freq"].most_common(10),
+            "top_symptoms": sym_freq.most_common(10),
+            "top_pulses": pulse_freq.most_common(8),
+            "symptom_edge_count": len(edges),
+            "top_symptom_edges": edges[:10],
+            "network_hubs": [{"formula": f, "degree": d}
+                             for f, d in degree.most_common(8)],
+            "top_families": [{"base": fam["base"],
+                              "n_modifications": len(fam["modifications"])}
+                             for fam in families[:6]],
+            "mistreatment_paths": [{
+                "mistreatment": p["mistreatment"],
+                "resulting_pattern": p["resulting_pattern"],
+                "rescue_formulas": p.get("rescue_formulas", [])[:3],
+                "clauses": p.get("clauses", [])[:3],
+            } for p in paths[:8]],
+            "sample_formula_rules": [{
+                "formula": f.formula,
+                "core_symptoms": f.core_symptoms[:4],
+                "core_pulse": f.core_pulse[:2],
+                "supporting_clauses": f.supporting_clauses[:3],
+            } for f in sample_rules],
+        }
+
+    def _draft_sections(self, paper_type: str, title_root: str, topic: str,
+                        digest: Dict) -> Dict:
+        """LLM (or offline-deterministic) 引言/計量解讀/討論/結論 + guard report."""
+        from ..agent.citation_guard import CitationGuard
+        from ..llm.client import get_client
+        client = self._llm_client or get_client()
+        try:
+            draft = client.draft_paper(paper_type, title_root, topic, digest) or {}
+        except Exception:
+            draft = {}
+        sections = {k: v.strip() for k, v in draft.items()
+                    if k in ("introduction", "quant_interpretation",
+                             "discussion", "conclusion")
+                    and isinstance(v, str) and v.strip()}
+        report = None
+        if sections:
+            guard = CitationGuard({c.clause_id: c for c in self.all_clauses})
+            report = guard.check("\n".join(sections.values()))
+        return {"sections": sections, "citation_report": report,
+                "backend": client.backend}
+
+    # ------------------------------------------------------------------
     def generate(self, paper_type: str = "formula_pattern",
-                 topic: str = "", out_dir: Optional[Path] = None) -> Path:
+                 topic: str = "", out_dir: Optional[Path] = None,
+                 use_llm: bool = True) -> Path:
         if paper_type not in PAPER_TYPES:
             paper_type = "formula_pattern"
         title_root = PAPER_TYPES[paper_type]
@@ -82,6 +197,13 @@ class PaperWriter:
         # ---------- figures & tables (reproducible assets) -----------------
         figures = self._emit_figures(out, paper_type, s)
         tables = self._emit_tables(out, s)
+
+        # ---------- augmentation layer: LLM drafts from the research digest
+        digest = self._research_digest(s, topic)
+        draft = (self._draft_sections(paper_type, title_root, topic, digest)
+                 if use_llm else {"sections": {}, "citation_report": None,
+                                  "backend": "disabled"})
+        drafted = draft["sections"]
 
         title = f"基於條文級規則挖掘與自主審核的{title_root}：以{topic}為例"
         gold = s["levels"].get("gold", 0)
@@ -124,11 +246,23 @@ InitialRule → FormulaPatternRule → SixChannelRule → TherapyRule →
 MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 圖譜（同方族/鑒別/誤治傳變/禁忌/傳變/異文/注釋支持七類邊）。"""
 
-        results = self._results_section(paper_type, s, topic)
+        results = self._results_section(paper_type, s, topic, digest)
 
-        discussion = f"""## 5 討論
+        intro_body = drafted.get("introduction") or (
+            "《傷寒論》以六經統病、以方證相應，其條文之間存在並列、遞進、"
+            "誤治轉變、鑒別與禁忌等強結構關係。既往數字化工作多止於全文檢索或人工標註，"
+            "缺少「規則必須回到原文」的硬性約束。本文提出 Hermes-Shanghanlun 框架，"
+            "把每一條原文轉化為可追蹤規則，使每一個方證判斷都能回到條文編號。")
 
-（1）證據邊界。本研究嚴格區分原文直述與後世歸納：如「營衛不和」屬後世
+        quant_body = drafted.get("quant_interpretation", "")
+        quant_section = ""
+        if quant_body:
+            quant_section = ("## 5 計量結果解讀\n\n"
+                             "（本節由增益層基於 research/ 計量資產撰寫，屬 D/E 層歸納，"
+                             "引用已過 CitationGuard 核驗。）\n\n" + quant_body)
+
+        discussion = "## 6 討論\n\n" + (drafted.get("discussion") or
+            """（1）證據邊界。本研究嚴格區分原文直述與後世歸納：如「營衛不和」屬後世
 病機術語，批評器將其攔截出規則主體並降級為模型解釋層；「可與」與「主之」
 的證據強度差異被顯式建模，避免將斟酌之辭讀作必用之訓。
 （2）版本異文的影響。B層對齊顯示宋本與桂本在部分條文存在用字差異，
@@ -138,14 +272,28 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 自動審核可保證「不偽造證據」，但不能替代學科專家對歸納合理性的終審。
 （4）應用。規則庫已編譯為六經、方證、誤治、禁忌、鑒別等 Skill，
 可服務醫師輔助（標註輔助性質）、科研挖掘（共現網絡、知識圖譜）與教學練習；
-患者端嚴格禁用診斷與處方功能。"""
+患者端嚴格禁用診斷與處方功能。""")
 
-        conclusion = """## 6 結論
-
-以條文為最小證據單位、以自主審核為質量閘門的 Hermes 流水線，能夠將
+        conclusion = "## 7 結論\n\n" + (drafted.get("conclusion") or
+            """以條文為最小證據單位、以自主審核為質量閘門的 Hermes 流水線，能夠將
 《傷寒論》整書轉化為層級化、可回源、可調用的規則系統；所有方證判斷
 均可回到條文，所有歸納均標明證據層級，為中醫古籍的可計算化提供了
-一條可複製的路徑。"""
+一條可複製的路徑。""")
+
+        # citation-verification footer for the machine-drafted prose
+        report = draft.get("citation_report")
+        if report is not None:
+            notes = ["", "—" * 12, "【增益層引用核驗】"]
+            if report.verified_ids:
+                notes.append("已核實條文：" + "、".join(report.verified_ids))
+            if report.unsupported_ids:
+                notes.append("⚠️ 未能核實的條文編號（請勿採信）："
+                             + "、".join(report.unsupported_ids))
+            if report.quote_mismatches:
+                notes.append("⚠️ 有引文未能在所引條文中逐字核對。")
+            if not report.has_any_citation:
+                notes.append("⚠️ 增益層文本未包含可核驗的條文編號，僅供參考。")
+            conclusion += "\n" + "\n".join(notes)
 
         references = """## 參考文獻
 
@@ -169,24 +317,30 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 通訊作者敬上
 {time.strftime('%Y-%m-%d')}"""
 
-        manuscript = "\n\n".join([
+        parts = [
             f"# {title}", "## 摘要\n\n" + abstract,
-            "## 1 引言\n\n《傷寒論》以六經統病、以方證相應，其條文之間存在並列、遞進、"
-            "誤治轉變、鑒別與禁忌等強結構關係。既往數字化工作多止於全文檢索或人工標註，"
-            "缺少「規則必須回到原文」的硬性約束。本文提出 Hermes-Shanghanlun 框架，"
-            "把每一條原文轉化為可追蹤規則，使每一個方證判斷都能回到條文編號。",
+            "## 1 引言\n\n" + intro_body,
             "## 2 數據\n\n" + self._data_section(s),
-            methods, results, discussion, conclusion,
+            methods, results,
+        ]
+        if quant_section:
+            parts.append(quant_section)
+        parts += [
+            discussion, conclusion,
             "## 圖表清單\n\n" + "\n".join(f"- {f}" for f in figures + tables),
             references, cover_letter,
             "## Supplementary Materials\n\n- S1 規則庫 rules_initial/initial_rules.jsonl\n"
             "- S2 審計日誌 audit/audit_log.jsonl\n- S3 條文關係圖 relations/clause_relations.jsonl\n"
             "- S4 共現網絡與家族樹 research/*.json",
-        ])
+        ]
+        manuscript = "\n\n".join(parts)
         (out / "manuscript.md").write_text(manuscript, encoding="utf-8")
         meta = {"paper_type": paper_type, "title": title, "topic": topic,
                 "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                 "figures": figures, "tables": tables,
+                "llm_backend": draft.get("backend", "disabled"),
+                "llm_sections": sorted(drafted.keys()),
+                "citation_report": (report.to_dict() if report is not None else None),
                 "statistics": {k: v for k, v in s.items()
                                if k not in ("formula_freq", "channel_clauses")}}
         (out / "paper_meta.json").write_text(
@@ -199,7 +353,8 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
         return (f"宋本條文 {s['n_clauses']} 條（含霍亂、陰陽易差後勞復附篇），"
                 f"六經分佈如下：\n\n| 六經 | 條文數 |\n|---|---|\n{rows}")
 
-    def _results_section(self, paper_type: str, s: Dict, topic: str) -> str:
+    def _results_section(self, paper_type: str, s: Dict, topic: str,
+                         digest: Dict) -> str:
         lines = ["## 4 結果", ""]
         lines.append(f"### 4.1 規則庫總體\n共 {s['n_initial_rules']} 條初始規則："
                      + "、".join(f"{k} {v}條" for k, v in sorted(s['rule_types'].items(),
@@ -209,20 +364,89 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
         top = s["formula_freq"].most_common(10)
         lines.append("### 4.2 高頻方劑\n| 方劑 | 條文數 |\n|---|---|\n" +
                      "\n".join(f"| {f} | {n} |" for f, n in top))
-        if paper_type == "mistreatment" or True:
+        n_sub = 2
+
+        if paper_type in ("mistreatment", "methodology"):
+            n_sub += 1
             paths = self.mistreatment_rules[:8]
-            lines.append("### 4.3 誤治傳變路徑（節選）\n| 誤治 | 變證 | 救治方 | 證據條文 |\n|---|---|---|---|\n" +
+            lines.append(f"### 4.{n_sub} 誤治傳變路徑（節選）\n| 誤治 | 變證 | 救治方 | 證據條文 |\n|---|---|---|---|\n" +
                          "\n".join(f"| {m.mistreatment_type} | {m.resulting_pattern} | "
                                    f"{'、'.join(m.rescue_formulas[:2])} | "
                                    f"{'、'.join(m.supporting_clauses[:2])} |" for m in paths))
-        fprs = [f for f in self.formula_rules if topic and (f.formula in topic or
-                (f.formula_family and f.formula_family in topic))][:6] or self.formula_rules[:6]
-        lines.append("### 4.4 方證規則示例\n| 方劑 | 核心證 | 核心脈 | 條文 | 等級 |\n|---|---|---|---|---|\n" +
-                     "\n".join(f"| {f.formula} | {'、'.join(f.core_symptoms[:4])} | "
-                               f"{'、'.join(f.core_pulse[:2]) or '—'} | "
-                               f"{'、'.join(f.supporting_clauses[:2])} | {f.release_level} |"
-                               for f in fprs))
+
+        if paper_type == "network_pharmacology":
+            n_sub += 1
+            hubs = digest.get("network_hubs", [])
+            edges = digest.get("top_symptom_edges", [])
+            lines.append(f"### 4.{n_sub} 方-證共現網絡\n"
+                         f"共 {digest.get('symptom_edge_count', 0)} 條方-症共現邊。"
+                         "樞紐方（按關聯證候數）：\n\n| 方劑 | 關聯證候數 |\n|---|---|\n" +
+                         "\n".join(f"| {h['formula']} | {h['degree']} |" for h in hubs[:8]) +
+                         "\n\n最強共現邊：\n\n| 方劑 | 症狀 | 權重 |\n|---|---|---|\n" +
+                         "\n".join(f"| {e['formula']} | {e['symptom']} | {e['weight']} |"
+                                   for e in edges[:8]))
+            n_sub += 1
+            herb_freq: Counter = Counter()
+            for c in self.clauses:
+                herb_freq.update(c.herbs)
+            lines.append(f"### 4.{n_sub} 高頻藥物（網絡藥理學靶點篩選候選）\n"
+                         "| 藥物 | 條文數 |\n|---|---|\n" +
+                         "\n".join(f"| {h} | {n} |" for h, n in herb_freq.most_common(12)))
+
+        if paper_type == "commentary_compare":
+            n_sub += 1
+            lines.append(f"### 4.{n_sub} 成無己注對齊示例\n" +
+                         self._commentary_table(topic))
+
+        if paper_type == "methodology":
+            n_sub += 1
+            lines.append(f"### 4.{n_sub} 審核閘門通過情況\n" + self._audit_table(s))
+
+        if paper_type in ("formula_pattern", "six_channel_kg", "mistreatment"):
+            n_sub += 1
+            fprs = [f for f in self.formula_rules if topic and (f.formula in topic or
+                    (f.formula_family and f.formula_family in topic))][:6] or self.formula_rules[:6]
+            lines.append(f"### 4.{n_sub} 方證規則示例\n| 方劑 | 核心證 | 核心脈 | 條文 | 等級 |\n|---|---|---|---|---|\n" +
+                         "\n".join(f"| {f.formula} | {'、'.join(f.core_symptoms[:4])} | "
+                                   f"{'、'.join(f.core_pulse[:2]) or '—'} | "
+                                   f"{'、'.join(f.supporting_clauses[:2])} | {f.release_level} |"
+                                   for f in fprs))
         return "\n\n".join(lines)
+
+    def _commentary_table(self, topic: str) -> str:
+        rules = self.commentary_rules
+        if rules is None:
+            rules = [CommentaryRule.from_dict(d) for d in read_jsonl(
+                config.RULES_COMMENTARY_DIR / "commentary_rules.jsonl")]
+        store = {c.clause_id: c for c in self.all_clauses}
+        # prefer commentaries on clauses that mention the topic formula
+        def relevant(r):
+            c = store.get(r.clause_id)
+            return bool(c and topic and any(f in topic for f in c.formula_names))
+        picked = [r for r in rules if relevant(r)][:6] or rules[:6]
+        if not picked:
+            return "（無成注對齊數據。）"
+        rows = []
+        for r in picked:
+            base = store.get(r.clause_id)
+            base_text = (base.clean_text[:40] + "…") if base else "—"
+            rows.append(f"| {r.clause_id} | {base_text} | "
+                        f"{r.commentary_text[:40]}… | {r.alignment_similarity:.2f} |")
+        return ("| 條文 | 原文（A層） | 成無己注（C層） | 對齊相似度 |\n|---|---|---|---|\n"
+                + "\n".join(rows))
+
+    def _audit_table(self, s: Dict) -> str:
+        stage: Counter = Counter()
+        path = config.AUDIT_DIR / "audit_log.jsonl"
+        if path.exists():
+            for d in read_jsonl(path):
+                stage[d.get("stage", "?")] += 1
+        levels = s["levels"]
+        rows = "\n".join(f"| {k} | {v} |" for k, v in stage.most_common())
+        return (f"六道閘門審計記錄共 {sum(stage.values())} 條：\n\n"
+                f"| 閘門階段 | 記錄數 |\n|---|---|\n{rows}\n\n"
+                f"發佈分級：gold {levels.get('gold',0)} / silver {levels.get('silver',0)} / "
+                f"bronze {levels.get('bronze',0)} / rejected {levels.get('rejected',0)}。")
 
     # ------------------------------------------------------------------
     def _emit_figures(self, out: Path, paper_type: str, s: Dict) -> List[str]:

@@ -88,6 +88,37 @@ def critic_user_prompt(clause_text: str, rule_json: str) -> str:
 verdict=fail 僅用於：證據不在原文、方證不符、把後世術語當原文、把可與誇大為主之。"""
 
 
+def paper_system_prompt() -> str:
+    return (EVIDENCE_CONTRACT + "\n\n任務：作為《傷寒論》計量研究的執筆人，"
+            "基於【計量摘要】（頻次表、共現網絡、家族樹、誤治路徑等真實統計）"
+            "撰寫論文的引言、計量結果解讀、討論與結論四節。要求：\n"
+            "1. 逐項解讀計量數字（為什麼是這些方、這些症狀、這些路徑），"
+            "而非復述數字；\n"
+            "2. 涉及原文的每一處論斷都附 clause_id（摘要中已給出可用編號，"
+            "不得編造新的編號）；\n"
+            "3. 計量歸納屬 D/E 層，須與 A 層原文直述明確區分；\n"
+            "4. 「」引號只用於逐字引用條文原文（引文會逐字核驗），"
+            "行文強調請改用其他標記；\n"
+            "5. 學術中文（繁體），不使用未經摘要支持的事實。嚴格輸出 JSON。")
+
+
+def paper_user_prompt(paper_type: str, title_root: str, topic: str,
+                      digest: Dict) -> str:
+    import json as _json
+    return f"""論文類型：{paper_type}（{title_root}）　主題：{topic}
+
+【計量摘要（唯一可用事實來源，clause_id 僅可取自其中）】
+{_json.dumps(digest, ensure_ascii=False, indent=1)}
+
+請輸出 JSON：
+{{
+  "introduction": "引言：研究動機與問題（≥150字）",
+  "quant_interpretation": "計量結果解讀：逐項分析上述統計並引用 clause_id（≥300字）",
+  "discussion": "討論：計量結果的學術含義、與條文結構的互證、侷限（≥200字）",
+  "conclusion": "結論（≥80字）"
+}}"""
+
+
 def synth_system_prompt(role: str) -> str:
     return (EVIDENCE_CONTRACT + "\n\n" + ROLE_GUIDANCE.get(role, ROLE_GUIDANCE["doctor"])
             + "\n\n任務：基於【已檢索證據】生成自然語言回答。只能使用證據中的事實；"
