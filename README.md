@@ -30,7 +30,8 @@ python3 -m hermes_shanghan serve        # 打開 http://127.0.0.1:8765/
 11 個模塊：總覽 · **智能體（單/多智能體合議）** · 原文檢索 · 方證匹配 · 方證鑒別 ·
 六經教學 · 誤治傳變 · 科研挖掘 · 論文生成 · Skill 庫 · 接入。證據優先：答案中的
 `clause_id` 可點擊展開條文全息（A/B/C/D/E 五層色標）；多智能體合議把「規劃→取證→
-方證/鑒別/六經/誤治專家→批評→綜合」可視化為時間線，每步附證據與引用核驗。
+方證/鑒別/六經/誤治專家→批評→綜合」可視化為時間線，每步附證據與引用核驗；
+接入真實大模型時每位專家對自身工具證據附一句合議評述（引用同樣過核驗）。
 詳見 [`docs/WEB_UI.md`](docs/WEB_UI.md)。
 
 ## 快速開始
@@ -44,7 +45,8 @@ python3 -m hermes_shanghan pipeline
 # 規則庫統計
 python3 -m hermes_shanghan stats
 
-# 醫師端：方證匹配（簡繁皆可輸入）
+# 醫師端：方證匹配（簡繁與異體字[脇/鞕/欬/濇]皆可輸入；核心證/兼證/
+# 提綱證[如口苦→少陽]/近似證分級計分）
 python3 -m hermes_shanghan match --symptoms "恶寒,发热,无汗,身疼痛" --pulse "浮紧"
 
 # 患者端（自動角色推斷 + 意圖守衛）
@@ -82,7 +84,7 @@ python3 -m hermes_shanghan serve                 # http://127.0.0.1:8765/
 python3 -m hermes_shanghan agent "少陰病寒化與熱化怎麼區分？" --role student
 python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
 
-# 測試（82 項：對抗性審核 + LLM/智能體/多智能體 + Web/HTTP + 論文增益層）
+# 測試（97 項：對抗性審核 + LLM/智能體/多智能體 + Web/HTTP + 論文增益層 + 異體字/匹配調優）
 python3 -m unittest discover -s tests
 ```
 
@@ -153,14 +155,14 @@ python3 -m hermes_shanghan export-tools --out tools.json
 
 ```text
 ShanghanClause (398 條正文 + 283 條輔助 + <F>方劑塊)
-  └─ InitialRule         1,471 條（逐條抽取，禁止跨條歸納；17 種規則類型）
-       └─ FormulaPatternRule    109 個方證規則（核心證/兼證/組成/煎服/加減/禁忌）
+  └─ InitialRule         1,501 條（逐條抽取，禁止跨條歸納；一條多方分支各成規則；15+2 種規則類型）
+       └─ FormulaPatternRule    113 個方證規則（核心證[主之條優先]/兼證/組成/煎服/加減/禁忌）
        └─ SixChannelRule          8 個六經規則（提綱/亞型/主方/欲解時）
        └─ TherapyRule            23 個治法規則（汗吐下和溫清補救逆 + 禁/誤）
        └─ MistreatmentRule       60 條誤治傳變路徑（誤治→變證→救治方）
-       └─ DifferentialRule       28 組方證鑒別（多軸對比表）
-            └─ MergedShanghanRule 117 條合併規則（僅引用下層 ID + 證據鏈）
-另：ClauseRelation 1,709 條關係邊 ｜ VariantRule 616 條異文 ｜ CommentaryRule 383 條成注
+       └─ DifferentialRule       64 組方證鑒別（多軸對比表，含自動發現）
+            └─ MergedShanghanRule 121 條合併規則（僅引用下層 ID + 證據鏈）
+另：ClauseRelation 1,711 條關係邊 ｜ VariantRule 616 條異文 ｜ CommentaryRule 383 條成注
 ```
 
 ## 自主審核流水線（每條規則 6 道閘門）
@@ -174,20 +176,20 @@ SchemaValidator → EvidenceVerifier → SemanticReviewer → ShanghanCritic
 ShanghanCritic 專門攔截協議列舉的錯誤類型：後世術語（營衛不和等）混入規則主體、
 忽略同條禁忌、「可與」誇大為「主之」、「主之」擴域、太陽中風/傷寒混淆、
 少陰寒化/熱化混淆、陽明經證/腑證混淆、否定陷阱（「不惡寒」誤標「惡寒」）。
-全部 7,411 條審計記錄落盤於 `data/shanghan/audit/`。
+全部 7,569 條審計記錄落盤於 `data/shanghan/audit/`。
 
 **字節級可復現**：所有集合派生字段落盤前均按確定性次序排序（最長優先、同長按
 字典序；對齊候選同分按段落序），任意 `PYTHONHASHSEED` 下重跑
 `python3 -m hermes_shanghan pipeline`，`data/shanghan/` 與 `data/skills/` 產物
 逐字節一致（`memory/` 含更新時間戳、`papers/` 含生成日期，二者除外）。
 
-## Skill 目錄（135 個 Skill，每個含 SKILL.md + rules.jsonl + examples.jsonl）
+## Skill 目錄（139 個 Skill，每個含 SKILL.md + rules.jsonl + examples.jsonl）
 
 ```text
 data/skills/shanghanlun/
 ├─ hermes.shanghan.catalog/                 目錄與版本總覽
 ├─ hermes.shanghan.six_channels/{taiyang,yangming,shaoyang,taiyin,shaoyin,jueyin,huoluan,laofu}/
-├─ hermes.shanghan.formula_patterns/        109 個方證 Skill（guizhi_tang, mahuang_tang,
+├─ hermes.shanghan.formula_patterns/        113 個方證 Skill（guizhi_tang, mahuang_tang,
 │                                           xiaochaihu_tang, dachengqi_tang, wumei_wan…）
 ├─ hermes.shanghan.mistreatment/            誤治傳變圖譜
 ├─ hermes.shanghan.contraindications/       禁忌法度（含宋本可/不可專篇）
@@ -239,10 +241,10 @@ hermes_shanghan/
 ├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
 ├─ server/      service(API面) · http_server(stdlib) · static(SPA: index/css/js)
 ├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
-tests/          82 項測試（對抗性審核 + LLM/智能體/多智能體 + Web/HTTP + 論文增益層）
+tests/          97 項測試（對抗性審核 + LLM/智能體/多智能體 + Web/HTTP + 論文增益層等）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/論文）
-data/skills/       135 個編譯後 Skill
+data/skills/       139 個編譯後 Skill
 docs/PROTOCOL.md   完整協議文本
 ```
 
@@ -250,7 +252,7 @@ docs/PROTOCOL.md   完整協議文本
 
 - ✅ MVP-1 宋本條文解析：398 條 + clause_id + 原文檢索 + 方/證/脈抽取
 - ✅ MVP-2 太陽病 Skill：taiyang + guizhi_tang + mahuang_tang + gegen_tang + 誤治
-- ✅ MVP-3 方證系統：桂枝/麻黃/柴胡/承氣/瀉心/四逆六大類方全覆蓋（109 方）
+- ✅ MVP-3 方證系統：桂枝/麻黃/柴胡/承氣/瀉心/四逆六大類方全覆蓋（113 方）
 - ✅ MVP-4 六經全覆蓋：太陽/陽明/少陽/太陰/少陰/厥陰（+霍亂/勞復附篇）
 - ✅ MVP-5 科研與 Paper Writer：方證知識圖譜/六經規則/誤治傳變三類論文自動生成
 

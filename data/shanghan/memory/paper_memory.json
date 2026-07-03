@@ -3,18 +3,18 @@
   "clauses_canonical": 398,
   "clauses_auxiliary": 283,
   "formulas_harvested": 116,
-  "initial_rules_raw": 1471,
-  "initial_rules_accepted": 1471,
+  "initial_rules_raw": 1501,
+  "initial_rules_accepted": 1501,
   "initial_rules_rejected": 0,
-  "audit_records": 7411,
-  "relations": 1709,
+  "audit_records": 7569,
+  "relations": 1711,
   "variants": 616,
   "commentaries": 383,
-  "formula_pattern_rules": 109,
+  "formula_pattern_rules": 113,
   "six_channel_rules": 8,
   "therapy_rules": 23,
   "mistreatment_rules": 60,
-  "differential_rules": 28,
-  "merged_rules": 117
+  "differential_rules": 64,
+  "merged_rules": 121
  }
 }

@@ -11,7 +11,7 @@ from typing import Dict, List, Tuple
 
 from .. import config, lexicon
 from ..schemas import InitialRule, RULE_TYPES, EVIDENCE_TYPES, INTERPRETATION_LEVELS, ShanghanClause
-from ..textutil import contains_verbatim
+from ..textutil import contains_verbatim, fold_variants
 
 RE_IR_ID = re.compile(r"^IR_SHL_[A-Z0-9_]+_L?\d{2,3}$")  # _NNN det. / _LNN llm
 RE_CLAUSE_ID = re.compile(r"^SHL_SONGBEN_(AUX_)?\d{4}$")
@@ -68,7 +68,8 @@ def verify_evidence(rule: InitialRule, clause_store: Dict[str, ShanghanClause]) 
     if not span_ok:
         flags.append("evidence:span_not_in_clause")
 
-    full_text = clause.clean_text + "\n" + "\n".join(fb.raw_text for fb in clause.formula_blocks)
+    full_text = fold_variants(clause.clean_text + "\n"
+                              + "\n".join(fb.raw_text for fb in clause.formula_blocks))
 
     # every IF-side textual condition must appear in the evidence
     for key, term in _iter_condition_terms(rule):

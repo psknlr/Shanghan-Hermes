@@ -10,7 +10,7 @@ description: 誤治傳變圖譜：誤汗/誤下/誤吐/火逆 → 變證 → 救
 | 誤治 | 變證 | 救治方 | 證據條文（前3） | 等級 |
 |---|---|---|---|---|
 | 誤下 | 結胸 | 大陷胸湯、大陷胸丸 | SHL_SONGBEN_0131、SHL_SONGBEN_0134、SHL_SONGBEN_0135 | gold |
-| 誤下 | 痞證 | 半夏瀉心湯、甘草瀉心湯、大黃黃連瀉心湯 | SHL_SONGBEN_0149、SHL_SONGBEN_0154、SHL_SONGBEN_0155 | gold |
+| 誤下 | 痞證 | 甘草瀉心湯、大黃黃連瀉心湯 | SHL_SONGBEN_0149、SHL_SONGBEN_0154、SHL_SONGBEN_0155 | gold |
 | 誤下 | 協熱利 | 葛根黃芩黃連湯、桂枝人參湯 | SHL_SONGBEN_0034、SHL_SONGBEN_0163 | gold |
 | 誤下 | 虛煩 | 梔子豉湯、梔子生薑豉湯 | SHL_SONGBEN_0076、SHL_SONGBEN_0077、SHL_SONGBEN_0078 | gold |
 | 誤下 | 氣上衝 | 桂枝湯 | SHL_SONGBEN_0015、SHL_SONGBEN_0044、SHL_SONGBEN_0045 | gold |

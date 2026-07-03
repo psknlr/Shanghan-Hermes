@@ -48,7 +48,7 @@ def extract_user_prompt(clause_id: str, chapter: str, six_channel: str,
 {{
   "rules": [
     {{
-      "rule_type": "formula_pattern_rule|six_channel_definition_rule|disease_pattern_rule|pulse_symptom_rule|therapy_selection_rule|contraindication_rule|mistreatment_rule|transformation_rule|prognosis_rule",
+      "rule_type": "formula_pattern_rule|six_channel_definition_rule|disease_pattern_rule|pulse_symptom_rule|therapy_selection_rule|contraindication_rule|mistreatment_rule|transformation_rule|prognosis_rule|administration_rule|formula_composition_rule|dosage_processing_rule|differential_rule|rescue_reverse_rule|recurrence_rule",
       "if_conditions": {{"disease": [], "symptoms": [], "negated_findings": [], "pulse": [], "mistreatment": []}},
       "then_conclusions": {{"formula": [], "treatment_principle": [], "contraindicated_actions": []}},
       "prescription_strength": "主之|宜|屬|與|可與|",

@@ -3,7 +3,7 @@ name: hermes.formula.zhizigancaochi_tang
 description: 梔子甘草豉湯方證規則：核心證候、脈象、組成、煎服法、加減方與禁忌，全部回源條文。
 formula: 梔子甘草豉湯
 formula_family: 
-six_channel_scope: []
+six_channel_scope: ["太陽病"]
 release_level: silver
 ---
 
@@ -11,8 +11,8 @@ release_level: silver
 
 | 項目 | 內容 | 證據層 |
 |---|---|---|
-| 核心病類 | 梔子甘草豉湯證 | 歸納（D/E） |
-| 六經歸屬 | — | 原文章節（A） |
+| 核心病類 | 太陽病梔子甘草豉湯證 | 歸納（D/E） |
+| 六經歸屬 | 太陽病 | 原文章節（A） |
 | 核心症狀 | — | 跨條歸納自原文（A→D） |
 | 核心脈象 | — | 跨條歸納自原文（A→D） |
 | 兼證 | — | 跨條歸納自原文（A→D） |
@@ -30,6 +30,9 @@ release_level: silver
 —
 
 ## 支持條文（原文）
+
+> 發汗後，水藥不得入口，爲逆；若更發汗，必吐下不止。發汗吐下後，虛煩不得眠，若劇者，必反復顛倒，心中懊憹，梔子豉湯主之。若少氣者，梔子甘草豉湯主之；若嘔者，梔子生薑豉湯主之。
+（SHL_SONGBEN_0076，辨太陽病脈證並治中）
 
 > 梔子甘草豉湯方
 （SHL_SONGBEN_AUX_0246，辨發汗吐下後脈證並治第二十二）

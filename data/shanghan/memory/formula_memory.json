@@ -4,7 +4,7 @@
   "n_clauses": 1,
   "composition": [],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "乾薑附子湯": {
   "family": "附子湯",
@@ -14,7 +14,7 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "乾薑黃芩黃連人參湯": {
   "family": "",
@@ -26,11 +26,11 @@
    "人參"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "五苓散": {
   "family": "五苓散",
-  "n_clauses": 5,
+  "n_clauses": 8,
   "composition": [
    "豬苓",
    "澤瀉",
@@ -39,7 +39,7 @@
    "桂枝"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "十棗湯": {
   "family": "",
@@ -50,7 +50,7 @@
    "大戟"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "半夏散及湯": {
   "family": "",
@@ -61,7 +61,7 @@
    "甘草"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "半夏瀉心湯": {
   "family": "瀉心湯",
@@ -76,7 +76,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "厚朴生薑半夏甘草人參湯": {
   "family": "",
@@ -89,7 +89,7 @@
    "人參"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "去桂加白朮湯": {
   "family": "",
@@ -102,7 +102,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "吳茱萸湯": {
   "family": "",
@@ -114,7 +114,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "四逆加人參湯": {
   "family": "四逆湯",
@@ -126,7 +126,7 @@
    "人參"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "四逆散": {
   "family": "四逆湯",
@@ -140,11 +140,11 @@
   "modifications": [
    "四逆加人參湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "四逆湯": {
   "family": "四逆湯",
-  "n_clauses": 11,
+  "n_clauses": 13,
   "composition": [
    "甘草",
    "乾薑",
@@ -153,11 +153,11 @@
   "modifications": [
    "四逆加人參湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "大承氣湯": {
   "family": "承氣湯",
-  "n_clauses": 24,
+  "n_clauses": 27,
   "composition": [
    "大黃",
    "厚朴",
@@ -165,11 +165,11 @@
    "芒硝"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "大柴胡湯": {
   "family": "柴胡湯",
-  "n_clauses": 3,
+  "n_clauses": 4,
   "composition": [
    "柴胡",
    "黃芩",
@@ -180,7 +180,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "大陷胸丸": {
   "family": "陷胸湯",
@@ -192,18 +192,18 @@
    "杏仁"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "大陷胸湯": {
   "family": "陷胸湯",
-  "n_clauses": 4,
+  "n_clauses": 5,
   "composition": [
    "大黃",
    "芒硝",
    "甘遂"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "大青龍湯": {
   "family": "青龍湯",
@@ -218,7 +218,7 @@
    "石膏"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "大黃黃連瀉心湯": {
   "family": "瀉心湯",
@@ -228,11 +228,11 @@
    "黃連"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "小建中湯": {
   "family": "",
-  "n_clauses": 1,
+  "n_clauses": 2,
   "composition": [
    "桂枝",
    "甘草",
@@ -242,7 +242,7 @@
    "膠飴"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "小承氣湯": {
   "family": "承氣湯",
@@ -253,11 +253,11 @@
    "枳實"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "小柴胡湯": {
   "family": "柴胡湯",
-  "n_clauses": 16,
+  "n_clauses": 21,
   "composition": [
    "柴胡",
    "黃芩",
@@ -268,7 +268,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "小陷胸湯": {
   "family": "陷胸湯",
@@ -279,7 +279,7 @@
    "栝蔞實"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "小青龍湯": {
   "family": "青龍湯",
@@ -295,7 +295,7 @@
    "半夏"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "抵當丸": {
   "family": "",
@@ -307,7 +307,7 @@
    "大黃"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "抵當湯": {
   "family": "",
@@ -319,7 +319,7 @@
    "大黃"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "旋覆代赭湯": {
   "family": "",
@@ -334,7 +334,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "枳實梔子豉湯": {
   "family": "梔子豉湯",
@@ -345,7 +345,7 @@
    "香豉"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "柴胡加芒消湯": {
   "family": "柴胡湯",
@@ -361,7 +361,7 @@
    "芒硝"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "柴胡加龍骨牡蠣湯": {
   "family": "柴胡湯",
@@ -381,7 +381,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "柴胡桂枝乾薑湯": {
   "family": "桂枝湯",
@@ -396,7 +396,7 @@
    "甘草"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "柴胡桂枝湯": {
   "family": "桂枝湯",
@@ -413,7 +413,7 @@
    "柴胡"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝二越婢一湯": {
   "family": "桂枝湯",
@@ -428,7 +428,7 @@
    "石膏"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝二麻黃一湯": {
   "family": "桂枝湯",
@@ -443,7 +443,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝人參湯": {
   "family": "桂枝湯",
@@ -456,7 +456,7 @@
    "乾薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝加厚朴杏子湯": {
   "family": "桂枝湯",
@@ -471,7 +471,7 @@
    "杏仁"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝加大黃湯": {
   "family": "桂枝湯",
@@ -485,7 +485,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝加桂湯": {
   "family": "桂枝湯",
@@ -498,11 +498,11 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝加芍藥湯": {
   "family": "桂枝湯",
-  "n_clauses": 1,
+  "n_clauses": 2,
   "composition": [
    "桂枝",
    "芍藥",
@@ -513,7 +513,7 @@
   "modifications": [
    "桂枝加芍藥生薑各一兩人參三兩新加湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝加芍藥生薑各一兩人參三兩新加湯": {
   "family": "桂枝湯",
@@ -527,7 +527,7 @@
    "生薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝加葛根湯": {
   "family": "桂枝湯",
@@ -542,7 +542,7 @@
    "麻黃"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝加附子湯": {
   "family": "桂枝湯",
@@ -556,7 +556,7 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝去桂加茯苓白朮湯": {
   "family": "桂枝湯",
@@ -570,7 +570,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯": {
   "family": "桂枝湯",
@@ -585,7 +585,7 @@
    "龍骨"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝去芍藥加附子湯": {
   "family": "桂枝湯",
@@ -598,7 +598,7 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝去芍藥湯": {
   "family": "桂枝湯",
@@ -613,11 +613,11 @@
    "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
    "桂枝去芍藥加附子湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝湯": {
   "family": "桂枝湯",
-  "n_clauses": 29,
+  "n_clauses": 33,
   "composition": [
    "桂枝",
    "芍藥",
@@ -638,14 +638,14 @@
    "桂枝去芍藥加附子湯",
    "桂枝去芍藥湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝甘草湯": {
   "family": "桂枝湯",
   "n_clauses": 1,
   "composition": [],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝甘草龍骨牡蠣湯": {
   "family": "桂枝湯",
@@ -657,7 +657,7 @@
    "龍骨"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桂枝麻黃各半湯": {
   "family": "桂枝湯",
@@ -672,7 +672,7 @@
    "杏仁"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桃核承氣湯": {
   "family": "承氣湯",
@@ -685,7 +685,7 @@
    "芒硝"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桃花湯": {
   "family": "",
@@ -696,7 +696,7 @@
    "粳米"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "桔梗湯": {
   "family": "",
@@ -706,7 +706,7 @@
    "甘草"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "梔子乾薑湯": {
   "family": "",
@@ -716,7 +716,7 @@
    "乾薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "梔子厚朴湯": {
   "family": "",
@@ -727,7 +727,7 @@
    "枳實"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "梔子檗皮湯": {
   "family": "",
@@ -738,18 +738,18 @@
    "黃柏"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "梔子甘草豉湯": {
   "family": "",
-  "n_clauses": 1,
+  "n_clauses": 2,
   "composition": [
    "梔子",
    "甘草",
    "香豉"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "梔子生薑豉湯": {
   "family": "",
@@ -760,17 +760,17 @@
    "香豉"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "梔子豉湯": {
   "family": "梔子豉湯",
-  "n_clauses": 7,
+  "n_clauses": 8,
   "composition": [
    "梔子",
    "香豉"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "炙甘草湯": {
   "family": "",
@@ -787,7 +787,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "烏梅丸": {
   "family": "烏梅丸",
@@ -805,14 +805,14 @@
    "蜀椒"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "燒褌散": {
   "family": "",
   "n_clauses": 1,
   "composition": [],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "牡蠣澤瀉散": {
   "family": "",
@@ -827,11 +827,11 @@
    "栝蔞根"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "理中丸": {
   "family": "理中丸",
-  "n_clauses": 3,
+  "n_clauses": 2,
   "composition": [
    "人參",
    "乾薑",
@@ -839,7 +839,7 @@
    "白朮"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "瓜蒂散": {
   "family": "",
@@ -849,7 +849,7 @@
    "赤小豆"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "甘草瀉心湯": {
   "family": "瀉心湯",
@@ -863,7 +863,7 @@
    "乾薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "甘草附子湯": {
   "family": "附子湯",
@@ -875,11 +875,11 @@
    "桂枝"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "生薑瀉心湯": {
   "family": "瀉心湯",
-  "n_clauses": 1,
+  "n_clauses": 2,
   "composition": [
    "生薑",
    "甘草",
@@ -891,7 +891,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "當歸四逆加吳茱萸生薑湯": {
   "family": "當歸四逆湯",
@@ -908,7 +908,7 @@
    "吳茱萸"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "當歸四逆湯": {
   "family": "當歸四逆湯",
@@ -925,7 +925,7 @@
   "modifications": [
    "當歸四逆加吳茱萸生薑湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "白虎加人參湯": {
   "family": "白虎湯",
@@ -938,7 +938,7 @@
    "人參"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "白虎湯": {
   "family": "白虎湯",
@@ -952,7 +952,7 @@
   "modifications": [
    "白虎加人參湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "白通加豬膽汁湯": {
   "family": "",
@@ -965,11 +965,11 @@
    "豬膽汁"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "白通湯": {
   "family": "",
-  "n_clauses": 1,
+  "n_clauses": 2,
   "composition": [
    "蔥白",
    "乾薑",
@@ -978,7 +978,7 @@
   "modifications": [
    "白通加豬膽汁湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "白頭翁湯": {
   "family": "",
@@ -990,7 +990,7 @@
    "秦皮"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "真武湯": {
   "family": "真武湯",
@@ -1003,14 +1003,14 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "禹餘糧丸": {
   "family": "",
   "n_clauses": 1,
   "composition": [],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "竹葉石膏湯": {
   "family": "",
@@ -1025,7 +1025,7 @@
    "粳米"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "芍藥甘草湯": {
   "family": "",
@@ -1035,7 +1035,7 @@
    "甘草"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "芍藥甘草附子湯": {
   "family": "附子湯",
@@ -1046,7 +1046,7 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "苦酒湯": {
   "family": "",
@@ -1056,7 +1056,7 @@
    "雞子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "茯苓四逆湯": {
   "family": "四逆湯",
@@ -1069,7 +1069,7 @@
    "乾薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "茯苓桂枝甘草大棗湯": {
   "family": "桂枝湯",
@@ -1081,7 +1081,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "茯苓桂枝白朮甘草湯": {
   "family": "桂枝湯",
@@ -1093,7 +1093,7 @@
    "甘草"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "茯苓甘草湯": {
   "family": "",
@@ -1105,7 +1105,7 @@
    "生薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "茵陳蒿湯": {
   "family": "",
@@ -1116,7 +1116,7 @@
    "大黃"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "葛根加半夏湯": {
   "family": "葛根湯",
@@ -1132,7 +1132,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "葛根湯": {
   "family": "葛根湯",
@@ -1149,7 +1149,7 @@
   "modifications": [
    "葛根加半夏湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "葛根黃芩黃連湯": {
   "family": "葛根湯",
@@ -1161,18 +1161,18 @@
    "黃連"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "調胃承氣湯": {
   "family": "承氣湯",
-  "n_clauses": 7,
+  "n_clauses": 8,
   "composition": [
    "甘草",
    "芒硝",
    "大黃"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "豬膚湯": {
   "family": "",
@@ -1181,14 +1181,14 @@
    "豬膚"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "豬膽汁": {
   "family": "",
-  "n_clauses": 3,
+  "n_clauses": 2,
   "composition": [],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "豬苓湯": {
   "family": "",
@@ -1201,7 +1201,7 @@
    "滑石"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "赤石脂禹餘糧湯": {
   "family": "",
@@ -1211,7 +1211,7 @@
    "太一禹餘糧"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "通脈四逆加豬膽汁湯": {
   "family": "四逆湯",
@@ -1223,7 +1223,7 @@
    "豬膽汁"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "通脈四逆湯": {
   "family": "四逆湯",
@@ -1236,7 +1236,7 @@
   "modifications": [
    "通脈四逆加豬膽汁湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "附子湯": {
   "family": "附子湯",
@@ -1249,7 +1249,7 @@
    "芍藥"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "附子瀉心湯": {
   "family": "瀉心湯",
@@ -1261,7 +1261,7 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "麻子仁丸": {
   "family": "",
@@ -1275,7 +1275,7 @@
    "杏仁"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "麻黃升麻湯": {
   "family": "麻黃湯",
@@ -1296,7 +1296,7 @@
    "乾薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "麻黃杏仁甘草石膏湯": {
   "family": "麻黃湯",
@@ -1308,7 +1308,7 @@
    "石膏"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "麻黃湯": {
   "family": "麻黃湯",
@@ -1320,7 +1320,7 @@
    "杏仁"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "麻黃細辛附子湯": {
   "family": "麻黃湯",
@@ -1331,7 +1331,7 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "麻黃連軺赤小豆湯": {
   "family": "麻黃湯",
@@ -1347,7 +1347,7 @@
    "甘草"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "麻黃附子甘草湯": {
   "family": "麻黃湯",
@@ -1358,7 +1358,7 @@
    "附子"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "黃芩加半夏生薑湯": {
   "family": "",
@@ -1372,11 +1372,11 @@
    "生薑"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "黃芩湯": {
   "family": "",
-  "n_clauses": 2,
+  "n_clauses": 3,
   "composition": [
    "黃芩",
    "芍藥",
@@ -1386,7 +1386,7 @@
   "modifications": [
    "黃芩加半夏生薑湯"
   ],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "黃連湯": {
   "family": "",
@@ -1401,7 +1401,7 @@
    "大棗"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "黃連阿膠湯": {
   "family": "",
@@ -1413,7 +1413,7 @@
    "雞子黃"
   ],
   "modifications": [],
-  "updated_at": "2026-07-02T03:23:34"
+  "updated_at": "2026-07-03T02:12:18"
  },
  "蜜煎導": {
   "family": "",
@@ -1422,6 +1422,37 @@
    "食蜜"
   ],
   "modifications": [],
-  "updated_at": "2026-06-13T05:13:55"
+  "updated_at": "2026-07-03T02:12:18"
+ },
+ "文蛤散": {
+  "family": "",
+  "n_clauses": 1,
+  "composition": [
+   "文蛤"
+  ],
+  "modifications": [],
+  "updated_at": "2026-07-03T02:12:18"
+ },
+ "桂枝附子湯": {
+  "family": "桂枝湯",
+  "n_clauses": 1,
+  "composition": [
+   "桂枝",
+   "附子",
+   "生薑",
+   "甘草",
+   "大棗"
+  ],
+  "modifications": [],
+  "updated_at": "2026-07-03T02:12:18"
+ },
+ "甘草湯": {
+  "family": "",
+  "n_clauses": 1,
+  "composition": [
+   "甘草"
+  ],
+  "modifications": [],
+  "updated_at": "2026-07-03T02:12:18"
  }
 }

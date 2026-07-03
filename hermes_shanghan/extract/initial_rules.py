@@ -17,6 +17,7 @@ from typing import Dict, List, Optional
 
 from .. import config, lexicon
 from ..schemas import InitialRule, ShanghanClause
+from ..textutil import fold_variants
 from .entities import EntityExtractor, EntityResult
 
 RE_OUTLINE = re.compile(r"(太陽|陽明|少陽|太陰|少陰|厥陰)之為病")
@@ -50,7 +51,7 @@ class InitialRuleExtractor:
 
     # ------------------------------------------------------------------
     def extract_clause_rules(self, clause: ShanghanClause) -> List[InitialRule]:
-        text = clause.clean_text
+        text = fold_variants(clause.clean_text)
         res = self.extractor.extract(text)
         rules: List[InitialRule] = []
         ev_type = "original_text" if clause.text_type == "original_clause" else "auxiliary_text"
@@ -67,7 +68,29 @@ class InitialRuleExtractor:
             )
 
         positive_mentions = [m for m in res.formula_mentions if not m["negated"]]
-        main_mention = positive_mentions[-1] if positive_mentions else None
+        # main formula = strongest prescription marker, latest on ties — a
+        # trailing post-note formula (157條末「理中者…」) must not outrank
+        # the mid-clause 「生薑瀉心湯主之」
+        _rank = {"主之": 5, "宜": 4, "屬": 3, "與": 2, "可與": 1}
+        main_mention = max(positive_mentions,
+                           key=lambda m: (_rank.get(m["strength"], 0), m["start"])) \
+            if positive_mentions else None
+
+        # branch prescriptions: one per formula (strongest mention), in text
+        # order. A clause like 149 條 prescribes 大陷胸湯主之 for the 結胸
+        # branch AND 宜半夏瀉心湯 for the 痞 branch — each gets its own rule
+        # with conditions taken from its own branch segment.
+        best_by_name: Dict[str, Dict] = {}
+        for m in positive_mentions:
+            if not m["strength"]:
+                continue
+            cur = best_by_name.get(m["name"])
+            if cur is None or (_rank[m["strength"]], m["start"]) > \
+                    (_rank[cur["strength"]], cur["start"]):
+                best_by_name[m["name"]] = m
+        prescriptions = sorted(best_by_name.values(), key=lambda m: m["start"])
+        if not prescriptions and main_mention:
+            prescriptions = [main_mention]
 
         # ---- 01 six_channel_definition_rule --------------------------------
         m_out = RE_OUTLINE.search(text)
@@ -98,12 +121,14 @@ class InitialRuleExtractor:
                 rules.append(r)
                 break
 
-        # ---- 03 formula_pattern_rule ---------------------------------------
-        if main_mention:
-            cond_text = _conditions_text(text, main_mention)
+        # ---- 03 formula_pattern_rule (one per branch prescription) ----------
+        prev_end = 0
+        for pm in prescriptions:
+            cond_text = text[prev_end:pm["start"]].rstrip("，者、 ")
+            prev_end = pm["end"]
             cond = self.extractor.extract(cond_text)
             r = base_rule("formula_pattern_rule")
-            r.prescription_strength = main_mention["strength"] or "與"
+            r.prescription_strength = pm["strength"] or "與"
             r.if_conditions = {
                 "disease": cond.disease_patterns,
                 "symptoms": cond.symptoms,
@@ -113,17 +138,17 @@ class InitialRuleExtractor:
                 "time_course": cond.time_course,
             }
             r.then_conclusions = {
-                "formula": [main_mention["name"]],
+                "formula": [pm["name"]],
                 "treatment_principle": res.therapy_terms,
-                "alternatives": [m["name"] for m in positive_mentions[:-1]
-                                 if m["name"] != main_mention["name"]],
+                "alternatives": [m["name"] for m in positive_mentions
+                                 if m["name"] != pm["name"]],
             }
             strength_note = {"主之": "主治關係（主之）", "宜": "建議用方（宜）",
                              "可與": "斟酌可用（可與）", "與": "給予（與）",
                              "屬": "證屬（屬）"}.get(r.prescription_strength, "")
             r.interpretation = (
-                f"該條可作為{main_mention['name']}相關方證的原文證據，原文用語為"
-                f"「{main_mention['surface']}{ '主之' if r.prescription_strength=='主之' else ''}」，"
+                f"該條可作為{pm['name']}相關方證的原文證據，原文用語為"
+                f"「{pm['surface']}{ '主之' if r.prescription_strength=='主之' else ''}」，"
                 f"證據強度：{strength_note}。")
             r.model_confidence = 0.9 if r.prescription_strength == "主之" else 0.82
             rules.append(r)

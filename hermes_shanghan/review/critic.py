@@ -18,6 +18,7 @@ from __future__ import annotations
 from typing import Dict, List, Tuple
 
 from .. import lexicon
+from ..textutil import fold_variants
 from ..schemas import InitialRule, ShanghanClause
 
 # formulas that anchor the classic confusion axes
@@ -46,7 +47,8 @@ def criticize(rule: InitialRule, clause_store: Dict[str, ShanghanClause]) -> Tup
     clause = clause_store.get(rule.clause_id)
     if clause is None:
         return "fail", ["critic:no_clause"]
-    text = clause.clean_text + "\n".join(fb.raw_text for fb in clause.formula_blocks)
+    text = fold_variants(clause.clean_text
+                         + "\n".join(fb.raw_text for fb in clause.formula_blocks))
 
     # 1 —— posthoc vocabulary leaking into evidence-grounded fields
     grounded_terms = _all_terms(rule.if_conditions) + _all_terms(rule.then_conclusions)

@@ -116,8 +116,18 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 
 - `--llm-extract`：LLM 候選規則與確定性規則合併去重後，**統一過審核**。
   在 `local` 後端，LLM 鏡像規則引擎，增量為 0；真實模型才會擴大召回。
+  全部 15 種條文級規則類型均開放給 LLM（異文/成注規則屬 B/C 層對齊產物，
+  不經此路徑）。
 - `--llm-critic`：LLM 對抗式批評器作為**附加閘門**，僅能下調等級（advisory），
   不能把證據不實的規則提升放行——硬證據閘門始終優先。
+
+## 多智能體合議的專家評述
+
+接入真實模型時（`available=True`），合議庭的每位專家（方證/鑒別/六經/誤治）
+會基於**自己那一步的工具證據**追加一至三句評述（`💬`，時間線可見）；每句
+評述先過 CitationGuard——引用了證據之外的條文編號會被就地標記
+「⚠️ 含未核實條文編號」。可用 `Council(llm_specialists=False)` 關閉，
+離線 `local` 後端自動跳過。
 
 ## 8 個可調用工具（智能體 / harness 共用同一能力面）
 

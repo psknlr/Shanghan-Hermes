@@ -36,6 +36,7 @@
   "桂技甘草湯",
   "桂枝二越婢一湯",
   "桂枝二麻黃一湯",
+  "桂枝人參湯",
   "桂枝加厚朴杏子湯",
   "桂枝加大黃湯",
   "桂枝加芍藥湯",
@@ -151,6 +152,7 @@
   "吐涎沫",
   "吐膿血",
   "吐蚘",
+  "咳",
   "咽中乾",
   "咽中痛",
   "咽乾",
@@ -170,6 +172,7 @@
   "四逆",
   "夜而安靜",
   "大便溏",
+  "大便硬",
   "大便難",
   "大汗出",
   "大渴",
@@ -184,6 +187,8 @@
   "小便難",
   "少腹急結",
   "少腹滿",
+  "少腹硬",
+  "少腹硬滿",
   "少腹裏急",
   "往來寒熱",
   "微喘",
@@ -191,11 +196,15 @@
   "微煩",
   "微熱",
   "微盜汗出",
+  "心下因硬",
   "心下急",
   "心下悸",
   "心下支結",
   "心下滿微痛",
   "心下濡",
+  "心下痞",
+  "心下痞硬",
+  "心下硬",
   "心下逆滿",
   "心中悸",
   "心中懊憹",
@@ -252,10 +261,17 @@
   "翕翕發熱",
   "胃中不和",
   "背惡寒",
+  "胸中痞硬",
   "胸中窒",
   "胸有寒",
   "胸滿",
+  "胸脅滿",
+  "胸脅苦滿",
   "能食",
+  "脅下滿",
+  "脅下痞硬",
+  "脅下硬滿",
+  "脅痛",
   "腰痛",
   "腳攣急",
   "腹中急痛",
@@ -510,6 +526,11 @@
   },
   {
    "formula": "小青龍湯",
+   "symptom": "咳",
+   "weight": 2
+  },
+  {
+   "formula": "小青龍湯",
    "symptom": "渴",
    "weight": 2
   },
@@ -590,6 +611,11 @@
   },
   {
    "formula": "小柴胡湯",
+   "symptom": "脅下滿",
+   "weight": 2
+  },
+  {
+   "formula": "小柴胡湯",
    "symptom": "頸項強",
    "weight": 2
   },
@@ -606,6 +632,11 @@
   {
    "formula": "小柴胡湯",
    "symptom": "微煩",
+   "weight": 2
+  },
+  {
+   "formula": "小柴胡湯",
+   "symptom": "胸脅滿",
    "weight": 2
   },
   {
@@ -634,8 +665,23 @@
    "weight": 2
   },
   {
+   "formula": "大黃黃連瀉心湯",
+   "symptom": "心下痞",
+   "weight": 2
+  },
+  {
    "formula": "附子瀉心湯",
    "symptom": "汗出",
+   "weight": 2
+  },
+  {
+   "formula": "五苓散",
+   "symptom": "心下痞",
+   "weight": 2
+  },
+  {
+   "formula": "甘草瀉心湯",
+   "symptom": "心下痞硬",
    "weight": 2
   },
   {
@@ -646,6 +692,11 @@
   {
    "formula": "甘草瀉心湯",
    "symptom": "下利",
+   "weight": 2
+  },
+  {
+   "formula": "理中丸",
+   "symptom": "心下痞硬",
    "weight": 2
   },
   {
@@ -696,6 +747,11 @@
   {
    "formula": "豬苓湯",
    "symptom": "渴",
+   "weight": 2
+  },
+  {
+   "formula": "小柴胡湯",
+   "symptom": "脅下硬滿",
    "weight": 2
   },
   {
@@ -1149,8 +1205,18 @@
    "weight": 1
   },
   {
+   "formula": "小柴胡湯",
+   "symptom": "脅痛",
+   "weight": 1
+  },
+  {
    "formula": "麻黃湯",
    "symptom": "嗜臥",
+   "weight": 1
+  },
+  {
+   "formula": "麻黃湯",
+   "symptom": "脅痛",
    "weight": 1
   },
   {
@@ -1525,12 +1591,22 @@
   },
   {
    "formula": "小柴胡湯",
+   "symptom": "胸脅苦滿",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
    "symptom": "心煩喜嘔",
    "weight": 1
   },
   {
    "formula": "小柴胡湯",
    "symptom": "腹中痛",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "symptom": "脅下痞硬",
    "weight": 1
   },
   {
@@ -1551,6 +1627,11 @@
   {
    "formula": "小柴胡湯",
    "symptom": "微熱",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "symptom": "咳",
    "weight": 1
   },
   {
@@ -1606,6 +1687,11 @@
   {
    "formula": "小柴胡湯",
    "symptom": "心下急",
+   "weight": 1
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "symptom": "胸脅滿",
    "weight": 1
   },
   {
@@ -1740,6 +1826,11 @@
   },
   {
    "formula": "抵當湯",
+   "symptom": "少腹硬",
+   "weight": 1
+  },
+  {
+   "formula": "抵當湯",
    "symptom": "小便不利",
    "weight": 1
   },
@@ -1781,6 +1872,11 @@
   {
    "formula": "大陷胸湯",
    "symptom": "心中懊憹",
+   "weight": 1
+  },
+  {
+   "formula": "大陷胸湯",
+   "symptom": "心下因硬",
    "weight": 1
   },
   {
@@ -1841,6 +1937,11 @@
   {
    "formula": "大陷胸湯",
    "symptom": "潮熱",
+   "weight": 1
+  },
+  {
+   "formula": "大陷胸湯",
+   "symptom": "少腹硬滿",
    "weight": 1
   },
   {
@@ -1920,6 +2021,11 @@
   },
   {
    "formula": "柴胡桂枝乾薑湯",
+   "symptom": "胸脅滿",
+   "weight": 1
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
    "symptom": "小便不利",
    "weight": 1
   },
@@ -1951,6 +2057,11 @@
   {
    "formula": "小柴胡湯",
    "symptom": "微惡寒",
+   "weight": 1
+  },
+  {
+   "formula": "小柴胡湯",
+   "symptom": "大便硬",
    "weight": 1
   },
   {
@@ -1990,6 +2101,11 @@
   },
   {
    "formula": "十棗湯",
+   "symptom": "心下痞硬",
+   "weight": 1
+  },
+  {
+   "formula": "十棗湯",
    "symptom": "乾嘔",
    "weight": 1
   },
@@ -2006,6 +2122,11 @@
   {
    "formula": "十棗湯",
    "symptom": "不惡寒",
+   "weight": 1
+  },
+  {
+   "formula": "附子瀉心湯",
+   "symptom": "心下痞",
    "weight": 1
   },
   {
@@ -2030,6 +2151,11 @@
   },
   {
    "formula": "生薑瀉心湯",
+   "symptom": "心下痞硬",
+   "weight": 1
+  },
+  {
+   "formula": "生薑瀉心湯",
    "symptom": "乾噫食臭",
    "weight": 1
   },
@@ -2046,6 +2172,11 @@
   {
    "formula": "附子瀉心湯",
    "symptom": "胃中不和",
+   "weight": 1
+  },
+  {
+   "formula": "附子瀉心湯",
+   "symptom": "心下痞硬",
    "weight": 1
   },
   {
@@ -2066,6 +2197,11 @@
   {
    "formula": "半夏瀉心湯",
    "symptom": "胃中不和",
+   "weight": 1
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "symptom": "心下痞硬",
    "weight": 1
   },
   {
@@ -2139,8 +2275,18 @@
    "weight": 1
   },
   {
+   "formula": "甘草瀉心湯",
+   "symptom": "心下痞",
+   "weight": 1
+  },
+  {
    "formula": "赤石脂禹餘糧湯",
    "symptom": "下利不止",
+   "weight": 1
+  },
+  {
+   "formula": "赤石脂禹餘糧湯",
+   "symptom": "心下痞硬",
    "weight": 1
   },
   {
@@ -2160,7 +2306,22 @@
   },
   {
    "formula": "旋覆代赭湯",
+   "symptom": "心下痞硬",
+   "weight": 1
+  },
+  {
+   "formula": "旋覆代赭湯",
    "symptom": "噫氣",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝人參湯",
+   "symptom": "心下痞硬",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝湯",
+   "symptom": "心下痞",
    "weight": 1
   },
   {
@@ -2186,6 +2347,11 @@
   {
    "formula": "大柴胡湯",
    "symptom": "下利",
+   "weight": 1
+  },
+  {
+   "formula": "瓜蒂散",
+   "symptom": "胸中痞硬",
    "weight": 1
   },
   {
@@ -2295,6 +2461,11 @@
   },
   {
    "formula": "桂枝附子湯",
+   "symptom": "大便硬",
+   "weight": 1
+  },
+  {
+   "formula": "桂枝附子湯",
    "symptom": "小便自利",
    "weight": 1
   },
@@ -2306,6 +2477,11 @@
   {
    "formula": "去桂加白朮湯",
    "symptom": "不渴",
+   "weight": 1
+  },
+  {
+   "formula": "去桂加白朮湯",
+   "symptom": "大便硬",
    "weight": 1
   },
   {
@@ -2775,6 +2951,11 @@
   },
   {
    "formula": "小承氣湯",
+   "symptom": "心下硬",
+   "weight": 1
+  },
+  {
+   "formula": "小承氣湯",
    "symptom": "能食",
    "weight": 1
   },
@@ -2791,6 +2972,11 @@
   {
    "formula": "大承氣湯",
    "symptom": "煩躁",
+   "weight": 1
+  },
+  {
+   "formula": "大承氣湯",
+   "symptom": "心下硬",
    "weight": 1
   },
   {
@@ -3010,6 +3196,11 @@
   },
   {
    "formula": "真武湯方（附加減法）",
+   "symptom": "咳",
+   "weight": 1
+  },
+  {
+   "formula": "真武湯方（附加減法）",
    "symptom": "小便利",
    "weight": 1
   },
@@ -3041,6 +3232,11 @@
   {
    "formula": "真武湯",
    "symptom": "自下利",
+   "weight": 1
+  },
+  {
+   "formula": "真武湯",
+   "symptom": "咳",
    "weight": 1
   },
   {
@@ -3095,6 +3291,11 @@
   },
   {
    "formula": "四逆散",
+   "symptom": "咳",
+   "weight": 1
+  },
+  {
+   "formula": "四逆散",
    "symptom": "小便不利",
    "weight": 1
   },
@@ -3111,6 +3312,11 @@
   {
    "formula": "豬苓湯",
    "symptom": "下利",
+   "weight": 1
+  },
+  {
+   "formula": "豬苓湯",
+   "symptom": "咳",
    "weight": 1
   },
   {

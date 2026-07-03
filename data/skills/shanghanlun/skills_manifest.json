@@ -4,7 +4,7 @@
  "skills_built": {
   "catalog": 1,
   "six_channels": 8,
-  "formula_patterns": 109,
+  "formula_patterns": 113,
   "mistreatment": 1,
   "contraindications": 1,
   "therapy": 9,
@@ -15,5 +15,5 @@
   "paper_writer": 1,
   "patient_education": 1
  },
- "total_dirs": 135
+ "total_dirs": 139
 }

@@ -15,13 +15,12 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from ..llm.client import LLMClient, get_client
-from ..schemas import AutonomousReview, InitialRule, ShanghanClause
+from ..schemas import RULE_TYPES, AutonomousReview, InitialRule, ShanghanClause
 
-RULE_TYPES_ALLOWED = {
-    "formula_pattern_rule", "six_channel_definition_rule", "disease_pattern_rule",
-    "pulse_symptom_rule", "therapy_selection_rule", "contraindication_rule",
-    "mistreatment_rule", "transformation_rule", "prognosis_rule",
-}
+# every clause-level rule type is fair game for the LLM (the evidence gates
+# protect precision); variant/commentary rules are separate dataclasses built
+# by B/C-layer alignment, not InitialRules
+RULE_TYPES_ALLOWED = RULE_TYPES - {"variant_rule", "commentary_rule"}
 
 
 class LLMRuleExtractor:

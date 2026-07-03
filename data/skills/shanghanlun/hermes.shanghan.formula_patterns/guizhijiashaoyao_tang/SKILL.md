@@ -3,17 +3,17 @@ name: hermes.formula.guizhijiashaoyao_tang
 description: 桂枝加芍藥湯方證規則：核心證候、脈象、組成、煎服法、加減方與禁忌，全部回源條文。
 formula: 桂枝加芍藥湯
 formula_family: 桂枝湯
-six_channel_scope: []
-release_level: silver
+six_channel_scope: ["太陰病"]
+release_level: gold
 ---
 
 # 桂枝加芍藥湯方證 Skill
 
 | 項目 | 內容 | 證據層 |
 |---|---|---|
-| 核心病類 | 桂枝加芍藥湯證 | 歸納（D/E） |
-| 六經歸屬 | — | 原文章節（A） |
-| 核心症狀 | — | 跨條歸納自原文（A→D） |
+| 核心病類 | 太陽病類證 | 歸納（D/E） |
+| 六經歸屬 | 太陰病 | 原文章節（A） |
+| 核心症狀 | 腹滿 | 跨條歸納自原文（A→D） |
 | 核心脈象 | — | 跨條歸納自原文（A→D） |
 | 兼證 | — | 跨條歸納自原文（A→D） |
 
@@ -30,6 +30,9 @@ release_level: silver
 —
 
 ## 支持條文（原文）
+
+> 本太陽病，醫反下之，因爾腹滿時痛者，屬太陰也，桂枝加芍藥湯主之；大實痛者，桂枝加大黃湯主之。
+（SHL_SONGBEN_0279，辨太陰病脈證並治）
 
 > 桂枝加芍藥湯方
 （SHL_SONGBEN_AUX_0273，辨發汗吐下後脈證並治第二十二）

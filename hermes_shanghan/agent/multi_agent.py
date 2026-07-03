@@ -56,9 +56,38 @@ SPECIALISTS = {
 
 class Council:
     def __init__(self, client: Optional[LLMClient] = None,
-                 registry: Optional[ToolRegistry] = None):
+                 registry: Optional[ToolRegistry] = None,
+                 llm_specialists: bool = True):
         self.client = client or get_client()
         self.registry = registry or get_registry()
+        # when a real model is available, each specialist adds a short
+        # grounded comment on its own tool evidence (citation-checked)
+        self.llm_specialists = llm_specialists
+
+    def _specialist_comment(self, msg: CouncilMessage) -> None:
+        """Append an LLM remark grounded in this specialist's tool data."""
+        if not (self.llm_specialists and self.client.available):
+            return
+        try:
+            data = json.dumps(msg.data, ensure_ascii=False)[:2500]
+            remark = self.client.complete(
+                "你是《傷寒論》合議庭的" + msg.role_cn +
+                "。基於下方工具證據，用一至三句話給出你的專業判斷。"
+                "只可使用證據中的事實；引用條文須附 clause_id"
+                "（僅可取自證據）；證據不足就明說。",
+                f"問題相關證據（JSON）：\n{data}", task="synthesize").strip()
+            if not remark:
+                return
+            guard = CitationGuard(self.registry.art.clause_store())
+            report = guard.check(remark)
+            if report.unsupported_ids:
+                remark += "（⚠️ 含未核實條文編號，請以文末核驗為準）"
+            msg.content += "\n💬 " + remark
+            msg.evidence_ids = list(dict.fromkeys(
+                msg.evidence_ids + report.verified_ids))
+            msg.data["llm_remark"] = remark
+        except Exception:
+            pass  # specialist prose is optional; never break the council
 
     # ------------------------------------------------------------------
     def _infer_role(self, question: str, role: Optional[str]) -> str:
@@ -116,6 +145,7 @@ class Council:
         for spec in plan["specialists"]:
             msg = self._run_specialist(spec, plan, role)
             if msg:
+                self._specialist_comment(msg)
                 messages.append(msg)
                 evidence_ids += msg.evidence_ids
                 specialist_findings.append({"agent": spec, "summary": msg.content,
