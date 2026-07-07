@@ -129,6 +129,18 @@ def _paper(svc, body, m, q):
                      use_llm=body.get("use_llm", True))
 
 
+@route("POST", r"/api/complex")
+def _complex(svc, body, m, q):
+    return svc.complex(body.get("question", ""), role=body.get("role"))
+
+
+@route("POST", r"/api/chat")
+def _chat(svc, body, m, q):
+    return svc.chat(body.get("question", ""),
+                    session_id=str(body.get("session_id", "default")),
+                    role=body.get("role"))
+
+
 @route("POST", r"/api/deep-research")
 def _deep_research(svc, body, m, q):
     return svc.deep_research(body.get("topic", ""),

@@ -94,11 +94,14 @@ python3 -m hermes_shanghan evaluate --suite all --ablations
 python3 -m hermes_shanghan deep-research "桂枝湯類方的劑量演化與注家詮釋"
 python3 -m hermes_shanghan paper --type provenance --topic 桂枝湯類方源流
 
-# 智能體問答（工具取證 + 回源核驗 + 安全治理；離線可用）
+# 智能體問答（工具取證 + 回源核驗 + 反思自糾；離線可用）
 python3 -m hermes_shanghan agent "少陰病寒化與熱化怎麼區分？" --role student
+
+# 複合問題編排（任務分解→作用域子代理→綜合再核驗）
+python3 -m hermes_shanghan solve "桂枝湯與麻黃湯如何鑒別？各自劑量比是多少？注家有何分歧？"
 python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
 
-# 測試（129 項：對抗性審核 + 智能體 + 評測套件 + 圖譜/劑量 + 深度研究循環/圖表）
+# 測試（138 項：對抗性審核 + 反思/編排/會話智能體 + 評測套件 + 圖譜/劑量 + 研究循環）
 python3 -m unittest discover -s tests
 ```
 
@@ -149,6 +152,16 @@ python3 -m hermes_shanghan export-tools --out tools.json
 四項保證跨 harness 一致：**證據回源**（answer 引用 clause_id，guard 核驗）、
 **層級標註**（A/B/C/D/E）、**患者安全**（診斷/處方/劑量上游攔截）、
 **優雅降級**（無 litellm/key 自動用 local 後端）。詳見 [`docs/LLM_AGENT.md`](docs/LLM_AGENT.md)。
+
+**智能體架構四層**（在線/離線同構，全部可測）：
+- **反思自糾環**：引用核驗不通過（偽造編號/無引用）→ 裁決回饋給模型、
+  允許補充取證後重答（有界輪數）——核驗器從標注器升級為閉環控制器；
+- **複合任務編排**（`solve` / `POST /api/complex`）：分解複合問題→按類型
+  派遣**工具域受限**（ScopedRegistry 最小權限）的子代理→綜合後整體再核驗；
+  research 型子任務自動派遣深度研究循環；
+- **會話記憶**（`POST /api/chat`，按 session_id 隔離）：方名錨點 + 證據
+  台賬跨輪累積，「它的劑量比呢？」自動指代消解；
+- **深度研究循環**（`deep-research`）：見下文專節。
 
 ## 數據與版本分層
 
@@ -310,12 +323,13 @@ hermes_shanghan/
 ├─ paper/       writer（8 類論文 + LLM 增益層）· charts（純標準庫 SVG 統計圖）
 ├─ memory/      store（7 個記憶模塊）
 ├─ llm/         config · cache · prompts · providers(litellm/local/scripted) · client
-├─ agent/       tools(12 個回源工具) · citation_guard · agent(ReAct) · multi_agent(議會)
+├─ agent/       tools(12 工具+ScopedRegistry) · citation_guard · agent(ReAct+反思自糾)
+│               · complex_agent(任務分解編排) · session(會話記憶) · multi_agent(議會)
 │               · research_loop（深度研究循環：規劃→子代理→批評家）
 ├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
 ├─ server/      service(API面) · http_server(stdlib) · static(SPA: index/css/js)
 ├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
-tests/          129 項測試（對抗性審核 + 智能體 + 評測/圖譜/劑量 + 研究循環/圖表等）
+tests/          138 項測試（對抗性審核 + 智能體架構 + 評測/圖譜/劑量 + 研究循環等）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/論文）
 data/skills/       139 個編譯後 Skill

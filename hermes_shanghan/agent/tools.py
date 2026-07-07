@@ -334,6 +334,33 @@ class ToolRegistry:
             return {"error": f"tool {name} failed: {type(exc).__name__}: {exc}"}
 
 
+class ScopedRegistry:
+    """Least-privilege view of a registry: a dispatched subagent sees only
+    the tools its subtask needs — smaller decision space for the model,
+    smaller blast radius for a confused one."""
+
+    def __init__(self, base: ToolRegistry, allowed: List[str]):
+        self._base = base
+        self._allowed = [n for n in allowed if n in base.names()]
+
+    @property
+    def art(self):
+        return self._base.art
+
+    def names(self) -> List[str]:
+        return list(self._allowed)
+
+    def specs(self) -> List[Dict]:
+        return [s for s in self._base.specs()
+                if s["function"]["name"] in self._allowed]
+
+    def call(self, name: str, arguments: Dict) -> Dict:
+        if name not in self._allowed:
+            return {"error": f"tool out of scope: {name}",
+                    "available": self.names()}
+        return self._base.call(name, arguments)
+
+
 _REGISTRY: Optional[ToolRegistry] = None
 
 

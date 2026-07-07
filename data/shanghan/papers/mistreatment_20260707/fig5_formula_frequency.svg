@@ -1,0 +1,36 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='720' height='372' viewBox='0 0 720 372' font-family='Noto Sans CJK SC, PingFang SC, sans-serif'>
+<rect width='720' height='372' fill='#fcfcfb'/>
+<text x='16' y='24' font-size='15' font-weight='600' fill='#0b0b0b'>高頻方劑（載方條文數）</text>
+<text x='16' y='42' font-size='11' fill='#52514e'>宋本 398 條正文，A 層直計</text>
+<line x1='150' y1='50' x2='150' y2='356' stroke='#e4e3df' stroke-width='1'/>
+<text x='142' y='72' font-size='12' text-anchor='end' fill='#0b0b0b'>桂枝湯</text>
+<path d='M151.0,56.0 h476.0 q4,0 4,4 v14.0 q0,4 -4,4 h-476.0 z' fill='#2a78d6'/>
+<text x='638.0' y='72' font-size='11' fill='#52514e'>26</text>
+<text x='142' y='102' font-size='12' text-anchor='end' fill='#0b0b0b'>小柴胡湯</text>
+<path d='M151.0,86.0 h365.2 q4,0 4,4 v14.0 q0,4 -4,4 h-365.2 z' fill='#2a78d6'/>
+<text x='527.2307692307693' y='102' font-size='11' fill='#52514e'>20</text>
+<text x='142' y='132' font-size='12' text-anchor='end' fill='#0b0b0b'>大承氣湯</text>
+<path d='M151.0,116.0 h346.8 q4,0 4,4 v14.0 q0,4 -4,4 h-346.8 z' fill='#2a78d6'/>
+<text x='508.7692307692308' y='132' font-size='11' fill='#52514e'>19</text>
+<text x='142' y='162' font-size='12' text-anchor='end' fill='#0b0b0b'>四逆湯</text>
+<path d='M151.0,146.0 h217.5 q4,0 4,4 v14.0 q0,4 -4,4 h-217.5 z' fill='#2a78d6'/>
+<text x='379.53846153846155' y='162' font-size='11' fill='#52514e'>12</text>
+<text x='142' y='192' font-size='12' text-anchor='end' fill='#0b0b0b'>麻黃湯</text>
+<path d='M151.0,176.0 h162.2 q4,0 4,4 v14.0 q0,4 -4,4 h-162.2 z' fill='#2a78d6'/>
+<text x='324.1538461538462' y='192' font-size='11' fill='#52514e'>9</text>
+<text x='142' y='222' font-size='12' text-anchor='end' fill='#0b0b0b'>調胃承氣湯</text>
+<path d='M151.0,206.0 h143.7 q4,0 4,4 v14.0 q0,4 -4,4 h-143.7 z' fill='#2a78d6'/>
+<text x='305.6923076923077' y='222' font-size='11' fill='#52514e'>8</text>
+<text x='142' y='252' font-size='12' text-anchor='end' fill='#0b0b0b'>五苓散</text>
+<path d='M151.0,236.0 h143.7 q4,0 4,4 v14.0 q0,4 -4,4 h-143.7 z' fill='#2a78d6'/>
+<text x='305.6923076923077' y='252' font-size='11' fill='#52514e'>8</text>
+<text x='142' y='282' font-size='12' text-anchor='end' fill='#0b0b0b'>小承氣湯</text>
+<path d='M151.0,266.0 h125.2 q4,0 4,4 v14.0 q0,4 -4,4 h-125.2 z' fill='#2a78d6'/>
+<text x='287.2307692307692' y='282' font-size='11' fill='#52514e'>7</text>
+<text x='142' y='312' font-size='12' text-anchor='end' fill='#0b0b0b'>梔子豉湯</text>
+<path d='M151.0,296.0 h106.8 q4,0 4,4 v14.0 q0,4 -4,4 h-106.8 z' fill='#2a78d6'/>
+<text x='268.7692307692308' y='312' font-size='11' fill='#52514e'>6</text>
+<text x='142' y='342' font-size='12' text-anchor='end' fill='#0b0b0b'>白虎加人參湯</text>
+<path d='M151.0,326.0 h88.3 q4,0 4,4 v14.0 q0,4 -4,4 h-88.3 z' fill='#2a78d6'/>
+<text x='250.30769230769232' y='342' font-size='11' fill='#52514e'>5</text>
+</svg>

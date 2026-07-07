@@ -180,6 +180,16 @@ def cmd_divergence(args):
                                   "commentator_fingerprints")})
 
 
+def cmd_solve(args):
+    _need_pipeline()
+    from .agent.complex_agent import ComplexAgent
+    out = ComplexAgent().solve(args.question, role=args.role)
+    if args.answer_only:
+        print(out.get("answer", out.get("message", "")))
+    else:
+        _print(out)
+
+
 def cmd_deep_research(args):
     _need_pipeline()
     from .agent.research_loop import DeepResearcher
@@ -486,6 +496,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp = sub.add_parser("divergence", help="注家分歧圖譜：覆蓋/爭點條文/一致度矩陣")
     sp.add_argument("--clause", default="", help="按 clause_id 片段過濾")
     sp.set_defaults(func=cmd_divergence)
+
+    sp = sub.add_parser("solve", help="複合問題編排：任務分解→作用域子代理→綜合核驗")
+    sp.add_argument("question")
+    sp.add_argument("--role", choices=list(safety.ROLES))
+    sp.add_argument("--answer-only", action="store_true")
+    sp.set_defaults(func=cmd_solve)
 
     sp = sub.add_parser("deep-research", help="深度研究循環：規劃→子代理取證→批評家→溯源檔案")
     sp.add_argument("topic")
