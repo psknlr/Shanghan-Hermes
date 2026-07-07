@@ -1,0 +1,250 @@
+{
+ "note": "劑量演化：加味≠增量，僅劑量變化的方對(dose-only)單獨計數",
+ "n_edges": 21,
+ "n_with_dose_delta": 8,
+ "n_dose_only_edges": 2,
+ "edges": [
+  {
+   "base": "四逆湯",
+   "modified": "四逆加人參湯",
+   "edge_kind": "加味",
+   "added_herbs": "人參",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "桂枝加芍藥湯",
+   "modified": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "edge_kind": "加味+增減量",
+   "added_herbs": "人參",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "芍藥",
+     "base_raw": "六兩",
+     "mod_raw": "四兩",
+     "factor": 0.667
+    },
+    {
+     "herb": "生薑",
+     "base_raw": "三兩，切",
+     "mod_raw": "四兩",
+     "factor": 1.333
+    }
+   ]
+  },
+  {
+   "base": "桂枝去芍藥湯",
+   "modified": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "edge_kind": "加味",
+   "added_herbs": "牡蠣、蜀漆、龍骨",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "桂枝去芍藥湯",
+   "modified": "桂枝去芍藥加附子湯",
+   "edge_kind": "加味",
+   "added_herbs": "附子",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝加厚朴杏子湯",
+   "edge_kind": "加味",
+   "added_herbs": "厚朴、杏仁",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝加大黃湯",
+   "edge_kind": "加味+增減量",
+   "added_herbs": "大黃",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "芍藥",
+     "base_raw": "三兩",
+     "mod_raw": "六兩",
+     "factor": 2.0
+    }
+   ]
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝加桂湯",
+   "edge_kind": "增減量",
+   "added_herbs": "",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "桂枝",
+     "base_raw": "三兩，去皮",
+     "mod_raw": "五兩，去皮",
+     "factor": 1.667
+    }
+   ]
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝加芍藥湯",
+   "edge_kind": "增減量",
+   "added_herbs": "",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "芍藥",
+     "base_raw": "三兩",
+     "mod_raw": "六兩",
+     "factor": 2.0
+    }
+   ]
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "edge_kind": "加味+增減量",
+   "added_herbs": "人參",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "芍藥",
+     "base_raw": "三兩",
+     "mod_raw": "四兩",
+     "factor": 1.333
+    },
+    {
+     "herb": "生薑",
+     "base_raw": "三兩，切",
+     "mod_raw": "四兩",
+     "factor": 1.333
+    }
+   ]
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝加葛根湯",
+   "edge_kind": "加味+增減量",
+   "added_herbs": "葛根、麻黃",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "桂枝",
+     "base_raw": "三兩，去皮",
+     "mod_raw": "二兩，去皮",
+     "factor": 0.667
+    },
+    {
+     "herb": "芍藥",
+     "base_raw": "三兩",
+     "mod_raw": "二兩",
+     "factor": 0.667
+    }
+   ]
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝加附子湯",
+   "edge_kind": "加味+增減量",
+   "added_herbs": "附子",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "甘草",
+     "base_raw": "二兩，炙",
+     "mod_raw": "三兩，炙",
+     "factor": 1.5
+    }
+   ]
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝去桂加茯苓白朮湯",
+   "edge_kind": "加味+減味",
+   "added_herbs": "白朮、茯苓",
+   "removed_herbs": "桂枝",
+   "dose_deltas": []
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "edge_kind": "加味+減味",
+   "added_herbs": "牡蠣、蜀漆、龍骨",
+   "removed_herbs": "芍藥",
+   "dose_deltas": []
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝去芍藥加附子湯",
+   "edge_kind": "加味+減味",
+   "added_herbs": "附子",
+   "removed_herbs": "芍藥",
+   "dose_deltas": []
+  },
+  {
+   "base": "桂枝湯",
+   "modified": "桂枝去芍藥湯",
+   "edge_kind": "減味",
+   "added_herbs": "",
+   "removed_herbs": "芍藥",
+   "dose_deltas": []
+  },
+  {
+   "base": "當歸四逆湯",
+   "modified": "當歸四逆加吳茱萸生薑湯",
+   "edge_kind": "加味",
+   "added_herbs": "吳茱萸、生薑",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "白虎湯",
+   "modified": "白虎加人參湯",
+   "edge_kind": "加味",
+   "added_herbs": "人參",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "白通湯",
+   "modified": "白通加豬膽汁湯",
+   "edge_kind": "加味",
+   "added_herbs": "人尿、豬膽汁",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "葛根湯",
+   "modified": "葛根加半夏湯",
+   "edge_kind": "加味+增減量",
+   "added_herbs": "半夏",
+   "removed_herbs": "",
+   "dose_deltas": [
+    {
+     "herb": "生薑",
+     "base_raw": "三兩，切",
+     "mod_raw": "二兩，切",
+     "factor": 0.667
+    }
+   ]
+  },
+  {
+   "base": "通脈四逆湯",
+   "modified": "通脈四逆加豬膽汁湯",
+   "edge_kind": "加味",
+   "added_herbs": "豬膽汁",
+   "removed_herbs": "",
+   "dose_deltas": []
+  },
+  {
+   "base": "黃芩湯",
+   "modified": "黃芩加半夏生薑湯",
+   "edge_kind": "加味",
+   "added_herbs": "半夏、生薑",
+   "removed_herbs": "",
+   "dose_deltas": []
+  }
+ ]
+}

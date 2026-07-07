@@ -7,14 +7,18 @@
   "initial_rules_accepted": 1501,
   "initial_rules_rejected": 0,
   "audit_records": 7569,
-  "relations": 1711,
+  "relations": 4286,
   "variants": 616,
-  "commentaries": 383,
+  "commentaries": 2958,
   "formula_pattern_rules": 113,
   "six_channel_rules": 8,
   "therapy_rules": 23,
   "mistreatment_rules": 60,
   "differential_rules": 64,
-  "merged_rules": 121
+  "merged_rules": 121,
+  "commentary_books_aligned": 9,
+  "clauses_multi_commentator": 395,
+  "dose_rows": 536,
+  "dose_unparsed": 5
  }
 }

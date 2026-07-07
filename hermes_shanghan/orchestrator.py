@@ -233,6 +233,29 @@ def run_pipeline(verbose: bool = True, use_llm_extractor: bool = False,
     miner = ResearchMiner(clauses, formula_rules, mistreatment_rules)
     miner.run_topic("全書方證體系", outputs=["network"])
 
+    # commentary divergence atlas (C 層多注家) + dosimetric layer
+    import json as _json
+
+    from .apps.commentary_atlas import CommentaryAtlas
+    from .apps.dosimetry import DosimetryMiner
+    store = {c.clause_id: c for c in clauses}
+    atlas = CommentaryAtlas(artifacts_comment, store).build()
+    (config.RESEARCH_DIR / "commentary_divergence.json").write_text(
+        _json.dumps(atlas, ensure_ascii=False, indent=1), encoding="utf-8")
+    stats["commentary_books_aligned"] = atlas["n_books"]
+    stats["clauses_multi_commentator"] = atlas["n_clauses_multi_commentator"]
+    dosi = DosimetryMiner(clauses, formula_rules)
+    table = dosi.dose_table()
+    for name, payload in (("dose_table.json", table),
+                          ("dose_ratios.json", dosi.dose_ratios(table)),
+                          ("dose_family_evolution.json",
+                           dosi.family_dose_evolution(table)),
+                          ("dose_summary.json", dosi.summary(table))):
+        (config.RESEARCH_DIR / name).write_text(
+            _json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
+    stats["dose_rows"] = table["n_rows"]
+    stats["dose_unparsed"] = table["n_unparsed"]
+
     memory.paper_memory.set("last_pipeline_stats", {
         k: v for k, v in stats.items() if isinstance(v, (int, str))})
     memory.save_all()

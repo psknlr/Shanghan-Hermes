@@ -156,6 +156,11 @@ class FormulaPatternInducer:
                         len(other_name) > len(r.formula):
                     a = {c["herb"] for c in r.composition}
                     b = {c["herb"] for c in other.composition}
+                    # a real 加減方 keeps most of the base recipe — the stem
+                    # match alone lets 四逆散 claim 四逆加人參湯 (= 四逆湯加
+                    # 人參, a different formula sharing one herb)
+                    if a and b and len(a & b) * 2 < len(a):
+                        continue
                     added = sorted(b - a)
                     removed = sorted(a - b)
                     r.modification_relations.append({

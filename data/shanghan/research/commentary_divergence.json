@@ -1,0 +1,10600 @@
+{
+ "interpretation_level": "posthoc_induction(D/E) over aligned C-layer",
+ "n_commentary_rules": 2958,
+ "n_books": 9,
+ "book_coverage": {
+  "傷寒來蘇集": {
+   "commentator": "柯琴",
+   "n_aligned_clauses": 331,
+   "mean_similarity": 0.896
+  },
+  "傷寒懸解": {
+   "commentator": "黃元御",
+   "n_aligned_clauses": 48,
+   "mean_similarity": 0.824
+  },
+  "傷寒溯源集": {
+   "commentator": "錢潢",
+   "n_aligned_clauses": 376,
+   "mean_similarity": 0.901
+  },
+  "傷寒論條辨": {
+   "commentator": "方有執",
+   "n_aligned_clauses": 371,
+   "mean_similarity": 0.905
+  },
+  "傷寒論注": {
+   "commentator": "柯琴",
+   "n_aligned_clauses": 334,
+   "mean_similarity": 0.89
+  },
+  "傷寒論輯義": {
+   "commentator": "丹波元簡",
+   "n_aligned_clauses": 365,
+   "mean_similarity": 0.905
+  },
+  "傷寒貫珠集": {
+   "commentator": "尤怡",
+   "n_aligned_clauses": 324,
+   "mean_similarity": 0.901
+  },
+  "張卿子傷寒論": {
+   "commentator": "張卿子",
+   "n_aligned_clauses": 365,
+   "mean_similarity": 0.915
+  },
+  "註解傷寒論": {
+   "commentator": "成無己",
+   "n_aligned_clauses": 370,
+   "mean_similarity": 0.927
+  }
+ },
+ "n_clauses_multi_commentator": 395,
+ "mean_term_divergence": 0.8237,
+ "top_divergent_clauses": [
+  {
+   "clause_id": "SHL_SONGBEN_0384",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.9443,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之",
+     "邪氣"
+    ],
+    "錢潢": [
+     "陰陽"
+    ]
+   },
+   "clause_text": "傷寒，其脈微濇者，本是霍亂，今是傷寒，卻四五日，至陰經上，轉入陰必利；本嘔，下利者，不可治也。欲似大便，而反失氣，仍不利…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0367",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.9322,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ]
+   },
+   "clause_text": "下利，脈數而渴者，今自愈。設不差，必清膿血，以有熱故也。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0278",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.9218,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "成無己": [
+     "太陰病"
+    ],
+    "尤怡": [
+     "正氣",
+     "邪氣"
+    ],
+    "錢潢": [
+     "下之",
+     "表證"
+    ]
+   },
+   "clause_text": "傷寒脈浮而緩，手足自溫者，繫在太陰。太陰當發身黃，若小便自利者，不能發黃；至七八日，雖暴煩下利，日十餘行，必自止，以脾家…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0296",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.901,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   },
+   "clause_text": "少陰病，吐、利、躁煩，四逆者，死。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0349",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8996,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "尤怡": [
+     "溫之"
+    ]
+   },
+   "clause_text": "傷寒脈促，手足厥逆，可灸之。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0074",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8965,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "發汗",
+     "表裏"
+    ],
+    "錢潢": [
+     "汗解",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "表證"
+    ]
+   },
+   "clause_text": "中風發熱，六七日不解而煩，有表裏證，渴欲飲水，水入則吐者，名曰水逆，五苓散主之。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0344",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8952,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   },
+   "clause_text": "傷寒發熱，下利，厥逆，躁不得臥者，死。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0141",
+   "n_commentators": 5,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8851,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "成無己": [
+     "和之",
+     "發汗"
+    ],
+    "尤怡": [
+     "下之",
+     "寒熱"
+    ],
+    "錢潢": [
+     "吐之",
+     "水逆證",
+     "汗解",
+     "邪氣",
+     "鬱熱"
+    ]
+   },
+   "clause_text": "病在陽，應以汗解之，反以冷水潠之，若灌之，其熱被劫，不得去，彌更益煩，肉上粟起，意欲飲水，反不渴者，服文蛤散；若不差者，…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0334",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8844,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "下之",
+     "寒熱",
+     "發汗",
+     "虛實"
+    ]
+   },
+   "clause_text": "傷寒，先厥後發熱，下利必自止。而反汗出，咽中痛者，其喉為痹。發熱無汗，而利必自止；若不止，必便膿血。便膿血者，其喉不痹。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0188",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8737,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "太陽病",
+     "正氣"
+    ],
+    "錢潢": [
+     "傳經",
+     "陽明經證"
+    ]
+   },
+   "clause_text": "傷寒轉繫陽明者，其人濈然微汗出也。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0227",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8716,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "經絡",
+     "胃氣",
+     "陽明病"
+    ],
+    "丹波元簡": [
+     "太陽病"
+    ]
+   },
+   "clause_text": "脈浮，發熱，口乾，鼻燥，能食者則衄。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0215",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8705,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "可下"
+    ],
+    "錢潢": [
+     "陽明病"
+    ],
+    "張卿子": [
+     "下之"
+    ],
+    "黃元御": [
+     "胃氣"
+    ]
+   },
+   "clause_text": "陽明病，譫語，有潮熱，反不能食者，胃中必有燥屎五六枚也。若能食者，但鞕耳。宜大承氣湯下之。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0321",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.87,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃氣"
+    ],
+    "尤怡": [
+     "急下"
+    ]
+   },
+   "clause_text": "少陰病，自利清水，色純青，心下必痛，口乾燥者，可下之，宜大承氣湯。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0361",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8679,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "柯琴": [
+     "汗解"
+    ]
+   },
+   "clause_text": "下利脈數，有微熱汗出，今自愈。設復緊，為未解。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0338",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8643,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱"
+    ]
+   },
+   "clause_text": "傷寒，脈微而厥，至七八日，膚冷，其人躁無暫安時者，此為藏厥，非蚘厥也。蚘厥者，其人當吐蚘，令病者靜而復時煩者，此為藏寒。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0381",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8597,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之",
+     "可下"
+    ]
+   },
+   "clause_text": "傷寒，噦而腹滿，視其前後，知何部不利，利之即愈。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0210",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8502,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "陰陽"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "胃氣"
+    ],
+    "丹波元簡": [
+     "虛實"
+    ]
+   },
+   "clause_text": "夫實則譫語，虛則鄭聲，鄭聲者，重語也。直視，譫語，喘滿者死，下利者亦死。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0017",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8489,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "黃元御": [
+     "溫之",
+     "經絡",
+     "胃氣"
+    ]
+   },
+   "clause_text": "若酒客病，不可與桂枝湯，得之則嘔，以酒客不喜甘故也。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0154",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8478,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "錢潢": [
+     "邪氣"
+    ]
+   },
+   "clause_text": "心下痞，按之濡，其脈關上浮者，大黃黃連瀉心湯主之。…"
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0024",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8469,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "方有執": [
+     "發汗"
+    ],
+    "柯琴": [
+     "表裏"
+    ],
+    "尤怡": [
+     "太陽病"
+    ]
+   },
+   "clause_text": "太陽病，初服桂枝湯，反煩不解者，先刺風池、風府，卻與桂枝湯則愈。…"
+  }
+ ],
+ "agreement_matrix": [
+  {
+   "a": "丹波元簡",
+   "b": "尤怡",
+   "n_shared_clauses": 274,
+   "mean_term_agreement": 0.1585
+  },
+  {
+   "a": "丹波元簡",
+   "b": "張卿子",
+   "n_shared_clauses": 302,
+   "mean_term_agreement": 0.2843
+  },
+  {
+   "a": "丹波元簡",
+   "b": "成無己",
+   "n_shared_clauses": 304,
+   "mean_term_agreement": 0.2804
+  },
+  {
+   "a": "丹波元簡",
+   "b": "方有執",
+   "n_shared_clauses": 283,
+   "mean_term_agreement": 0.0994
+  },
+  {
+   "a": "丹波元簡",
+   "b": "柯琴",
+   "n_shared_clauses": 294,
+   "mean_term_agreement": 0.1588
+  },
+  {
+   "a": "丹波元簡",
+   "b": "錢潢",
+   "n_shared_clauses": 303,
+   "mean_term_agreement": 0.2562
+  },
+  {
+   "a": "丹波元簡",
+   "b": "黃元御",
+   "n_shared_clauses": 37,
+   "mean_term_agreement": 0.1496
+  },
+  {
+   "a": "尤怡",
+   "b": "張卿子",
+   "n_shared_clauses": 272,
+   "mean_term_agreement": 0.2056
+  },
+  {
+   "a": "尤怡",
+   "b": "成無己",
+   "n_shared_clauses": 276,
+   "mean_term_agreement": 0.219
+  },
+  {
+   "a": "尤怡",
+   "b": "方有執",
+   "n_shared_clauses": 246,
+   "mean_term_agreement": 0.1077
+  },
+  {
+   "a": "尤怡",
+   "b": "柯琴",
+   "n_shared_clauses": 260,
+   "mean_term_agreement": 0.13
+  },
+  {
+   "a": "尤怡",
+   "b": "錢潢",
+   "n_shared_clauses": 274,
+   "mean_term_agreement": 0.1618
+  },
+  {
+   "a": "尤怡",
+   "b": "黃元御",
+   "n_shared_clauses": 35,
+   "mean_term_agreement": 0.1301
+  },
+  {
+   "a": "張卿子",
+   "b": "成無己",
+   "n_shared_clauses": 267,
+   "mean_term_agreement": 0.897
+  },
+  {
+   "a": "張卿子",
+   "b": "方有執",
+   "n_shared_clauses": 281,
+   "mean_term_agreement": 0.1189
+  },
+  {
+   "a": "張卿子",
+   "b": "柯琴",
+   "n_shared_clauses": 289,
+   "mean_term_agreement": 0.1371
+  },
+  {
+   "a": "張卿子",
+   "b": "錢潢",
+   "n_shared_clauses": 314,
+   "mean_term_agreement": 0.1929
+  },
+  {
+   "a": "張卿子",
+   "b": "黃元御",
+   "n_shared_clauses": 41,
+   "mean_term_agreement": 0.1513
+  },
+  {
+   "a": "成無己",
+   "b": "方有執",
+   "n_shared_clauses": 282,
+   "mean_term_agreement": 0.1318
+  },
+  {
+   "a": "成無己",
+   "b": "柯琴",
+   "n_shared_clauses": 295,
+   "mean_term_agreement": 0.1382
+  },
+  {
+   "a": "成無己",
+   "b": "錢潢",
+   "n_shared_clauses": 317,
+   "mean_term_agreement": 0.1817
+  },
+  {
+   "a": "成無己",
+   "b": "黃元御",
+   "n_shared_clauses": 43,
+   "mean_term_agreement": 0.1439
+  },
+  {
+   "a": "方有執",
+   "b": "柯琴",
+   "n_shared_clauses": 262,
+   "mean_term_agreement": 0.102
+  },
+  {
+   "a": "方有執",
+   "b": "錢潢",
+   "n_shared_clauses": 286,
+   "mean_term_agreement": 0.0842
+  },
+  {
+   "a": "方有執",
+   "b": "黃元御",
+   "n_shared_clauses": 36,
+   "mean_term_agreement": 0.1444
+  },
+  {
+   "a": "柯琴",
+   "b": "錢潢",
+   "n_shared_clauses": 292,
+   "mean_term_agreement": 0.1058
+  },
+  {
+   "a": "柯琴",
+   "b": "黃元御",
+   "n_shared_clauses": 44,
+   "mean_term_agreement": 0.0728
+  },
+  {
+   "a": "錢潢",
+   "b": "黃元御",
+   "n_shared_clauses": 42,
+   "mean_term_agreement": 0.1526
+  }
+ ],
+ "commentator_fingerprints": {
+  "丹波元簡": [
+   {
+    "term": "厥陰病",
+    "lift": 6.04,
+    "n": 3
+   },
+   {
+    "term": "當吐",
+    "lift": 5.04,
+    "n": 5
+   },
+   {
+    "term": "回陽",
+    "lift": 3.45,
+    "n": 4
+   },
+   {
+    "term": "可吐",
+    "lift": 3.02,
+    "n": 3
+   },
+   {
+    "term": "清熱",
+    "lift": 3.02,
+    "n": 3
+   },
+   {
+    "term": "少陽病",
+    "lift": 2.59,
+    "n": 3
+   },
+   {
+    "term": "少陰病",
+    "lift": 2.46,
+    "n": 22
+   },
+   {
+    "term": "太陽病",
+    "lift": 2.29,
+    "n": 33
+   }
+  ],
+  "尤怡": [
+   {
+    "term": "直中",
+    "lift": 17.34,
+    "n": 5
+   },
+   {
+    "term": "清熱",
+    "lift": 13.87,
+    "n": 6
+   },
+   {
+    "term": "補之",
+    "lift": 6.94,
+    "n": 4
+   },
+   {
+    "term": "和胃氣",
+    "lift": 3.96,
+    "n": 4
+   },
+   {
+    "term": "越之",
+    "lift": 3.47,
+    "n": 5
+   },
+   {
+    "term": "攻之",
+    "lift": 2.49,
+    "n": 19
+   },
+   {
+    "term": "邪氣",
+    "lift": 2.46,
+    "n": 108
+   },
+   {
+    "term": "正氣",
+    "lift": 2.35,
+    "n": 22
+   }
+  ],
+  "張卿子": [
+   {
+    "term": "榮衛",
+    "lift": 4.03,
+    "n": 8
+   },
+   {
+    "term": "傳經",
+    "lift": 2.11,
+    "n": 15
+   },
+   {
+    "term": "攻表",
+    "lift": 1.61,
+    "n": 4
+   },
+   {
+    "term": "邪氣",
+    "lift": 1.41,
+    "n": 78
+   },
+   {
+    "term": "利小便",
+    "lift": 1.41,
+    "n": 7
+   },
+   {
+    "term": "和解",
+    "lift": 1.38,
+    "n": 8
+   },
+   {
+    "term": "陽明病",
+    "lift": 1.36,
+    "n": 22
+   },
+   {
+    "term": "胃氣",
+    "lift": 1.33,
+    "n": 35
+   }
+  ],
+  "成無己": [
+   {
+    "term": "榮衛",
+    "lift": 4.87,
+    "n": 9
+   },
+   {
+    "term": "攻表",
+    "lift": 2.75,
+    "n": 6
+   },
+   {
+    "term": "傳經",
+    "lift": 2.27,
+    "n": 16
+   },
+   {
+    "term": "利小便",
+    "lift": 1.64,
+    "n": 8
+   },
+   {
+    "term": "太陰病",
+    "lift": 1.62,
+    "n": 3
+   },
+   {
+    "term": "邪氣",
+    "lift": 1.48,
+    "n": 82
+   },
+   {
+    "term": "津液",
+    "lift": 1.37,
+    "n": 65
+   },
+   {
+    "term": "正氣",
+    "lift": 1.34,
+    "n": 16
+   }
+  ],
+  "方有執": [
+   {
+    "term": "腠理",
+    "lift": 1.19,
+    "n": 4
+   },
+   {
+    "term": "當下",
+    "lift": 1.05,
+    "n": 6
+   },
+   {
+    "term": "急下",
+    "lift": 0.88,
+    "n": 4
+   },
+   {
+    "term": "津液",
+    "lift": 0.68,
+    "n": 36
+   },
+   {
+    "term": "溫之",
+    "lift": 0.66,
+    "n": 3
+   },
+   {
+    "term": "攻之",
+    "lift": 0.64,
+    "n": 7
+   },
+   {
+    "term": "解表",
+    "lift": 0.64,
+    "n": 5
+   },
+   {
+    "term": "可發汗",
+    "lift": 0.48,
+    "n": 5
+   }
+  ],
+  "柯琴": [
+   {
+    "term": "表裏",
+    "lift": 182.82,
+    "n": 29
+   },
+   {
+    "term": "裏證",
+    "lift": 113.47,
+    "n": 18
+   },
+   {
+    "term": "半表半裏",
+    "lift": 50.43,
+    "n": 8
+   },
+   {
+    "term": "併病",
+    "lift": 44.13,
+    "n": 7
+   },
+   {
+    "term": "救裏",
+    "lift": 44.13,
+    "n": 7
+   },
+   {
+    "term": "攻裏",
+    "lift": 18.91,
+    "n": 3
+   },
+   {
+    "term": "壞病",
+    "lift": 7.56,
+    "n": 12
+   },
+   {
+    "term": "救逆",
+    "lift": 6.3,
+    "n": 3
+   }
+  ],
+  "錢潢": [
+   {
+    "term": "取微似汗",
+    "lift": 11.68,
+    "n": 4
+   },
+   {
+    "term": "鬱熱",
+    "lift": 9.92,
+    "n": 17
+   },
+   {
+    "term": "攻下",
+    "lift": 5.35,
+    "n": 11
+   },
+   {
+    "term": "三焦",
+    "lift": 4.04,
+    "n": 9
+   },
+   {
+    "term": "汗解",
+    "lift": 3.79,
+    "n": 24
+   },
+   {
+    "term": "補之",
+    "lift": 3.5,
+    "n": 3
+   },
+   {
+    "term": "利其小便",
+    "lift": 3.34,
+    "n": 4
+   },
+   {
+    "term": "發其汗",
+    "lift": 2.97,
+    "n": 28
+   }
+  ],
+  "黃元御": [
+   {
+    "term": "攻下",
+    "lift": 7.88,
+    "n": 3
+   },
+   {
+    "term": "太陽病",
+    "lift": 3.75,
+    "n": 8
+   },
+   {
+    "term": "陽明病",
+    "lift": 3.26,
+    "n": 7
+   },
+   {
+    "term": "表證",
+    "lift": 2.63,
+    "n": 6
+   },
+   {
+    "term": "發其汗",
+    "lift": 1.97,
+    "n": 3
+   },
+   {
+    "term": "發汗",
+    "lift": 1.7,
+    "n": 12
+   },
+   {
+    "term": "胃氣",
+    "lift": 1.68,
+    "n": 6
+   },
+   {
+    "term": "下之",
+    "lift": 1.1,
+    "n": 9
+   }
+  ]
+ },
+ "clauses": [
+  {
+   "clause_id": "SHL_SONGBEN_0384",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.9443,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之",
+     "邪氣"
+    ],
+    "錢潢": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0367",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.9322,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0278",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.9218,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "成無己": [
+     "太陰病"
+    ],
+    "尤怡": [
+     "正氣",
+     "邪氣"
+    ],
+    "錢潢": [
+     "下之",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0296",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.901,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0349",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8996,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "尤怡": [
+     "溫之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0074",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8965,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "發汗",
+     "表裏"
+    ],
+    "錢潢": [
+     "汗解",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0344",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8952,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0141",
+   "n_commentators": 5,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8851,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "成無己": [
+     "和之",
+     "發汗"
+    ],
+    "尤怡": [
+     "下之",
+     "寒熱"
+    ],
+    "錢潢": [
+     "吐之",
+     "水逆證",
+     "汗解",
+     "邪氣",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0334",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8844,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "下之",
+     "寒熱",
+     "發汗",
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0188",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8737,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "太陽病",
+     "正氣"
+    ],
+    "錢潢": [
+     "傳經",
+     "陽明經證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0227",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8716,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "經絡",
+     "胃氣",
+     "陽明病"
+    ],
+    "丹波元簡": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0215",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8705,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "可下"
+    ],
+    "錢潢": [
+     "陽明病"
+    ],
+    "張卿子": [
+     "下之"
+    ],
+    "黃元御": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0321",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.87,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃氣"
+    ],
+    "尤怡": [
+     "急下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0361",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8679,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "柯琴": [
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0338",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8643,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0381",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8597,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之",
+     "可下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0210",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8502,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "陰陽"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "胃氣"
+    ],
+    "丹波元簡": [
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0017",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8489,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "黃元御": [
+     "溫之",
+     "經絡",
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0154",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8478,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "錢潢": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0024",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8469,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "方有執": [
+     "發汗"
+    ],
+    "柯琴": [
+     "表裏"
+    ],
+    "尤怡": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0374",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8458,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "柯琴": [
+     "胃氣"
+    ],
+    "錢潢": [
+     "經絡"
+    ],
+    "丹波元簡": [
+     "下之",
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0092",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8453,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "裏證"
+    ],
+    "尤怡": [
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0222",
+   "n_commentators": 5,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8442,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "錢潢": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0261",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8436,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "陽明病"
+    ],
+    "丹波元簡": [
+     "下之",
+     "可下",
+     "當下",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0360",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8413,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "傳經"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0175",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8407,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "尤怡": [
+     "發其汗",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0274",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8313,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "半表半裏"
+    ],
+    "尤怡": [
+     "正氣",
+     "邪氣"
+    ],
+    "錢潢": [
+     "津液",
+     "表證"
+    ],
+    "丹波元簡": [
+     "太陰病",
+     "直中"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0304",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8307,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "傳經"
+    ],
+    "柯琴": [
+     "寒熱",
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0378",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.83,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0013",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8262,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "方有執": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0310",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.826,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "寒熱",
+     "邪氣"
+    ],
+    "柯琴": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0297",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8259,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "尤怡": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0303",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8215,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "下之",
+     "急下",
+     "津液",
+     "裏證"
+    ],
+    "尤怡": [
+     "補之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0282",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8178,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0127",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8165,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0368",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8156,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "尤怡": [
+     "當溫"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0366",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8151,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱",
+     "陰陽"
+    ],
+    "錢潢": [
+     "胃氣",
+     "表證",
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0165",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.812,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "虛實",
+     "表裏"
+    ],
+    "錢潢": [
+     "下之",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "和解",
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0263",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8085,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "經絡"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0115",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8059,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "汗解"
+    ],
+    "丹波元簡": [
+     "發汗",
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0307",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8006,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "和之"
+    ],
+    "尤怡": [
+     "少陰病"
+    ],
+    "丹波元簡": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0125",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.8004,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "柯琴": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0231",
+   "n_commentators": 4,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7954,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "表證",
+     "裏證"
+    ],
+    "尤怡": [
+     "和解",
+     "攻之",
+     "正氣",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0317",
+   "n_commentators": 4,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7944,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱",
+     "溫裏",
+     "陽鬱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0081",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7899,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃氣"
+    ],
+    "錢潢": [
+     "溫之"
+    ],
+    "丹波元簡": [
+     "三焦"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0291",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7869,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "尤怡": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0289",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7846,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0370",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7764,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "方有執": [
+     "救表",
+     "陰陽"
+    ],
+    "尤怡": [
+     "越之"
+    ],
+    "錢潢": [
+     "表證"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0138",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7643,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "錢潢": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0108",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7617,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "陰陽"
+    ],
+    "錢潢": [
+     "下之",
+     "可下",
+     "溫之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0388",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7553,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "溫裏"
+    ],
+    "錢潢": [
+     "表證"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0009",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7484,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "陰陽"
+    ],
+    "尤怡": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0272",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 1.0,
+   "lexical_divergence": 0.7245,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {
+    "錢潢": [
+     "三焦"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0350",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9886,
+   "lexical_divergence": 0.8724,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "下之",
+     "可下",
+     "吐之",
+     "溫之",
+     "當下",
+     "當吐"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0202",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9848,
+   "lexical_divergence": 0.7721,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "當下",
+     "經絡",
+     "胃氣"
+    ],
+    "張卿子": [
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0011",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.9815,
+   "lexical_divergence": 0.8798,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "攻之",
+     "正氣",
+     "經絡",
+     "表裏",
+     "邪氣"
+    ],
+    "張卿子": [
+     "下之",
+     "標本"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0183",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.9815,
+   "lexical_divergence": 0.8547,
+   "n_analytic_terms": 12,
+   "distinctive_terms": {
+    "方有執": [
+     "腠理"
+    ],
+    "柯琴": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "傳經",
+     "利小便",
+     "寒熱",
+     "表證",
+     "解表"
+    ],
+    "黃元御": [
+     "回陽",
+     "攻下",
+     "陰陽",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0340",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9778,
+   "lexical_divergence": 0.847,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "吐之",
+     "虛實"
+    ],
+    "丹波元簡": [
+     "可下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0177",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9773,
+   "lexical_divergence": 0.8808,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "建中",
+     "虛實",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0180",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9762,
+   "lexical_divergence": 0.873,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "下之",
+     "可下",
+     "表證",
+     "裏證"
+    ],
+    "尤怡": [
+     "胃氣"
+    ],
+    "錢潢": [
+     "傳經"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0258",
+   "n_commentators": 5,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.9762,
+   "lexical_divergence": 0.7426,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "方有執": [
+     "當下"
+    ],
+    "尤怡": [
+     "可下",
+     "攻之",
+     "清熱",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0270",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9722,
+   "lexical_divergence": 0.8604,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "胃氣"
+    ],
+    "柯琴": [
+     "可下"
+    ],
+    "錢潢": [
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0155",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9722,
+   "lexical_divergence": 0.8143,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之"
+    ],
+    "錢潢": [
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "回陽",
+     "發汗",
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0262",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9714,
+   "lexical_divergence": 0.8209,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "發汗",
+     "解表"
+    ],
+    "尤怡": [
+     "清熱"
+    ],
+    "錢潢": [
+     "利其小便"
+    ],
+    "丹波元簡": [
+     "汗解",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0225",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9697,
+   "lexical_divergence": 0.8536,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "救逆",
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0264",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9689,
+   "lexical_divergence": 0.7994,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "可發汗",
+     "發汗",
+     "經絡",
+     "越之"
+    ],
+    "尤怡": [
+     "可下",
+     "邪氣"
+    ],
+    "錢潢": [
+     "下之",
+     "正氣"
+    ],
+    "丹波元簡": [
+     "少陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0166",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9667,
+   "lexical_divergence": 0.8941,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "越之"
+    ],
+    "尤怡": [
+     "當吐"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0192",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9667,
+   "lexical_divergence": 0.8533,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "成無己": [
+     "下之",
+     "陰陽"
+    ],
+    "方有執": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0318",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9597,
+   "lexical_divergence": 0.8779,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "發汗"
+    ],
+    "尤怡": [
+     "可下",
+     "和之",
+     "和解",
+     "解表",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "少陰病",
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0383",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.9583,
+   "lexical_divergence": 0.7746,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0179",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.9568,
+   "lexical_divergence": 0.9184,
+   "n_analytic_terms": 12,
+   "distinctive_terms": {
+    "尤怡": [
+     "利小便",
+     "寒熱",
+     "發汗"
+    ],
+    "錢潢": [
+     "利其小便",
+     "和之",
+     "攻下",
+     "發其汗"
+    ],
+    "張卿子": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0029",
+   "n_commentators": 5,
+   "commentators": [
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "黃元御"
+   ],
+   "term_divergence": 0.955,
+   "lexical_divergence": 0.9114,
+   "n_analytic_terms": 13,
+   "distinctive_terms": {
+    "成無己": [
+     "可發汗",
+     "陰陽"
+    ],
+    "柯琴": [
+     "利小便",
+     "標本",
+     "津液"
+    ],
+    "黃元御": [
+     "回陽",
+     "太陽病",
+     "發其汗",
+     "胃氣",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0053",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9524,
+   "lexical_divergence": 0.891,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "方有執": [
+     "發汗"
+    ],
+    "柯琴": [
+     "溫之"
+    ],
+    "錢潢": [
+     "營弱衛強",
+     "邪氣",
+     "鬱熱"
+    ],
+    "丹波元簡": [
+     "和之",
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0331",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.95,
+   "lexical_divergence": 0.8547,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "津液"
+    ],
+    "丹波元簡": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0186",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.95,
+   "lexical_divergence": 0.8432,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "胃家實熱",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0346",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.95,
+   "lexical_divergence": 0.8273,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "正氣",
+     "陰陽"
+    ],
+    "錢潢": [
+     "當下"
+    ],
+    "丹波元簡": [
+     "厥陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0051",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.904,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "攻之"
+    ],
+    "錢潢": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0328",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.901,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "正氣",
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "厥陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0234",
+   "n_commentators": 4,
+   "commentators": [
+    "丹波元簡",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.8857,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "表證"
+    ],
+    "丹波元簡": [
+     "太陽病",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0174",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.876,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0372",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.8758,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "攻之",
+     "溫之"
+    ],
+    "錢潢": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0376",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.8757,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "錢潢": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0313",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.8589,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "和之"
+    ],
+    "丹波元簡": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0010",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.8576,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0039",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.8394,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "取微似汗"
+    ],
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0293",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9444,
+   "lexical_divergence": 0.7605,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "表證"
+    ],
+    "丹波元簡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0193",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9407,
+   "lexical_divergence": 0.8055,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之",
+     "可下",
+     "邪氣"
+    ],
+    "錢潢": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0156",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.9405,
+   "lexical_divergence": 0.8559,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "成無己": [
+     "發汗"
+    ],
+    "錢潢": [
+     "汗解",
+     "邪氣"
+    ],
+    "黃元御": [
+     "利其小便",
+     "利小便"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0277",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.9405,
+   "lexical_divergence": 0.8516,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經"
+    ],
+    "錢潢": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0095",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.94,
+   "lexical_divergence": 0.8442,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "尤怡": [
+     "和之",
+     "營弱衛強",
+     "發其汗",
+     "發汗"
+    ],
+    "錢潢": [
+     "衛強營弱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0221",
+   "n_commentators": 3,
+   "commentators": [
+    "丹波元簡",
+    "成無己",
+    "柯琴"
+   ],
+   "term_divergence": 0.9394,
+   "lexical_divergence": 0.9398,
+   "n_analytic_terms": 11,
+   "distinctive_terms": {
+    "成無己": [
+     "攻表"
+    ],
+    "柯琴": [
+     "吐之",
+     "和之",
+     "攻下",
+     "津液",
+     "表裏",
+     "裏證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0035",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9333,
+   "lexical_divergence": 0.8942,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "方有執": [
+     "取微似汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0371",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9333,
+   "lexical_divergence": 0.8831,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "寒熱",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0343",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9333,
+   "lexical_divergence": 0.8683,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經",
+     "直中"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0311",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9333,
+   "lexical_divergence": 0.8622,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "和之",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0042",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9333,
+   "lexical_divergence": 0.8175,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0198",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9333,
+   "lexical_divergence": 0.7932,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0356",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9333,
+   "lexical_divergence": 0.7868,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "建中",
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0273",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9286,
+   "lexical_divergence": 0.8821,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "尤怡": [
+     "傳經",
+     "直中"
+    ],
+    "錢潢": [
+     "經絡"
+    ],
+    "張卿子": [
+     "當下"
+    ],
+    "丹波元簡": [
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0369",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9259,
+   "lexical_divergence": 0.8284,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "寒熱",
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0375",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.925,
+   "lexical_divergence": 0.8446,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃家實熱"
+    ],
+    "尤怡": [
+     "越之"
+    ],
+    "錢潢": [
+     "下之",
+     "可下",
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0339",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.925,
+   "lexical_divergence": 0.7736,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "半表半裏",
+     "和之"
+    ],
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0300",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9246,
+   "lexical_divergence": 0.8654,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "吐之",
+     "腠理",
+     "補之"
+    ],
+    "丹波元簡": [
+     "溫之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0236",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.9242,
+   "lexical_divergence": 0.8511,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "汗解",
+     "表裏"
+    ],
+    "錢潢": [
+     "三焦",
+     "經絡",
+     "腠理",
+     "邪氣",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0249",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.9226,
+   "lexical_divergence": 0.8521,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "和胃氣",
+     "胃氣"
+    ],
+    "尤怡": [
+     "攻之",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "當吐"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0302",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9222,
+   "lexical_divergence": 0.8415,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "裏證"
+    ],
+    "錢潢": [
+     "可發汗",
+     "和之",
+     "發其汗"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0212",
+   "n_commentators": 7,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.9213,
+   "lexical_divergence": 0.8545,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "可下",
+     "壞病",
+     "虛實"
+    ],
+    "尤怡": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0122",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "黃元御"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8979,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "方有執": [
+     "正氣",
+     "邪氣"
+    ],
+    "柯琴": [
+     "胃氣",
+     "虛實"
+    ],
+    "丹波元簡": [
+     "發其汗",
+     "越之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0012",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8688,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "成無己": [
+     "榮衛",
+     "腠理"
+    ],
+    "柯琴": [
+     "寒熱",
+     "胃氣"
+    ],
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0129",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8581,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "可下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0348",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8534,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "回陽",
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0185",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8392,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "發其汗",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0118",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8374,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "壞病",
+     "救逆",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0312",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8169,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "尤怡": [
+     "清熱"
+    ],
+    "丹波元簡": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0341",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.8109,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0099",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9167,
+   "lexical_divergence": 0.7803,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "張卿子": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0062",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9138,
+   "lexical_divergence": 0.8112,
+   "n_analytic_terms": 11,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "溫之",
+     "經絡",
+     "胃氣",
+     "表裏"
+    ],
+    "尤怡": [
+     "下之"
+    ],
+    "錢潢": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0019",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9091,
+   "lexical_divergence": 0.8628,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0002",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9091,
+   "lexical_divergence": 0.8467,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0389",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9091,
+   "lexical_divergence": 0.812,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0359",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9087,
+   "lexical_divergence": 0.8578,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱"
+    ],
+    "張卿子": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0386",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9083,
+   "lexical_divergence": 0.8633,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "尤怡": [
+     "陰陽"
+    ],
+    "錢潢": [
+     "津液"
+    ],
+    "丹波元簡": [
+     "清熱",
+     "當吐"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0342",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9056,
+   "lexical_divergence": 0.9076,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "尤怡": [
+     "直中",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0398",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.9048,
+   "lexical_divergence": 0.8658,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0325",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.9048,
+   "lexical_divergence": 0.7954,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "少陰病"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0025",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9042,
+   "lexical_divergence": 0.8582,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "成無己": [
+     "榮衛"
+    ],
+    "尤怡": [
+     "正氣"
+    ],
+    "錢潢": [
+     "取微似汗",
+     "寒熱",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0309",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9028,
+   "lexical_divergence": 0.82,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "溫之",
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0207",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9017,
+   "lexical_divergence": 0.8598,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "津液",
+     "虛實"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0355",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9008,
+   "lexical_divergence": 0.8349,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃氣",
+     "補之"
+    ],
+    "尤怡": [
+     "越之"
+    ],
+    "錢潢": [
+     "回陽"
+    ],
+    "丹波元簡": [
+     "可吐"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0117",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.9,
+   "lexical_divergence": 0.8852,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "方有執": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0176",
+   "n_commentators": 5,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9,
+   "lexical_divergence": 0.8472,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏"
+    ],
+    "錢潢": [
+     "下之",
+     "津液",
+     "表證",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0281",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9,
+   "lexical_divergence": 0.8441,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0152",
+   "n_commentators": 4,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.9,
+   "lexical_divergence": 0.803,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "合病"
+    ],
+    "丹波元簡": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0030",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "錢潢"
+   ],
+   "term_divergence": 0.9,
+   "lexical_divergence": 0.7899,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "發汗"
+    ],
+    "錢潢": [
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0353",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9,
+   "lexical_divergence": 0.7319,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經",
+     "汗解",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0148",
+   "n_commentators": 5,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.9,
+   "lexical_divergence": 0.7097,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ],
+    "錢潢": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0357",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8968,
+   "lexical_divergence": 0.855,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "寒熱",
+     "虛實",
+     "越之",
+     "陰陽"
+    ],
+    "錢潢": [
+     "可下",
+     "急下",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0200",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8963,
+   "lexical_divergence": 0.8696,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "發汗",
+     "表證"
+    ],
+    "丹波元簡": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0147",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8958,
+   "lexical_divergence": 0.8499,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "錢潢": [
+     "攻下",
+     "發汗",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0086",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8935,
+   "lexical_divergence": 0.8827,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "張卿子": [
+     "可發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0397",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8929,
+   "lexical_divergence": 0.815,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0319",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8922,
+   "lexical_divergence": 0.8677,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "成無己": [
+     "下之",
+     "傳經",
+     "急下"
+    ],
+    "錢潢": [
+     "利小便"
+    ],
+    "丹波元簡": [
+     "清熱",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0027",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8917,
+   "lexical_divergence": 0.8709,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0315",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8917,
+   "lexical_divergence": 0.84,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "成無己": [
+     "正氣"
+    ],
+    "尤怡": [
+     "寒熱",
+     "直中"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0320",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8891,
+   "lexical_divergence": 0.8929,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "胃氣"
+    ],
+    "張卿子": [
+     "傳經"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0337",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.9008,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "厥陰病",
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0104",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8904,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "攻下"
+    ],
+    "柯琴": [
+     "併病"
+    ],
+    "尤怡": [
+     "可下",
+     "少陽病"
+    ],
+    "錢潢": [
+     "胃氣",
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0119",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8708,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "汗解"
+    ],
+    "丹波元簡": [
+     "救逆"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0237",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8606,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0216",
+   "n_commentators": 5,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8545,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "經絡",
+     "表裏",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0354",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8475,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "溫之",
+     "陰陽"
+    ],
+    "尤怡": [
+     "急下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0014",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8415,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0379",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8352,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱"
+    ],
+    "尤怡": [
+     "厥陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0171",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8347,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0292",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.831,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經",
+     "直中"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0229",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8259,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "併病",
+     "合病",
+     "和之"
+    ],
+    "錢潢": [
+     "下之",
+     "可下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0395",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.8105,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0352",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.7744,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0201",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8889,
+   "lexical_divergence": 0.7735,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0168",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8846,
+   "lexical_divergence": 0.8171,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "併病",
+     "救裏",
+     "表裏",
+     "表證"
+    ],
+    "錢潢": [
+     "發汗",
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0001",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8833,
+   "lexical_divergence": 0.8526,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "腠理",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0235",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.881,
+   "lexical_divergence": 0.8817,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "黃元御": [
+     "可下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0077",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.881,
+   "lexical_divergence": 0.8577,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "下之",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0005",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8794,
+   "lexical_divergence": 0.8131,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "表證",
+     "陽明病"
+    ],
+    "尤怡": [
+     "胃氣"
+    ],
+    "丹波元簡": [
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0146",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8794,
+   "lexical_divergence": 0.8089,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏"
+    ],
+    "尤怡": [
+     "解表"
+    ],
+    "錢潢": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0287",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8794,
+   "lexical_divergence": 0.7926,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "回陽"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "當溫"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0167",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.875,
+   "lexical_divergence": 0.8644,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "補之"
+    ],
+    "丹波元簡": [
+     "攻下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0004",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.875,
+   "lexical_divergence": 0.7971,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0040",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.875,
+   "lexical_divergence": 0.7796,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "下之",
+     "表裏",
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0209",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8746,
+   "lexical_divergence": 0.8603,
+   "n_analytic_terms": 11,
+   "distinctive_terms": {
+    "成無己": [
+     "和之"
+    ],
+    "方有執": [
+     "下之"
+    ],
+    "柯琴": [
+     "攻下"
+    ],
+    "尤怡": [
+     "和胃氣",
+     "微和胃氣",
+     "邪氣",
+     "陽明病"
+    ],
+    "錢潢": [
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0191",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8704,
+   "lexical_divergence": 0.8564,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "下之"
+    ],
+    "柯琴": [
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0233",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.87,
+   "lexical_divergence": 0.8302,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0123",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8692,
+   "lexical_divergence": 0.8139,
+   "n_analytic_terms": 11,
+   "distinctive_terms": {
+    "柯琴": [
+     "和之",
+     "壞病",
+     "寒熱",
+     "攻之",
+     "表證",
+     "裏證"
+    ],
+    "錢潢": [
+     "攻下",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0137",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.869,
+   "lexical_divergence": 0.8458,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "陽明病"
+    ],
+    "錢潢": [
+     "太陽病",
+     "汗解",
+     "發其汗"
+    ],
+    "張卿子": [
+     "發汗"
+    ],
+    "丹波元簡": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0228",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8679,
+   "lexical_divergence": 0.775,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "可下",
+     "吐之"
+    ],
+    "尤怡": [
+     "越之"
+    ],
+    "錢潢": [
+     "胃氣",
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "太陽病",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0208",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8667,
+   "lexical_divergence": 0.9119,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "成無己": [
+     "津液"
+    ],
+    "柯琴": [
+     "裏證"
+    ],
+    "尤怡": [
+     "攻之"
+    ],
+    "錢潢": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0329",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8667,
+   "lexical_divergence": 0.8577,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0082",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8651,
+   "lexical_divergence": 0.8704,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "建中"
+    ],
+    "黃元御": [
+     "利小便",
+     "少陰病"
+    ],
+    "丹波元簡": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0114",
+   "n_commentators": 7,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8651,
+   "lexical_divergence": 0.805,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0187",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8611,
+   "lexical_divergence": 0.8048,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "經絡",
+     "表裏"
+    ],
+    "錢潢": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0088",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8587,
+   "lexical_divergence": 0.8835,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "黃元御": [
+     "壞病"
+    ],
+    "丹波元簡": [
+     "利小便",
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0164",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8583,
+   "lexical_divergence": 0.8871,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "壞病",
+     "攻裏",
+     "救表",
+     "救裏",
+     "表裏"
+    ],
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0219",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8574,
+   "lexical_divergence": 0.8387,
+   "n_analytic_terms": 14,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液",
+     "當下",
+     "胃氣",
+     "表裏",
+     "表證",
+     "裏證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0135",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8571,
+   "lexical_divergence": 0.9076,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "太陽病"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "寒熱",
+     "虛實",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0314",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8571,
+   "lexical_divergence": 0.8115,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0260",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8571,
+   "lexical_divergence": 0.811,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "清熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0242",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8571,
+   "lexical_divergence": 0.6968,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "張卿子": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0169",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8567,
+   "lexical_divergence": 0.795,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏",
+     "裏證"
+    ],
+    "錢潢": [
+     "寒熱",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0041",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.855,
+   "lexical_divergence": 0.7766,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "三焦",
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0111",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8522,
+   "lexical_divergence": 0.886,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "成無己": [
+     "正氣"
+    ],
+    "方有執": [
+     "下之"
+    ],
+    "錢潢": [
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0142",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8521,
+   "lexical_divergence": 0.8369,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "併病"
+    ],
+    "丹波元簡": [
+     "可下",
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0105",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8508,
+   "lexical_divergence": 0.8886,
+   "n_analytic_terms": 12,
+   "distinctive_terms": {
+    "成無己": [
+     "傳經"
+    ],
+    "柯琴": [
+     "經絡",
+     "陰陽"
+    ],
+    "尤怡": [
+     "太陽病"
+    ],
+    "錢潢": [
+     "正氣"
+    ],
+    "丹波元簡": [
+     "和之",
+     "陽明腑證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0326",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.85,
+   "lexical_divergence": 0.8581,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "厥陰病",
+     "太陰病",
+     "裏證"
+    ],
+    "尤怡": [
+     "可下",
+     "邪氣"
+    ],
+    "錢潢": [
+     "三焦",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0054",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.85,
+   "lexical_divergence": 0.8108,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "發其汗"
+    ],
+    "尤怡": [
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0194",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.849,
+   "lexical_divergence": 0.8851,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "寒熱",
+     "攻下",
+     "當下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0182",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8489,
+   "lexical_divergence": 0.8248,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "方有執": [
+     "榮衛"
+    ],
+    "柯琴": [
+     "下之",
+     "可下",
+     "和之"
+    ],
+    "錢潢": [
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0140",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8478,
+   "lexical_divergence": 0.8043,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "成無己": [
+     "攻之"
+    ],
+    "方有執": [
+     "表證"
+    ],
+    "錢潢": [
+     "可下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0043",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8472,
+   "lexical_divergence": 0.8298,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "汗解",
+     "腠理"
+    ],
+    "尤怡": [
+     "可發汗",
+     "太陽病",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0301",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8457,
+   "lexical_divergence": 0.8545,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "可發汗",
+     "津液",
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0391",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8444,
+   "lexical_divergence": 0.9188,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0204",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8443,
+   "lexical_divergence": 0.8026,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "錢潢": [
+     "下之",
+     "太陽病",
+     "表證"
+    ],
+    "丹波元簡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0038",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8426,
+   "lexical_divergence": 0.8315,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "陰陽",
+     "陽鬱"
+    ],
+    "黃元御": [
+     "寒熱",
+     "鬱熱"
+    ],
+    "丹波元簡": [
+     "營弱衛強"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0080",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8413,
+   "lexical_divergence": 0.8414,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "攻裏"
+    ],
+    "錢潢": [
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0163",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8376,
+   "lexical_divergence": 0.868,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏"
+    ],
+    "尤怡": [
+     "攻表"
+    ],
+    "錢潢": [
+     "正氣",
+     "津液",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "太陽病",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0184",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8375,
+   "lexical_divergence": 0.8593,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0047",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8373,
+   "lexical_divergence": 0.8963,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "腠理"
+    ],
+    "尤怡": [
+     "發汗",
+     "邪氣"
+    ],
+    "錢潢": [
+     "發其汗",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0223",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8357,
+   "lexical_divergence": 0.876,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之",
+     "吐之",
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0279",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.834,
+   "lexical_divergence": 0.849,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "太陽病"
+    ],
+    "柯琴": [
+     "胃氣",
+     "表裏"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0380",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.8762,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "當溫"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0073",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.8691,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "發其汗"
+    ],
+    "尤怡": [
+     "利小便"
+    ],
+    "丹波元簡": [
+     "營衛不和"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0373",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.8666,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經",
+     "清熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0078",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.8537,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0332",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.8411,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0299",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.8302,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "傳經"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0377",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.7707,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "尤怡": [
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0109",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.7638,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "太陽病",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0226",
+   "n_commentators": 4,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.7555,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "虛實",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0143",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.7479,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "寒熱"
+    ],
+    "丹波元簡": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0031",
+   "n_commentators": 4,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8333,
+   "lexical_divergence": 0.718,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0103",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8279,
+   "lexical_divergence": 0.8633,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "和之",
+     "壞病",
+     "表證"
+    ],
+    "尤怡": [
+     "可下",
+     "太陽病",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0037",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8244,
+   "lexical_divergence": 0.7531,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "樞機不利"
+    ],
+    "錢潢": [
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0238",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8222,
+   "lexical_divergence": 0.8437,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "攻下",
+     "越之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0079",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8218,
+   "lexical_divergence": 0.844,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "可下",
+     "當吐"
+    ],
+    "錢潢": [
+     "表證",
+     "越之",
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "吐之",
+     "溫之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0008",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8214,
+   "lexical_divergence": 0.8106,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0149",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.82,
+   "lexical_divergence": 0.8637,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "尤怡": [
+     "和之",
+     "和解"
+    ],
+    "錢潢": [
+     "壞病"
+    ],
+    "丹波元簡": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0134",
+   "n_commentators": 5,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.82,
+   "lexical_divergence": 0.811,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "尤怡": [
+     "正氣"
+    ],
+    "錢潢": [
+     "衛強營弱",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0276",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8186,
+   "lexical_divergence": 0.8889,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "溫之",
+     "當溫",
+     "裏證"
+    ],
+    "丹波元簡": [
+     "可發汗",
+     "太陽病",
+     "建中",
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0046",
+   "n_commentators": 7,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.8167,
+   "lexical_divergence": 0.8476,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "太陽病"
+    ],
+    "錢潢": [
+     "發汗",
+     "解表",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0126",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8151,
+   "lexical_divergence": 0.8287,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "三焦"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0007",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8148,
+   "lexical_divergence": 0.8621,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "直中"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0107",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8136,
+   "lexical_divergence": 0.8648,
+   "n_analytic_terms": 11,
+   "distinctive_terms": {
+    "柯琴": [
+     "樞機不利"
+    ],
+    "尤怡": [
+     "和胃氣",
+     "胃氣",
+     "虛實",
+     "陰陽"
+    ],
+    "錢潢": [
+     "三焦"
+    ],
+    "丹波元簡": [
+     "和解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0028",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8095,
+   "lexical_divergence": 0.7105,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "柯琴": [
+     "發汗"
+    ],
+    "尤怡": [
+     "攻表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0034",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8075,
+   "lexical_divergence": 0.7691,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱",
+     "虛實",
+     "表裏"
+    ],
+    "尤怡": [
+     "和之",
+     "清熱"
+    ],
+    "錢潢": [
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0178",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8025,
+   "lexical_divergence": 0.8616,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "三焦"
+    ],
+    "尤怡": [
+     "攻之",
+     "補之"
+    ],
+    "錢潢": [
+     "經絡"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0112",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8,
+   "lexical_divergence": 0.8792,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0016",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8,
+   "lexical_divergence": 0.8791,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "錢潢": [
+     "取微似汗",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "吐之",
+     "當下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0364",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8,
+   "lexical_divergence": 0.8634,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "厥陰病",
+     "當溫"
+    ],
+    "錢潢": [
+     "發其汗",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0060",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8,
+   "lexical_divergence": 0.832,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "尤怡": [
+     "和之",
+     "溫之",
+     "陰陽"
+    ],
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0243",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.8,
+   "lexical_divergence": 0.8307,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "下之",
+     "寒熱",
+     "攻之",
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0018",
+   "n_commentators": 4,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8,
+   "lexical_divergence": 0.8244,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0394",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.8,
+   "lexical_divergence": 0.7856,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "和之",
+     "虛實",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0063",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.7976,
+   "lexical_divergence": 0.8781,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0305",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.7976,
+   "lexical_divergence": 0.7471,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0056",
+   "n_commentators": 7,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.796,
+   "lexical_divergence": 0.8236,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "發其汗"
+    ],
+    "錢潢": [
+     "寒熱",
+     "邪氣"
+    ],
+    "黃元御": [
+     "解表",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0266",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7959,
+   "lexical_divergence": 0.8224,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "半表半裏",
+     "裏證"
+    ],
+    "尤怡": [
+     "和之",
+     "津液"
+    ],
+    "張卿子": [
+     "可吐",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0196",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7946,
+   "lexical_divergence": 0.8211,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "方有執": [
+     "腠理"
+    ],
+    "錢潢": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0110",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7921,
+   "lexical_divergence": 0.7992,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃氣",
+     "陰陽"
+    ],
+    "尤怡": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0390",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7917,
+   "lexical_divergence": 0.8448,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "可下",
+     "可吐",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0170",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7882,
+   "lexical_divergence": 0.8299,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "救裏",
+     "發汗",
+     "表裏",
+     "裏證"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0130",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7881,
+   "lexical_divergence": 0.8493,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "方有執": [
+     "傳經"
+    ],
+    "尤怡": [
+     "攻之",
+     "正氣"
+    ],
+    "錢潢": [
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0267",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.7874,
+   "lexical_divergence": 0.8406,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "張卿子": [
+     "榮衛"
+    ],
+    "柯琴": [
+     "寒熱"
+    ],
+    "丹波元簡": [
+     "吐之",
+     "和解",
+     "當吐"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0224",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.787,
+   "lexical_divergence": 0.8023,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0075",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7857,
+   "lexical_divergence": 0.9137,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "傳經",
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0113",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7857,
+   "lexical_divergence": 0.8752,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "和解",
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0021",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7857,
+   "lexical_divergence": 0.851,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0333",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7857,
+   "lexical_divergence": 0.836,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "陽明病"
+    ],
+    "尤怡": [
+     "溫之"
+    ],
+    "錢潢": [
+     "當溫"
+    ],
+    "丹波元簡": [
+     "合病",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0345",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.7857,
+   "lexical_divergence": 0.7459,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0382",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.7857,
+   "lexical_divergence": 0.7358,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "表證",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0006",
+   "n_commentators": 5,
+   "commentators": [
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.785,
+   "lexical_divergence": 0.9061,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "攻之"
+    ],
+    "柯琴": [
+     "汗解"
+    ],
+    "尤怡": [
+     "溫之",
+     "邪氣"
+    ],
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0240",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7847,
+   "lexical_divergence": 0.8559,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "黃元御": [
+     "經絡",
+     "表證"
+    ],
+    "丹波元簡": [
+     "汗解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0023",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7794,
+   "lexical_divergence": 0.8549,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "成無己": [
+     "發其汗"
+    ],
+    "柯琴": [
+     "和解",
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0076",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7767,
+   "lexical_divergence": 0.8782,
+   "n_analytic_terms": 11,
+   "distinctive_terms": {
+    "柯琴": [
+     "利小便",
+     "壞病",
+     "當下",
+     "當吐",
+     "解表",
+     "陽明病"
+    ],
+    "丹波元簡": [
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0096",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7762,
+   "lexical_divergence": 0.9139,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "半表半裏",
+     "表裏",
+     "鬱熱"
+    ],
+    "尤怡": [
+     "和解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0195",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7746,
+   "lexical_divergence": 0.8344,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "方有執": [
+     "可下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0244",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7741,
+   "lexical_divergence": 0.7733,
+   "n_analytic_terms": 12,
+   "distinctive_terms": {
+    "柯琴": [
+     "併病"
+    ],
+    "黃元御": [
+     "攻下"
+    ],
+    "丹波元簡": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0387",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7698,
+   "lexical_divergence": 0.7635,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "營衛不和"
+    ],
+    "錢潢": [
+     "下之",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0069",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.769,
+   "lexical_divergence": 0.8564,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "回陽"
+    ],
+    "尤怡": [
+     "正氣",
+     "邪氣"
+    ],
+    "錢潢": [
+     "發其汗",
+     "補之",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0211",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7683,
+   "lexical_divergence": 0.8885,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃氣"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "太陽病",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0220",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7683,
+   "lexical_divergence": 0.7537,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "當下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0161",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7675,
+   "lexical_divergence": 0.8424,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "下之"
+    ],
+    "尤怡": [
+     "和胃氣"
+    ],
+    "錢潢": [
+     "發其汗"
+    ],
+    "丹波元簡": [
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0294",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7667,
+   "lexical_divergence": 0.8658,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "尤怡": [
+     "攻之"
+    ],
+    "錢潢": [
+     "回陽"
+    ],
+    "丹波元簡": [
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0045",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7663,
+   "lexical_divergence": 0.8502,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "黃元御": [
+     "可下",
+     "太陽病",
+     "當下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0151",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.7619,
+   "lexical_divergence": 0.7967,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0066",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7611,
+   "lexical_divergence": 0.8244,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "正氣"
+    ],
+    "尤怡": [
+     "攻之",
+     "補之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0068",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7611,
+   "lexical_divergence": 0.7923,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "攻表",
+     "救裏",
+     "陰陽"
+    ],
+    "尤怡": [
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0252",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7571,
+   "lexical_divergence": 0.7805,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏",
+     "裏證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0067",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7556,
+   "lexical_divergence": 0.7943,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "攻表"
+    ],
+    "尤怡": [
+     "和之"
+    ],
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0205",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7544,
+   "lexical_divergence": 0.764,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0120",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7542,
+   "lexical_divergence": 0.8392,
+   "n_analytic_terms": 12,
+   "distinctive_terms": {
+    "柯琴": [
+     "併病",
+     "可吐",
+     "太陽病"
+    ],
+    "尤怡": [
+     "寒熱",
+     "正氣",
+     "發汗"
+    ],
+    "錢潢": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0214",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7524,
+   "lexical_divergence": 0.8302,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "胃氣"
+    ],
+    "尤怡": [
+     "攻之"
+    ],
+    "錢潢": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0131",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.75,
+   "lexical_divergence": 0.8339,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0327",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.75,
+   "lexical_divergence": 0.8278,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "錢潢": [
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0065",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.75,
+   "lexical_divergence": 0.8269,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0241",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7406,
+   "lexical_divergence": 0.8754,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "攻下"
+    ],
+    "張卿子": [
+     "虛實"
+    ],
+    "黃元御": [
+     "合病",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0335",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.74,
+   "lexical_divergence": 0.8308,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "攻裏",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0248",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7397,
+   "lexical_divergence": 0.8614,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ],
+    "尤怡": [
+     "胃氣"
+    ],
+    "錢潢": [
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0190",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7381,
+   "lexical_divergence": 0.8448,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "傳經"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0087",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.7381,
+   "lexical_divergence": 0.8375,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "可發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0070",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7378,
+   "lexical_divergence": 0.8474,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "柯琴": [
+     "正氣",
+     "虛實",
+     "邪氣"
+    ],
+    "錢潢": [
+     "微和胃氣",
+     "發汗"
+    ],
+    "黃元御": [
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0213",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7365,
+   "lexical_divergence": 0.8092,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "可發汗",
+     "發其汗",
+     "發汗",
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0268",
+   "n_commentators": 5,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.735,
+   "lexical_divergence": 0.7409,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "尤怡": [
+     "下之",
+     "可下",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0160",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7344,
+   "lexical_divergence": 0.7577,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0015",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7341,
+   "lexical_divergence": 0.7979,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "方有執": [
+     "可下",
+     "解表"
+    ],
+    "尤怡": [
+     "正氣"
+    ],
+    "錢潢": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0033",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7341,
+   "lexical_divergence": 0.7688,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "解表",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0324",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.7289,
+   "lexical_divergence": 0.7847,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0218",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7277,
+   "lexical_divergence": 0.8599,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "成無己": [
+     "合病"
+    ],
+    "柯琴": [
+     "可發汗",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0284",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.725,
+   "lexical_divergence": 0.8484,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "可發汗",
+     "少陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0124",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7234,
+   "lexical_divergence": 0.8254,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "下之"
+    ],
+    "丹波元簡": [
+     "三焦",
+     "當下",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0162",
+   "n_commentators": 4,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.7222,
+   "lexical_divergence": 0.7245,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0173",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.719,
+   "lexical_divergence": 0.8245,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏"
+    ],
+    "尤怡": [
+     "三焦",
+     "下之"
+    ],
+    "錢潢": [
+     "鬱熱"
+    ],
+    "丹波元簡": [
+     "和解"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0158",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.7189,
+   "lexical_divergence": 0.7866,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "寒熱",
+     "汗解"
+    ],
+    "丹波元簡": [
+     "當下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0197",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7143,
+   "lexical_divergence": 0.7494,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "半表半裏",
+     "吐之"
+    ],
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0153",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.71,
+   "lexical_divergence": 0.7452,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0091",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.7055,
+   "lexical_divergence": 0.8288,
+   "n_analytic_terms": 14,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "柯琴": [
+     "救裏",
+     "表裏"
+    ],
+    "尤怡": [
+     "寒熱",
+     "發汗",
+     "邪氣",
+     "陰陽"
+    ],
+    "錢潢": [
+     "虛實"
+    ],
+    "黃元御": [
+     "攻表",
+     "表證"
+    ],
+    "丹波元簡": [
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0102",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7046,
+   "lexical_divergence": 0.9048,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "半表半裏",
+     "和之",
+     "發汗",
+     "裏證",
+     "解表"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0101",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7016,
+   "lexical_divergence": 0.8039,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "方有執": [
+     "和之"
+    ],
+    "錢潢": [
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0106",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7,
+   "lexical_divergence": 0.9111,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "救裏",
+     "標本"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0269",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7,
+   "lexical_divergence": 0.7882,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "柯琴": [
+     "和之",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0385",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.7,
+   "lexical_divergence": 0.7748,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "尤怡": [
+     "當溫"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0288",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.7,
+   "lexical_divergence": 0.7463,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "錢潢": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0098",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.6998,
+   "lexical_divergence": 0.7928,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "方有執": [
+     "可下"
+    ],
+    "柯琴": [
+     "壞病",
+     "表裏"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0085",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6961,
+   "lexical_divergence": 0.852,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "下之"
+    ],
+    "柯琴": [
+     "津液"
+    ],
+    "錢潢": [
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "建中"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0044",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6952,
+   "lexical_divergence": 0.8385,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "太陰病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0280",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6944,
+   "lexical_divergence": 0.8692,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "溫之"
+    ],
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0159",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6929,
+   "lexical_divergence": 0.7588,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "寒熱",
+     "補之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0150",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6907,
+   "lexical_divergence": 0.8345,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "方有執": [
+     "可發汗",
+     "發汗"
+    ],
+    "柯琴": [
+     "當下"
+    ],
+    "尤怡": [
+     "三焦",
+     "胃氣"
+    ],
+    "丹波元簡": [
+     "少陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0251",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.6905,
+   "lexical_divergence": 0.7637,
+   "n_analytic_terms": 13,
+   "distinctive_terms": {
+    "柯琴": [
+     "虛實"
+    ],
+    "尤怡": [
+     "和胃氣",
+     "微和胃氣",
+     "當下",
+     "胃氣"
+    ],
+    "丹波元簡": [
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0206",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.688,
+   "lexical_divergence": 0.7842,
+   "n_analytic_terms": 11,
+   "distinctive_terms": {
+    "柯琴": [
+     "利小便"
+    ],
+    "尤怡": [
+     "表證",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0026",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.6875,
+   "lexical_divergence": 0.827,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "方有執": [
+     "解表"
+    ],
+    "錢潢": [
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0172",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.681,
+   "lexical_divergence": 0.7626,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "錢潢": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0144",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6778,
+   "lexical_divergence": 0.8155,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "和之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0255",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6711,
+   "lexical_divergence": 0.7821,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "攻下",
+     "當下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0322",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.669,
+   "lexical_divergence": 0.828,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "攻之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0064",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6667,
+   "lexical_divergence": 0.8949,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0055",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6667,
+   "lexical_divergence": 0.8775,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "少陰病"
+    ],
+    "錢潢": [
+     "發其汗",
+     "鬱熱"
+    ],
+    "張卿子": [
+     "太陽病"
+    ],
+    "丹波元簡": [
+     "可發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0316",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6667,
+   "lexical_divergence": 0.7886,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0358",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6667,
+   "lexical_divergence": 0.7819,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0306",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.6667,
+   "lexical_divergence": 0.7656,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0071",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.6631,
+   "lexical_divergence": 0.8895,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "方有執": [
+     "太陽病"
+    ],
+    "柯琴": [
+     "發其汗"
+    ],
+    "錢潢": [
+     "取微似汗",
+     "邪氣"
+    ],
+    "黃元御": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0203",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.6627,
+   "lexical_divergence": 0.9232,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "尤怡": [
+     "攻之",
+     "陽明病"
+    ],
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0145",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6611,
+   "lexical_divergence": 0.7444,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "陽明病"
+    ],
+    "錢潢": [
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0330",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6571,
+   "lexical_divergence": 0.8848,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "尤怡": [
+     "當溫"
+    ],
+    "錢潢": [
+     "攻下"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0061",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.654,
+   "lexical_divergence": 0.7754,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "錢潢": [
+     "寒熱"
+    ],
+    "柯琴": [
+     "發其汗"
+    ],
+    "丹波元簡": [
+     "回陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0132",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6519,
+   "lexical_divergence": 0.8543,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "錢潢": [
+     "正氣"
+    ],
+    "柯琴": [
+     "急下",
+     "攻之",
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0136",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6515,
+   "lexical_divergence": 0.7969,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "攻之",
+     "汗解",
+     "胃氣",
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0247",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.6429,
+   "lexical_divergence": 0.7629,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "錢潢": [
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0139",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.64,
+   "lexical_divergence": 0.7047,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "併病",
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0250",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6397,
+   "lexical_divergence": 0.803,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "下之"
+    ],
+    "柯琴": [
+     "壞病"
+    ],
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "取微似汗",
+     "攻下",
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0089",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6389,
+   "lexical_divergence": 0.8276,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "方有執": [
+     "可發汗",
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0093",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.637,
+   "lexical_divergence": 0.805,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "太陽病",
+     "表裏"
+    ],
+    "尤怡": [
+     "正氣"
+    ],
+    "錢潢": [
+     "汗解",
+     "發其汗"
+    ],
+    "丹波元簡": [
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0072",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.6342,
+   "lexical_divergence": 0.8551,
+   "n_analytic_terms": 12,
+   "distinctive_terms": {
+    "柯琴": [
+     "半表半裏",
+     "汗解",
+     "發其汗",
+     "表裏"
+    ],
+    "錢潢": [
+     "腠理",
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "太陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0052",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.6333,
+   "lexical_divergence": 0.8831,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0084",
+   "n_commentators": 5,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.6333,
+   "lexical_divergence": 0.8713,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "錢潢": [
+     "三焦",
+     "寒熱",
+     "虛實",
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "建中"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0365",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6333,
+   "lexical_divergence": 0.8138,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "下之",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0230",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6245,
+   "lexical_divergence": 0.6996,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "攻之"
+    ],
+    "錢潢": [
+     "寒熱",
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0217",
+   "n_commentators": 6,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6233,
+   "lexical_divergence": 0.7982,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "和之"
+    ],
+    "錢潢": [
+     "胃家實熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0265",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6224,
+   "lexical_divergence": 0.8228,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "柯琴": [
+     "和之",
+     "寒熱",
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0259",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6143,
+   "lexical_divergence": 0.8663,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "當溫",
+     "陽明病"
+    ],
+    "錢潢": [
+     "汗解",
+     "發其汗",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0048",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.6071,
+   "lexical_divergence": 0.7021,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "傳經"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0036",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6039,
+   "lexical_divergence": 0.7869,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "太陽病",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0336",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6,
+   "lexical_divergence": 0.8305,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "寒熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0271",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6,
+   "lexical_divergence": 0.7777,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "尤怡": [
+     "少陽病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0199",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.6,
+   "lexical_divergence": 0.7262,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "錢潢": [
+     "鬱熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0020",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5992,
+   "lexical_divergence": 0.7573,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "錢潢": [
+     "發其汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0032",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5978,
+   "lexical_divergence": 0.7722,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ],
+    "錢潢": [
+     "下之",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0097",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5956,
+   "lexical_divergence": 0.8283,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "成無己": [
+     "經絡"
+    ],
+    "柯琴": [
+     "半表半裏",
+     "裏證"
+    ],
+    "尤怡": [
+     "陰陽"
+    ],
+    "錢潢": [
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0290",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5952,
+   "lexical_divergence": 0.8339,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0059",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5912,
+   "lexical_divergence": 0.7893,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "利小便",
+     "陰陽"
+    ],
+    "丹波元簡": [
+     "發其汗",
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0245",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5905,
+   "lexical_divergence": 0.8595,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "表證"
+    ],
+    "錢潢": [
+     "正氣",
+     "邪氣"
+    ],
+    "丹波元簡": [
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0094",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.585,
+   "lexical_divergence": 0.858,
+   "n_analytic_terms": 10,
+   "distinctive_terms": {
+    "柯琴": [
+     "津液"
+    ],
+    "尤怡": [
+     "可下"
+    ],
+    "錢潢": [
+     "正氣"
+    ],
+    "黃元御": [
+     "表證",
+     "陽明病"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0181",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.5849,
+   "lexical_divergence": 0.752,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0121",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5848,
+   "lexical_divergence": 0.8383,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ],
+    "錢潢": [
+     "表證"
+    ],
+    "丹波元簡": [
+     "下之",
+     "太陽病",
+     "清熱"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0257",
+   "n_commentators": 4,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5833,
+   "lexical_divergence": 0.798,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "柯琴": [
+     "表裏"
+    ],
+    "錢潢": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0254",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5817,
+   "lexical_divergence": 0.7982,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "救裏"
+    ],
+    "尤怡": [
+     "正氣"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0100",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5762,
+   "lexical_divergence": 0.9012,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "錢潢": [
+     "營衛不和"
+    ],
+    "丹波元簡": [
+     "和解",
+     "少陽病",
+     "汗解",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0396",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.5714,
+   "lexical_divergence": 0.8497,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0049",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5713,
+   "lexical_divergence": 0.7939,
+   "n_analytic_terms": 9,
+   "distinctive_terms": {
+    "方有執": [
+     "當下"
+    ],
+    "錢潢": [
+     "合病",
+     "陰陽"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0253",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5683,
+   "lexical_divergence": 0.8366,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0246",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.5667,
+   "lexical_divergence": 0.7945,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "利小便"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0286",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5563,
+   "lexical_divergence": 0.819,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "急下"
+    ],
+    "丹波元簡": [
+     "津液"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0256",
+   "n_commentators": 3,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "柯琴"
+   ],
+   "term_divergence": 0.5556,
+   "lexical_divergence": 0.6185,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "下之"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0133",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5524,
+   "lexical_divergence": 0.8256,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "方有執": [
+     "津液"
+    ],
+    "錢潢": [
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0347",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5476,
+   "lexical_divergence": 0.8499,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "錢潢": [
+     "正氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0083",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.5389,
+   "lexical_divergence": 0.8282,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0189",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.53,
+   "lexical_divergence": 0.7963,
+   "n_analytic_terms": 8,
+   "distinctive_terms": {
+    "柯琴": [
+     "合病"
+    ],
+    "尤怡": [
+     "邪氣",
+     "陽明病"
+    ],
+    "錢潢": [
+     "三焦",
+     "胃氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0323",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5,
+   "lexical_divergence": 0.8844,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {
+    "柯琴": [
+     "當溫"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0003",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.5,
+   "lexical_divergence": 0.8411,
+   "n_analytic_terms": 1,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0232",
+   "n_commentators": 3,
+   "commentators": [
+    "張卿子",
+    "成無己",
+    "錢潢"
+   ],
+   "term_divergence": 0.5,
+   "lexical_divergence": 0.5752,
+   "n_analytic_terms": 4,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0090",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": 0.4789,
+   "lexical_divergence": 0.7854,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "尤怡": [
+     "當下"
+    ],
+    "錢潢": [
+     "發其汗",
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0057",
+   "n_commentators": 8,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.4464,
+   "lexical_divergence": 0.8102,
+   "n_analytic_terms": 5,
+   "distinctive_terms": {
+    "方有執": [
+     "腠理"
+    ],
+    "柯琴": [
+     "汗解"
+    ],
+    "尤怡": [
+     "邪氣"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0058",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴"
+   ],
+   "term_divergence": 0.4444,
+   "lexical_divergence": 0.8443,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "尤怡": [
+     "正氣",
+     "邪氣"
+    ],
+    "柯琴": [
+     "利小便",
+     "發汗"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0392",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.4048,
+   "lexical_divergence": 0.8317,
+   "n_analytic_terms": 2,
+   "distinctive_terms": {
+    "柯琴": [
+     "表證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0285",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.381,
+   "lexical_divergence": 0.8078,
+   "n_analytic_terms": 6,
+   "distinctive_terms": {
+    "柯琴": [
+     "當溫",
+     "表證",
+     "裏證"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0050",
+   "n_commentators": 7,
+   "commentators": [
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": 0.2959,
+   "lexical_divergence": 0.8534,
+   "n_analytic_terms": 7,
+   "distinctive_terms": {
+    "柯琴": [
+     "正氣",
+     "津液",
+     "發其汗"
+    ],
+    "錢潢": [
+     "汗解",
+     "虛實"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0283",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": 0.1905,
+   "lexical_divergence": 0.803,
+   "n_analytic_terms": 3,
+   "distinctive_terms": {
+    "丹波元簡": [
+     "溫之",
+     "腠理"
+    ]
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0116",
+   "n_commentators": 2,
+   "commentators": [
+    "丹波元簡",
+    "柯琴"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 1.0,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0239",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.8701,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0295",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.839,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0275",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.8366,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0308",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.8356,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0298",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.8249,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0363",
+   "n_commentators": 7,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.82,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0351",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "柯琴",
+    "錢潢"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.804,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0362",
+   "n_commentators": 6,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "張卿子",
+    "成無己",
+    "方有執",
+    "錢潢"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.7792,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0022",
+   "n_commentators": 4,
+   "commentators": [
+    "丹波元簡",
+    "尤怡",
+    "錢潢",
+    "黃元御"
+   ],
+   "term_divergence": null,
+   "lexical_divergence": 0.6703,
+   "n_analytic_terms": 0,
+   "distinctive_terms": {}
+  }
+ ]
+}

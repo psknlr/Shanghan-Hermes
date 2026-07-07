@@ -60,6 +60,20 @@ COMMENTARY_BOOKS = [
     "註解傷寒論", "傷寒論條辨", "傷寒來蘇集", "傷寒貫珠集", "傷寒溯源集",
     "張卿子傷寒論", "傷寒懸解", "傷寒論注", "傷寒論輯義",
 ]
+# book → (rule-id slug, canonical commentator name). 傷寒論注 is 柯琴's
+# standalone annotation (same commentator as 來蘇集, different book — the
+# divergence atlas dedupes by commentator per clause).
+COMMENTARY_BOOK_INFO = {
+    "註解傷寒論": ("ZHUJIE", "成無己"),
+    "傷寒論條辨": ("TIAOBIAN", "方有執"),
+    "傷寒來蘇集": ("LAISU", "柯琴"),
+    "傷寒貫珠集": ("GUANZHU", "尤怡"),
+    "傷寒溯源集": ("SUYUAN", "錢潢"),
+    "張卿子傷寒論": ("ZHANGQINGZI", "張卿子"),
+    "傷寒懸解": ("XUANJIE", "黃元御"),
+    "傷寒論注": ("LUNZHU", "柯琴"),
+    "傷寒論輯義": ("JIYI", "丹波元簡"),
+}
 FORMULA_FAMILY_BOOKS = ["傷寒論類方"]
 
 LAYER_OF_BOOK = {

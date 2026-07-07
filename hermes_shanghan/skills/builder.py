@@ -519,8 +519,15 @@ class SkillBuilder:
 """ + CORE_PRINCIPLES
         examples = [{"query": "第12條桂本有沒有異文？",
                      "answer_outline": "查 variants 規則中 clause_id=SHL_SONGBEN_0012 的對齊記錄。"}]
+        # stratified commentary sample: rules are written in book order, so a
+        # flat [:200] slice would contain only the first book (成無己)
+        by_book: Dict[str, List] = {}
+        for r in self.commentary_rules:
+            by_book.setdefault(r.book, []).append(r)
+        per_book = max(1, 200 // max(1, len(by_book)))
+        comm_sample = [r for rs in by_book.values() for r in rs[:per_book]]
         _write_skill(self.root / "hermes.shanghan.variants", md,
-                     self.variant_rules[:400] + self.commentary_rules[:200], examples)
+                     self.variant_rules[:400] + comm_sample, examples)
         return 1
 
     # ------------------------------------------------------------------

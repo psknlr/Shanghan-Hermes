@@ -155,7 +155,42 @@ class PaperWriter:
                 "supporting_clauses": f.supporting_clauses[:3],
             } for f in sample_rules],
             "benchmark": self._benchmark_digest(),
+            "commentary_atlas": self._atlas_digest(),
+            "dosimetry": self._dose_digest(),
         }
+
+    def _atlas_digest(self) -> Dict:
+        a = self._load_research("commentary_divergence.json")
+        if not a:
+            return {}
+        ag = sorted(a["agreement_matrix"], key=lambda x: -x["mean_term_agreement"])
+        return {"n_books": a["n_books"],
+                "n_commentary_rules": a["n_commentary_rules"],
+                "n_clauses_multi_commentator": a["n_clauses_multi_commentator"],
+                "book_coverage": {b: c["n_aligned_clauses"]
+                                  for b, c in a["book_coverage"].items()},
+                "most_agreeing_pair": ag[0] if ag else None,
+                "most_diverging_pair": ag[-1] if ag else None,
+                "top_divergent_clauses": [
+                    {"clause_id": t["clause_id"],
+                     "n_commentators": t["n_commentators"],
+                     "term_divergence": t["term_divergence"]}
+                    for t in a["top_divergent_clauses"][:3]]}
+
+    def _dose_digest(self) -> Dict:
+        summ = self._load_research("dose_summary.json")
+        evo = self._load_research("dose_family_evolution.json")
+        if not summ:
+            return {}
+        dose_only = [e for e in evo.get("edges", [])
+                     if e["dose_deltas"] and not e["added_herbs"]
+                     and not e["removed_herbs"]]
+        return {"parse_coverage": summ.get("parse_coverage", {}),
+                "heaviest_formulas": summ.get("heaviest_formulas_kaogu_g", [])[:3],
+                "n_dose_delta_edges": evo.get("n_with_dose_delta", 0),
+                "dose_only_edges": [
+                    {"base": e["base"], "modified": e["modified"],
+                     "delta": e["dose_deltas"][0]} for e in dose_only[:3]]}
 
     def _benchmark_digest(self) -> Dict:
         """Compact evaluation metrics for the drafting layer ({} if not run)."""
@@ -417,8 +452,14 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 
         if paper_type == "commentary_compare":
             n_sub += 1
-            lines.append(f"### 4.{n_sub} 成無己注對齊示例\n" +
+            lines.append(f"### 4.{n_sub} 多注家對齊示例\n" +
                          self._commentary_table(topic))
+            n_sub += 1
+            lines.append(f"### 4.{n_sub} 注家分歧圖譜\n" + self._atlas_tables())
+
+        if paper_type == "network_pharmacology":
+            n_sub += 1
+            lines.append(f"### 4.{n_sub} 劑量計量層\n" + self._dose_tables())
 
         if paper_type == "methodology":
             n_sub += 1
@@ -439,6 +480,11 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
                                    for f in fprs))
         return "\n\n".join(lines)
 
+    @staticmethod
+    def _cell(text: str, limit: int) -> str:
+        """Markdown-table-safe cell: strip newlines/pipes before truncating."""
+        return (text or "").replace("\n", "").replace("|", "／")[:limit]
+
     def _commentary_table(self, topic: str) -> str:
         rules = self.commentary_rules
         if rules is None:
@@ -451,15 +497,78 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
             return bool(c and topic and any(f in topic for f in c.formula_names))
         picked = [r for r in rules if relevant(r)][:6] or rules[:6]
         if not picked:
-            return "（無成注對齊數據。）"
+            return "（無注文對齊數據。）"
         rows = []
         for r in picked:
             base = store.get(r.clause_id)
-            base_text = (base.clean_text[:40] + "…") if base else "—"
-            rows.append(f"| {r.clause_id} | {base_text} | "
-                        f"{r.commentary_text[:40]}… | {r.alignment_similarity:.2f} |")
-        return ("| 條文 | 原文（A層） | 成無己注（C層） | 對齊相似度 |\n|---|---|---|---|\n"
-                + "\n".join(rows))
+            base_text = self._cell(base.clean_text, 40) + "…" if base else "—"
+            rows.append(f"| {r.clause_id} | {r.commentator} | {base_text} | "
+                        f"{self._cell(r.commentary_text, 40)}… | "
+                        f"{r.alignment_similarity:.2f} |")
+        return ("| 條文 | 注家 | 原文（A層） | 注文（C層） | 對齊相似度 |\n"
+                "|---|---|---|---|---|\n" + "\n".join(rows))
+
+    @staticmethod
+    def _load_research(name: str) -> Dict:
+        p = config.RESEARCH_DIR / name
+        if p.exists():
+            try:
+                return json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return {}
+        return {}
+
+    def _atlas_tables(self) -> str:
+        a = self._load_research("commentary_divergence.json")
+        if not a:
+            return "（尚無分歧圖譜：請先運行 pipeline。）"
+        cov = "\n".join(
+            f"| {b} | {c['commentator']} | {c['n_aligned_clauses']} | {c['mean_similarity']} |"
+            for b, c in a["book_coverage"].items())
+        top = "\n".join(
+            f"| {t['clause_id']} | {t['n_commentators']} | {t['term_divergence']} | "
+            f"{self._cell(t['clause_text'], 28)}… |"
+            for t in a["top_divergent_clauses"][:8])
+        ag = sorted(a["agreement_matrix"], key=lambda x: -x["mean_term_agreement"])
+        pairs = ag[:3] + ag[-3:]
+        agr = "\n".join(f"| {p['a']} × {p['b']} | {p['mean_term_agreement']} | "
+                        f"{p['n_shared_clauses']} |" for p in pairs)
+        return (f"九注本條文級對齊共 {a['n_commentary_rules']} 條注文，"
+                f"{a['n_clauses_multi_commentator']} 條條文有 ≥2 位注家。\n\n"
+                f"**各注本對齊覆蓋（低覆蓋為結構性事實，不填充）**\n\n"
+                f"| 注本 | 注家 | 對齊條數 | 平均相似度 |\n|---|---|---|---|\n{cov}\n\n"
+                f"**分歧最大條文（術語剖面 Jaccard 距離）**\n\n"
+                f"| 條文 | 注家數 | 分歧度 | 原文 |\n|---|---|---|---|\n{top}\n\n"
+                f"**注家一致度矩陣（最相近3對 / 最分歧3對）**\n\n"
+                f"| 注家對 | 術語一致度 | 共注條數 |\n|---|---|---|\n{agr}")
+
+    def _dose_tables(self) -> str:
+        ratios = self._load_research("dose_ratios.json")
+        evo = self._load_research("dose_family_evolution.json")
+        summ = self._load_research("dose_summary.json")
+        if not ratios:
+            return "（尚無劑量資產：請先運行 pipeline。）"
+        rt = "\n".join(f"| {f['formula']} | {f['ratio'][:40]} | "
+                       f"{f['total_weight_g']['kaogu']} / "
+                       f"{f['total_weight_g']['duliangheng']} / "
+                       f"{f['total_weight_g']['zhezhuan']} |"
+                       for f in ratios["formulas"][:10])
+        rows = []
+        for e in evo.get("edges", []):
+            for d in e["dose_deltas"][:1]:
+                rows.append(f"| {e['base']} → {e['modified']} | {e['edge_kind']} | "
+                            f"{d['herb']}：{d['base_raw'][:8]}→{d['mod_raw'][:8]}"
+                            f"（×{d['factor']}） |")
+        cov = summ.get("parse_coverage", {})
+        return (f"劑量比例以銖當量計、與折算學派無關；絕對質量按三家折算並存"
+                f"（考古實測/度量衡史/明清折算，D/E 層標註）。解析 "
+                f"{cov.get('n_rows','—')} 條劑量，未解析 {cov.get('n_unparsed','—')} "
+                f"條（逐一列於 dose_table.json）。\n\n"
+                f"**方內藥量比（前10方；總量 g：考古/度量衡史/折算）**\n\n"
+                f"| 方 | 銖當量比 | 總量(g) |\n|---|---|---|\n{rt}\n\n"
+                f"**家族樹劑量演化（加味≠增量；dose-only 邊 "
+                f"{evo.get('n_dose_only_edges','—')} 條）**\n\n"
+                f"| 方對 | 邊類型 | 劑量變化 |\n|---|---|---|\n" + "\n".join(rows[:10]))
 
     @staticmethod
     def _load_eval() -> Dict:

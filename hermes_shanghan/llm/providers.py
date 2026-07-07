@@ -380,6 +380,32 @@ class LocalProvider:
                          f"{gd.get('grounded_answer_rate')}、未核實引用率 "
                          f"{gd.get('unsupported_citation_rate')}，"
                          "為接入任意大模型提供了可對比的幻覺引用標尺。")
+        at = d.get("commentary_atlas") or {}
+        if at.get("n_books"):
+            ap, dp = at.get("most_agreeing_pair"), at.get("most_diverging_pair")
+            seg = (f"注家分歧圖譜覆蓋 {at['n_books']} 部注本、"
+                   f"{at.get('n_commentary_rules', 0)} 條對齊注文，"
+                   f"{at.get('n_clauses_multi_commentator', 0)} 條條文有多位注家。")
+            if ap and dp:
+                seg += (f"術語一致度最高為 {ap['a']}×{ap['b']}"
+                        f"（{ap['mean_term_agreement']}），最低為 "
+                        f"{dp['a']}×{dp['b']}（{dp['mean_term_agreement']}）——"
+                        "注家譜系的親疏由數據呈現，無需先驗學派標籤。")
+            lines.append(seg)
+        ds = d.get("dosimetry") or {}
+        if ds.get("parse_coverage", {}).get("n_rows"):
+            pc = ds["parse_coverage"]
+            seg = (f"劑量計量層解析 {pc['n_rows']} 條劑量"
+                   f"（未解析 {pc.get('n_unparsed', 0)} 條已逐一列出）；"
+                   "藥量比以銖當量計、與折算學派無關。")
+            de = ds.get("dose_only_edges") or []
+            if de:
+                e = de[0]
+                seg += (f"家族樹中 {len(de)} 條僅劑量變化的方對——如 "
+                        f"{e['base']}→{e['modified']}（{e['delta']['herb']}"
+                        f"×{e['delta']['factor']}）——證明量變致新方是"
+                        "經方配伍的獨立維度。")
+            lines.append(seg)
         quant = "\n".join(f"（{i+1}）{s}" for i, s in enumerate(lines)) or \
             "（計量摘要不足，未生成解讀。）"
 

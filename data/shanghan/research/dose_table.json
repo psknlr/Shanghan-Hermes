@@ -1,0 +1,6926 @@
+{
+ "schools": {
+  "kaogu": "考古實測（東漢1斤=250g，光和大司農銅權；柯雪帆等）",
+  "duliangheng": "度量衡史（吳承洛：東漢1斤=222.73g）",
+  "zhezhuan": "明清折算（古之一兩，今用一錢≈3g）"
+ },
+ "sheng_ml": 200.0,
+ "interpretation_level": "posthoc_conversion(D/E)",
+ "n_rows": 536,
+ "kind_counts": {
+  "weight": 378,
+  "count": 96,
+  "none": 19,
+  "volume": 42,
+  "length": 1
+ },
+ "n_unparsed": 5,
+ "unparsed": [
+  {
+   "formula": "四逆散",
+   "herb": "枳實",
+   "raw": "破，水漬，炙乾"
+  },
+  {
+   "formula": "大陷胸湯",
+   "herb": "甘遂",
+   "raw": "一錢匕"
+  },
+  {
+   "formula": "大青龍湯",
+   "herb": "石膏",
+   "raw": "如雞子大，碎"
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "herb": "蜀漆",
+   "raw": "暖水洗去腥"
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "herb": "栝蔞根",
+   "raw": "各等分"
+  }
+ ],
+ "rows": [
+  {
+   "formula": "三物白散",
+   "clause_id": "SHL_SONGBEN_0141",
+   "herb": "桔梗",
+   "raw": "三分",
+   "kind": "weight",
+   "each": false,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   }
+  },
+  {
+   "formula": "三物白散",
+   "clause_id": "SHL_SONGBEN_0141",
+   "herb": "巴豆",
+   "raw": "一分，去皮心，熬黑，研如脂",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "三物白散",
+   "clause_id": "SHL_SONGBEN_0141",
+   "herb": "貝母",
+   "raw": "三分",
+   "kind": "weight",
+   "each": false,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   }
+  },
+  {
+   "formula": "乾薑附子湯",
+   "clause_id": "SHL_SONGBEN_0061",
+   "herb": "乾薑",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "乾薑附子湯",
+   "clause_id": "SHL_SONGBEN_0061",
+   "herb": "附子",
+   "raw": "一枚，生用，去皮，切八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "乾薑黃芩黃連人參湯",
+   "clause_id": "SHL_SONGBEN_0359",
+   "herb": "乾薑",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "乾薑黃芩黃連人參湯",
+   "clause_id": "SHL_SONGBEN_0359",
+   "herb": "黃芩",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "乾薑黃芩黃連人參湯",
+   "clause_id": "SHL_SONGBEN_0359",
+   "herb": "黃連",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "乾薑黃芩黃連人參湯",
+   "clause_id": "SHL_SONGBEN_0359",
+   "herb": "人參",
+   "raw": "各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "五苓散",
+   "clause_id": "SHL_SONGBEN_0071",
+   "herb": "豬苓",
+   "raw": "十八銖，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   }
+  },
+  {
+   "formula": "五苓散",
+   "clause_id": "SHL_SONGBEN_0071",
+   "herb": "澤瀉",
+   "raw": "一兩六銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 30.0,
+   "grams": {
+    "kaogu": 19.53,
+    "duliangheng": 17.4,
+    "zhezhuan": 3.75
+   }
+  },
+  {
+   "formula": "五苓散",
+   "clause_id": "SHL_SONGBEN_0071",
+   "herb": "白朮",
+   "raw": "十八銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   }
+  },
+  {
+   "formula": "五苓散",
+   "clause_id": "SHL_SONGBEN_0071",
+   "herb": "茯苓",
+   "raw": "十八銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   }
+  },
+  {
+   "formula": "五苓散",
+   "clause_id": "SHL_SONGBEN_0071",
+   "herb": "桂枝",
+   "raw": "半兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 12.0,
+   "grams": {
+    "kaogu": 7.81,
+    "duliangheng": 6.96,
+    "zhezhuan": 1.5
+   }
+  },
+  {
+   "formula": "十棗湯",
+   "clause_id": "SHL_SONGBEN_0152",
+   "herb": "芫花",
+   "raw": "熬",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "十棗湯",
+   "clause_id": "SHL_SONGBEN_0152",
+   "herb": "甘遂",
+   "raw": "",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "十棗湯",
+   "clause_id": "SHL_SONGBEN_0152",
+   "herb": "大戟",
+   "raw": "",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "半夏散及湯",
+   "clause_id": "SHL_SONGBEN_0313",
+   "herb": "半夏",
+   "raw": "洗",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "半夏散及湯",
+   "clause_id": "SHL_SONGBEN_0313",
+   "herb": "桂枝",
+   "raw": "去皮",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "半夏散及湯",
+   "clause_id": "SHL_SONGBEN_0313",
+   "herb": "甘草",
+   "raw": "炙",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "clause_id": "SHL_SONGBEN_0149",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "clause_id": "SHL_SONGBEN_0149",
+   "herb": "黃芩",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "clause_id": "SHL_SONGBEN_0149",
+   "herb": "乾薑",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "clause_id": "SHL_SONGBEN_0149",
+   "herb": "人參",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "clause_id": "SHL_SONGBEN_0149",
+   "herb": "甘草",
+   "raw": "炙，各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "clause_id": "SHL_SONGBEN_0149",
+   "herb": "黃連",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "半夏瀉心湯",
+   "clause_id": "SHL_SONGBEN_0149",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "厚朴生薑半夏甘草人參湯",
+   "clause_id": "SHL_SONGBEN_0066",
+   "herb": "厚朴",
+   "raw": "半斤，炙，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "厚朴生薑半夏甘草人參湯",
+   "clause_id": "SHL_SONGBEN_0066",
+   "herb": "生薑",
+   "raw": "半斤，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "厚朴生薑半夏甘草人參湯",
+   "clause_id": "SHL_SONGBEN_0066",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "厚朴生薑半夏甘草人參湯",
+   "clause_id": "SHL_SONGBEN_0066",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "厚朴生薑半夏甘草人參湯",
+   "clause_id": "SHL_SONGBEN_0066",
+   "herb": "人參",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "去桂加白朮湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "附子",
+   "raw": "三枚，炮，去皮，破",
+   "kind": "count",
+   "each": false,
+   "count": 3,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "去桂加白朮湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "白朮",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "去桂加白朮湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "去桂加白朮湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "去桂加白朮湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "吳茱萸湯",
+   "clause_id": "SHL_SONGBEN_0243",
+   "herb": "吳茱萸",
+   "raw": "一升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "吳茱萸湯",
+   "clause_id": "SHL_SONGBEN_0243",
+   "herb": "人參",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "吳茱萸湯",
+   "clause_id": "SHL_SONGBEN_0243",
+   "herb": "生薑",
+   "raw": "六兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "吳茱萸湯",
+   "clause_id": "SHL_SONGBEN_0243",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "四逆加人參湯",
+   "clause_id": "SHL_SONGBEN_0385",
+   "herb": "甘草",
+   "raw": "二兩，灸",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "四逆加人參湯",
+   "clause_id": "SHL_SONGBEN_0385",
+   "herb": "附子",
+   "raw": "一枚，生，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "四逆加人參湯",
+   "clause_id": "SHL_SONGBEN_0385",
+   "herb": "乾薑",
+   "raw": "一兩半",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "四逆加人參湯",
+   "clause_id": "SHL_SONGBEN_0385",
+   "herb": "人參",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "四逆散",
+   "clause_id": "SHL_SONGBEN_0318",
+   "herb": "甘草",
+   "raw": "炙",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "四逆散",
+   "clause_id": "SHL_SONGBEN_0318",
+   "herb": "枳實",
+   "raw": "破，水漬，炙乾",
+   "kind": "none",
+   "each": false,
+   "unparsed_head": "破，水漬，炙乾"
+  },
+  {
+   "formula": "四逆散",
+   "clause_id": "SHL_SONGBEN_0318",
+   "herb": "柴胡",
+   "raw": "",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "四逆散",
+   "clause_id": "SHL_SONGBEN_0318",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "四逆湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "四逆湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "乾薑",
+   "raw": "一兩半",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "四逆湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "附子",
+   "raw": "一枚，生用，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "大承氣湯",
+   "clause_id": "SHL_SONGBEN_0208",
+   "herb": "大黃",
+   "raw": "四兩，酒洗",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "大承氣湯",
+   "clause_id": "SHL_SONGBEN_0208",
+   "herb": "厚朴",
+   "raw": "半斤，炙，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "大承氣湯",
+   "clause_id": "SHL_SONGBEN_0208",
+   "herb": "枳實",
+   "raw": "五枚，炙",
+   "kind": "count",
+   "each": false,
+   "count": 5,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "大承氣湯",
+   "clause_id": "SHL_SONGBEN_0208",
+   "herb": "芒硝",
+   "raw": "三合",
+   "kind": "volume",
+   "each": false,
+   "ge": 3.0,
+   "ml": 60.0
+  },
+  {
+   "formula": "大柴胡湯",
+   "clause_id": "SHL_SONGBEN_0103",
+   "herb": "柴胡",
+   "raw": "半斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "大柴胡湯",
+   "clause_id": "SHL_SONGBEN_0103",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "大柴胡湯",
+   "clause_id": "SHL_SONGBEN_0103",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "大柴胡湯",
+   "clause_id": "SHL_SONGBEN_0103",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "大柴胡湯",
+   "clause_id": "SHL_SONGBEN_0103",
+   "herb": "生薑",
+   "raw": "五兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 120.0,
+   "grams": {
+    "kaogu": 78.12,
+    "duliangheng": 69.6,
+    "zhezhuan": 15.0
+   }
+  },
+  {
+   "formula": "大柴胡湯",
+   "clause_id": "SHL_SONGBEN_0103",
+   "herb": "枳實",
+   "raw": "四枚，炙",
+   "kind": "count",
+   "each": false,
+   "count": 4,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "大柴胡湯",
+   "clause_id": "SHL_SONGBEN_0103",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "大陷胸丸",
+   "clause_id": "SHL_SONGBEN_0131",
+   "herb": "大黃",
+   "raw": "半斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "大陷胸丸",
+   "clause_id": "SHL_SONGBEN_0131",
+   "herb": "葶藶子",
+   "raw": "半升，熬",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "大陷胸丸",
+   "clause_id": "SHL_SONGBEN_0131",
+   "herb": "芒硝",
+   "raw": "半升",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "大陷胸丸",
+   "clause_id": "SHL_SONGBEN_0131",
+   "herb": "杏仁",
+   "raw": "半升，去皮尖，熬黑",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "大陷胸湯",
+   "clause_id": "SHL_SONGBEN_0134",
+   "herb": "大黃",
+   "raw": "六兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "大陷胸湯",
+   "clause_id": "SHL_SONGBEN_0134",
+   "herb": "芒硝",
+   "raw": "一升",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "大陷胸湯",
+   "clause_id": "SHL_SONGBEN_0134",
+   "herb": "甘遂",
+   "raw": "一錢匕",
+   "kind": "none",
+   "each": false,
+   "unparsed_head": "一錢匕"
+  },
+  {
+   "formula": "大青龍湯",
+   "clause_id": "SHL_SONGBEN_0038",
+   "herb": "麻黃",
+   "raw": "六兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "大青龍湯",
+   "clause_id": "SHL_SONGBEN_0038",
+   "herb": "桂枝",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "大青龍湯",
+   "clause_id": "SHL_SONGBEN_0038",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "大青龍湯",
+   "clause_id": "SHL_SONGBEN_0038",
+   "herb": "杏仁",
+   "raw": "四十枚，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 40,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "大青龍湯",
+   "clause_id": "SHL_SONGBEN_0038",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "大青龍湯",
+   "clause_id": "SHL_SONGBEN_0038",
+   "herb": "大棗",
+   "raw": "十枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 10,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "大青龍湯",
+   "clause_id": "SHL_SONGBEN_0038",
+   "herb": "石膏",
+   "raw": "如雞子大，碎",
+   "kind": "none",
+   "each": false,
+   "unparsed_head": "如雞子大，碎"
+  },
+  {
+   "formula": "大黃黃連瀉心湯",
+   "clause_id": "SHL_SONGBEN_0154",
+   "herb": "大黃",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "大黃黃連瀉心湯",
+   "clause_id": "SHL_SONGBEN_0154",
+   "herb": "黃連",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "小建中湯",
+   "clause_id": "SHL_SONGBEN_0100",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "小建中湯",
+   "clause_id": "SHL_SONGBEN_0100",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "小建中湯",
+   "clause_id": "SHL_SONGBEN_0100",
+   "herb": "大棗",
+   "raw": "二十枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 20,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "小建中湯",
+   "clause_id": "SHL_SONGBEN_0100",
+   "herb": "芍藥",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "小建中湯",
+   "clause_id": "SHL_SONGBEN_0100",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "小建中湯",
+   "clause_id": "SHL_SONGBEN_0100",
+   "herb": "膠飴",
+   "raw": "一升",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "小承氣湯",
+   "clause_id": "SHL_SONGBEN_0208",
+   "herb": "大黃",
+   "raw": "四兩，酒洗",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "小承氣湯",
+   "clause_id": "SHL_SONGBEN_0208",
+   "herb": "厚朴",
+   "raw": "二兩，炙，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "小承氣湯",
+   "clause_id": "SHL_SONGBEN_0208",
+   "herb": "枳實",
+   "raw": "三枚，大者，炙",
+   "kind": "count",
+   "each": false,
+   "count": 3,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "小柴胡湯",
+   "clause_id": "SHL_SONGBEN_0096",
+   "herb": "柴胡",
+   "raw": "半斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "小柴胡湯",
+   "clause_id": "SHL_SONGBEN_0096",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "小柴胡湯",
+   "clause_id": "SHL_SONGBEN_0096",
+   "herb": "人參",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "小柴胡湯",
+   "clause_id": "SHL_SONGBEN_0096",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "小柴胡湯",
+   "clause_id": "SHL_SONGBEN_0096",
+   "herb": "甘草",
+   "raw": "炙",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "小柴胡湯",
+   "clause_id": "SHL_SONGBEN_0096",
+   "herb": "生薑",
+   "raw": "切，各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "小柴胡湯",
+   "clause_id": "SHL_SONGBEN_0096",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "小陷胸湯",
+   "clause_id": "SHL_SONGBEN_0138",
+   "herb": "黃連",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "小陷胸湯",
+   "clause_id": "SHL_SONGBEN_0138",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "小陷胸湯",
+   "clause_id": "SHL_SONGBEN_0138",
+   "herb": "栝蔞實",
+   "raw": "大者一枚",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "麻黃",
+   "raw": "去節",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "細辛",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "乾薑",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "甘草",
+   "raw": "炙",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "桂枝",
+   "raw": "去皮，各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "五味子",
+   "raw": "半升",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "小青龍湯",
+   "clause_id": "SHL_SONGBEN_0040",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "抵當丸",
+   "clause_id": "SHL_SONGBEN_0126",
+   "herb": "水蛭",
+   "raw": "二十個，熬",
+   "kind": "count",
+   "each": false,
+   "count": 20,
+   "count_unit": "個"
+  },
+  {
+   "formula": "抵當丸",
+   "clause_id": "SHL_SONGBEN_0126",
+   "herb": "虻蟲",
+   "raw": "二十個，去翅足，熬",
+   "kind": "count",
+   "each": false,
+   "count": 20,
+   "count_unit": "個"
+  },
+  {
+   "formula": "抵當丸",
+   "clause_id": "SHL_SONGBEN_0126",
+   "herb": "桃仁",
+   "raw": "二十五個，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 25,
+   "count_unit": "個"
+  },
+  {
+   "formula": "抵當丸",
+   "clause_id": "SHL_SONGBEN_0126",
+   "herb": "大黃",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "抵當湯",
+   "clause_id": "SHL_SONGBEN_0124",
+   "herb": "水蛭",
+   "raw": "熬",
+   "kind": "count",
+   "each": true,
+   "count": 30,
+   "count_unit": "個",
+   "shared_from_each": true
+  },
+  {
+   "formula": "抵當湯",
+   "clause_id": "SHL_SONGBEN_0124",
+   "herb": "虻蟲",
+   "raw": "各三十個，去翅足，熬",
+   "kind": "count",
+   "each": true,
+   "count": 30,
+   "count_unit": "個"
+  },
+  {
+   "formula": "抵當湯",
+   "clause_id": "SHL_SONGBEN_0124",
+   "herb": "桃仁",
+   "raw": "二十個，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 20,
+   "count_unit": "個"
+  },
+  {
+   "formula": "抵當湯",
+   "clause_id": "SHL_SONGBEN_0124",
+   "herb": "大黃",
+   "raw": "三兩，酒洗",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "文蛤散",
+   "clause_id": "SHL_SONGBEN_0141",
+   "herb": "文蛤",
+   "raw": "五兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 120.0,
+   "grams": {
+    "kaogu": 78.12,
+    "duliangheng": 69.6,
+    "zhezhuan": 15.0
+   }
+  },
+  {
+   "formula": "旋覆代赭湯",
+   "clause_id": "SHL_SONGBEN_0161",
+   "herb": "旋覆花",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "旋覆代赭湯",
+   "clause_id": "SHL_SONGBEN_0161",
+   "herb": "人參",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "旋覆代赭湯",
+   "clause_id": "SHL_SONGBEN_0161",
+   "herb": "生薑",
+   "raw": "五兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 120.0,
+   "grams": {
+    "kaogu": 78.12,
+    "duliangheng": 69.6,
+    "zhezhuan": 15.0
+   }
+  },
+  {
+   "formula": "旋覆代赭湯",
+   "clause_id": "SHL_SONGBEN_0161",
+   "herb": "代赭",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "旋覆代赭湯",
+   "clause_id": "SHL_SONGBEN_0161",
+   "herb": "甘草",
+   "raw": "三兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "旋覆代赭湯",
+   "clause_id": "SHL_SONGBEN_0161",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "旋覆代赭湯",
+   "clause_id": "SHL_SONGBEN_0161",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "枳實梔子豉湯",
+   "clause_id": "SHL_SONGBEN_0393",
+   "herb": "枳實",
+   "raw": "三枚，炙",
+   "kind": "count",
+   "each": false,
+   "count": 3,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "枳實梔子豉湯",
+   "clause_id": "SHL_SONGBEN_0393",
+   "herb": "梔子",
+   "raw": "十四個，擘",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "個"
+  },
+  {
+   "formula": "枳實梔子豉湯",
+   "clause_id": "SHL_SONGBEN_0393",
+   "herb": "香豉",
+   "raw": "一升，綿裹",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "柴胡",
+   "raw": "二兩十六銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 64.0,
+   "grams": {
+    "kaogu": 41.67,
+    "duliangheng": 37.12,
+    "zhezhuan": 8.0
+   }
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "黃芩",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "人參",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "甘草",
+   "raw": "一兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "生薑",
+   "raw": "一兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "半夏",
+   "raw": "二十銖，本云五枚，洗",
+   "kind": "weight",
+   "each": false,
+   "zhu": 20.0,
+   "grams": {
+    "kaogu": 13.02,
+    "duliangheng": 11.6,
+    "zhezhuan": 2.5
+   }
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "大棗",
+   "raw": "四枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 4,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "柴胡加芒消湯",
+   "clause_id": "SHL_SONGBEN_0104",
+   "herb": "芒硝",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "柴胡",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "龍骨",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "黃芩",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "生薑",
+   "raw": "切",
+   "kind": "weight",
+   "each": true,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "鉛丹",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "人參",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "桂枝",
+   "raw": "去皮",
+   "kind": "weight",
+   "each": true,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "茯苓",
+   "raw": "各一兩半",
+   "kind": "weight",
+   "each": true,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "半夏",
+   "raw": "二合半，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 2.5,
+   "ml": 50.0
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "大黃",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "牡蠣",
+   "raw": "一兩半，熬",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "柴胡加龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0107",
+   "herb": "大棗",
+   "raw": "六枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 6,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "clause_id": "SHL_SONGBEN_0147",
+   "herb": "柴胡",
+   "raw": "半斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "clause_id": "SHL_SONGBEN_0147",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "clause_id": "SHL_SONGBEN_0147",
+   "herb": "乾薑",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "clause_id": "SHL_SONGBEN_0147",
+   "herb": "栝蔞根",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "clause_id": "SHL_SONGBEN_0147",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "clause_id": "SHL_SONGBEN_0147",
+   "herb": "牡蠣",
+   "raw": "二兩，熬",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "clause_id": "SHL_SONGBEN_0147",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "桂枝",
+   "raw": "一兩半，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "黃芩",
+   "raw": "一兩半",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "人參",
+   "raw": "一兩半",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "甘草",
+   "raw": "一兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "半夏",
+   "raw": "二合半，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 2.5,
+   "ml": 50.0
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "芍藥",
+   "raw": "一兩半",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "大棗",
+   "raw": "六枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 6,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "生薑",
+   "raw": "一兩半，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "柴胡桂枝湯",
+   "clause_id": "SHL_SONGBEN_0146",
+   "herb": "柴胡",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂技甘草湯",
+   "clause_id": "SHL_SONGBEN_0064",
+   "herb": "桂枝",
+   "raw": "四兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂技甘草湯",
+   "clause_id": "SHL_SONGBEN_0064",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "clause_id": "SHL_SONGBEN_0027",
+   "herb": "桂枝",
+   "raw": "去皮",
+   "kind": "weight",
+   "each": true,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "clause_id": "SHL_SONGBEN_0027",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "clause_id": "SHL_SONGBEN_0027",
+   "herb": "麻黃",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "clause_id": "SHL_SONGBEN_0027",
+   "herb": "甘草",
+   "raw": "炙，各十八銖",
+   "kind": "weight",
+   "each": true,
+   "zhu": 18.0,
+   "grams": {
+    "kaogu": 11.72,
+    "duliangheng": 10.44,
+    "zhezhuan": 2.25
+   }
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "clause_id": "SHL_SONGBEN_0027",
+   "herb": "大棗",
+   "raw": "四枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 4,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "clause_id": "SHL_SONGBEN_0027",
+   "herb": "生薑",
+   "raw": "一兩二銖，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 26.0,
+   "grams": {
+    "kaogu": 16.93,
+    "duliangheng": 15.08,
+    "zhezhuan": 3.25
+   }
+  },
+  {
+   "formula": "桂枝二越婢一湯",
+   "clause_id": "SHL_SONGBEN_0027",
+   "herb": "石膏",
+   "raw": "二十四銖，碎，綿裹",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "clause_id": "SHL_SONGBEN_0025",
+   "herb": "桂枝",
+   "raw": "一兩十七銖，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 41.0,
+   "grams": {
+    "kaogu": 26.69,
+    "duliangheng": 23.78,
+    "zhezhuan": 5.12
+   }
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "clause_id": "SHL_SONGBEN_0025",
+   "herb": "芍藥",
+   "raw": "一兩六銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 30.0,
+   "grams": {
+    "kaogu": 19.53,
+    "duliangheng": 17.4,
+    "zhezhuan": 3.75
+   }
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "clause_id": "SHL_SONGBEN_0025",
+   "herb": "麻黃",
+   "raw": "十六銖，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 16.0,
+   "grams": {
+    "kaogu": 10.42,
+    "duliangheng": 9.28,
+    "zhezhuan": 2.0
+   }
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "clause_id": "SHL_SONGBEN_0025",
+   "herb": "生薑",
+   "raw": "一兩六銖，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 30.0,
+   "grams": {
+    "kaogu": 19.53,
+    "duliangheng": 17.4,
+    "zhezhuan": 3.75
+   }
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "clause_id": "SHL_SONGBEN_0025",
+   "herb": "杏仁",
+   "raw": "十六個，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 16,
+   "count_unit": "個"
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "clause_id": "SHL_SONGBEN_0025",
+   "herb": "甘草",
+   "raw": "一兩二銖，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 26.0,
+   "grams": {
+    "kaogu": 16.93,
+    "duliangheng": 15.08,
+    "zhezhuan": 3.25
+   }
+  },
+  {
+   "formula": "桂枝二麻黃一湯",
+   "clause_id": "SHL_SONGBEN_0025",
+   "herb": "大棗",
+   "raw": "五枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 5,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝人參湯",
+   "clause_id": "SHL_SONGBEN_0163",
+   "herb": "桂枝",
+   "raw": "四兩，別切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂枝人參湯",
+   "clause_id": "SHL_SONGBEN_0163",
+   "herb": "甘草",
+   "raw": "四兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂枝人參湯",
+   "clause_id": "SHL_SONGBEN_0163",
+   "herb": "白朮",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝人參湯",
+   "clause_id": "SHL_SONGBEN_0163",
+   "herb": "人參",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝人參湯",
+   "clause_id": "SHL_SONGBEN_0163",
+   "herb": "乾薑",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加厚朴杏子湯",
+   "clause_id": "SHL_SONGBEN_0043",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加厚朴杏子湯",
+   "clause_id": "SHL_SONGBEN_0043",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加厚朴杏子湯",
+   "clause_id": "SHL_SONGBEN_0043",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加厚朴杏子湯",
+   "clause_id": "SHL_SONGBEN_0043",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加厚朴杏子湯",
+   "clause_id": "SHL_SONGBEN_0043",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加厚朴杏子湯",
+   "clause_id": "SHL_SONGBEN_0043",
+   "herb": "厚朴",
+   "raw": "二兩，炙，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加厚朴杏子湯",
+   "clause_id": "SHL_SONGBEN_0043",
+   "herb": "杏仁",
+   "raw": "五十枚，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 50,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加大黃湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加大黃湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "大黃",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加大黃湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "芍藥",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "桂枝加大黃湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加大黃湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加大黃湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加桂湯",
+   "clause_id": "SHL_SONGBEN_0117",
+   "herb": "桂枝",
+   "raw": "五兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 120.0,
+   "grams": {
+    "kaogu": 78.12,
+    "duliangheng": 69.6,
+    "zhezhuan": 15.0
+   }
+  },
+  {
+   "formula": "桂枝加桂湯",
+   "clause_id": "SHL_SONGBEN_0117",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加桂湯",
+   "clause_id": "SHL_SONGBEN_0117",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加桂湯",
+   "clause_id": "SHL_SONGBEN_0117",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加桂湯",
+   "clause_id": "SHL_SONGBEN_0117",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加芍藥湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "芍藥",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加芍藥湯",
+   "clause_id": "SHL_SONGBEN_0279",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "clause_id": "SHL_SONGBEN_0062",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "clause_id": "SHL_SONGBEN_0062",
+   "herb": "芍藥",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "clause_id": "SHL_SONGBEN_0062",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "clause_id": "SHL_SONGBEN_0062",
+   "herb": "人參",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "clause_id": "SHL_SONGBEN_0062",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "clause_id": "SHL_SONGBEN_0062",
+   "herb": "生薑",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂枝加葛根湯",
+   "clause_id": "SHL_SONGBEN_0014",
+   "herb": "葛根",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂枝加葛根湯",
+   "clause_id": "SHL_SONGBEN_0014",
+   "herb": "桂枝",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加葛根湯",
+   "clause_id": "SHL_SONGBEN_0014",
+   "herb": "芍藥",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加葛根湯",
+   "clause_id": "SHL_SONGBEN_0014",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加葛根湯",
+   "clause_id": "SHL_SONGBEN_0014",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝加葛根湯",
+   "clause_id": "SHL_SONGBEN_0014",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加葛根湯",
+   "clause_id": "SHL_SONGBEN_0014",
+   "herb": "麻黃",
+   "raw": "三兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加附子湯",
+   "clause_id": "SHL_SONGBEN_0020",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加附子湯",
+   "clause_id": "SHL_SONGBEN_0020",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加附子湯",
+   "clause_id": "SHL_SONGBEN_0020",
+   "herb": "甘草",
+   "raw": "三兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加附子湯",
+   "clause_id": "SHL_SONGBEN_0020",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝加附子湯",
+   "clause_id": "SHL_SONGBEN_0020",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝加附子湯",
+   "clause_id": "SHL_SONGBEN_0020",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝去桂加茯苓白朮湯",
+   "clause_id": "SHL_SONGBEN_0028",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去桂加茯苓白朮湯",
+   "clause_id": "SHL_SONGBEN_0028",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝去桂加茯苓白朮湯",
+   "clause_id": "SHL_SONGBEN_0028",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去桂加茯苓白朮湯",
+   "clause_id": "SHL_SONGBEN_0028",
+   "herb": "白朮",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "桂枝去桂加茯苓白朮湯",
+   "clause_id": "SHL_SONGBEN_0028",
+   "herb": "茯苓",
+   "raw": "各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去桂加茯苓白朮湯",
+   "clause_id": "SHL_SONGBEN_0028",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "clause_id": "SHL_SONGBEN_0112",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "clause_id": "SHL_SONGBEN_0112",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "clause_id": "SHL_SONGBEN_0112",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "clause_id": "SHL_SONGBEN_0112",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "clause_id": "SHL_SONGBEN_0112",
+   "herb": "牡蠣",
+   "raw": "五兩，熬",
+   "kind": "weight",
+   "each": false,
+   "zhu": 120.0,
+   "grams": {
+    "kaogu": 78.12,
+    "duliangheng": 69.6,
+    "zhezhuan": 15.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "clause_id": "SHL_SONGBEN_0112",
+   "herb": "蜀漆",
+   "raw": "三兩，洗去腥",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "clause_id": "SHL_SONGBEN_0112",
+   "herb": "龍骨",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加附子湯",
+   "clause_id": "SHL_SONGBEN_0022",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加附子湯",
+   "clause_id": "SHL_SONGBEN_0022",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加附子湯",
+   "clause_id": "SHL_SONGBEN_0022",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥加附子湯",
+   "clause_id": "SHL_SONGBEN_0022",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝去芍藥加附子湯",
+   "clause_id": "SHL_SONGBEN_0022",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝去芍藥湯",
+   "clause_id": "SHL_SONGBEN_0021",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥湯",
+   "clause_id": "SHL_SONGBEN_0021",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥湯",
+   "clause_id": "SHL_SONGBEN_0021",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝去芍藥湯",
+   "clause_id": "SHL_SONGBEN_0021",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝湯",
+   "clause_id": "SHL_SONGBEN_0012",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝湯",
+   "clause_id": "SHL_SONGBEN_0012",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝湯",
+   "clause_id": "SHL_SONGBEN_0012",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝湯",
+   "clause_id": "SHL_SONGBEN_0012",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝湯",
+   "clause_id": "SHL_SONGBEN_0012",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝甘草龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0118",
+   "herb": "桂枝",
+   "raw": "一兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "桂枝甘草龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0118",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝甘草龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0118",
+   "herb": "牡蠣",
+   "raw": "二兩，熬",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝甘草龍骨牡蠣湯",
+   "clause_id": "SHL_SONGBEN_0118",
+   "herb": "龍骨",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝附子湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "桂枝",
+   "raw": "四兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桂枝附子湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "附子",
+   "raw": "三枚，炮，去皮，破",
+   "kind": "count",
+   "each": false,
+   "count": 3,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝附子湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "桂枝附子湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桂枝附子湯",
+   "clause_id": "SHL_SONGBEN_0174",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "clause_id": "SHL_SONGBEN_0023",
+   "herb": "桂枝",
+   "raw": "一兩十六銖，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 40.0,
+   "grams": {
+    "kaogu": 26.04,
+    "duliangheng": 23.2,
+    "zhezhuan": 5.0
+   }
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "clause_id": "SHL_SONGBEN_0023",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "clause_id": "SHL_SONGBEN_0023",
+   "herb": "生薑",
+   "raw": "切",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "clause_id": "SHL_SONGBEN_0023",
+   "herb": "甘草",
+   "raw": "炙",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "clause_id": "SHL_SONGBEN_0023",
+   "herb": "麻黃",
+   "raw": "去節，各一兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "clause_id": "SHL_SONGBEN_0023",
+   "herb": "大棗",
+   "raw": "四枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 4,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桂枝麻黃各半湯",
+   "clause_id": "SHL_SONGBEN_0023",
+   "herb": "杏仁",
+   "raw": "二十四枚，湯浸，去皮尖及兩仁者",
+   "kind": "count",
+   "each": false,
+   "count": 24,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "桃核承氣湯",
+   "clause_id": "SHL_SONGBEN_0106",
+   "herb": "桃仁",
+   "raw": "五十個，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 50,
+   "count_unit": "個"
+  },
+  {
+   "formula": "桃核承氣湯",
+   "clause_id": "SHL_SONGBEN_0106",
+   "herb": "大黃",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "桃核承氣湯",
+   "clause_id": "SHL_SONGBEN_0106",
+   "herb": "桂枝",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桃核承氣湯",
+   "clause_id": "SHL_SONGBEN_0106",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桃核承氣湯",
+   "clause_id": "SHL_SONGBEN_0106",
+   "herb": "芒硝",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "桃花湯",
+   "clause_id": "SHL_SONGBEN_0306",
+   "herb": "赤石脂",
+   "raw": "一斤，一半全用，一半篩末",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "桃花湯",
+   "clause_id": "SHL_SONGBEN_0306",
+   "herb": "乾薑",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "桃花湯",
+   "clause_id": "SHL_SONGBEN_0306",
+   "herb": "粳米",
+   "raw": "一升",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "桔梗湯",
+   "clause_id": "SHL_SONGBEN_0311",
+   "herb": "桔梗",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "桔梗湯",
+   "clause_id": "SHL_SONGBEN_0311",
+   "herb": "甘草",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "梔子乾薑湯",
+   "clause_id": "SHL_SONGBEN_0080",
+   "herb": "梔子",
+   "raw": "十四個，擘",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "個"
+  },
+  {
+   "formula": "梔子乾薑湯",
+   "clause_id": "SHL_SONGBEN_0080",
+   "herb": "乾薑",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "梔子厚朴湯",
+   "clause_id": "SHL_SONGBEN_0079",
+   "herb": "梔子",
+   "raw": "十四個，擘",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "個"
+  },
+  {
+   "formula": "梔子厚朴湯",
+   "clause_id": "SHL_SONGBEN_0079",
+   "herb": "厚朴",
+   "raw": "四兩，炙，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "梔子厚朴湯",
+   "clause_id": "SHL_SONGBEN_0079",
+   "herb": "枳實",
+   "raw": "四枚，水浸，炙令黃",
+   "kind": "count",
+   "each": false,
+   "count": 4,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "梔子檗皮湯",
+   "clause_id": "SHL_SONGBEN_0261",
+   "herb": "肥梔子",
+   "raw": "十五個，擘",
+   "kind": "count",
+   "each": false,
+   "count": 15,
+   "count_unit": "個"
+  },
+  {
+   "formula": "梔子檗皮湯",
+   "clause_id": "SHL_SONGBEN_0261",
+   "herb": "甘草",
+   "raw": "一兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "梔子檗皮湯",
+   "clause_id": "SHL_SONGBEN_0261",
+   "herb": "黃柏",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "梔子甘草豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "梔子",
+   "raw": "十四個，擘",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "個"
+  },
+  {
+   "formula": "梔子甘草豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "梔子甘草豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "香豉",
+   "raw": "四合，綿裹",
+   "kind": "volume",
+   "each": false,
+   "ge": 4.0,
+   "ml": 80.0
+  },
+  {
+   "formula": "梔子生薑豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "梔子",
+   "raw": "十四個，擘",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "個"
+  },
+  {
+   "formula": "梔子生薑豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "生薑",
+   "raw": "五兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 120.0,
+   "grams": {
+    "kaogu": 78.12,
+    "duliangheng": 69.6,
+    "zhezhuan": 15.0
+   }
+  },
+  {
+   "formula": "梔子生薑豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "香豉",
+   "raw": "四合，綿裹",
+   "kind": "volume",
+   "each": false,
+   "ge": 4.0,
+   "ml": 80.0
+  },
+  {
+   "formula": "梔子豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "梔子",
+   "raw": "十四個，擘",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "個"
+  },
+  {
+   "formula": "梔子豉湯",
+   "clause_id": "SHL_SONGBEN_0076",
+   "herb": "香豉",
+   "raw": "四合，綿裹",
+   "kind": "volume",
+   "each": false,
+   "ge": 4.0,
+   "ml": 80.0
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "甘草",
+   "raw": "四兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "人參",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "生地黃",
+   "raw": "一斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "阿膠",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "麥門冬",
+   "raw": "半斤，去心",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "麻仁",
+   "raw": "半升",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "炙甘草湯",
+   "clause_id": "SHL_SONGBEN_0177",
+   "herb": "大棗",
+   "raw": "三十枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 30,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "烏梅",
+   "raw": "三百枚",
+   "kind": "count",
+   "each": false,
+   "count": 300,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "細辛",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "乾薑",
+   "raw": "十兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 240.0,
+   "grams": {
+    "kaogu": 156.25,
+    "duliangheng": 139.2,
+    "zhezhuan": 30.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "黃連",
+   "raw": "十六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "附子",
+   "raw": "六兩，炮，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "當歸",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "黃檗",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "桂枝",
+   "raw": "六兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "人參",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "烏梅丸",
+   "clause_id": "SHL_SONGBEN_0338",
+   "herb": "蜀椒",
+   "raw": "四兩，出汗",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "clause_id": "SHL_SONGBEN_0395",
+   "herb": "牡蠣",
+   "raw": "熬",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "clause_id": "SHL_SONGBEN_0395",
+   "herb": "澤瀉",
+   "raw": "",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "clause_id": "SHL_SONGBEN_0395",
+   "herb": "蜀漆",
+   "raw": "暖水洗去腥",
+   "kind": "none",
+   "each": false,
+   "unparsed_head": "暖水洗去腥"
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "clause_id": "SHL_SONGBEN_0395",
+   "herb": "葶藶子",
+   "raw": "熬",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "clause_id": "SHL_SONGBEN_0395",
+   "herb": "商陸根",
+   "raw": "熬",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "clause_id": "SHL_SONGBEN_0395",
+   "herb": "海藻",
+   "raw": "洗去鹹",
+   "kind": "none",
+   "each": false
+  },
+  {
+   "formula": "牡蠣澤瀉散",
+   "clause_id": "SHL_SONGBEN_0395",
+   "herb": "栝蔞根",
+   "raw": "各等分",
+   "kind": "none",
+   "each": false,
+   "unparsed_head": "各等分"
+  },
+  {
+   "formula": "理中丸",
+   "clause_id": "SHL_SONGBEN_0386",
+   "herb": "人參",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "理中丸",
+   "clause_id": "SHL_SONGBEN_0386",
+   "herb": "乾薑",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "理中丸",
+   "clause_id": "SHL_SONGBEN_0386",
+   "herb": "甘草",
+   "raw": "炙",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "理中丸",
+   "clause_id": "SHL_SONGBEN_0386",
+   "herb": "白朮",
+   "raw": "各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "瓜蒂散",
+   "clause_id": "SHL_SONGBEN_0166",
+   "herb": "瓜蒂",
+   "raw": "一分，熬黃",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "瓜蒂散",
+   "clause_id": "SHL_SONGBEN_0166",
+   "herb": "赤小豆",
+   "raw": "一分",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "甘草乾薑湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "甘草",
+   "raw": "四兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "甘草乾薑湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "乾薑",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "甘草湯",
+   "clause_id": "SHL_SONGBEN_0311",
+   "herb": "甘草",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "甘草瀉心湯",
+   "clause_id": "SHL_SONGBEN_0158",
+   "herb": "甘草",
+   "raw": "四兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "甘草瀉心湯",
+   "clause_id": "SHL_SONGBEN_0158",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "甘草瀉心湯",
+   "clause_id": "SHL_SONGBEN_0158",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "甘草瀉心湯",
+   "clause_id": "SHL_SONGBEN_0158",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "甘草瀉心湯",
+   "clause_id": "SHL_SONGBEN_0158",
+   "herb": "黃連",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "甘草瀉心湯",
+   "clause_id": "SHL_SONGBEN_0158",
+   "herb": "乾薑",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "甘草附子湯",
+   "clause_id": "SHL_SONGBEN_0175",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "甘草附子湯",
+   "clause_id": "SHL_SONGBEN_0175",
+   "herb": "附子",
+   "raw": "二枚，炮，去皮，破",
+   "kind": "count",
+   "each": false,
+   "count": 2,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "甘草附子湯",
+   "clause_id": "SHL_SONGBEN_0175",
+   "herb": "白朮",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "甘草附子湯",
+   "clause_id": "SHL_SONGBEN_0175",
+   "herb": "桂枝",
+   "raw": "四兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "生薑",
+   "raw": "四兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "甘草",
+   "raw": "三兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "人參",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "乾薑",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "黃連",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "生薑瀉心湯",
+   "clause_id": "SHL_SONGBEN_0157",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "當歸",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "通草",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "大棗",
+   "raw": "二十五枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 25,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "細辛",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "生薑",
+   "raw": "半斤，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "吳茱萸",
+   "raw": "二升",
+   "kind": "volume",
+   "each": false,
+   "ge": 20.0,
+   "ml": 400.0
+  },
+  {
+   "formula": "當歸四逆湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "當歸",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "細辛",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "當歸四逆湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "當歸四逆湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "通草",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "當歸四逆湯",
+   "clause_id": "SHL_SONGBEN_0352",
+   "herb": "大棗",
+   "raw": "二十五枚，擘，一法十二枚",
+   "kind": "count",
+   "each": false,
+   "count": 25,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "白虎加人參湯",
+   "clause_id": "SHL_SONGBEN_0026",
+   "herb": "知母",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "白虎加人參湯",
+   "clause_id": "SHL_SONGBEN_0026",
+   "herb": "石膏",
+   "raw": "一斤，碎，綿裹",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "白虎加人參湯",
+   "clause_id": "SHL_SONGBEN_0026",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "白虎加人參湯",
+   "clause_id": "SHL_SONGBEN_0026",
+   "herb": "粳米",
+   "raw": "六合",
+   "kind": "volume",
+   "each": false,
+   "ge": 6.0,
+   "ml": 120.0
+  },
+  {
+   "formula": "白虎加人參湯",
+   "clause_id": "SHL_SONGBEN_0026",
+   "herb": "人參",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "白虎湯",
+   "clause_id": "SHL_SONGBEN_0176",
+   "herb": "知母",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "白虎湯",
+   "clause_id": "SHL_SONGBEN_0176",
+   "herb": "石膏",
+   "raw": "一斤，碎",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "白虎湯",
+   "clause_id": "SHL_SONGBEN_0176",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "白虎湯",
+   "clause_id": "SHL_SONGBEN_0176",
+   "herb": "粳米",
+   "raw": "六合",
+   "kind": "volume",
+   "each": false,
+   "ge": 6.0,
+   "ml": 120.0
+  },
+  {
+   "formula": "白通加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0315",
+   "herb": "蔥白",
+   "raw": "四莖",
+   "kind": "count",
+   "each": false,
+   "count": 4,
+   "count_unit": "莖"
+  },
+  {
+   "formula": "白通加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0315",
+   "herb": "乾薑",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "白通加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0315",
+   "herb": "附子",
+   "raw": "一枚，生，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "白通加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0315",
+   "herb": "人尿",
+   "raw": "五合",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "白通加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0315",
+   "herb": "豬膽汁",
+   "raw": "一合",
+   "kind": "volume",
+   "each": false,
+   "ge": 1.0,
+   "ml": 20.0
+  },
+  {
+   "formula": "白通湯",
+   "clause_id": "SHL_SONGBEN_0314",
+   "herb": "蔥白",
+   "raw": "四莖",
+   "kind": "count",
+   "each": false,
+   "count": 4,
+   "count_unit": "莖"
+  },
+  {
+   "formula": "白通湯",
+   "clause_id": "SHL_SONGBEN_0314",
+   "herb": "乾薑",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "白通湯",
+   "clause_id": "SHL_SONGBEN_0314",
+   "herb": "附子",
+   "raw": "一枚，生，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "白頭翁湯",
+   "clause_id": "SHL_SONGBEN_0371",
+   "herb": "白頭翁",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "白頭翁湯",
+   "clause_id": "SHL_SONGBEN_0371",
+   "herb": "黃檗",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "白頭翁湯",
+   "clause_id": "SHL_SONGBEN_0371",
+   "herb": "黃連",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "白頭翁湯",
+   "clause_id": "SHL_SONGBEN_0371",
+   "herb": "秦皮",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "真武湯",
+   "clause_id": "SHL_SONGBEN_0082",
+   "herb": "茯苓",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "真武湯",
+   "clause_id": "SHL_SONGBEN_0082",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "真武湯",
+   "clause_id": "SHL_SONGBEN_0082",
+   "herb": "生薑",
+   "raw": "切，各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "真武湯",
+   "clause_id": "SHL_SONGBEN_0082",
+   "herb": "白朮",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "真武湯",
+   "clause_id": "SHL_SONGBEN_0082",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "真武湯方（附加減法）",
+   "clause_id": "SHL_SONGBEN_0316",
+   "herb": "茯苓",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "真武湯方（附加減法）",
+   "clause_id": "SHL_SONGBEN_0316",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "真武湯方（附加減法）",
+   "clause_id": "SHL_SONGBEN_0316",
+   "herb": "生薑",
+   "raw": "切，各三兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "真武湯方（附加減法）",
+   "clause_id": "SHL_SONGBEN_0316",
+   "herb": "白朮",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "真武湯方（附加減法）",
+   "clause_id": "SHL_SONGBEN_0316",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "clause_id": "SHL_SONGBEN_0397",
+   "herb": "竹葉",
+   "raw": "二把",
+   "kind": "count",
+   "each": false,
+   "count": 2,
+   "count_unit": "把"
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "clause_id": "SHL_SONGBEN_0397",
+   "herb": "石膏",
+   "raw": "一斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "clause_id": "SHL_SONGBEN_0397",
+   "herb": "半夏",
+   "raw": "半斤，洗",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "clause_id": "SHL_SONGBEN_0397",
+   "herb": "麥門冬",
+   "raw": "一升，去心",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "clause_id": "SHL_SONGBEN_0397",
+   "herb": "人參",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "clause_id": "SHL_SONGBEN_0397",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "clause_id": "SHL_SONGBEN_0397",
+   "herb": "粳米",
+   "raw": "半升",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "芍藥甘草湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "芍藥甘草湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "甘草",
+   "raw": "炙，各四兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "芍藥甘草附子湯",
+   "clause_id": "SHL_SONGBEN_0068",
+   "herb": "芍藥",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "芍藥甘草附子湯",
+   "clause_id": "SHL_SONGBEN_0068",
+   "herb": "甘草",
+   "raw": "各三兩，炙",
+   "kind": "weight",
+   "each": true,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "芍藥甘草附子湯",
+   "clause_id": "SHL_SONGBEN_0068",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "苦酒湯",
+   "clause_id": "SHL_SONGBEN_0312",
+   "herb": "半夏",
+   "raw": "洗，破如棗核，十四枚",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "苦酒湯",
+   "clause_id": "SHL_SONGBEN_0312",
+   "herb": "雞子",
+   "raw": "一枚，去黃，內上苦酒，著雞子殼中",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "茯苓四逆湯",
+   "clause_id": "SHL_SONGBEN_0069",
+   "herb": "茯苓",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "茯苓四逆湯",
+   "clause_id": "SHL_SONGBEN_0069",
+   "herb": "人參",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "茯苓四逆湯",
+   "clause_id": "SHL_SONGBEN_0069",
+   "herb": "附子",
+   "raw": "一枚，生用，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "茯苓四逆湯",
+   "clause_id": "SHL_SONGBEN_0069",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "茯苓四逆湯",
+   "clause_id": "SHL_SONGBEN_0069",
+   "herb": "乾薑",
+   "raw": "一兩半",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "茯苓桂枝甘草大棗湯",
+   "clause_id": "SHL_SONGBEN_0065",
+   "herb": "茯苓",
+   "raw": "半斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "茯苓桂枝甘草大棗湯",
+   "clause_id": "SHL_SONGBEN_0065",
+   "herb": "桂枝",
+   "raw": "四兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "茯苓桂枝甘草大棗湯",
+   "clause_id": "SHL_SONGBEN_0065",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "茯苓桂枝甘草大棗湯",
+   "clause_id": "SHL_SONGBEN_0065",
+   "herb": "大棗",
+   "raw": "十五枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 15,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "茯苓桂枝白朮甘草湯",
+   "clause_id": "SHL_SONGBEN_0067",
+   "herb": "茯苓",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "茯苓桂枝白朮甘草湯",
+   "clause_id": "SHL_SONGBEN_0067",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "茯苓桂枝白朮甘草湯",
+   "clause_id": "SHL_SONGBEN_0067",
+   "herb": "白朮",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "茯苓桂枝白朮甘草湯",
+   "clause_id": "SHL_SONGBEN_0067",
+   "herb": "甘草",
+   "raw": "炙，各二兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "茯苓甘草湯",
+   "clause_id": "SHL_SONGBEN_0073",
+   "herb": "茯苓",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "茯苓甘草湯",
+   "clause_id": "SHL_SONGBEN_0073",
+   "herb": "桂枝",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "茯苓甘草湯",
+   "clause_id": "SHL_SONGBEN_0073",
+   "herb": "甘草",
+   "raw": "一兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "茯苓甘草湯",
+   "clause_id": "SHL_SONGBEN_0073",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "茵陳蒿湯",
+   "clause_id": "SHL_SONGBEN_0236",
+   "herb": "茵陳蒿",
+   "raw": "六兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 144.0,
+   "grams": {
+    "kaogu": 93.75,
+    "duliangheng": 83.52,
+    "zhezhuan": 18.0
+   }
+  },
+  {
+   "formula": "茵陳蒿湯",
+   "clause_id": "SHL_SONGBEN_0236",
+   "herb": "梔子",
+   "raw": "十四枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 14,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "茵陳蒿湯",
+   "clause_id": "SHL_SONGBEN_0236",
+   "herb": "大黃",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "葛根",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "麻黃",
+   "raw": "三兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "芍藥",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "桂枝",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "生薑",
+   "raw": "二兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "葛根加半夏湯",
+   "clause_id": "SHL_SONGBEN_0033",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "葛根湯",
+   "clause_id": "SHL_SONGBEN_0031",
+   "herb": "葛根",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "葛根湯",
+   "clause_id": "SHL_SONGBEN_0031",
+   "herb": "麻黃",
+   "raw": "三兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "葛根湯",
+   "clause_id": "SHL_SONGBEN_0031",
+   "herb": "桂枝",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根湯",
+   "clause_id": "SHL_SONGBEN_0031",
+   "herb": "生薑",
+   "raw": "三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "葛根湯",
+   "clause_id": "SHL_SONGBEN_0031",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根湯",
+   "clause_id": "SHL_SONGBEN_0031",
+   "herb": "芍藥",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根湯",
+   "clause_id": "SHL_SONGBEN_0031",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "葛根黃芩黃連湯",
+   "clause_id": "SHL_SONGBEN_0034",
+   "herb": "葛根",
+   "raw": "半斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "葛根黃芩黃連湯",
+   "clause_id": "SHL_SONGBEN_0034",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "葛根黃芩黃連湯",
+   "clause_id": "SHL_SONGBEN_0034",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "葛根黃芩黃連湯",
+   "clause_id": "SHL_SONGBEN_0034",
+   "herb": "黃連",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "蜜煎導",
+   "clause_id": "SHL_SONGBEN_0233",
+   "herb": "食蜜",
+   "raw": "七合",
+   "kind": "volume",
+   "each": false,
+   "ge": 7.0,
+   "ml": 140.0
+  },
+  {
+   "formula": "調胃承氣湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "調胃承氣湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "芒硝",
+   "raw": "半升",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "調胃承氣湯",
+   "clause_id": "SHL_SONGBEN_0029",
+   "herb": "大黃",
+   "raw": "四兩，清酒洗",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "豬膚湯",
+   "clause_id": "SHL_SONGBEN_0310",
+   "herb": "豬膚",
+   "raw": "一斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "豬苓湯",
+   "clause_id": "SHL_SONGBEN_0223",
+   "herb": "豬苓",
+   "raw": "去皮",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "豬苓湯",
+   "clause_id": "SHL_SONGBEN_0223",
+   "herb": "茯苓",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "豬苓湯",
+   "clause_id": "SHL_SONGBEN_0223",
+   "herb": "澤瀉",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "豬苓湯",
+   "clause_id": "SHL_SONGBEN_0223",
+   "herb": "阿膠",
+   "raw": "",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   },
+   "shared_from_each": true
+  },
+  {
+   "formula": "豬苓湯",
+   "clause_id": "SHL_SONGBEN_0223",
+   "herb": "滑石",
+   "raw": "碎，各一兩",
+   "kind": "weight",
+   "each": true,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "赤石脂禹餘糧湯",
+   "clause_id": "SHL_SONGBEN_0159",
+   "herb": "赤石脂",
+   "raw": "一斤，碎",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "赤石脂禹餘糧湯",
+   "clause_id": "SHL_SONGBEN_0159",
+   "herb": "太一禹餘糧",
+   "raw": "一斤，碎",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "通脈四逆加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0390",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "通脈四逆加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0390",
+   "herb": "乾薑",
+   "raw": "三兩，強人可四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "通脈四逆加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0390",
+   "herb": "附子",
+   "raw": "大者一枚，生，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "通脈四逆加豬膽汁湯",
+   "clause_id": "SHL_SONGBEN_0390",
+   "herb": "豬膽汁",
+   "raw": "半合",
+   "kind": "volume",
+   "each": false,
+   "ge": 0.5,
+   "ml": 10.0
+  },
+  {
+   "formula": "通脈四逆湯",
+   "clause_id": "SHL_SONGBEN_0317",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "通脈四逆湯",
+   "clause_id": "SHL_SONGBEN_0317",
+   "herb": "附子",
+   "raw": "大者一枚，生用，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "通脈四逆湯",
+   "clause_id": "SHL_SONGBEN_0317",
+   "herb": "乾薑",
+   "raw": "三兩，強人可四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "附子湯",
+   "clause_id": "SHL_SONGBEN_0304",
+   "herb": "附子",
+   "raw": "二枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 2,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "附子湯",
+   "clause_id": "SHL_SONGBEN_0304",
+   "herb": "茯苓",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "附子湯",
+   "clause_id": "SHL_SONGBEN_0304",
+   "herb": "人參",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "附子湯",
+   "clause_id": "SHL_SONGBEN_0304",
+   "herb": "白朮",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "附子湯",
+   "clause_id": "SHL_SONGBEN_0304",
+   "herb": "芍藥",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "附子瀉心湯",
+   "clause_id": "SHL_SONGBEN_0155",
+   "herb": "大黃",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "附子瀉心湯",
+   "clause_id": "SHL_SONGBEN_0155",
+   "herb": "黃連",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "附子瀉心湯",
+   "clause_id": "SHL_SONGBEN_0155",
+   "herb": "黃芩",
+   "raw": "一兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "附子瀉心湯",
+   "clause_id": "SHL_SONGBEN_0155",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破，別煮取汁",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "麻子仁丸",
+   "clause_id": "SHL_SONGBEN_0247",
+   "herb": "麻子仁",
+   "raw": "二升",
+   "kind": "volume",
+   "each": false,
+   "ge": 20.0,
+   "ml": 400.0
+  },
+  {
+   "formula": "麻子仁丸",
+   "clause_id": "SHL_SONGBEN_0247",
+   "herb": "芍藥",
+   "raw": "半斤",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "麻子仁丸",
+   "clause_id": "SHL_SONGBEN_0247",
+   "herb": "枳實",
+   "raw": "半斤，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "麻子仁丸",
+   "clause_id": "SHL_SONGBEN_0247",
+   "herb": "大黃",
+   "raw": "一斤，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 384.0,
+   "grams": {
+    "kaogu": 250.0,
+    "duliangheng": 222.72,
+    "zhezhuan": 48.0
+   }
+  },
+  {
+   "formula": "麻子仁丸",
+   "clause_id": "SHL_SONGBEN_0247",
+   "herb": "厚朴",
+   "raw": "一尺，炙，去皮",
+   "kind": "length",
+   "each": false,
+   "length": 1,
+   "length_unit": "尺"
+  },
+  {
+   "formula": "麻子仁丸",
+   "clause_id": "SHL_SONGBEN_0247",
+   "herb": "杏仁",
+   "raw": "一升，去皮尖，熬，別作脂",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "麻黃",
+   "raw": "二兩半，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 60.0,
+   "grams": {
+    "kaogu": 39.06,
+    "duliangheng": 34.8,
+    "zhezhuan": 7.5
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "升麻",
+   "raw": "一兩一分",
+   "kind": "weight",
+   "each": false,
+   "zhu": 30.0,
+   "grams": {
+    "kaogu": 19.53,
+    "duliangheng": 17.4,
+    "zhezhuan": 3.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "當歸",
+   "raw": "一兩一分",
+   "kind": "weight",
+   "each": false,
+   "zhu": 30.0,
+   "grams": {
+    "kaogu": 19.53,
+    "duliangheng": 17.4,
+    "zhezhuan": 3.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "知母",
+   "raw": "十八株",
+   "kind": "count",
+   "each": false,
+   "count": 18,
+   "count_unit": "株"
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "黃芩",
+   "raw": "十八株",
+   "kind": "count",
+   "each": false,
+   "count": 18,
+   "count_unit": "株"
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "芍藥",
+   "raw": "六銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "天門冬",
+   "raw": "六銖，去心",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "桂枝",
+   "raw": "六銖，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "茯苓",
+   "raw": "六銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "甘草",
+   "raw": "六銖，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "石膏",
+   "raw": "六銖，碎，綿裹",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "白朮",
+   "raw": "六銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃升麻湯",
+   "clause_id": "SHL_SONGBEN_0357",
+   "herb": "乾薑",
+   "raw": "六銖",
+   "kind": "weight",
+   "each": false,
+   "zhu": 6.0,
+   "grams": {
+    "kaogu": 3.91,
+    "duliangheng": 3.48,
+    "zhezhuan": 0.75
+   }
+  },
+  {
+   "formula": "麻黃杏仁甘草石膏湯",
+   "clause_id": "SHL_SONGBEN_0063",
+   "herb": "麻黃",
+   "raw": "四兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "麻黃杏仁甘草石膏湯",
+   "clause_id": "SHL_SONGBEN_0063",
+   "herb": "杏仁",
+   "raw": "五十個，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 50,
+   "count_unit": "個"
+  },
+  {
+   "formula": "麻黃杏仁甘草石膏湯",
+   "clause_id": "SHL_SONGBEN_0063",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃杏仁甘草石膏湯",
+   "clause_id": "SHL_SONGBEN_0063",
+   "herb": "石膏",
+   "raw": "半斤，碎、綿裹",
+   "kind": "weight",
+   "each": false,
+   "zhu": 192.0,
+   "grams": {
+    "kaogu": 125.0,
+    "duliangheng": 111.36,
+    "zhezhuan": 24.0
+   }
+  },
+  {
+   "formula": "麻黃湯",
+   "clause_id": "SHL_SONGBEN_0035",
+   "herb": "麻黃",
+   "raw": "三兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "麻黃湯",
+   "clause_id": "SHL_SONGBEN_0035",
+   "herb": "桂枝",
+   "raw": "二兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃湯",
+   "clause_id": "SHL_SONGBEN_0035",
+   "herb": "甘草",
+   "raw": "一兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 24.0,
+   "grams": {
+    "kaogu": 15.62,
+    "duliangheng": 13.92,
+    "zhezhuan": 3.0
+   }
+  },
+  {
+   "formula": "麻黃湯",
+   "clause_id": "SHL_SONGBEN_0035",
+   "herb": "杏仁",
+   "raw": "七十個，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 70,
+   "count_unit": "個"
+  },
+  {
+   "formula": "麻黃細辛附子湯",
+   "clause_id": "SHL_SONGBEN_0301",
+   "herb": "麻黃",
+   "raw": "二兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃細辛附子湯",
+   "clause_id": "SHL_SONGBEN_0301",
+   "herb": "細辛",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃細辛附子湯",
+   "clause_id": "SHL_SONGBEN_0301",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "麻黃",
+   "raw": "二兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "連軺",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "杏仁",
+   "raw": "四十個，去皮尖",
+   "kind": "count",
+   "each": false,
+   "count": 40,
+   "count_unit": "個"
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "赤小豆",
+   "raw": "一升",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "生梓白皮",
+   "raw": "一升，切",
+   "kind": "volume",
+   "each": false,
+   "ge": 10.0,
+   "ml": 200.0
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "生薑",
+   "raw": "二兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃連軺赤小豆湯",
+   "clause_id": "SHL_SONGBEN_0262",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃附子甘草湯",
+   "clause_id": "SHL_SONGBEN_0302",
+   "herb": "麻黃",
+   "raw": "二兩，去節",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃附子甘草湯",
+   "clause_id": "SHL_SONGBEN_0302",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "麻黃附子甘草湯",
+   "clause_id": "SHL_SONGBEN_0302",
+   "herb": "附子",
+   "raw": "一枚，炮，去皮，破八片",
+   "kind": "count",
+   "each": false,
+   "count": 1,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "黃芩加半夏生薑湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "黃芩加半夏生薑湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "芍藥",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "黃芩加半夏生薑湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "黃芩加半夏生薑湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "黃芩加半夏生薑湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "黃芩加半夏生薑湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "生薑",
+   "raw": "一兩半，一方三兩，切",
+   "kind": "weight",
+   "each": false,
+   "zhu": 36.0,
+   "grams": {
+    "kaogu": 23.44,
+    "duliangheng": 20.88,
+    "zhezhuan": 4.5
+   }
+  },
+  {
+   "formula": "黃芩湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "黃芩",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "黃芩湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "芍藥",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "黃芩湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "甘草",
+   "raw": "二兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "黃芩湯",
+   "clause_id": "SHL_SONGBEN_0172",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "黃連湯",
+   "clause_id": "SHL_SONGBEN_0173",
+   "herb": "黃連",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "黃連湯",
+   "clause_id": "SHL_SONGBEN_0173",
+   "herb": "甘草",
+   "raw": "三兩，炙",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "黃連湯",
+   "clause_id": "SHL_SONGBEN_0173",
+   "herb": "乾薑",
+   "raw": "三兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "黃連湯",
+   "clause_id": "SHL_SONGBEN_0173",
+   "herb": "桂枝",
+   "raw": "三兩，去皮",
+   "kind": "weight",
+   "each": false,
+   "zhu": 72.0,
+   "grams": {
+    "kaogu": 46.88,
+    "duliangheng": 41.76,
+    "zhezhuan": 9.0
+   }
+  },
+  {
+   "formula": "黃連湯",
+   "clause_id": "SHL_SONGBEN_0173",
+   "herb": "人參",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "黃連湯",
+   "clause_id": "SHL_SONGBEN_0173",
+   "herb": "半夏",
+   "raw": "半升，洗",
+   "kind": "volume",
+   "each": false,
+   "ge": 5.0,
+   "ml": 100.0
+  },
+  {
+   "formula": "黃連湯",
+   "clause_id": "SHL_SONGBEN_0173",
+   "herb": "大棗",
+   "raw": "十二枚，擘",
+   "kind": "count",
+   "each": false,
+   "count": 12,
+   "count_unit": "枚"
+  },
+  {
+   "formula": "黃連阿膠湯",
+   "clause_id": "SHL_SONGBEN_0303",
+   "herb": "黃連",
+   "raw": "四兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 96.0,
+   "grams": {
+    "kaogu": 62.5,
+    "duliangheng": 55.68,
+    "zhezhuan": 12.0
+   }
+  },
+  {
+   "formula": "黃連阿膠湯",
+   "clause_id": "SHL_SONGBEN_0303",
+   "herb": "黃芩",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "黃連阿膠湯",
+   "clause_id": "SHL_SONGBEN_0303",
+   "herb": "芍藥",
+   "raw": "二兩",
+   "kind": "weight",
+   "each": false,
+   "zhu": 48.0,
+   "grams": {
+    "kaogu": 31.25,
+    "duliangheng": 27.84,
+    "zhezhuan": 6.0
+   }
+  },
+  {
+   "formula": "黃連阿膠湯",
+   "clause_id": "SHL_SONGBEN_0303",
+   "herb": "雞子黃",
+   "raw": "二枚",
+   "kind": "count",
+   "each": false,
+   "count": 2,
+   "count_unit": "枚"
+  }
+ ]
+}

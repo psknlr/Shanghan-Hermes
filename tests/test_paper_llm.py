@@ -87,7 +87,7 @@ class TestPaperAugmentationOffline(unittest.TestCase):
 
     def test_commentary_compare_specific_sections(self):
         text, _ = self._generate("commentary_compare", topic="桂枝湯歷代注釋")
-        self.assertIn("成無己注對齊示例", text)
+        self.assertIn("多注家對齊示例", text)
         self.assertIn("C層", text)
 
     def test_methodology_specific_sections(self):
