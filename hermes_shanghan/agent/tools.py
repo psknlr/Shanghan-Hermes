@@ -7,6 +7,8 @@ operations are simply not exposed as tools.
 """
 from __future__ import annotations
 
+import copy
+import json
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
@@ -27,14 +29,69 @@ class Tool:
             "parameters": self.parameters}}
 
 
+# —— uniform result envelope ————————————————————————————————————
+# Every successful tool result is stamped with its dominant evidence layer
+# (A 原文直述／B 版本異文／C 注家解釋／D 後世歸納／E 模型推理；旁證=非經文層)
+# and, where relevant, standing limitations — so binders/critics downstream
+# never have to guess whether a payload is 原文 or 歸納.
+TOOL_META: Dict[str, Dict] = {
+    "shanghan_search": {"evidence_level": "A"},
+    "shanghan_get_clause": {"evidence_level": "A"},
+    "shanghan_match_formula": {
+        "evidence_level": "D",
+        "limitations": ["匹配分數為規則歸納（D層），證據錨定 A 層條文；不替代臨床判斷"]},
+    "shanghan_differential": {
+        "evidence_level": "D",
+        "limitations": ["鑒別軸為跨條歸納（D層），關鍵鑒別點須回源 supporting_clauses"]},
+    "shanghan_six_channel": {"evidence_level": "D",
+                             "limitations": ["篇章級歸納，提綱原文屬 A 層"]},
+    "shanghan_formula_rule": {"evidence_level": "D",
+                              "limitations": ["方證規則為跨條歸納，組成/服法屬 A 層原文"]},
+    "shanghan_mistreatment": {"evidence_level": "D"},
+    "shanghan_list_formulas": {"evidence_level": "A"},
+    "shanghan_divergence_atlas": {"evidence_level": "C"},
+    "shanghan_dose": {"evidence_level": "A",
+                      "limitations": ["藥量比為銖當量原文換算；折算克數依三家學派假設"]},
+    "shanghan_corpus_stats": {"evidence_level": "D"},
+    "shanghan_eval_metrics": {"evidence_level": "D"},
+    "shanghan_variants": {"evidence_level": "B"},
+    "shanghan_relations": {"evidence_level": "D"},
+    "shanghan_therapy": {"evidence_level": "D"},
+    "shanghan_contraindication_check": {"evidence_level": "D"},
+    "shanghan_dose_convert": {"evidence_level": "A"},
+    "shanghan_case_search": {"evidence_level": "旁證"},
+    "shanghan_library": {"evidence_level": "旁證"},
+    "shanghan_hypotheses": {
+        "evidence_level": "D",
+        "limitations": ["多假設分析為規則歸納（D層），置信度為啟發式評分；不替代臨床判斷"]},
+}
+
+_RELEASE_CONFIDENCE = {"gold": 0.9, "silver": 0.75, "bronze": 0.6}
+
+# patient-mode hard isolation: only reading/explaining the classics is
+# exposed — no formula matching, no composition/dose, no therapy selection.
+# This is registry-level enforcement, independent of prompts and redaction.
+PATIENT_SAFE_TOOLS: List[str] = [
+    "shanghan_search", "shanghan_get_clause", "shanghan_six_channel",
+    "shanghan_relations", "shanghan_variants", "shanghan_divergence_atlas",
+    "shanghan_corpus_stats", "shanghan_eval_metrics", "shanghan_library",
+]
+
+
 class ToolRegistry:
     """Lazy-loads pipeline artifacts once, exposes 8 grounded tools."""
 
-    def __init__(self):
+    def __init__(self, cache_size: int = 256):
         self._art = None
         self._clause_rag = None
         self._matcher = None
         self._tools: Dict[str, Tool] = {}
+        # (tool, canonical-args) → result cache: repeated retrieval within a
+        # session/orchestration is free and reproducible
+        self._cache: Dict[str, Dict] = {}
+        self._cache_size = cache_size
+        self.cache_hits = 0
+        self.cache_misses = 0
         self._register_all()
 
     # -- lazy resources -------------------------------------------------
@@ -202,6 +259,18 @@ class ToolRegistry:
              "required": []},
             self._t_case_search)
         self._add(
+            "shanghan_hypotheses",
+            "多假設方證分析（醫師/教學端）：依症狀脈象返回並列候選方證假設，"
+            "每個假設帶支持證據/反證/缺失關鍵證，並生成鑒別追問；"
+            "證據不足時建議先補充四診信息而非給單一答案。",
+            {"type": "object", "properties": {
+                "symptoms": {"type": "array", "items": {"type": "string"}},
+                "pulse": {"type": "array", "items": {"type": "string"}},
+                "six_channel": {"type": "string"},
+                "top_k": {"type": "integer", "default": 4}},
+             "required": ["symptoms"]},
+            self._t_hypotheses)
+        self._add(
             "shanghan_library",
             "中醫笈成全庫快速查閱（800+ 部醫籍，文獻旁證層/非經文層）：按書名/作者/"
             "朝代/分類檢索編目；按原文詞句全文檢索（返回書·章節定位的摘錄）；"
@@ -252,6 +321,22 @@ class ToolRegistry:
         if ratios is None or evo is None:
             return {"tool": "shanghan_dose", "error": "劑量資產未生成：請先運行 pipeline"}
         if formula:
+            res = self.resolve_formula(formula)
+            dose_names = {x["formula"] for x in ratios["formulas"]} \
+                | {n for e in evo["edges"] for n in (e["base"], e["modified"])}
+            if res["resolved"]:
+                formula = res["resolved"]
+            else:
+                # the dose layer covers formulas that may lack a pattern
+                # rule — an exact dose-layer name must not be blocked by
+                # rule-inventory disambiguation
+                from .. import lexicon
+                from ..textutil import normalize_query
+                exact = lexicon.canonical_formula(normalize_query(formula))
+                if exact in dose_names:
+                    formula = exact
+                else:
+                    return self._ambiguous_payload("shanghan_dose", res)
             f = next((x for x in ratios["formulas"] if x["formula"] == formula), None)
             edges = [e for e in evo["edges"]
                      if formula in (e["base"], e["modified"])]
@@ -355,7 +440,10 @@ class ToolRegistry:
     def _t_contra_check(self, formula, symptoms=None):
         from .. import lexicon
         from ..textutil import normalize_query
-        formula = lexicon.canonical_formula(normalize_query(formula))
+        res = self.resolve_formula(formula)
+        if not res["resolved"]:
+            return self._ambiguous_payload("shanghan_contraindication_check", res)
+        formula = res["resolved"]
         rule = next((r for r in self.art.formula_rules if r.formula == formula), None)
         if rule is None:
             return {"tool": "shanghan_contraindication_check",
@@ -507,8 +595,17 @@ class ToolRegistry:
                                   six_channel=six_channel, top_k=top_k)
 
     def _t_differential(self, formulas):
-        from ..textutil import normalize_query
-        names = [normalize_query(f) for f in formulas]
+        names, unresolved = [], []
+        for f in formulas:
+            res = self.resolve_formula(f)
+            if res["resolved"]:
+                names.append(res["resolved"])
+            else:
+                unresolved.append(res)
+        if unresolved:
+            out = self._ambiguous_payload("shanghan_differential", unresolved[0])
+            out["resolved_formulas"] = names
+            return out
         cands = [d for d in self.art.differential_rules if set(names) <= set(d.formulas)]
         if not cands:
             cands = [d for d in self.art.differential_rules
@@ -535,16 +632,51 @@ class ToolRegistry:
         d["tool"] = "shanghan_six_channel"
         return d
 
-    def _t_formula_rule(self, formula):
+    # -- formula-name disambiguation --------------------------------------
+    def _formula_inventory(self) -> List[str]:
+        return [r.formula for r in self.art.formula_rules]
+
+    def resolve_formula(self, formula: str) -> Dict:
+        """Normalize + canonicalize + fuzzy-resolve a formula name against
+        the rule inventory. See lexicon.disambiguate_formula."""
+        from .. import lexicon
         from ..textutil import normalize_query
-        from ..lexicon import canonical_formula
-        name = canonical_formula(normalize_query(formula))
-        fpr = next((r for r in self.art.formula_rules if r.formula == name), None)
+        return lexicon.disambiguate_formula(normalize_query(formula),
+                                            self._formula_inventory())
+
+    @staticmethod
+    def _ambiguous_payload(tool: str, res: Dict) -> Dict:
+        return {"tool": tool,
+                "error": (f"方名「{res['input']}」無法唯一定位"
+                          if res["candidates"] else
+                          f"未找到方名「{res['input']}」的規則"),
+                "ambiguous": res["ambiguous"],
+                "candidates": res["candidates"],
+                "hint": ("請從 candidates 中選定一個方名重試；"
+                         "如需完整清單可調 shanghan_list_formulas"
+                         if res["candidates"] else
+                         "可調 shanghan_list_formulas 查看可用方名")}
+
+    def _t_formula_rule(self, formula):
+        res = self.resolve_formula(formula)
+        if not res["resolved"]:
+            return self._ambiguous_payload("shanghan_formula_rule", res)
+        fpr = next((r for r in self.art.formula_rules
+                    if r.formula == res["resolved"]), None)
         if fpr is None:
-            return {"tool": "shanghan_formula_rule", "error": f"未找到 {name} 的方證規則"}
+            return {"tool": "shanghan_formula_rule",
+                    "error": f"未找到 {res['resolved']} 的方證規則"}
         d = fpr.to_dict()
         d["tool"] = "shanghan_formula_rule"
+        if res["resolved"] != res["input"]:
+            d["resolved_from"] = res["input"]
         return d
+
+    def _t_hypotheses(self, symptoms, pulse=None, six_channel=None, top_k=4):
+        from .hypothesis import HypothesisManager
+        return HypothesisManager(self).analyze(
+            symptoms=symptoms, pulse=pulse or [],
+            six_channel=six_channel, top_k=top_k)
 
     def _t_mistreatment(self, query=None):
         from ..textutil import normalize_query
@@ -573,16 +705,117 @@ class ToolRegistry:
     def names(self) -> List[str]:
         return list(self._tools)
 
+    def for_role(self, role: Optional[str]) -> "ToolRegistry":
+        """Hard role isolation at the capability surface: patient sessions
+        get a registry that simply does not contain prescription-adjacent
+        tools — 不是提示詞約束，而是能力面裁剪."""
+        if role == "patient":
+            return ScopedRegistry(self, PATIENT_SAFE_TOOLS)
+        return self
+
     def call(self, name: str, arguments: Dict) -> Dict:
         tool = self._tools.get(name)
         if tool is None:
             return {"error": f"unknown tool: {name}", "available": self.names()}
+        arguments = self._coerce_args(tool, dict(arguments or {}))
+        problem = self._validate_args(tool, arguments)
+        if problem:
+            return {"tool": name, "error": f"參數校驗失敗：{problem}",
+                    "expected_schema": tool.parameters}
+        key = name + "::" + json.dumps(arguments, ensure_ascii=False,
+                                       sort_keys=True, default=str)
+        cached = self._cache.get(key)
+        if cached is not None:
+            self.cache_hits += 1
+            out = copy.deepcopy(cached)
+            out["cache_hit"] = True
+            return out
+        self.cache_misses += 1
         try:
-            return tool.func(**(arguments or {}))
+            result = tool.func(**arguments)
         except TypeError as exc:
             return {"error": f"bad arguments for {name}: {exc}"}
         except Exception as exc:  # never crash the agent on a tool error
             return {"error": f"tool {name} failed: {type(exc).__name__}: {exc}"}
+        result = self._stamp(name, result)
+        if isinstance(result, dict) and "error" not in result:
+            if len(self._cache) >= self._cache_size:
+                self._cache.pop(next(iter(self._cache)))
+            self._cache[key] = copy.deepcopy(result)
+        return result
+
+    # -- envelope helpers -------------------------------------------------
+    @staticmethod
+    def _coerce_args(tool: Tool, arguments: Dict) -> Dict:
+        """Repair common LLM slips (top_k="6", symptoms="惡寒") instead of
+        failing the call."""
+        props = tool.parameters.get("properties", {})
+        for k, v in list(arguments.items()):
+            want = props.get(k, {}).get("type")
+            if want == "integer" and isinstance(v, str) and v.strip().isdigit():
+                arguments[k] = int(v)
+            elif want == "array" and isinstance(v, str):
+                arguments[k] = [s for s in
+                                (x.strip() for x in
+                                 v.replace("，", ",").replace("、", ",").split(","))
+                                if s]
+            elif want == "boolean" and isinstance(v, str):
+                arguments[k] = v.strip().lower() in ("true", "1", "yes", "是")
+        return arguments
+
+    @staticmethod
+    def _validate_args(tool: Tool, arguments: Dict) -> Optional[str]:
+        props = tool.parameters.get("properties", {})
+        required = tool.parameters.get("required", [])
+        # an explicitly-passed empty list is a legal value（pulse-only 方證
+        # 匹配傳 symptoms=[]）——only absent/None/"" count as missing
+        missing = [r for r in required
+                   if r not in arguments or arguments.get(r) in (None, "")]
+        if missing:
+            return f"缺少必填參數 {'、'.join(missing)}"
+        unknown = [k for k in arguments if k not in props]
+        if unknown:
+            return f"未知參數 {'、'.join(unknown)}（可用：{'、'.join(props)}）"
+        type_map = {"string": str, "integer": int, "boolean": bool,
+                    "array": list, "object": dict}
+        for k, v in arguments.items():
+            want = props.get(k, {}).get("type")
+            py = type_map.get(want)
+            if py and v is not None and not isinstance(v, py):
+                return f"參數 {k} 應為 {want}"
+        return None
+
+    def _stamp(self, name: str, result: Any) -> Any:
+        meta = TOOL_META.get(name)
+        if not (meta and isinstance(result, dict)) or "error" in result:
+            return result
+        result.setdefault("evidence_level", meta["evidence_level"])
+        if meta.get("limitations"):
+            result.setdefault("limitations", list(meta["limitations"]))
+        result.setdefault("confidence", self._result_confidence(name, result))
+        return result
+
+    @staticmethod
+    def _result_confidence(name: str, result: Dict) -> float:
+        """Deterministic, honest confidence: derived from match scores /
+        release levels / hit presence — not a model's self-assessment."""
+        if name in ("shanghan_match_formula", "shanghan_hypotheses"):
+            m = (result.get("matched_formula_patterns")
+                 or result.get("hypotheses") or [])
+            top = (m[0].get("match_score") or m[0].get("score", 0)) if m else 0
+            return round(min(0.95, float(top or 0)), 2) if m else 0.1
+        if name == "shanghan_differential":
+            d = result.get("differential") or {}
+            return _RELEASE_CONFIDENCE.get(d.get("release_level"), 0.7)
+        if name == "shanghan_formula_rule":
+            return _RELEASE_CONFIDENCE.get(result.get("release_level"), 0.7)
+        if name == "shanghan_search":
+            return 0.9 if result.get("hits") else 0.2
+        if name in ("shanghan_get_clause", "shanghan_dose_convert",
+                    "shanghan_corpus_stats", "shanghan_eval_metrics",
+                    "shanghan_list_formulas"):
+            return 0.95        # deterministic lookup / computation
+        return 0.8
 
 
 class ScopedRegistry:
@@ -610,6 +843,16 @@ class ScopedRegistry:
             return {"error": f"tool out of scope: {name}",
                     "available": self.names()}
         return self._base.call(name, arguments)
+
+    def for_role(self, role: Optional[str]) -> "ScopedRegistry":
+        if role == "patient":
+            return ScopedRegistry(self._base,
+                                  [n for n in self._allowed
+                                   if n in PATIENT_SAFE_TOOLS])
+        return self
+
+    def resolve_formula(self, formula: str) -> Dict:
+        return self._base.resolve_formula(formula)
 
 
 _REGISTRY: Optional[ToolRegistry] = None

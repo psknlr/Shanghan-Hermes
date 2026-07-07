@@ -289,6 +289,44 @@ def canonical_formula(name: str) -> str:
     return FORMULA_ALIASES.get(name, name)
 
 
+def disambiguate_formula(name: str, inventory: List[str]) -> Dict:
+    """Resolve a possibly partial/misspelled formula name against an
+    inventory (usually the rule base's formula list).
+
+    Returns {"input", "resolved", "ambiguous", "candidates"}:
+      * exact (after alias canonicalization) → resolved, no candidates;
+      * one plausible candidate → auto-resolved but candidates kept so the
+        caller can surface the assumption;
+      * several plausible candidates（如「桂枝」）→ ambiguous, resolved=None,
+        the agent should ask the user or pick deliberately;
+      * nothing plausible → resolved=None, candidates=[].
+    """
+    raw = name.strip()
+    cand = canonical_formula(raw)
+    if cand in inventory:
+        return {"input": raw, "resolved": cand, "ambiguous": False,
+                "candidates": []}
+    scored: List[Tuple[float, str]] = []
+    for f in inventory:
+        if cand and cand in f:                    # 桂枝 → 桂枝湯/桂枝加桂湯…
+            # prefer shorter completions: 桂枝→桂枝湯 over 桂枝加芍藥湯
+            scored.append((1.0 + len(cand) / len(f), f))
+            continue
+        sa, sb = set(cand), set(f)
+        if not sa or not sb:
+            continue
+        jac = len(sa & sb) / len(sa | sb)
+        if jac >= 0.5:                            # 桂枝白芍湯 ≈ 桂枝加芍藥湯
+            scored.append((jac, f))
+    scored.sort(key=lambda t: (-t[0], len(t[1]), t[1]))
+    candidates = [f for _, f in scored[:6]]
+    if len(candidates) == 1:
+        return {"input": raw, "resolved": candidates[0], "ambiguous": False,
+                "candidates": candidates}
+    return {"input": raw, "resolved": None, "ambiguous": bool(candidates),
+            "candidates": candidates}
+
+
 def formula_family(name: str) -> Optional[str]:
     """Map a formula to its 類方 family head (longest suffix-ish match)."""
     name = canonical_formula(name)

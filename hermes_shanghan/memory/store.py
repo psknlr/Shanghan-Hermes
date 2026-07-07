@@ -24,6 +24,9 @@ from .. import config
 MEMORY_NAMES = [
     "clause_memory", "formula_memory", "six_channel_memory",
     "mistreatment_memory", "critic_memory", "skill_memory", "paper_memory",
+    # agent-layer stores: user corrections（「不是X而是Y」）and long-running
+    # research-project state (topics, key formulas, draft outputs)
+    "correction_memory", "project_memory",
 ]
 
 

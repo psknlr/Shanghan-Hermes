@@ -186,6 +186,11 @@ class LocalProvider:
         from ..textutil import normalize_query
         from .. import lexicon
         q_raw = self._last_user(messages)
+        # the orchestrator's dependency-context block（「（已取證 T1：…SHL_…）
+        # 綜合任務：…」）carries clause ids and digits that must not hijack
+        # routing — route the join task on its actual task text
+        if "綜合任務：" in q_raw:
+            q_raw = q_raw.split("綜合任務：")[-1]
         q = normalize_query(q_raw)
         available = {t["function"]["name"] for t in tools if t.get("function")}
 
@@ -242,6 +247,7 @@ class LocalProvider:
             return call("shanghan_contraindication_check",
                         {"formula": formulas[0], "symptoms": found.symptoms})
         if re.search(r"(汗法|下法|吐法|和法|溫法|補法|利水|救逆|治法|法度|禁[汗下吐]|誤[汗下吐])", q) and \
+                not re.search(r"(結胸|痞|壞病|變證|傳變|救治|火逆)", q) and \
                 "shanghan_therapy" in available:
             m_th = re.search(r"(禁[汗下吐]|誤[汗下吐]|[汗下吐和溫清補]法|利水|救逆)", q)
             return call("shanghan_therapy",
@@ -269,7 +275,13 @@ class LocalProvider:
             return call("shanghan_mistreatment", {"query": q_raw})
         if (re.search(r"第?\d{1,3}條", q) or re.search(r"SHL_SONGBEN", q_raw)) and \
                 "shanghan_get_clause" in available and m_num:
-            return call("shanghan_get_clause", {"ref": m_num.group(1)})
+            # prefer an explicit 第N條/full SHL id over the first digit run,
+            # so a stray "T1"-style token cannot become the clause ref
+            m_ref = re.search(r"第?\s*(\d{1,3})\s*條", q)
+            m_id = re.search(r"SHL_SONGBEN_(?:AUX_)?\d{4}", q_raw)
+            ref = m_ref.group(1) if m_ref else \
+                (m_id.group(0) if m_id else m_num.group(1))
+            return call("shanghan_get_clause", {"ref": ref})
         if channel and "shanghan_six_channel" in available and \
                 re.search(r"(六經|提綱|綱領|內部結構|主方|亞型|" + channel + ")", q):
             return call("shanghan_six_channel", {"channel": channel})

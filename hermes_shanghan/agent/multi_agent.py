@@ -79,9 +79,12 @@ class Council:
             if not remark:
                 return
             guard = CitationGuard(self.registry.art.clause_store())
-            report = guard.check(remark)
-            if report.unsupported_ids:
-                remark += "（⚠️ 含未核實條文編號，請以文末核驗為準）"
+            # the remark may only cite THIS specialist's own tool evidence
+            from .citation_guard import RE_CLAUSE_ID
+            allowed = list(dict.fromkeys(RE_CLAUSE_ID.findall(data)))
+            report = guard.check(remark, allowed_ids=allowed or None)
+            if report.unsupported_ids or report.outside_evidence_ids:
+                remark += "（⚠️ 含未核實或超出本專家證據的條文編號，請以文末核驗為準）"
             msg.content += "\n💬 " + remark
             msg.evidence_ids = list(dict.fromkeys(
                 msg.evidence_ids + report.verified_ids))
@@ -104,8 +107,18 @@ class Council:
         messages: List[CouncilMessage] = []
         evidence_ids: List[str] = []
 
-        # patient guard up front
+        # patient guard up front: red-flag triage, then intent guard
         if role == "patient":
+            triage = safety.red_flag_triage(question)
+            if triage:
+                messages.append(CouncilMessage(
+                    "SafetyTriage", "安全分診官", "critique",
+                    content="患者語境出現紅旗信號，優先就醫提示。", data=triage))
+                out = safety.governed(triage, "patient")
+                out.update({"question": question, "backend": self.client.backend,
+                            "council": [m.to_dict() for m in messages],
+                            "evidence_clause_ids": []})
+                return out
             guard = safety.patient_intent_guard(question)
             if guard:
                 messages.append(CouncilMessage(
@@ -116,6 +129,9 @@ class Council:
                             "council": [m.to_dict() for m in messages],
                             "evidence_clause_ids": []})
                 return out
+
+        # hard role isolation: patient deliberations see only safe tools
+        reg = self.registry.for_role(role)
 
         q = normalize_query(question)
 
@@ -129,7 +145,7 @@ class Council:
             data=plan))
 
         # 2 — Retriever ---------------------------------------------------
-        retr = self.registry.call("shanghan_search", {"query": question, "top_k": 6,
+        retr = reg.call("shanghan_search", {"query": question, "top_k": 6,
                                                        "expand": True})
         hits = retr.get("hits", [])
         ev = [h["clause_id"] for h in hits]
@@ -140,27 +156,46 @@ class Council:
             evidence_ids=ev, tool_calls=[{"tool": "shanghan_search"}],
             data={"hits": hits}))
 
-        # 3 — Specialists -------------------------------------------------
+        # 3 — Specialists: each emits an INDEPENDENT structured judgment ----
         specialist_findings: List[Dict] = []
+        judgments: List[Dict] = []
+        must_verify: List[str] = []
         for spec in plan["specialists"]:
-            msg = self._run_specialist(spec, plan, role)
+            msg = self._run_specialist(spec, plan, role, reg)
             if msg:
                 self._specialist_comment(msg)
                 messages.append(msg)
                 evidence_ids += msg.evidence_ids
                 specialist_findings.append({"agent": spec, "summary": msg.content,
                                             "data": msg.data})
+                if msg.data.get("judgment"):
+                    judgments.append(msg.data["judgment"])
+                must_verify += msg.data.get("must_verify", [])
 
         # 4 — Critic ------------------------------------------------------
         critic_msg, contraindication_notes = self._critique(specialist_findings, evidence_ids)
         messages.append(critic_msg)
 
+        # 4b — ConsensusJudge: 共識/分歧/需補充 + 評分裁決 ------------------
+        from .consensus import ConsensusJudge, render_adjudication
+        adjudication = ConsensusJudge().adjudicate(
+            judgments, contraindication_notes, must_verify)
+        messages.append(CouncilMessage(
+            "ConsensusJudge", "合議裁決官", "adjudicate",
+            content=(f"主導假設：{adjudication['dominant_hypothesis'] or '—'}；"
+                     f"置信 {adjudication['final_confidence']}"
+                     f"（{adjudication['decision']}）"),
+            data=adjudication))
+
         # 5 — Synthesizer -------------------------------------------------
         evidence_ids = list(dict.fromkeys(evidence_ids))
         final = self._synthesize(question, role, plan, specialist_findings,
                                  contraindication_notes, hits)
+        final = final.rstrip() + "\n\n" + render_adjudication(adjudication)
         guard = CitationGuard(self.registry.art.clause_store())
-        report = guard.check(final)
+        # 嚴格接地：合議答案只可引用本輪各專家取回的證據
+        report = guard.check(final,
+                             allowed_ids=evidence_ids if evidence_ids else None)
         final = guard.annotate(final, report)
         messages.append(CouncilMessage(
             "Synthesizer", "合議綜合官", "synthesize",
@@ -172,6 +207,8 @@ class Council:
             "question": question, "backend": self.client.backend,
             "answer": final, "role": role,
             "council": [m.to_dict() for m in messages],
+            "judgments": judgments,
+            "consensus": adjudication,
             "evidence_clause_ids": report.verified_ids,
             "citation_report": report.to_dict(),
             "specialists": plan["specialists"],
@@ -201,64 +238,122 @@ class Council:
                 "channel": channel, "specialists": specialists,
                 "mistreatment": res.mistreatment_types}
 
-    def _run_specialist(self, spec: str, plan: Dict, role: str) -> Optional[CouncilMessage]:
+    def _run_specialist(self, spec: str, plan: Dict, role: str,
+                        reg=None) -> Optional[CouncilMessage]:
+        reg = reg or self.registry
         cn = SPECIALISTS[spec]
         if spec == "FormulaAnalyst":
             if not (plan["symptoms"] or plan["pulse"]):
                 return None
-            out = self.registry.call("shanghan_match_formula",
+            out = reg.call("shanghan_match_formula",
                                      {"symptoms": plan["symptoms"], "pulse": plan["pulse"],
                                       "top_k": 4})
             matches = out.get("matched_formula_patterns", [])
             ev = [e["clause_id"] for m in matches for e in m.get("evidence", [])]
             top = "、".join(f"{m['formula']}({m['match_score']})" for m in matches[:3])
+            # independent structured judgment（多假設 + 追問由 HypothesisManager 供給）
+            judgment, must_verify, hyps = None, [], []
+            try:
+                if role == "patient":
+                    raise RuntimeError("hypotheses disabled for patient role")
+                from .hypothesis import HypothesisManager
+                hyp = HypothesisManager(self.registry).analyze(
+                    plan["symptoms"], plan["pulse"])
+                hyps = hyp.get("hypotheses", [])
+                must_verify = hyp.get("clarifying_questions", [])[:3]
+            except Exception:
+                hyp = {}
+            if matches:
+                m0 = matches[0]
+                close = [h["formula"] for h in hyps[1:]
+                         if m0.get("match_score", 0) - h.get("score", 0) < 0.15]
+                judgment = {
+                    "agent": spec,
+                    "hypothesis": f"{m0['formula']}證可能性較高",
+                    "support": [x.split("：", 1)[-1]
+                                for x in m0.get("matched_findings", [])][:5],
+                    "against": m0.get("conflicts", []),
+                    "evidence": [e["clause_id"] for e in m0.get("evidence", [])],
+                    "confidence": m0.get("match_score", 0.0),
+                    "data_channel_scope": m0.get("six_channel", ""),
+                    "close_alternatives": close[:2],
+                }
             return CouncilMessage(spec, cn, "analyze",
                                   content=f"候選方證：{top or '無顯著匹配'}。",
                                   evidence_ids=ev,
                                   tool_calls=[{"tool": "shanghan_match_formula"}],
-                                  data={"matches": matches})
+                                  data={"matches": matches, "judgment": judgment,
+                                        "hypotheses": hyps,
+                                        "must_verify": must_verify})
         if spec == "DifferentialAnalyst":
             formulas = plan["formulas"]
             if len(formulas) < 2:
                 # derive from formula analyst if available later; try top matches
-                fm = self.registry.call("shanghan_match_formula",
+                fm = reg.call("shanghan_match_formula",
                                         {"symptoms": plan["symptoms"], "pulse": plan["pulse"],
                                          "top_k": 2})
                 formulas = [m["formula"] for m in fm.get("matched_formula_patterns", [])][:2]
             if len(formulas) < 2:
                 return CouncilMessage(spec, cn, "analyze",
                                       content="可鑒別方不足兩個，略過鑒別。")
-            out = self.registry.call("shanghan_differential", {"formulas": formulas})
+            out = reg.call("shanghan_differential", {"formulas": formulas})
             d = out.get("differential", {})
             ev = d.get("supporting_clauses", [])
             disc = "；".join(d.get("key_discriminators", [])[:3])
+            judgment = {
+                "agent": spec,
+                "hypothesis": f"需鑒別 {' 與 '.join(formulas)}",
+                "support": d.get("key_discriminators", [])[:3],
+                "against": [],
+                "evidence": ev[:6],
+                "confidence": {"gold": 0.85, "silver": 0.7,
+                               "bronze": 0.55}.get(d.get("release_level"), 0.6),
+            }
             return CouncilMessage(spec, cn, "analyze",
                                   content=f"鑒別 {' vs '.join(formulas)}：{disc}",
                                   evidence_ids=ev,
                                   tool_calls=[{"tool": "shanghan_differential"}],
-                                  data={"differential": d})
+                                  data={"differential": d, "judgment": judgment})
         if spec == "ChannelAnalyst":
             channel = plan["channel"] or "太陽病"
-            out = self.registry.call("shanghan_six_channel", {"channel": channel})
+            out = reg.call("shanghan_six_channel", {"channel": channel})
             if out.get("error"):
                 return CouncilMessage(spec, cn, "analyze", content=out["error"])
             ev = [out.get("outline_clause_id", "")]
+            judgment = {
+                "agent": spec,
+                "hypothesis": f"{channel}方向",
+                "support": [f"提綱：{out.get('outline_text', '')[:30]}"],
+                "against": [],
+                "evidence": [e for e in ev if e],
+                # explicit channel mention in the question beats a default
+                "confidence": 0.75 if plan["channel"] else 0.5,
+                "data_channel": channel,
+            }
             return CouncilMessage(spec, cn, "analyze",
                                   content=f"{channel}：{out.get('summary','')[:60]}…",
                                   evidence_ids=[e for e in ev if e],
                                   tool_calls=[{"tool": "shanghan_six_channel"}],
-                                  data={"six_channel": out})
+                                  data={"six_channel": out, "judgment": judgment})
         if spec == "MistreatmentAnalyst":
-            out = self.registry.call("shanghan_mistreatment", {"query": plan.get("channel") or ""})
+            out = reg.call("shanghan_mistreatment", {"query": plan.get("channel") or ""})
             paths = out.get("paths", [])
             ev = [c for p in paths for c in p.get("clauses", [])]
             sample = "；".join(f"{p['mistreatment']}→{p['resulting_pattern']}→"
                                f"{'、'.join(p['rescue_formulas'][:1])}" for p in paths[:3])
+            judgment = {
+                "agent": spec,
+                "hypothesis": "存在誤治傳變風險路徑" if paths else "",
+                "support": [sample] if sample else [],
+                "against": [],
+                "evidence": ev[:6],
+                "confidence": 0.6 if paths else 0.2,
+            } if paths else None
             return CouncilMessage(spec, cn, "analyze",
                                   content=f"誤治路徑：{sample}",
                                   evidence_ids=ev[:6],
                                   tool_calls=[{"tool": "shanghan_mistreatment"}],
-                                  data={"paths": paths})
+                                  data={"paths": paths, "judgment": judgment})
         return None
 
     def _critique(self, findings: List[Dict], evidence_ids: List[str]):

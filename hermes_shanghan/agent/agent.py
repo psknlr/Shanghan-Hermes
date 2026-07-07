@@ -30,7 +30,7 @@ class AgentTrace:
 class ShanghanAgent:
     def __init__(self, client: Optional[LLMClient] = None,
                  registry: Optional[ToolRegistry] = None, max_steps: int = 5,
-                 max_repair_rounds: int = 1):
+                 max_repair_rounds: int = 1, max_tool_calls: int = 12):
         self.client = client or get_client()
         self.registry = registry or get_registry()
         self.max_steps = max_steps
@@ -38,6 +38,9 @@ class ShanghanAgent:
         # verdict back and let the model retry (guard as controller, not
         # just annotator)
         self.max_repair_rounds = max_repair_rounds
+        # hard per-question tool budget across the first pass AND all
+        # reflection rounds — a confused model cannot retrieve forever
+        self.max_tool_calls = max_tool_calls
 
     def _infer_role(self, question: str, role: Optional[str]) -> str:
         if role in safety.ROLES:
@@ -57,8 +60,17 @@ class ShanghanAgent:
         role = self._infer_role(question, role)
         trace = AgentTrace()
 
-        # patient safety: intent guard BEFORE any model/tool call
+        # patient safety: red-flag triage, then intent guard — both BEFORE
+        # any model/tool call
         if role == "patient":
+            triage = safety.red_flag_triage(question)
+            if triage:
+                trace.add("red_flag_triage", flags=triage["red_flags"],
+                          urgent=triage["urgent"])
+                out = safety.governed(triage, "patient")
+                out["agent_trace"] = trace.steps
+                out["backend"] = self.client.backend
+                return out
             guard = safety.patient_intent_guard(question)
             if guard:
                 trace.add("safety_block", intents=guard["refused_intents"])
@@ -67,12 +79,17 @@ class ShanghanAgent:
                 out["backend"] = self.client.backend
                 return out
 
+        # hard role isolation: the tool surface itself is scoped by role
+        registry = self.registry.for_role(role)
+        if registry is not self.registry:
+            trace.add("tool_scope", role=role, tools=registry.names())
+
         messages: List[Dict] = [
             {"role": "system", "content": agent_system_prompt(role)},
             {"role": "user", "content": question},
         ]
         tool_results: List[Dict] = []
-        final = self._react(messages, trace, tool_results)
+        final = self._react(messages, trace, tool_results, registry)
         if not final:
             # ran out of steps: synthesize from whatever we gathered
             final = self.client.synthesize(question, self._evidence_from(tool_results), role)
@@ -81,7 +98,7 @@ class ShanghanAgent:
         # citation guard, with guard-driven reflection: an answer that cites
         # unverifiable clause_ids (or none at all despite gathered evidence)
         # is sent back with the verdict for another bounded attempt
-        guard = CitationGuard(self.registry.art.clause_store())
+        guard = CitationGuard(registry.art.clause_store())
         # strict grounding: citations must come from THIS round's tool
         # evidence, not merely exist somewhere in the corpus
         allowed = self._clause_ids_from(tool_results)
@@ -108,12 +125,30 @@ class ShanghanAgent:
                          "必要時可再調用工具補充取證；沒有證據的結論必須刪去。")
             messages.append({"role": "assistant", "content": final})
             messages.append({"role": "user", "content": feedback})
-            retry = self._react(messages, trace, tool_results, budget=3)
+            retry = self._react(messages, trace, tool_results, registry, budget=3)
             if not retry:
                 break
             final = retry
             allowed = self._clause_ids_from(tool_results)
             report = guard.check(final, allowed_ids=allowed if tool_results else None)
+
+        # multi-hypothesis layer: when this round did formula matching,
+        # upgrade top-k into parallel hypotheses + 鑒別追問 (亮點功能一)
+        hyp_payload = self._hypotheses_from(tool_results, registry, role)
+        if hyp_payload:
+            from .hypothesis import render_hypotheses
+            final = final.rstrip() + "\n\n" + render_hypotheses(hyp_payload)
+            trace.add("hypotheses", n=len(hyp_payload["hypotheses"]),
+                      needs_clarification=hyp_payload["needs_clarification"])
+            allowed = self._clause_ids_from(tool_results)
+            report = guard.check(final, allowed_ids=allowed if tool_results else None)
+
+        # claim→evidence binding: sentence-level audit of what supports what
+        from .evidence_binder import EvidenceBinder
+        binding = EvidenceBinder(registry.art.clause_store()).bind(final, tool_results)
+        trace.add("claim_binding", n_claims=binding["n_claims"],
+                  grounding_rate=binding["claim_grounding_rate"])
+
         final = guard.annotate(final, report)
         trace.add("citation_check", **report.to_dict())
 
@@ -124,18 +159,71 @@ class ShanghanAgent:
             "tools_used": [t["tool"] for t in tool_results],
             "evidence_clause_ids": report.verified_ids,
             "citation_report": report.to_dict(),
+            "claims": binding,
             "reflection_rounds": rounds,
             "agent_trace": trace.steps,
         }
+        if hyp_payload:
+            payload["hypotheses"] = hyp_payload["hypotheses"]
+            payload["decision"] = hyp_payload["decision"]
+            if hyp_payload["needs_clarification"]:
+                payload["clarification"] = {
+                    "reason": hyp_payload["clarification_reason"],
+                    "questions": hyp_payload["clarifying_questions"]}
         return safety.governed(payload, role)
 
+    def _hypotheses_from(self, tool_results: List[Dict], registry,
+                         role: str) -> Optional[Dict]:
+        """Reuse this round's match/hypotheses call to attach the parallel-
+        hypothesis analysis (doctor/student/researcher surfaces only)."""
+        if role == "patient":
+            return None
+        for tr in tool_results:
+            if tr["tool"] == "shanghan_hypotheses" and \
+                    tr["result"].get("hypotheses"):
+                return tr["result"]
+        match = next((t for t in tool_results
+                      if t["tool"] == "shanghan_match_formula"
+                      and t.get("result", {}).get("matched_formula_patterns")),
+                     None)
+        if match is None:
+            return None
+        try:
+            from .hypothesis import HypothesisManager
+
+            def as_list(v):
+                # raw tool arguments may predate registry coercion
+                if isinstance(v, str):
+                    return [s for s in
+                            (x.strip() for x in
+                             v.replace("，", ",").replace("、", ",").split(","))
+                            if s]
+                return list(v or [])
+
+            args = match.get("arguments", {}) or {}
+            out = HypothesisManager(registry).analyze(
+                symptoms=as_list(args.get("symptoms")),
+                pulse=as_list(args.get("pulse")),
+                six_channel=args.get("six_channel"))
+            return out if out.get("hypotheses") else None
+        except Exception:
+            return None    # hypothesis layer is additive; never break ask()
+
     def _react(self, messages: List[Dict], trace: AgentTrace,
-               tool_results: List[Dict], budget: Optional[int] = None) -> str:
+               tool_results: List[Dict], registry=None,
+               budget: Optional[int] = None) -> str:
         """One bounded tool-calling loop; returns final text ('' if budget
         ran out). Shared by the first pass and every reflection round."""
-        specs = self.registry.specs()
+        registry = registry or self.registry
+        specs = registry.specs()
         for _ in range(budget or self.max_steps):
-            res = self.client.chat(messages, tools=specs)
+            # tool budget is global to the question: once exhausted, the
+            # model is asked to answer from gathered evidence only
+            over_budget = len(tool_results) >= self.max_tool_calls
+            if over_budget:
+                trace.add("tool_budget_exhausted", used=len(tool_results),
+                          budget=self.max_tool_calls)
+            res = self.client.chat(messages, tools=None if over_budget else specs)
             if res.tool_calls:
                 assistant_msg = {"role": "assistant", "content": res.content or None,
                                  "tool_calls": [{"id": tc.id, "type": "function",
@@ -144,7 +232,7 @@ class ShanghanAgent:
                                                 for tc in res.tool_calls]}
                 messages.append(assistant_msg)
                 for tc in res.tool_calls:
-                    result = self.registry.call(tc.name, tc.arguments)
+                    result = registry.call(tc.name, tc.arguments)
                     tool_results.append({"tool": tc.name, "arguments": tc.arguments,
                                          "result": result})
                     trace.add("tool_call", tool=tc.name, arguments=tc.arguments)

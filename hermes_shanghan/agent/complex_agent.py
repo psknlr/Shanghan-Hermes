@@ -14,16 +14,15 @@ orchestration tree runs and tests offline through the same code path.
 """
 from __future__ import annotations
 
-import json
-import re
 from typing import Any, Dict, List, Optional
 
-from .. import lexicon, safety
+from .. import safety
 from ..llm.client import LLMClient, get_client
 from ..llm.prompts import EVIDENCE_CONTRACT
 from ..textutil import normalize_query
 from .agent import ShanghanAgent
 from .citation_guard import CitationGuard
+from .planner import Planner, execution_order
 from .tools import ScopedRegistry, ToolRegistry, get_registry
 
 # subtask type → (description for the planner, allowed tool scope)
@@ -62,20 +61,8 @@ TASK_TYPES: Dict[str, Dict] = {
                           "shanghan_formula_rule"]},
 }
 
-_KIND_PATTERNS = [
-    ("safety_check", r"能不能用|可不可以用|禁忌嗎|犯不犯禁"),
-    ("case", r"醫案|案例|實驗錄|診案"),
-    ("therapy", r"[汗下吐和溫清補]法|禁[汗下吐]|治法"),
-    ("differential", r"鑒別|對比|區別|區分|不同|vs"),
-    ("dose", r"劑量|藥量|用量|折算|幾兩|幾克|銖"),
-    ("commentary", r"注家|注本|詮釋|分歧|成無己|柯琴|尤怡|方有執"),
-    ("mistreatment", r"誤治|誤下|誤汗|誤吐|傳變|壞病|變證|救逆"),
-    ("six_channel", r"提綱|六經|經證|欲解時"),
-    ("stats", r"統計|頻次|多少條|基準|評測|接地率"),
-    ("literature", r"笈成|全庫文獻|古籍|醫籍|歷代醫書|後世醫[家書]|哪些書|哪部書|書目"),
-    ("research", r"溯源|源流|演化史|全面研究|綜述"),
-]
-RE_SPLIT = re.compile(r"[？?；;。]\s*")
+# segment classification patterns and split regex live in planner.py now —
+# the Planner is the single decomposition brain for this orchestrator
 
 
 class ComplexAgent:
@@ -91,31 +78,70 @@ class ComplexAgent:
     def solve(self, question: str, role: Optional[str] = None) -> Dict[str, Any]:
         role = role if role in safety.ROLES else "doctor"
         if role == "patient":
+            triage = safety.red_flag_triage(question)
+            if triage:
+                return safety.governed(triage, "patient")
             guard = safety.patient_intent_guard(question)
             if guard:
                 return safety.governed(guard, "patient")
 
-        subtasks = self._decompose(question)
+        plan = Planner(client=self.client, task_types=TASK_TYPES,
+                       max_subtasks=max(self.max_subtasks, 5)).plan(question)
+        ordered = execution_order(plan["subtasks"])
         trace: List[Dict] = [{"step": "decompose",
-                              "subtasks": [{"kind": t["kind"], "question": t["question"]}
-                                           for t in subtasks]}]
+                              "planner": plan["planner"], "goal": plan["goal"],
+                              "success_criteria": plan["success_criteria"],
+                              "subtasks": [{"id": t["id"], "kind": t["kind"],
+                                            "question": t["question"],
+                                            "depends_on": t["depends_on"]}
+                                           for t in ordered]}]
         results: List[Dict] = []
-        for t in subtasks:
-            results.append(self._dispatch(t, role, trace))
+        by_id: Dict[str, Dict] = {}
+        for t in ordered:
+            sub_q = t["question"]
+            deps = [by_id[d] for d in t.get("depends_on", []) if d in by_id]
+            if deps:
+                # a dependent task sees its dependencies' verified evidence —
+                # the join task reasons over gathered proof, not from scratch
+                ctx = "\n".join(
+                    f"（已取證 {d['id']}：{self._strip_footer(d['answer'])[:200]}"
+                    f"｜證據：{'、'.join(d.get('evidence_clause_ids', [])[:4])}）"
+                    for d in deps)
+                sub_q = ctx + "\n綜合任務：" + t["question"]
+            r = self._dispatch({"kind": t["kind"], "question": sub_q}, role, trace)
+            r["id"] = t["id"]
+            r["depends_on"] = t.get("depends_on", [])
+            r["planned_question"] = t["question"]
+            by_id[t["id"]] = r
+            results.append(r)
 
         final = self._synthesize(question, role, results)
+        # strict round grounding for the merged answer: only clause_ids that
+        # some subtask actually retrieved are legal citations here
+        allowed = sorted({cid for r in results
+                          for cid in r.get("evidence_clause_ids", [])})
         guard = CitationGuard(self.registry.art.clause_store())
-        report = guard.check(final)
+        report = guard.check(final, allowed_ids=allowed if allowed else None)
+        criteria = self._criteria_check(plan, final)
+        if criteria["unmet"]:
+            final += ("\n\n⚠️ 覆蓋提示：本回答尚未明確覆蓋——"
+                      + "；".join(criteria["unmet"]))
+        trace.append({"step": "criteria_check", **criteria})
         final = guard.annotate(final, report)
         payload = {
             "question": question, "role": role,
             "backend": self.client.backend,
             "answer": final,
-            "subtasks": [{"kind": r["kind"], "question": r["question"],
+            "plan": {"goal": plan["goal"], "planner": plan["planner"],
+                     "success_criteria": plan["success_criteria"]},
+            "subtasks": [{"id": r.get("id"), "kind": r["kind"],
+                          "question": r["question"],
+                          "depends_on": r.get("depends_on", []),
                           "tools_used": r.get("tools_used", []),
                           "evidence_clause_ids": r.get("evidence_clause_ids", []),
                           "reflection_rounds": r.get("reflection_rounds", 0)}
                          for r in results],
+            "criteria_check": criteria,
             "evidence_clause_ids": report.verified_ids,
             "citation_report": report.to_dict(),
             "orchestrator_trace": trace,
@@ -123,55 +149,41 @@ class ComplexAgent:
         return safety.governed(payload, role)
 
     # ------------------------------------------------------------------
-    def _decompose(self, question: str) -> List[Dict]:
-        if self.client.available:
-            catalog = "\n".join(f"- {k}：{v['desc']}" for k, v in TASK_TYPES.items())
-            try:
-                plan = self.client.json_complete(
-                    EVIDENCE_CONTRACT + "\n\n任務：把用戶的複合問題分解為可獨立"
-                    "查證的子任務（1-4 個），每個標注類型。嚴格輸出 JSON："
-                    "{\"subtasks\":[{\"kind\":\"…\",\"question\":\"…\"}]}",
-                    f"複合問題：{question}\n可用類型：\n{catalog}",
-                    task="synthesize")
-                tasks = [t for t in plan.get("subtasks", [])
-                         if t.get("kind") in TASK_TYPES and t.get("question")]
-                if tasks:
-                    return tasks[:self.max_subtasks]
-            except Exception:
-                pass
-        return self._decompose_local(question)
+    @staticmethod
+    def _criteria_check(plan: Dict, final: str) -> Dict:
+        """Deterministic success-criteria audit: coverage criteria
+        （「必須分別覆蓋：X、Y」）are checked against the merged answer;
+        citation criteria are enforced by the CitationGuard itself."""
+        unmet: List[str] = []
+        norm = normalize_query(final)
+        for c in plan.get("success_criteria", []):
+            if "必須分別覆蓋：" in c:
+                for obj in c.split("：", 1)[1].split("、"):
+                    key = obj.strip()
+                    # 「少陰病寒化」 counts as covered if 寒化 appears
+                    stem = key[-2:] if len(key) >= 2 else key
+                    if key and key not in norm and stem not in norm:
+                        unmet.append(key)
+        return {"criteria": plan.get("success_criteria", []), "unmet": unmet}
 
+    # ------------------------------------------------------------------
     def _decompose_local(self, question: str) -> List[Dict]:
-        q = normalize_query(question)
-        anchors = [n for n in sorted(lexicon.FORMULA_SEEDS, key=len, reverse=True)
-                   if n in q][:3]
-        segments = [s.strip() for s in RE_SPLIT.split(question) if s.strip()]
-        tasks: List[Dict] = []
-        for seg in segments or [question]:
-            kind = next((k for k, pat in _KIND_PATTERNS
-                         if re.search(pat, normalize_query(seg))), "general")
-            sub_q = seg
-            # a fragment like「各自劑量比是多少」loses its subjects in the
-            # split — re-anchor it with the formulas named in the full question
-            if anchors and not any(a in normalize_query(seg) for a in anchors):
-                sub_q = f"{seg}（涉及：{'、'.join(anchors)}）"
-            tasks.append({"kind": kind, "question": sub_q})
-        # merge consecutive duplicates of the same kind
-        merged: List[Dict] = []
-        for t in tasks:
-            if merged and merged[-1]["kind"] == t["kind"]:
-                merged[-1]["question"] += "；" + t["question"]
-            else:
-                merged.append(t)
-        return merged[:self.max_subtasks]
+        """Deterministic decomposition（保留舊接口：返回 {kind, question}）."""
+        plan = Planner(task_types=TASK_TYPES,
+                       max_subtasks=self.max_subtasks)._plan_local(question)
+        return [{"kind": t["kind"], "question": t["question"]}
+                for t in plan["subtasks"]]
 
     # ------------------------------------------------------------------
     def _dispatch(self, task: Dict, role: str, trace: List[Dict]) -> Dict:
         kind = task["kind"]
         if kind == "research":
             from .research_loop import DeepResearcher
+            # role isolation holds for research dispatch too: a patient-role
+            # research loop only sees the patient-safe tool surface
             dossier = DeepResearcher(client=self.client,
-                                     registry=self.registry).run(task["question"])
+                                     registry=self.registry.for_role(role)
+                                     ).run(task["question"])
             trace.append({"step": "subagent", "kind": kind,
                           "dispatch": "deep_research",
                           "rounds": dossier["n_rounds"]})

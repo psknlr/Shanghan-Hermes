@@ -6,7 +6,7 @@
   "grounded_answer_rate": 1.0,
   "no_citation_rate": 0.0,
   "unsupported_citation_rate": 0.0,
-  "mean_verified_per_answer": 4.3
+  "mean_verified_per_answer": 4.5667
  },
  "records": [
   {
@@ -272,8 +272,8 @@
   {
    "kind": "match",
    "question": "病人發熱、汗出、頭痛，考慮什麼方？",
-   "cited": 9,
-   "verified": 9,
+   "cited": 12,
+   "verified": 12,
    "unsupported": 0,
    "quote_mismatches": 0,
    "has_citation": true,
@@ -292,8 +292,8 @@
   {
    "kind": "match",
    "question": "病人嘔、往來寒熱、發熱，考慮什麼方？",
-   "cited": 9,
-   "verified": 9,
+   "cited": 12,
+   "verified": 12,
    "unsupported": 0,
    "quote_mismatches": 0,
    "has_citation": true,
@@ -302,8 +302,8 @@
   {
    "kind": "match",
    "question": "病人下利清穀、下利、發熱，考慮什麼方？",
-   "cited": 9,
-   "verified": 9,
+   "cited": 11,
+   "verified": 11,
    "unsupported": 0,
    "quote_mismatches": 0,
    "has_citation": true,

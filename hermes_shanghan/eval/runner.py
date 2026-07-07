@@ -36,7 +36,8 @@ def _write(name: str, payload: Dict) -> str:
     return str(p)
 
 
-def run_suites(suites=("cloze", "cases", "grounding"), ablations: bool = False,
+def run_suites(suites=("cloze", "cases", "grounding", "agent"),
+               ablations: bool = False,
                limit: Optional[int] = None, verbose: bool = True) -> Dict:
     from ..orchestrator import Artifacts
     art = Artifacts()
@@ -85,6 +86,16 @@ def run_suites(suites=("cloze", "cases", "grounding"), ablations: bool = False,
         _write("grounding_results.json", res)
         summary["suites"]["grounding"] = {k: v for k, v in res.items()
                                           if k != "records"}
+
+    if "agent" in suites:
+        log("▶ 智能體基準（路由/接地/鑒別覆蓋/安全）…")
+        from .agent_bench import run_agent_benchmarks
+        res = run_agent_benchmarks(limit=limit)
+        _write("agent_bench_results.json", res)
+        summary["suites"]["agent"] = {
+            "headline": res["headline"],
+            "benchmarks": {k: {"metrics": v["metrics"]}
+                           for k, v in res["benchmarks"].items()}}
 
     _write("eval_summary.json", summary)
     return summary

@@ -51,38 +51,6 @@
     }
    }
   },
-  "cloze_ablations": {
-   "without_outline_boost": {
-    "n": 140,
-    "top1": 0.1929,
-    "top3": 0.3929,
-    "top5": 0.4786,
-    "mrr": 0.3001,
-    "herb_precision": 0.4182,
-    "herb_recall": 0.4051,
-    "herb_f1": 0.406
-   },
-   "without_near_match": {
-    "n": 140,
-    "top1": 0.1857,
-    "top3": 0.3857,
-    "top5": 0.4643,
-    "mrr": 0.2915,
-    "herb_precision": 0.4098,
-    "herb_recall": 0.3961,
-    "herb_f1": 0.3972
-   },
-   "full": {
-    "n": 140,
-    "top1": 0.1929,
-    "top3": 0.3929,
-    "top5": 0.4714,
-    "mrr": 0.2968,
-    "herb_precision": 0.4182,
-    "herb_recall": 0.4051,
-    "herb_f1": 0.406
-   }
-  },
   "cases": {
    "benchmark": "case_replay_jingfang_shiyanlu",
    "source": "經方實驗錄",
@@ -122,7 +90,54 @@
     "grounded_answer_rate": 1.0,
     "no_citation_rate": 0.0,
     "unsupported_citation_rate": 0.0,
-    "mean_verified_per_answer": 4.3
+    "mean_verified_per_answer": 4.5667
+   }
+  },
+  "agent": {
+   "headline": {
+    "tool_selection_accuracy": 1.0,
+    "grounded_answer_rate": 1.0,
+    "mean_claim_grounding_rate": 0.7903,
+    "differential_axis_coverage": 1.0,
+    "safety_pass_rate": 1.0
+   },
+   "benchmarks": {
+    "routing": {
+     "metrics": {
+      "n_questions": 15,
+      "tool_selection_accuracy": 1.0,
+      "wrong_tool_rate": 0.0,
+      "mean_extra_tools_per_question": 0.0
+     }
+    },
+    "grounding": {
+     "metrics": {
+      "n_questions": 6,
+      "grounded_answer_rate": 1.0,
+      "outside_evidence_citation_rate": 0.0,
+      "unsupported_citation_rate": 0.0,
+      "mean_claim_grounding_rate": 0.7903
+     }
+    },
+    "differential": {
+     "metrics": {
+      "n_pairs": 5,
+      "axis_coverage_rate": 1.0,
+      "pairs_fully_covered": 5,
+      "pairs_with_evidence": 5
+     }
+    },
+    "safety": {
+     "metrics": {
+      "n_questions": 9,
+      "refusal_accuracy": 1.0,
+      "over_refusal_rate": 0.0,
+      "dose_leakage_rate": 0.0,
+      "unsafe_tool_rate": 0.0,
+      "safe_redirect_rate": 1.0,
+      "pass_rate": 1.0
+     }
+    }
    }
   }
  }

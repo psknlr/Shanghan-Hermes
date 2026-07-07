@@ -43,6 +43,57 @@ RE_DOSAGE_INTENT = re.compile(
     r"(劑量|剂量|用量|幾克|几克|多少克|多少錢|吃幾|吃几|喝幾|喝几|一天.{0,3}次|"
     r"每日.{0,3}次|加量|減量|减量|停藥|停药)")
 
+# —— patient-side red-flag triage ————————————————————————————————
+# Danger signs that must escalate to 立即就醫 BEFORE any classical-text
+# discussion. Two tiers: always-urgent signs, and vulnerable populations that
+# become urgent when combined with symptom/medication context.
+RE_RED_FLAG_URGENT = re.compile(
+    r"(高[熱燒烧]不退|持續高[熱烧燒]|39\.?5|40\s*度|呼吸困難|呼吸困难|喘不過氣|"
+    r"喘不过气|胸痛|胸口痛|口唇發[紫绀]|口唇发[紫绀]|意識(不清|模糊)|意识(不清|模糊)|"
+    r"神志(不清|改變|改变)|昏迷|昏厥|抽搐|驚厥|惊厥|嘔血|呕血|便血|咯血|吐血|"
+    r"劇烈頭痛|剧烈头痛|頸項強直|颈项强直|尿量明顯減少|尿量明显减少|無法進食|无法进食|"
+    r"嚴重脫水|严重脱水|出血點|出血点)")
+RE_VULNERABLE = re.compile(
+    r"(孕婦|孕妇|懷孕|怀孕|妊娠|哺乳|新生兒|新生儿|嬰兒|婴儿|嬰幼兒|婴幼儿|"
+    r"幼兒|幼儿|寶寶|宝宝|(我|家)?(小)?孩子?|兒童|儿童|老人|高齡|高龄)")
+RE_SYMPTOM_CONTEXT = re.compile(
+    r"(發[熱燒烧]|发[热烧]|惡寒|恶寒|怕冷|咳|嘔|呕|吐|下利|腹瀉|腹泻|腹痛|頭痛|头痛|"
+    r"出汗|無汗|无汗|喝.{0,6}[湯汤藥药]|吃.{0,6}藥|吃.{0,6}药|用藥|用药)")
+
+
+def red_flag_triage(question: str) -> Optional[Dict]:
+    """Return an urgent-care triage payload when the patient question carries
+    danger signs（紅旗症狀）or a vulnerable population + symptom/medication
+    context. Runs BEFORE the intent guard: 就醫優先於一切古籍討論."""
+    urgent = RE_RED_FLAG_URGENT.search(question)
+    vulnerable = RE_VULNERABLE.search(question) and (
+        RE_SYMPTOM_CONTEXT.search(question)
+        or RE_PRESCRIPTION_INTENT.search(question)
+        or RE_DOSAGE_INTENT.search(question))
+    if not urgent and not vulnerable:
+        return None
+    flags: List[str] = []
+    if urgent:
+        flags.append(f"危險徵象：{urgent.group(0)}")
+    if vulnerable:
+        flags.append(f"重點人群：{RE_VULNERABLE.search(question).group(0)}")
+    return {
+        "refused": True,
+        "urgent": bool(urgent),
+        "red_flags": flags,
+        "message": (
+            "您描述的情況包含需要優先由醫生當面評估的信號（"
+            + "；".join(flags) + "）。\n"
+            "請不要依靠古籍知識自行處理："
+            + ("建議儘快就醫（必要時急診）。\n" if urgent
+               else "重點人群用藥風險更高，請務必先諮詢執業醫師。\n")
+            + "就診前我可以幫您：\n"
+              "1. 把症狀按「開始時間—部位—性質—伴隨表現」整理成清單，供醫生快速了解；\n"
+              "2. 用通俗語言解釋醫生提到的中醫術語；\n"
+              "3. 提醒就診時值得主動告知的信息（過敏史、正在服用的藥物等）。"),
+        "safety_notice": PATIENT_NOTICE,
+    }
+
 # dose expressions to redact in patient-facing text — covers classical units
 # (三兩/半升), arabic-numeral doses (3克/10g/5 ml), and frequency schedules
 # (每日三次/一天2次/bid/tid)
@@ -94,11 +145,21 @@ def governed(payload: Dict, role: str) -> Dict:
         for key in ("answer", "explanation", "message"):
             if isinstance(payload.get(key), str):
                 payload[key] = redact_for_patient(payload[key])
+        # claim-binding payload carries answer sentences — redact those too
+        claims = payload.get("claims")
+        if isinstance(claims, dict):
+            claims = dict(claims)
+            claims["claims"] = [
+                {**c, "claim": redact_for_patient(c.get("claim", ""))}
+                for c in claims.get("claims", [])]
+            claims["ungrounded_claims"] = [
+                redact_for_patient(c) for c in claims.get("ungrounded_claims", [])]
+            payload["claims"] = claims
         # patient answers must not carry actionable prescriptions —
         # composition/administration blocks are dropped wholesale
         for key in ("matched_formula_patterns", "recommended_formulas",
                     "formula_blocks", "composition", "dose_processing",
-                    "administration"):
+                    "administration", "hypotheses", "clarification"):
             payload.pop(key, None)
     if role == "doctor":
         payload["assistive_only"] = True

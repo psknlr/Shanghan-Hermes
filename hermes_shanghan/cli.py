@@ -252,7 +252,7 @@ def cmd_evaluate(args):
     _need_pipeline()
     from .eval.runner import run_suites
     suites = tuple(args.suite.split(",")) if args.suite != "all" \
-        else ("cloze", "cases", "grounding")
+        else ("cloze", "cases", "grounding", "agent")
     summary = run_suites(suites=suites, ablations=args.ablations,
                          limit=args.limit)
     _print(summary)
@@ -572,9 +572,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("--rounds", type=int, default=3)
     sp.set_defaults(func=cmd_deep_research)
 
-    sp = sub.add_parser("evaluate", help="客觀評測：遮方預測/醫案回放/證據接地率")
+    sp = sub.add_parser("evaluate",
+                        help="客觀評測：遮方預測/醫案回放/證據接地率/智能體基準")
     sp.add_argument("--suite", default="all",
-                    help="all 或逗號分隔：cloze,cases,grounding")
+                    help="all 或逗號分隔：cloze,cases,grounding,agent")
     sp.add_argument("--ablations", action="store_true",
                     help="對匹配器各評分組件做消融實驗")
     sp.add_argument("--limit", type=int, default=None)

@@ -90,7 +90,11 @@ class PatientEducator:
         return entry
 
     def explain(self, question: str) -> Dict:
-        # 1 — intent guard first: refuse diagnosis/prescription/dosage asks
+        # 0 — red-flag triage: danger signs escalate to 就醫 before anything
+        triage = safety.red_flag_triage(question)
+        if triage:
+            return safety.governed(triage, "patient")
+        # 1 — intent guard: refuse diagnosis/prescription/dosage asks
         refusal = safety.patient_intent_guard(question)
         if refusal:
             return safety.governed(refusal, "patient")

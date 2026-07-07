@@ -20,7 +20,7 @@ class TestNewTools(unittest.TestCase):
 
     def test_registry_has_eighteen_tools(self):
         names = self.reg.names()
-        self.assertEqual(len(names), 19)
+        self.assertEqual(len(names), 20)
         for t in ("shanghan_variants", "shanghan_relations", "shanghan_therapy",
                   "shanghan_contraindication_check", "shanghan_dose_convert",
                   "shanghan_case_search"):

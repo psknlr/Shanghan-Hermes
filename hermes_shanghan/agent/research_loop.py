@@ -50,6 +50,33 @@ MODULES = {
 }
 DIMENSIONS = ["原文源流", "異文注家", "方證計量", "劑量計量", "客觀評測", "醫案例證"]
 
+# actionable follow-ups per uncovered dimension — a research gap is only
+# useful if it says HOW to close it
+GAP_SUGGESTIONS = {
+    "原文源流": "調用 shanghan_search / shanghan_formula_rule 補充 A 層條文取證",
+    "異文注家": "調用 shanghan_variants 對勘桂林古本/千金翼方，或 shanghan_divergence_atlas 取注家分歧",
+    "方證計量": "調用 shanghan_corpus_stats / shanghan_differential 補計量與鑒別",
+    "劑量計量": "調用 shanghan_dose（藥量比/家族演化）或 shanghan_dose_convert",
+    "客觀評測": "先運行 evaluate 生成基準，再調 shanghan_eval_metrics",
+    "醫案例證": "調用 shanghan_case_search（經方實驗錄旁證 + 經文錨點）",
+}
+
+
+def refine_questions(topic: str, formulas: List[str]) -> List[str]:
+    """Research-question refiner: expand a bare topic（「桂枝湯類方源流」）
+    into the concrete questions the loop should answer — deterministic so
+    the dossier is reproducible."""
+    f0 = formulas[0] if formulas else ""
+    subject = f0 or topic
+    return [
+        f"{topic}在宋本中的原文基礎（相關條文與方證規則）是什麼？",
+        f"{subject}的加減/類方變化體現哪些證候邊界？",
+        f"{subject}的藥量比與家族劑量演化呈何種模式？",
+        f"注家對{topic}核心條文的詮釋有哪些分歧？版本異文是否影響釋讀？",
+        f"{topic}相關的誤治傳變與禁例法度有哪些？",
+        f"現有規則庫的計量統計與客觀評測基準對{topic}的結論有何約束？",
+    ]
+
 
 class DeepResearcher:
     def __init__(self, client: Optional[LLMClient] = None,
@@ -87,16 +114,24 @@ class DeepResearcher:
         guard = CitationGuard(self.registry.art.clause_store())
         all_ids: List[str] = []
         for f in state["findings"]:
-            rep = guard.check(f["summary"])
+            # strict round grounding: a finding may only cite clause_ids that
+            # appeared in its OWN module result
+            own = f.pop("_result_ids", None)
+            rep = guard.check(f["summary"], allowed_ids=own)
             f["verified_clause_ids"] = rep.verified_ids
             f["citation_ok"] = rep.ok
             all_ids += rep.verified_ids
         coverage = {d: sum(1 for f in state["findings"] if f["dimension"] == d)
                     for d in DIMENSIONS}
+        gaps = self._gaps(state)
         return {"topic": topic, "backend": self.client.backend,
+                "research_questions": refine_questions(topic, formulas),
                 "n_rounds": len(state["rounds"]), "rounds": state["rounds"],
                 "coverage": coverage,
-                "uncovered_dimensions": self._gaps(state),
+                "uncovered_dimensions": gaps,
+                "gap_report": [{"dimension": d,
+                                "suggestion": GAP_SUGGESTIONS.get(d, "")}
+                               for d in gaps],
                 "evidence_clause_ids": sorted(set(all_ids)),
                 "findings": state["findings"]}
 
@@ -166,8 +201,12 @@ class DeepResearcher:
         result = self.registry.call(module, args)
         dimension = MODULES[module][0]
         summary = self._summarize(topic, module, result)
+        from .citation_guard import RE_CLAUSE_ID
+        own_ids = list(dict.fromkeys(RE_CLAUSE_ID.findall(
+            json.dumps(result, ensure_ascii=False, default=str))))
         return {"dimension": dimension, "module": module, "args": args,
                 "summary": summary,
+                "_result_ids": own_ids,
                 "error": result.get("error") if isinstance(result, dict) else None}
 
     def _summarize(self, topic: str, module: str, result: Dict) -> str:

@@ -108,15 +108,78 @@ system(角色契約) → user(問題) → [tool_call → tool_result]* → answe
 
 - **反思自糾**（agent.py）：答案先過 CitationGuard；含未核實編號、或有取證
   卻無引用時，裁決作為反饋回注模型，允許在有界輪數內補充取證並重答；
-  仍不過關則響亮標注「請勿採信」後交付——絕不靜默。
-- **複合任務編排**（complex_agent.py，CLI `solve`）：真模型 JSON 分解 /
-  local 確定性分解（句切分+類型識別+方名錨點回填）→ 每個子任務派遣一個
+  仍不過關則響亮標注「請勿採信」後交付——絕不靜默。每問另設
+  `max_tool_calls` 硬預算：超限後不再提供工具，強制據已有證據作答。
+- **任務圖規劃**（planner.py）：複合問題不再只做句切分——對比類問題
+  （「少陰寒化與熱化怎麼區分？」）自動展開為「逐對象取證（T1/T2/…）→
+  依賴匯總（Tn，depends_on 全部取證任務）」的任務圖，並產出
+  `success_criteria`（「必須分別覆蓋：寒化、熱化」等）；執行器按拓撲序
+  派遣，匯總任務可見依賴任務的已核實證據；`criteria_check` 對最終回答做
+  覆蓋審計，未覆蓋項響亮提示。方劑對比仍走 `shanghan_differential`
+  專用工具（已有能力不重複展開）。
+- **複合任務編排**（complex_agent.py，CLI `solve`）：每個子任務派遣一個
   ShanghanAgent，其 ToolRegistry 經 `ScopedRegistry` 裁剪到該類型所需工具
   （最小權限）→ research 型子任務改派 DeepResearcher → 綜合答覆整體再過
-  一次核驗。`orchestrator_trace` 記錄分解與每個子代理的工具域/實際調用。
+  一次核驗，且 `allowed_ids` 綁定各子任務證據並集——合併答案同樣
+  「引用必須來自本輪取證」。`orchestrator_trace` 記錄計劃/工具域/實際調用。
 - **會話記憶**（session.py，HTTP `POST /api/chat` 按 session_id 隔離）：
   跨輪累積方名錨點與已核實條文台賬；追問（「它的劑量比呢？」）自動前置
-  緊湊上下文完成指代消解；複合追問自動路由到編排器。
+  緊湊上下文完成指代消解；複合追問自動路由到編排器。用戶糾錯
+  （「不是桂枝加芍藥湯，而是桂枝去芍藥湯」）被記入 `corrections` 並持久化
+  到 `correction_memory`，此後每輪上下文注入「用戶已糾正，請勿再犯」。
+
+## 證據綁定與多假設推理（EvidenceBinder / HypothesisManager）
+
+- **EvidenceBinder**（evidence_binder.py）：最終回答逐句拆為 claims，
+  每句綁定到**本輪工具結果中出現過的** clause_id，標注
+  `support_type`（direct / cited_low_overlap / inferred / ungrounded）、
+  `evidence_layer`（A/B/C/D；句中出現後世病機術語如「營衛不和」一律降為
+  D/E，不得冒充原文）與置信度；聚合為 `claim_grounding_rate` 隨 payload
+  返回——「無證據鏈，不成回答」從答案級細化到句級。
+- **HypothesisManager + 鑒別追問**（hypothesis.py，工具
+  `shanghan_hypotheses`）：方證匹配不再輸出單一答案，而是並列假設——
+  每個假設帶支持證據/反證/「何種表現會削弱本假設」（由互斥證對確定性
+  生成，如桂枝湯之於「無汗」）/尚未確認的核心證/置信分層；top 候選評分
+  接近或關鍵鑒別變量缺失時 `needs_clarification=true`，自動生成鑒別追問
+  （「是『汗出』還是『無汗』？（汗出→桂枝湯；無汗→麻黃湯）」）。
+  醫師/教學端回答自動附【多假設方證分析】與【鑒別追問】區塊；患者端
+  永不輸出。
+
+## 工具結果統一信封（evidence_level / confidence / 緩存 / 校驗 / 消歧）
+
+- 每個成功的工具結果統一標注 `evidence_level`（A 原文／B 異文／C 注家／
+  D 歸納／旁證）與確定性來源的 `confidence`（匹配分/發布等級/命中率，
+  非模型自評），必要時附 `limitations`。
+- **參數校驗與修復**：缺必填/未知參數在執行前擋下並回 schema；常見模型
+  筆誤自動修復（`top_k:"3"`→3、`symptoms:"惡寒，發熱"`→列表）。
+- **方名消歧**：`桂枝` → `{"ambiguous":true,"candidates":["桂枝湯","桂枝加
+  桂湯",…]}`；別名（理中湯→理中丸）自動歸一並回報 `resolved_from`。
+  formula_rule / dose / contraindication_check / differential 全部接線。
+- **結果緩存**：同一（工具,參數）調用在註冊表生命週期內直接命中緩存
+  （深拷貝隔離，`cache_hit:true` 可見），科研復現與多智能體重複取證免費。
+
+## 患者端硬隔離與紅旗分診
+
+- **能力面隔離**（`PATIENT_SAFE_TOOLS` + `registry.for_role("patient")`）：
+  患者會話拿到的註冊表**不含**方證匹配/組成/劑量/治法/禁忌檢查等工具——
+  不是提示詞約束，而是工具面裁剪；ScopedRegistry 之上再裁剪同樣成立。
+- **紅旗分診**（safety.red_flag_triage，先於意圖守衛）：危險徵象（高熱
+  不退/呼吸困難/胸痛/神志改變/嘔血…）或重點人群（孕婦/嬰幼兒/老人）疊加
+  症狀/用藥語境時，直接升級為就醫優先的分診回覆，不進入任何模型/工具
+  調用；三個智能體入口（ShanghanAgent/ComplexAgent/Council）與患者教育
+  端全部接線。
+
+## 多智能體合議：獨立判斷 → 共識/分歧裁決（ConsensusJudge）
+
+每位專家先產出**獨立結構化判斷** `{hypothesis, support, against, evidence,
+confidence}`（方證專家由 HypothesisManager 供給多假設與追問）；
+`ConsensusJudge`（consensus.py）按固定評分規則合議：證據直接性 0-3、條文
+數量 0-2、支持覆蓋 0-3、反證衝突與安全風險扣分、完整度 0-2 →
+`final_confidence` 與 `decision`（probable / probable_but_needs_more_information /
+insufficient_evidence）。答覆自動附「◎ 共識 / ◎ 分歧 / ◎ 需要補充確認 /
+◎ 合議置信度」區塊——方證與六經定位不一致、候選評分接近（麻黃湯 vs
+大青龍湯）等衝突顯式呈現而非被單一答案掩蓋；合議最終答案的引用同樣
+綁定本輪各專家取回的證據（`allowed_ids`）。
 
 ## LLM 增強的規則挖掘
 
@@ -143,9 +206,10 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 「⚠️ 含未核實條文編號」。可用 `Council(llm_specialists=False)` 關閉，
 離線 `local` 後端自動跳過。
 
-## 19 個可調用工具（智能體 / harness 共用同一能力面）
+## 20 個可調用工具（智能體 / harness 共用同一能力面）
 
 `shanghan_search`、`shanghan_get_clause`、`shanghan_match_formula`、
+`shanghan_hypotheses`（多假設方證分析+鑒別追問）、
 `shanghan_differential`、`shanghan_six_channel`、`shanghan_formula_rule`、
 `shanghan_mistreatment`、`shanghan_list_formulas`，以及十一個**研究/推理/文獻模塊**：
 `shanghan_divergence_atlas`（注家分歧圖譜）、`shanghan_dose`（劑量計量）、
@@ -165,6 +229,22 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 （真模型 JSON 規劃 / local 覆蓋驅動）→ 子代理逐模塊取證並寫出引用核驗的
 發現 → 批評家查六維度缺口（含醫案例證）→ 迭代收斂。產出的溯源檔案驅動
 `paper --type provenance` 一鍵生成學術溯源論文（含 SVG 統計圖表）。
+檔案（dossier）另含：`research_questions`（研究問題細化器把裸主題展開為
+六個可回答的具體問題）、`gap_report`（每個未覆蓋維度附可執行補證建議，
+如「調用 shanghan_variants 對勘桂林古本」）；每條發現的引用綁定其
+**自身模塊結果**中的 clause_id（allowed_ids 逐發現核驗）。
+
+## 智能體基準（eval/agent_bench.py，`evaluate` 默認第四套件）
+
+| 基準 | 測什麼 | 指標 |
+|---|---|---|
+| routing | 問題→工具選擇 | tool_selection_accuracy / wrong_tool_rate |
+| grounding | 回答級接地 | outside_evidence_citation_rate / claim_grounding_rate |
+| differential | 鑒別軸覆蓋（桂枝湯vs麻黃湯須含汗出/無汗軸等） | axis_coverage_rate |
+| safety | 患者端拒答/劑量泄漏/越權工具/過度拒答 | refusal_accuracy / dose_leakage_rate / unsafe_tool_rate / over_refusal_rate |
+
+全部離線確定性運行，結果寫入 `data/shanghan/eval/agent_bench_results.json`
+並匯入 `eval_summary.json`——智能體行為回歸從此有數字可盯。
 
 ```bash
 python3 -m hermes_shanghan tool-call shanghan_differential --args '{"formulas":["桂枝湯","麻黃湯"]}'
