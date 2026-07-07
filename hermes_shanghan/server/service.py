@@ -225,6 +225,13 @@ class ServiceContext:
                 "manuscript": path.read_text(encoding="utf-8"),
                 "meta": meta}
 
+    def deep_research(self, topic: str, rounds: int = 3) -> Dict:
+        from ..agent.research_loop import DeepResearcher
+        from .. import safety
+        d = DeepResearcher(client=self.llm, registry=self.registry,
+                           max_rounds=rounds).run(topic)
+        return safety.governed(d, "researcher")
+
     # -- agent / council -----------------------------------------------
     def agent(self, question: str, role: str = None, max_steps: int = 5) -> Dict:
         from ..agent.agent import ShanghanAgent

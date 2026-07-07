@@ -175,6 +175,60 @@
      "properties": {}
     }
    }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_divergence_atlas",
+    "description": "注家分歧圖譜：9 部注本的對齊覆蓋、爭點條文榜、注家一致度矩陣與指紋；可按 clause_id 片段取單條的多注家記錄。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "clause": {
+       "type": "string",
+       "description": "可選 clause_id 片段，如 0012"
+      }
+     }
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_dose",
+    "description": "劑量計量層：某方的銖當量藥量比（學派無關）、三家折算總量與家族劑量演化邊；不給方名則返回全庫劑量摘要。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string",
+       "description": "可選方名，如 桂枝加芍藥湯"
+      }
+     }
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_corpus_stats",
+    "description": "規則庫計量統計：條文/規則/關係/方證頻次/六經分佈等全庫數字（科研引用用）。",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_eval_metrics",
+    "description": "客觀評測結果：遮方預測(LOCO)、醫案回放、證據接地率三大基準的當前指標與消融。",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    }
+   }
   }
  ],
  "anthropic_tools": [
@@ -323,6 +377,48 @@
   {
    "name": "shanghan_list_formulas",
    "description": "列出規則庫中可用的方劑名稱（用於消歧或選擇）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {}
+   }
+  },
+  {
+   "name": "shanghan_divergence_atlas",
+   "description": "注家分歧圖譜：9 部注本的對齊覆蓋、爭點條文榜、注家一致度矩陣與指紋；可按 clause_id 片段取單條的多注家記錄。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "clause": {
+      "type": "string",
+      "description": "可選 clause_id 片段，如 0012"
+     }
+    }
+   }
+  },
+  {
+   "name": "shanghan_dose",
+   "description": "劑量計量層：某方的銖當量藥量比（學派無關）、三家折算總量與家族劑量演化邊；不給方名則返回全庫劑量摘要。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "formula": {
+      "type": "string",
+      "description": "可選方名，如 桂枝加芍藥湯"
+     }
+    }
+   }
+  },
+  {
+   "name": "shanghan_corpus_stats",
+   "description": "規則庫計量統計：條文/規則/關係/方證頻次/六經分佈等全庫數字（科研引用用）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {}
+   }
+  },
+  {
+   "name": "shanghan_eval_metrics",
+   "description": "客觀評測結果：遮方預測(LOCO)、醫案回放、證據接地率三大基準的當前指標與消融。",
    "input_schema": {
     "type": "object",
     "properties": {}

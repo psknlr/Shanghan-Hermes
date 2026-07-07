@@ -34,6 +34,7 @@ PAPER_TYPES = {
     "commentary_compare": "《傷寒論》方劑歷代注釋比較",
     "methodology": "《傷寒論》古籍數據挖掘與智能體方法學研究",
     "benchmark": "《傷寒論》規則系統客觀評測（遮方預測/醫案回放/證據接地）",
+    "provenance": "《傷寒論》學術溯源研究（深度研究循環自動生成）",
 }
 
 
@@ -157,6 +158,14 @@ class PaperWriter:
             "benchmark": self._benchmark_digest(),
             "commentary_atlas": self._atlas_digest(),
             "dosimetry": self._dose_digest(),
+            "deep_research": ({
+                "n_rounds": self._dossier["n_rounds"],
+                "coverage": self._dossier["coverage"],
+                "findings": [{"dimension": f["dimension"],
+                              "summary": f["summary"],
+                              "verified_clause_ids": f.get("verified_clause_ids", [])[:3]}
+                             for f in self._dossier["findings"]],
+            } if getattr(self, "_dossier", None) else {}),
         }
 
     def _atlas_digest(self) -> Dict:
@@ -245,11 +254,19 @@ class PaperWriter:
                           "network_pharmacology": "經方藥物網絡",
                           "commentary_compare": "桂枝湯歷代注釋",
                           "methodology": "Hermes自主審核框架",
-                          "benchmark": "遮方預測與醫案回放基準"}[paper_type]
+                          "benchmark": "遮方預測與醫案回放基準",
+                          "provenance": "桂枝湯類方源流"}[paper_type]
         slug = f"{paper_type}_{time.strftime('%Y%m%d')}"
         out = out_dir or (config.PAPER_DIR / slug)
         out.mkdir(parents=True, exist_ok=True)
         s = self._stats()
+
+        # provenance papers run the deep-research loop first; its dossier
+        # becomes both a results section and drafting-layer input
+        self._dossier = None
+        if paper_type == "provenance":
+            from ..agent.research_loop import DeepResearcher
+            self._dossier = DeepResearcher().run(topic)
 
         # ---------- figures & tables (reproducible assets) -----------------
         figures = self._emit_figures(out, paper_type, s)
@@ -469,6 +486,11 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
             n_sub += 1
             lines.append(f"### 4.{n_sub} 客觀評測結果\n" + self._benchmark_tables())
 
+        if paper_type == "provenance" and self._dossier:
+            n_sub += 1
+            lines.append(f"### 4.{n_sub} 深度研究循環溯源發現\n"
+                         + self._provenance_tables(self._dossier))
+
         if paper_type in ("formula_pattern", "six_channel_kg", "mistreatment"):
             n_sub += 1
             fprs = [f for f in self.formula_rules if topic and (f.formula in topic or
@@ -569,6 +591,25 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
                 f"**家族樹劑量演化（加味≠增量；dose-only 邊 "
                 f"{evo.get('n_dose_only_edges','—')} 條）**\n\n"
                 f"| 方對 | 邊類型 | 劑量變化 |\n|---|---|---|\n" + "\n".join(rows[:10]))
+
+    def _provenance_tables(self, dossier: Dict) -> str:
+        cov = "、".join(f"{d}×{n}" for d, n in dossier["coverage"].items())
+        rounds = "\n".join(
+            f"| {r['round']} | " + "；".join(
+                f"{t['module']}（{t['reason'][:14]}）" for t in r["tasks"]) + " |"
+            for r in dossier["rounds"])
+        finds = "\n".join(
+            f"| {f['dimension']} | {f['module']} | "
+            f"{self._cell(f['summary'], 64)} | "
+            f"{'、'.join(f.get('verified_clause_ids', [])[:3]) or '—'} |"
+            for f in dossier["findings"])
+        return (f"研究循環共 {dossier['n_rounds']} 輪（後端 {dossier['backend']}），"
+                f"五維度覆蓋：{cov}；證據條文 "
+                f"{len(dossier['evidence_clause_ids'])} 條全部核驗。\n\n"
+                f"**循環軌跡（規劃器逐輪選調模塊）**\n\n"
+                f"| 輪 | 調用（理由） |\n|---|---|\n{rounds}\n\n"
+                f"**溯源發現（子代理產出，逐條引用核驗）**\n\n"
+                f"| 維度 | 模塊 | 發現 | 已核實條文 |\n|---|---|---|---|\n{finds}")
 
     @staticmethod
     def _load_eval() -> Dict:
@@ -711,6 +752,59 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
         mer.append("```")
         (out / "fig4_clause_topic_clusters.mmd.md").write_text("\n".join(mer), encoding="utf-8")
         figs.append("Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)")
+
+        # Fig5+: statistical SVG figures (stdlib charts.py; direct-labeled,
+        # CVD-validated palette; CSV tables alongside are the table view)
+        from .charts import grouped_hbar_chart, heatmap, hbar_chart
+        (out / "fig5_formula_frequency.svg").write_text(
+            hbar_chart(s["formula_freq"].most_common(10),
+                       "高頻方劑（載方條文數）", "宋本 398 條正文，A 層直計"),
+            encoding="utf-8")
+        figs.append("Fig.5 高頻方劑條形圖 (fig5_formula_frequency.svg)")
+
+        atlas = self._load_research("commentary_divergence.json")
+        if atlas.get("agreement_matrix"):
+            comms = sorted({p[k] for p in atlas["agreement_matrix"]
+                            for k in ("a", "b")})
+            vals = {(p["a"], p["b"]): p["mean_term_agreement"]
+                    for p in atlas["agreement_matrix"]}
+            (out / "fig6_commentator_agreement.svg").write_text(
+                heatmap(comms, vals, "注家術語一致度矩陣",
+                        "9 注本條文級對齊；深色=更一致（D/E 層歸納）"),
+                encoding="utf-8")
+            figs.append("Fig.6 注家一致度熱圖 (fig6_commentator_agreement.svg)")
+
+        ratios = self._load_research("dose_ratios.json")
+        if ratios.get("formulas"):
+            top = sorted(ratios["formulas"],
+                         key=lambda f: -f["total_weight_g"]["kaogu"])[:6]
+            rows = [(f["formula"], [f["total_weight_g"]["kaogu"],
+                                    f["total_weight_g"]["duliangheng"],
+                                    f["total_weight_g"]["zhezhuan"]]) for f in top]
+            (out / "fig7_dose_totals.svg").write_text(
+                grouped_hbar_chart(rows, ["考古實測", "度量衡史", "明清折算"],
+                                   "全方總重量（g，僅計重量類藥）",
+                                   "三家折算並存（後世考證，D/E 層）"),
+                encoding="utf-8")
+            figs.append("Fig.7 劑量三家折算圖 (fig7_dose_totals.svg)")
+
+        ev = self._load_eval()
+        cz = ev.get("cloze", {}).get("metrics", {}).get("attainable", {})
+        if cz.get("n"):
+            cs = ev.get("cases", {}).get("metrics", {})
+            gr = ev.get("grounding", {}).get("metrics", {})
+            pairs = [("遮方 Top-1", cz.get("top1", 0)),
+                     ("遮方 Top-3", cz.get("top3", 0)),
+                     ("遮方 Top-5", cz.get("top5", 0)),
+                     ("遮方 MRR", cz.get("mrr", 0)),
+                     ("醫案 Top-1", cs.get("top1", 0)),
+                     ("醫案 MRR", cs.get("mrr", 0)),
+                     ("接地率", gr.get("grounded_answer_rate", 0))]
+            (out / "fig8_benchmark.svg").write_text(
+                hbar_chart(pairs, "客觀評測基準", "遮方=LOCO 可達折；醫案=經方實驗錄",
+                           value_fmt="{:.2f}"),
+                encoding="utf-8")
+            figs.append("Fig.8 評測基準條形圖 (fig8_benchmark.svg)")
         return figs
 
     def _emit_tables(self, out: Path, s: Dict) -> List[str]:

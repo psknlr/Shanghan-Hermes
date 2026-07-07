@@ -198,6 +198,21 @@ class LocalProvider:
         m_num = re.search(r"(\d{1,3})", q)
         channel = next((c for c in _SIX_CHANNELS if c in q or c[:-1] in q), None)
 
+        if re.search(r"(注家|注本|分歧|詮釋|成無己|柯琴|尤怡|方有執|錢潢|黃元御)", q) and \
+                "shanghan_divergence_atlas" in available:
+            m_cl = re.search(r"(\d{2,4})\s*條|SHL_SONGBEN_(\d{4})", q)
+            args = {"clause": (m_cl.group(1) or m_cl.group(2)).zfill(4)} if m_cl else {}
+            return call("shanghan_divergence_atlas", args)
+        if re.search(r"(劑量|藥量|用量|幾兩|折算|銖|克數)", q) and \
+                "shanghan_dose" in available:
+            return call("shanghan_dose",
+                        {"formula": formulas[0]} if formulas else {})
+        if re.search(r"(基準|評測|遮方|接地率|醫案回放)", q) and \
+                "shanghan_eval_metrics" in available:
+            return call("shanghan_eval_metrics", {})
+        if re.search(r"(統計|多少條|頻次|計量概況|全庫)", q) and \
+                "shanghan_corpus_stats" in available:
+            return call("shanghan_corpus_stats", {})
         if len(formulas) >= 2 and "shanghan_differential" in available and \
                 re.search(r"(鑒別|區別|不同|對比|vs|區分)", q):
             return call("shanghan_differential", {"formulas": formulas})
@@ -291,6 +306,42 @@ class LocalProvider:
             elif isinstance(p, dict) and p.get("clause"):
                 c = p["clause"]
                 lines.append(f"[{c.get('clause_id')}] {c.get('clean_text','')}")
+                cited += 1
+            elif isinstance(p, dict) and p.get("tool") == "shanghan_divergence_atlas":
+                lines.append(f"注家分歧圖譜：{p.get('n_books', 9)} 注本、"
+                             f"{p.get('n_commentary_rules', 0)} 條對齊注文。")
+                for t in (p.get("top_divergent_clauses") or [])[:3]:
+                    lines.append(f"- 爭點條文 {t['clause_id']}"
+                                 f"（{t['n_commentators']} 家注，分歧度 {t['term_divergence']}）")
+                    cited += 1
+                for c in (p.get("clauses") or [])[:3]:
+                    lines.append(f"- [{c['clause_id']}] {c['n_commentators']} 家注："
+                                 f"{'、'.join(c.get('commentators', []))}")
+                    cited += 1
+            elif isinstance(p, dict) and p.get("tool") == "shanghan_dose":
+                if p.get("ratio"):
+                    r0 = p["ratio"]
+                    lines.append(f"{p['formula']} 藥量比（銖當量，學派無關）：{r0['ratio']}；"
+                                 f"三家折算總量(g)：{r0['total_weight_g']}"
+                                 f"（{r0.get('clause_id','')}）")
+                    cited += 1
+                for e in (p.get("evolution_edges") or [])[:3]:
+                    d0 = (e.get("dose_deltas") or [{}])[0]
+                    lines.append(f"- {e['base']}→{e['modified']}（{e['edge_kind']}"
+                                 + (f"：{d0.get('herb')}×{d0.get('factor')}" if d0 else "")
+                                 + "）")
+            elif isinstance(p, dict) and p.get("tool") == "shanghan_corpus_stats":
+                tops = "、".join(f"{f}({n})" for f, n in (p.get("top_formulas") or [])[:5])
+                lines.append(f"全庫計量：初始規則 {p.get('initial_rules', 0)} 條；"
+                             f"高頻方 {tops}。")
+                cited += 1
+            elif isinstance(p, dict) and p.get("tool") == "shanghan_eval_metrics":
+                cz = (p.get("suites", {}).get("cloze", {})
+                      .get("metrics", {}).get("attainable", {}))
+                gr = p.get("suites", {}).get("grounding", {}).get("metrics", {})
+                lines.append(f"評測基準：遮方 Top-1 {cz.get('top1', '—')} / MRR "
+                             f"{cz.get('mrr', '—')}；接地率 "
+                             f"{gr.get('grounded_answer_rate', '—')}。")
                 cited += 1
             elif isinstance(p, dict) and p.get("paths") is not None:
                 lines.append("誤治傳變路徑：")

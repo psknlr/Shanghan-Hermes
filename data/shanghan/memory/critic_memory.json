@@ -1,11 +1,11 @@
 {
  "contraindication_ignored": {
   "count": 21,
-  "updated_at": "2026-07-07T02:05:27"
+  "updated_at": "2026-07-07T04:48:17"
  },
  "_note": "高頻錯誤模式用於下一輪抽取的先驗約束，例如「營衛不和」類後世術語禁止落入規則主體。",
  "zhuzhi_scope_expanded": {
   "count": 1,
-  "updated_at": "2026-07-07T02:05:27"
+  "updated_at": "2026-07-07T04:48:17"
  }
 }

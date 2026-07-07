@@ -180,6 +180,13 @@ def cmd_divergence(args):
                                   "commentator_fingerprints")})
 
 
+def cmd_deep_research(args):
+    _need_pipeline()
+    from .agent.research_loop import DeepResearcher
+    dossier = DeepResearcher(max_rounds=args.rounds).run(args.topic)
+    _print(safety.governed(dossier, "researcher"))
+
+
 def cmd_evaluate(args):
     _need_pipeline()
     from .eval.runner import run_suites
@@ -480,6 +487,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("--clause", default="", help="按 clause_id 片段過濾")
     sp.set_defaults(func=cmd_divergence)
 
+    sp = sub.add_parser("deep-research", help="深度研究循環：規劃→子代理取證→批評家→溯源檔案")
+    sp.add_argument("topic")
+    sp.add_argument("--rounds", type=int, default=3)
+    sp.set_defaults(func=cmd_deep_research)
+
     sp = sub.add_parser("evaluate", help="客觀評測：遮方預測/醫案回放/證據接地率")
     sp.add_argument("--suite", default="all",
                     help="all 或逗號分隔：cloze,cases,grounding")
@@ -540,7 +552,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("--type", default="formula_pattern",
                     choices=["formula_pattern", "six_channel_kg", "mistreatment",
                              "network_pharmacology", "commentary_compare",
-                             "methodology", "benchmark"])
+                             "methodology", "benchmark", "provenance"])
     sp.add_argument("--topic", default="")
     sp.add_argument("--no-llm", action="store_true",
                     help="跳過增益層起草，只輸出確定性模板與數據表格")

@@ -1,0 +1,53 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='720' height='442' viewBox='0 0 720 442' font-family='Noto Sans CJK SC, PingFang SC, sans-serif'>
+<rect width='720' height='442' fill='#fcfcfb'/>
+<text x='16' y='24' font-size='15' font-weight='600' fill='#0b0b0b'>全方總重量（g，僅計重量類藥）</text>
+<text x='16' y='42' font-size='11' fill='#52514e'>三家折算並存（後世考證，D/E 層）</text>
+<rect x='16' y='50' width='10' height='10' rx='2' fill='#2a78d6'/>
+<text x='30' y='59' font-size='11' fill='#0b0b0b'>考古實測</text>
+<rect x='92' y='50' width='10' height='10' rx='2' fill='#1baf7a'/>
+<text x='106' y='59' font-size='11' fill='#0b0b0b'>度量衡史</text>
+<rect x='168' y='50' width='10' height='10' rx='2' fill='#eda100'/>
+<text x='182' y='59' font-size='11' fill='#0b0b0b'>明清折算</text>
+<text x='142' y='96.0' font-size='12' text-anchor='end' fill='#0b0b0b'>烏梅丸</text>
+<path d='M151.0,66.0 h466.0 q4,0 4,4 v6.0 q0,4 -4,4 h-466.0 z' fill='#2a78d6'/>
+<text x='626.0' y='77' font-size='10' fill='#52514e'>1000</text>
+<path d='M151.0,82.0 h414.7 q4,0 4,4 v6.0 q0,4 -4,4 h-414.7 z' fill='#1baf7a'/>
+<text x='574.723' y='93' font-size='10' fill='#52514e'>891</text>
+<path d='M151.0,98.0 h86.2 q4,0 4,4 v6.0 q0,4 -4,4 h-86.2 z' fill='#eda100'/>
+<text x='246.24' y='109' font-size='10' fill='#52514e'>192</text>
+<text x='142' y='156.0' font-size='12' text-anchor='end' fill='#0b0b0b'>炙甘草湯</text>
+<path d='M151.0,126.0 h275.1 q4,0 4,4 v6.0 q0,4 -4,4 h-275.1 z' fill='#2a78d6'/>
+<text x='435.086' y='137' font-size='10' fill='#52514e'>594</text>
+<path d='M151.0,142.0 h244.6 q4,0 4,4 v6.0 q0,4 -4,4 h-244.6 z' fill='#1baf7a'/>
+<text x='404.63' y='153' font-size='10' fill='#52514e'>529</text>
+<path d='M151.0,158.0 h49.6 q4,0 4,4 v6.0 q0,4 -4,4 h-49.6 z' fill='#eda100'/>
+<text x='209.57999999999998' y='169' font-size='10' fill='#52514e'>114</text>
+<text x='142' y='216.0' font-size='12' text-anchor='end' fill='#0b0b0b'>赤石脂禹餘糧湯</text>
+<path d='M151.0,186.0 h231.0 q4,0 4,4 v6.0 q0,4 -4,4 h-231.0 z' fill='#2a78d6'/>
+<text x='391.0' y='197' font-size='10' fill='#52514e'>500</text>
+<path d='M151.0,202.0 h205.3 q4,0 4,4 v6.0 q0,4 -4,4 h-205.3 z' fill='#1baf7a'/>
+<text x='365.33799999999997' y='213' font-size='10' fill='#52514e'>445</text>
+<path d='M151.0,218.0 h41.1 q4,0 4,4 v6.0 q0,4 -4,4 h-41.1 z' fill='#eda100'/>
+<text x='201.12' y='229' font-size='10' fill='#52514e'>96</text>
+<text x='142' y='276.0' font-size='12' text-anchor='end' fill='#0b0b0b'>麻子仁丸</text>
+<path d='M151.0,246.0 h231.0 q4,0 4,4 v6.0 q0,4 -4,4 h-231.0 z' fill='#2a78d6'/>
+<text x='391.0' y='257' font-size='10' fill='#52514e'>500</text>
+<path d='M151.0,262.0 h205.3 q4,0 4,4 v6.0 q0,4 -4,4 h-205.3 z' fill='#1baf7a'/>
+<text x='365.33799999999997' y='273' font-size='10' fill='#52514e'>445</text>
+<path d='M151.0,278.0 h41.1 q4,0 4,4 v6.0 q0,4 -4,4 h-41.1 z' fill='#eda100'/>
+<text x='201.12' y='289' font-size='10' fill='#52514e'>96</text>
+<text x='142' y='336.0' font-size='12' text-anchor='end' fill='#0b0b0b'>竹葉石膏湯</text>
+<path d='M151.0,306.0 h201.6 q4,0 4,4 v6.0 q0,4 -4,4 h-201.6 z' fill='#2a78d6'/>
+<text x='361.625' y='317' font-size='10' fill='#52514e'>438</text>
+<path d='M151.0,322.0 h179.2 q4,0 4,4 v6.0 q0,4 -4,4 h-179.2 z' fill='#1baf7a'/>
+<text x='339.206' y='333' font-size='10' fill='#52514e'>390</text>
+<path d='M151.0,338.0 h35.5 q4,0 4,4 v6.0 q0,4 -4,4 h-35.5 z' fill='#eda100'/>
+<text x='195.48' y='349' font-size='10' fill='#52514e'>84</text>
+<text x='142' y='396.0' font-size='12' text-anchor='end' fill='#0b0b0b'>白虎加人參湯</text>
+<path d='M151.0,366.0 h194.3 q4,0 4,4 v6.0 q0,4 -4,4 h-194.3 z' fill='#2a78d6'/>
+<text x='354.293' y='377' font-size='10' fill='#52514e'>422</text>
+<path d='M151.0,382.0 h172.6 q4,0 4,4 v6.0 q0,4 -4,4 h-172.6 z' fill='#1baf7a'/>
+<text x='332.626' y='393' font-size='10' fill='#52514e'>376</text>
+<path d='M151.0,398.0 h34.1 q4,0 4,4 v6.0 q0,4 -4,4 h-34.1 z' fill='#eda100'/>
+<text x='194.07' y='409' font-size='10' fill='#52514e'>81</text>
+</svg>

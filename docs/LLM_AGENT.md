@@ -129,11 +129,21 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 「⚠️ 含未核實條文編號」。可用 `Council(llm_specialists=False)` 關閉，
 離線 `local` 後端自動跳過。
 
-## 8 個可調用工具（智能體 / harness 共用同一能力面）
+## 12 個可調用工具（智能體 / harness 共用同一能力面）
 
 `shanghan_search`、`shanghan_get_clause`、`shanghan_match_formula`、
 `shanghan_differential`、`shanghan_six_channel`、`shanghan_formula_rule`、
-`shanghan_mistreatment`、`shanghan_list_formulas`。全部只讀、回源 clause_id。
+`shanghan_mistreatment`、`shanghan_list_formulas`，以及四個**研究模塊**：
+`shanghan_divergence_atlas`（注家分歧圖譜）、`shanghan_dose`（劑量計量）、
+`shanghan_corpus_stats`（全庫統計）、`shanghan_eval_metrics`（評測指標）。
+全部只讀、回源 clause_id；模型經 function-calling 自主選擇調用。
+
+## 深度研究循環（deep-research）
+
+`DeepResearcher`（`agent/research_loop.py`）實現 loop engineering：規劃器
+（真模型 JSON 規劃 / local 覆蓋驅動）→ 子代理逐模塊取證並寫出引用核驗的
+發現 → 批評家查五維度缺口 → 迭代收斂。產出的溯源檔案驅動
+`paper --type provenance` 一鍵生成學術溯源論文（含 SVG 統計圖表）。
 
 ```bash
 python3 -m hermes_shanghan tool-call shanghan_differential --args '{"formulas":["桂枝湯","麻黃湯"]}'

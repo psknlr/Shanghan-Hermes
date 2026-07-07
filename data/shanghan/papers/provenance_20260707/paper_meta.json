@@ -1,13 +1,17 @@
 {
- "paper_type": "mistreatment",
- "title": "基於條文級規則挖掘與自主審核的《傷寒論》誤治傳變規則研究：以誤治路徑為例",
- "topic": "誤治路徑",
- "generated_at": "2026-07-07T02:05:39",
+ "paper_type": "provenance",
+ "title": "基於條文級規則挖掘與自主審核的《傷寒論》學術溯源研究（深度研究循環自動生成）：以桂枝湯類方源流為例",
+ "topic": "桂枝湯類方源流",
+ "generated_at": "2026-07-07T04:44:24",
  "figures": [
   "Fig.1 六經-方劑分佈圖 (fig1_channel_formula.mmd.md)",
   "Fig.2 誤治-變證路徑圖 (fig2_mistreatment_paths.dot)",
   "Fig.3 方劑家族樹 (fig3_formula_family.dot)",
-  "Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)"
+  "Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)",
+  "Fig.5 高頻方劑條形圖 (fig5_formula_frequency.svg)",
+  "Fig.6 注家一致度熱圖 (fig6_commentator_agreement.svg)",
+  "Fig.7 劑量三家折算圖 (fig7_dose_totals.svg)",
+  "Fig.8 評測基準條形圖 (fig8_benchmark.svg)"
  ],
  "tables": [
   "Table 1 規則分級統計 (table1_rule_levels.csv)",

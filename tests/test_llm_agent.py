@@ -144,7 +144,7 @@ class TestToolRegistry(unittest.TestCase):
     def test_specs_and_calls(self):
         from hermes_shanghan.agent.tools import get_registry
         reg = get_registry()
-        self.assertEqual(len(reg.specs()), 8)
+        self.assertEqual(len(reg.specs()), 12)
         out = reg.call("shanghan_search", {"query": "桂枝湯", "top_k": 3})
         self.assertTrue(out["hits"])
         self.assertTrue(all(h["clause_id"] for h in out["hits"]))

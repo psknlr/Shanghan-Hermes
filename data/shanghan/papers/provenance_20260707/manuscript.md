@@ -1,8 +1,8 @@
-# 基於條文級規則挖掘與自主審核的《傷寒論》誤治傳變規則研究：以誤治路徑為例
+# 基於條文級規則挖掘與自主審核的《傷寒論》學術溯源研究（深度研究循環自動生成）：以桂枝湯類方源流為例
 
 ## 摘要
 
-目的：將《傷寒論》宋本條文轉化為可回源、可審核的結構化規則體系，並以誤治路徑為例驗證方法可行性。
+目的：將《傷寒論》宋本條文轉化為可回源、可審核的結構化規則體系，並以桂枝湯類方源流為例驗證方法可行性。
 方法：以宋本（趙開美本）現代編號398條為唯一原文證據層（A層），桂林古本等為異文層（B層），成無己注為注釋層（C層）；經條文切分、否定感知實體抽取、條文級初始規則抽取，再通過 Schema 校驗、證據回源驗證、語義審查、對抗式批評（ShanghanCritic）、自動修復與共識評級六道閘門完成自主審核。
 結果：共獲得初始規則1501條（gold 585、silver 882、bronze 34），方證規則113個，誤治傳變路徑60條，鑒別規則64組；高頻方劑為桂枝湯、小柴胡湯、大承氣湯、四逆湯、麻黃湯。每條結論均可追溯至條文編號。
 結論：條文級證據回源 + 模型自主審核可在不犧牲可追溯性的前提下規模化提取《傷寒論》知識，為方證研究、知識圖譜與臨床輔助提供可驗證的數據底座。
@@ -10,7 +10,7 @@
 
 ## 1 引言
 
-《傷寒論》以六經統病、以方證相應。本研究以宋本398 條正文為唯一 A 層證據，經六道審核閘門產出 1501 條可回源初始規則，在此基礎上以誤治路徑為切入，對《傷寒論》誤治傳變規則研究作條文計量學考察。既往數字化工作多止於檢索與標註，缺少規則必須回到原文的硬約束；本文的每一項計量結論均可回溯到具體條文編號。
+《傷寒論》以六經統病、以方證相應。本研究以宋本398 條正文為唯一 A 層證據，經六道審核閘門產出 1501 條可回源初始規則，在此基礎上以桂枝湯類方源流為切入，對《傷寒論》學術溯源研究（深度研究循環自動生成）作條文計量學考察。既往數字化工作多止於檢索與標註，缺少規則必須回到原文的硬約束；本文的每一項計量結論均可回溯到具體條文編號。
 
 ## 2 數據
 
@@ -77,27 +77,26 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 | 梔子豉湯 | 6 |
 | 白虎加人參湯 | 5 |
 
-### 4.3 誤治傳變路徑（節選）
-| 誤治 | 變證 | 救治方 | 證據條文 |
-|---|---|---|---|
-| 誤下 | 結胸 | 大陷胸湯、大陷胸丸 | SHL_SONGBEN_0131、SHL_SONGBEN_0134 |
-| 誤下 | 痞證 | 甘草瀉心湯、大黃黃連瀉心湯 | SHL_SONGBEN_0149、SHL_SONGBEN_0154 |
-| 誤下 | 協熱利 | 葛根黃芩黃連湯、桂枝人參湯 | SHL_SONGBEN_0034、SHL_SONGBEN_0163 |
-| 誤下 | 虛煩 | 梔子豉湯、梔子生薑豉湯 | SHL_SONGBEN_0076、SHL_SONGBEN_0077 |
-| 誤下 | 氣上衝 | 桂枝湯 | SHL_SONGBEN_0015、SHL_SONGBEN_0044 |
-| 誤汗 | 亡陽厥逆 | 四逆湯、乾薑附子湯 | SHL_SONGBEN_0029、SHL_SONGBEN_0061 |
-| 誤汗 | 心陽虛悸 | 桂枝甘草湯 | SHL_SONGBEN_0064 |
-| 誤汗 | 奔豚/欲作奔豚 | 茯苓桂枝甘草大棗湯 | SHL_SONGBEN_0065、SHL_SONGBEN_0117 |
+### 4.3 深度研究循環溯源發現
+研究循環共 2 輪（後端 local），五維度覆蓋：原文源流×2、異文注家×1、方證計量×1、劑量計量×1、客觀評測×1；證據條文 7 條全部核驗。
 
-### 4.4 方證規則示例
-| 方劑 | 核心證 | 核心脈 | 條文 | 等級 |
-|---|---|---|---|---|
-| 三物小白散 |  | — | SHL_SONGBEN_0141 | silver |
-| 乾薑附子湯 | 晝日煩躁不得眠、夜而安靜、不渴、無大熱 | 沉微 | SHL_SONGBEN_0061 | silver |
-| 乾薑黃芩黃連人參湯 |  | — | SHL_SONGBEN_0359 | silver |
-| 五苓散 | 渴、發熱、小便不利、汗出 | 浮、浮數 | SHL_SONGBEN_0071、SHL_SONGBEN_0072 | gold |
-| 十棗湯 | 下利、嘔逆、漐漐汗出、頭痛 | — | SHL_SONGBEN_0152 | silver |
-| 半夏散及湯 | 咽中痛 | — | SHL_SONGBEN_0313 | silver |
+**循環軌跡（規劃器逐輪選調模塊）**
+
+| 輪 | 調用（理由） |
+|---|---|
+| 1 | shanghan_search（取主題相關條文作 A 層源流）；shanghan_formula_rule（主題方證規則）；shanghan_divergence_atlas（注家詮釋史與分歧）；shanghan_corpus_stats（全庫計量背景）；shanghan_dose（劑量比與家族演化） |
+| 2 | shanghan_eval_metrics（方法可信度基準） |
+
+**溯源發現（子代理產出，逐條引用核驗）**
+
+| 維度 | 模塊 | 發現 | 已核實條文 |
+|---|---|---|---|
+| 原文源流 | shanghan_search | 檢得相關條文 6 條（SHL_SONGBEN_AUX_0255、SHL_SONGBEN_AUX_0274、SHL_SONGBEN | SHL_SONGBEN_AUX_0255、SHL_SONGBEN_AUX_0274、SHL_SONGBEN_AUX_0245 |
+| 原文源流 | shanghan_formula_rule | 桂枝湯 方證：核心證 發熱、汗出、頭痛、嗇嗇惡寒；支持條文 SHL_SONGBEN_0012、SHL_SONGBEN_0013、 | SHL_SONGBEN_0012、SHL_SONGBEN_0013、SHL_SONGBEN_0015 |
+| 異文注家 | shanghan_divergence_atlas | 九注本共 2958 條注文，395 條條文多注家。一致度最高 張卿子×成無己（0.897），最低 柯琴×黃元御（0.0728）。 | — |
+| 方證計量 | shanghan_corpus_stats | 全庫 1501 條初始規則；高頻方 桂枝湯(26)、小柴胡湯(20)、大承氣湯(19)、四逆湯(12)。 | — |
+| 劑量計量 | shanghan_dose | 桂枝湯 藥量比 桂枝1.50：芍藥1.50：甘草1：生薑1.50（銖當量，學派無關）；家族劑量邊 11 條。 | — |
+| 客觀評測 | shanghan_eval_metrics | 遮方基準（可達折）Top-1 0.1929、MRR 0.2968；接地率 1.0——方法可信度可查證。 | — |
 
 ## 5 計量結果解讀
 
@@ -120,7 +119,7 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 
 ## 7 結論
 
-以條文為最小證據單位的計量挖掘表明：誤治路徑的規律可以在不犧牲可追溯性的前提下被規模化提取；所有數字均可由 data/shanghan/ 下的規則庫與審計日誌復算。
+以條文為最小證據單位的計量挖掘表明：桂枝湯類方源流的規律可以在不犧牲可追溯性的前提下被規模化提取；所有數字均可由 data/shanghan/ 下的規則庫與審計日誌復算。
 
 ————————————
 【增益層引用核驗】
@@ -132,6 +131,10 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 - Fig.2 誤治-變證路徑圖 (fig2_mistreatment_paths.dot)
 - Fig.3 方劑家族樹 (fig3_formula_family.dot)
 - Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)
+- Fig.5 高頻方劑條形圖 (fig5_formula_frequency.svg)
+- Fig.6 注家一致度熱圖 (fig6_commentator_agreement.svg)
+- Fig.7 劑量三家折算圖 (fig7_dose_totals.svg)
+- Fig.8 評測基準條形圖 (fig8_benchmark.svg)
 - Table 1 規則分級統計 (table1_rule_levels.csv)
 - Table 2 方劑頻次表 (table2_formula_frequency.csv)
 - Table 3 規則類型統計 (table3_rule_types.csv)
@@ -151,7 +154,7 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 
 尊敬的編輯：
 
-茲投稿論文《基於條文級規則挖掘與自主審核的《傷寒論》誤治傳變規則研究：以誤治路徑為例》。本研究首次將「逐字證據回源 + 對抗式自主審核」
+茲投稿論文《基於條文級規則挖掘與自主審核的《傷寒論》學術溯源研究（深度研究循環自動生成）：以桂枝湯類方源流為例》。本研究首次將「逐字證據回源 + 對抗式自主審核」
 引入《傷寒論》全書規則挖掘，產出 1501 條分級規則並全部
 附帶條文證據鏈，數據與代碼完全公開可復現。本文未一稿多投，所有作者
 同意投稿。懇請審閱。

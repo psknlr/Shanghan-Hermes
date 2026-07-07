@@ -124,6 +124,109 @@ class ToolRegistry:
             "列出規則庫中可用的方劑名稱（用於消歧或選擇）。",
             {"type": "object", "properties": {}},
             self._t_list_formulas)
+        self._add(
+            "shanghan_divergence_atlas",
+            "注家分歧圖譜：9 部注本的對齊覆蓋、爭點條文榜、注家一致度矩陣與指紋；"
+            "可按 clause_id 片段取單條的多注家記錄。",
+            {"type": "object", "properties": {
+                "clause": {"type": "string", "description": "可選 clause_id 片段，如 0012"}}},
+            self._t_divergence)
+        self._add(
+            "shanghan_dose",
+            "劑量計量層：某方的銖當量藥量比（學派無關）、三家折算總量與家族劑量演化邊；"
+            "不給方名則返回全庫劑量摘要。",
+            {"type": "object", "properties": {
+                "formula": {"type": "string", "description": "可選方名，如 桂枝加芍藥湯"}}},
+            self._t_dose)
+        self._add(
+            "shanghan_corpus_stats",
+            "規則庫計量統計：條文/規則/關係/方證頻次/六經分佈等全庫數字（科研引用用）。",
+            {"type": "object", "properties": {}},
+            self._t_corpus_stats)
+        self._add(
+            "shanghan_eval_metrics",
+            "客觀評測結果：遮方預測(LOCO)、醫案回放、證據接地率三大基準的當前指標與消融。",
+            {"type": "object", "properties": {}},
+            self._t_eval_metrics)
+
+    # -- research-layer helpers -----------------------------------------
+    @staticmethod
+    def _research_json(name):
+        import json
+        p = config.RESEARCH_DIR / name
+        if not p.exists():
+            return None
+        try:
+            return json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _t_divergence(self, clause=None):
+        a = self._research_json("commentary_divergence.json")
+        if a is None:
+            return {"tool": "shanghan_divergence_atlas",
+                    "error": "分歧圖譜未生成：請先運行 pipeline"}
+        if clause:
+            rows = [r for r in a["clauses"] if clause in r["clause_id"]]
+            return {"tool": "shanghan_divergence_atlas", "clause_filter": clause,
+                    "book_coverage": a["book_coverage"], "clauses": rows[:10]}
+        return {"tool": "shanghan_divergence_atlas",
+                **{k: a[k] for k in ("n_books", "n_commentary_rules",
+                                     "n_clauses_multi_commentator",
+                                     "mean_term_divergence", "book_coverage",
+                                     "agreement_matrix",
+                                     "commentator_fingerprints")},
+                "top_divergent_clauses": a["top_divergent_clauses"][:8]}
+
+    def _t_dose(self, formula=None):
+        ratios = self._research_json("dose_ratios.json")
+        evo = self._research_json("dose_family_evolution.json")
+        if ratios is None or evo is None:
+            return {"tool": "shanghan_dose", "error": "劑量資產未生成：請先運行 pipeline"}
+        if formula:
+            f = next((x for x in ratios["formulas"] if x["formula"] == formula), None)
+            edges = [e for e in evo["edges"]
+                     if formula in (e["base"], e["modified"])]
+            if f is None and not edges:
+                return {"tool": "shanghan_dose", "error": f"無劑量數據：{formula}"}
+            return {"tool": "shanghan_dose", "formula": formula,
+                    "ratio": f, "evolution_edges": edges}
+        summ = self._research_json("dose_summary.json") or {}
+        return {"tool": "shanghan_dose", "note": ratios.get("note", ""),
+                "summary": summ,
+                "n_dose_only_edges": evo.get("n_dose_only_edges", 0)}
+
+    def _t_corpus_stats(self):
+        from collections import Counter
+        rules = read_jsonl(config.RULES_INITIAL_DIR / "initial_rules.jsonl")
+        levels = Counter(r["autonomous_review"]["release_level"] for r in rules)
+        formula_freq: Counter = Counter()
+        channel: Counter = Counter()
+        for c in self.art.clauses:
+            if c.text_type != "original_clause":
+                continue
+            formula_freq.update(c.formula_names)
+            if c.six_channel:
+                channel[c.six_channel] += 1
+        return {"tool": "shanghan_corpus_stats",
+                "initial_rules": len(rules),
+                "release_levels": dict(levels),
+                "formula_pattern_rules": len(self.art.formula_rules),
+                "differential_rules": len(self.art.differential_rules),
+                "mistreatment_rules": len(self.art.mistreatment_rules),
+                "variant_rules": len(self.art.variant_rules),
+                "commentary_rules": len(self.art.commentary_rules),
+                "top_formulas": formula_freq.most_common(12),
+                "channel_clauses": channel.most_common()}
+
+    def _t_eval_metrics(self):
+        import json
+        p = config.SHANGHAN_DIR / "eval" / "eval_summary.json"
+        if not p.exists():
+            return {"tool": "shanghan_eval_metrics",
+                    "error": "評測未運行：請先執行 evaluate"}
+        return {"tool": "shanghan_eval_metrics",
+                **json.loads(p.read_text(encoding="utf-8"))}
 
     # -- tool implementations ------------------------------------------
     def _t_search(self, query, top_k=6, six_channel=None, formula=None, expand=False):
