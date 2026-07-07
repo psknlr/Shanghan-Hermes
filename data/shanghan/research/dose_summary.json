@@ -1,0 +1,171 @@
+{
+ "herb_modal_doses": [
+  {
+   "herb": "甘草",
+   "n_formulas": 68,
+   "modal_dose": "2兩",
+   "modal_n": 45
+  },
+  {
+   "herb": "桂枝",
+   "n_formulas": 39,
+   "modal_dose": "3兩",
+   "modal_n": 17
+  },
+  {
+   "herb": "生薑",
+   "n_formulas": 38,
+   "modal_dose": "3兩",
+   "modal_n": 21
+  },
+  {
+   "herb": "芍藥",
+   "n_formulas": 30,
+   "modal_dose": "3兩",
+   "modal_n": 13
+  },
+  {
+   "herb": "乾薑",
+   "n_formulas": 22,
+   "modal_dose": "3兩",
+   "modal_n": 9
+  },
+  {
+   "herb": "人參",
+   "n_formulas": 21,
+   "modal_dose": "3兩",
+   "modal_n": 9
+  },
+  {
+   "herb": "黃芩",
+   "n_formulas": 15,
+   "modal_dose": "3兩",
+   "modal_n": 10
+  },
+  {
+   "herb": "大黃",
+   "n_formulas": 14,
+   "modal_dose": "2兩",
+   "modal_n": 5
+  },
+  {
+   "herb": "麻黃",
+   "n_formulas": 14,
+   "modal_dose": "3兩",
+   "modal_n": 5
+  },
+  {
+   "herb": "黃連",
+   "n_formulas": 12,
+   "modal_dose": "1兩",
+   "modal_n": 6
+  },
+  {
+   "herb": "茯苓",
+   "n_formulas": 12,
+   "modal_dose": "3兩",
+   "modal_n": 4
+  },
+  {
+   "herb": "白朮",
+   "n_formulas": 11,
+   "modal_dose": "2兩",
+   "modal_n": 4
+  },
+  {
+   "herb": "柴胡",
+   "n_formulas": 6,
+   "modal_dose": "8兩",
+   "modal_n": 3
+  },
+  {
+   "herb": "石膏",
+   "n_formulas": 6,
+   "modal_dose": "16兩",
+   "modal_n": 3
+  },
+  {
+   "herb": "厚朴",
+   "n_formulas": 5,
+   "modal_dose": "8兩",
+   "modal_n": 2
+  }
+ ],
+ "heaviest_formulas_kaogu_g": [
+  {
+   "formula": "烏梅丸",
+   "total_g": {
+    "kaogu": 1000.0,
+    "duliangheng": 890.9,
+    "zhezhuan": 192.0
+   }
+  },
+  {
+   "formula": "炙甘草湯",
+   "total_g": {
+    "kaogu": 593.8,
+    "duliangheng": 529.0,
+    "zhezhuan": 114.0
+   }
+  },
+  {
+   "formula": "赤石脂禹餘糧湯",
+   "total_g": {
+    "kaogu": 500.0,
+    "duliangheng": 445.4,
+    "zhezhuan": 96.0
+   }
+  },
+  {
+   "formula": "麻子仁丸",
+   "total_g": {
+    "kaogu": 500.0,
+    "duliangheng": 445.4,
+    "zhezhuan": 96.0
+   }
+  },
+  {
+   "formula": "竹葉石膏湯",
+   "total_g": {
+    "kaogu": 437.5,
+    "duliangheng": 389.8,
+    "zhezhuan": 84.0
+   }
+  },
+  {
+   "formula": "白虎加人參湯",
+   "total_g": {
+    "kaogu": 421.9,
+    "duliangheng": 375.8,
+    "zhezhuan": 81.0
+   }
+  },
+  {
+   "formula": "柴胡桂枝乾薑湯",
+   "total_g": {
+    "kaogu": 375.0,
+    "duliangheng": 334.1,
+    "zhezhuan": 72.0
+   }
+  },
+  {
+   "formula": "當歸四逆加吳茱萸生薑湯",
+   "total_g": {
+    "kaogu": 375.0,
+    "duliangheng": 334.1,
+    "zhezhuan": 72.0
+   }
+  }
+ ],
+ "parse_coverage": {
+  "n_rows": 536,
+  "kind_counts": {
+   "weight": 378,
+   "count": 96,
+   "none": 19,
+   "volume": 42,
+   "length": 1
+  },
+  "n_unparsed": 5
+ }
+}

@@ -1,0 +1,68 @@
+{
+ "paper_type": "mistreatment",
+ "title": "基於條文級規則挖掘與自主審核的《傷寒論》誤治傳變規則研究：以誤治路徑為例",
+ "topic": "誤治路徑",
+ "generated_at": "2026-07-02T03:23:50",
+ "figures": [
+  "Fig.1 六經-方劑分佈圖 (fig1_channel_formula.mmd.md)",
+  "Fig.2 誤治-變證路徑圖 (fig2_mistreatment_paths.dot)",
+  "Fig.3 方劑家族樹 (fig3_formula_family.dot)",
+  "Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)"
+ ],
+ "tables": [
+  "Table 1 規則分級統計 (table1_rule_levels.csv)",
+  "Table 2 方劑頻次表 (table2_formula_frequency.csv)",
+  "Table 3 規則類型統計 (table3_rule_types.csv)",
+  "Table 4 版本異文對比表 (table4_variant_comparison.csv)"
+ ],
+ "llm_backend": "local",
+ "llm_sections": [
+  "conclusion",
+  "discussion",
+  "introduction",
+  "quant_interpretation"
+ ],
+ "citation_report": {
+  "cited": [
+   "SHL_SONGBEN_0131",
+   "SHL_SONGBEN_0134"
+  ],
+  "verified": [
+   "SHL_SONGBEN_0131",
+   "SHL_SONGBEN_0134"
+  ],
+  "unsupported": [],
+  "quote_mismatches": [],
+  "has_any_citation": true,
+  "ok": true
+ },
+ "statistics": {
+  "n_clauses": 398,
+  "n_initial_rules": 1471,
+  "levels": {
+   "gold": 579,
+   "silver": 858,
+   "bronze": 34
+  },
+  "rule_types": {
+   "six_channel_definition_rule": 6,
+   "disease_pattern_rule": 36,
+   "pulse_symptom_rule": 88,
+   "transformation_rule": 14,
+   "mistreatment_rule": 134,
+   "therapy_selection_rule": 236,
+   "prognosis_rule": 212,
+   "formula_pattern_rule": 274,
+   "formula_composition_rule": 112,
+   "dosage_processing_rule": 112,
+   "administration_rule": 113,
+   "contraindication_rule": 69,
+   "differential_rule": 34,
+   "rescue_reverse_rule": 23,
+   "recurrence_rule": 8
+  },
+  "n_formula_rules": 109,
+  "n_mistreatment": 60,
+  "n_differential": 28
+ }
+}

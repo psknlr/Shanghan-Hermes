@@ -1,6 +1,7 @@
 """Segmentation & catalog tests against the real corpus."""
 import unittest
 
+from hermes_shanghan import config
 from hermes_shanghan.corpus import catalog, downloader, segmenter
 
 
@@ -49,7 +50,18 @@ class TestSegmentation(unittest.TestCase):
         manifest_path = downloader.run()
         self.assertTrue(manifest_path.exists())
         m = downloader.load_manifest()
-        self.assertGreaterEqual(m["book_count"], 60)
+        # 57 books are vendored in-repo; the source archives list 69 — the
+        # 12 not vendored (9 金匱, 3 傷寒) are recorded explicitly in the
+        # manifest so the discrepancy is auditable, not silently counted.
+        self.assertGreaterEqual(m["book_count"], 57)
+        self.assertEqual(m["book_count"] + m["vendor_missing_count"],
+                         m["vendor_listed_count"])
+        missing_titles = {b["title"] for b in m["vendor_missing_books"]}
+        # none of the pipeline's load-bearing books may be missing
+        for needed in (config.PRIMARY_BOOK, config.SONGBEN_FULL_BOOK,
+                       *config.VARIANT_BOOKS, *config.COMMENTARY_BOOKS,
+                       *config.FORMULA_FAMILY_BOOKS):
+            self.assertNotIn(needed, missing_titles)
         primary = [b for b in m["books"] if b["book_dir"] == "傷寒論_條文版"]
         self.assertEqual(primary[0]["hermes_layer"], "A")
         gui = [b for b in m["books"] if b["book_dir"] == "傷寒雜病論_桂本"]

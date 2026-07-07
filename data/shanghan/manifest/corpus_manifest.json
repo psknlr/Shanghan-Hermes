@@ -27,7 +27,59 @@
   "D": "後世類方歸納",
   "E": "模型推理"
  },
- "book_count": 69,
+ "book_count": 57,
+ "vendor_listed_count": 69,
+ "vendor_missing_count": 12,
+ "vendor_missing_books": [
+  {
+   "category": "jingui",
+   "title": "金匱方歌括"
+  },
+  {
+   "category": "jingui",
+   "title": "金匱玉函經二注"
+  },
+  {
+   "category": "jingui",
+   "title": "金匱玉函要略輯義"
+  },
+  {
+   "category": "jingui",
+   "title": "金匱玉函要略述義"
+  },
+  {
+   "category": "jingui",
+   "title": "金匱要略_條文版"
+  },
+  {
+   "category": "jingui",
+   "title": "金匱要略心典"
+  },
+  {
+   "category": "jingui",
+   "title": "金匱要略方論"
+  },
+  {
+   "category": "jingui",
+   "title": "金匱要略淺註"
+  },
+  {
+   "category": "jingui",
+   "title": "高注金匱要略"
+  },
+  {
+   "category": "shanghan",
+   "title": "重訂通俗傷寒論"
+  },
+  {
+   "category": "shanghan",
+   "title": "類證活人書"
+  },
+  {
+   "category": "shanghan",
+   "title": "類證活人書_1"
+  }
+ ],
  "books": [
   {
    "book_dir": "傷寒兼證析義",
@@ -47,141 +99,6 @@
     "index.txt": "6cf90519a6c248109b66bb64096a5a7d1eeb2f5bdca3a3839b32edd6fea9c5ff"
    },
    "path": "data/corpus_raw/jingui/書籍/傷寒兼證析義"
-  },
-  {
-   "book_dir": "金匱方歌括",
-   "category": "jingui",
-   "title": "金匱方歌括",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱方歌括"
-  },
-  {
-   "book_dir": "金匱玉函經二注",
-   "category": "jingui",
-   "title": "金匱玉函經二注",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱玉函經二注"
-  },
-  {
-   "book_dir": "金匱玉函要略輯義",
-   "category": "jingui",
-   "title": "金匱玉函要略輯義",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱玉函要略輯義"
-  },
-  {
-   "book_dir": "金匱玉函要略述義",
-   "category": "jingui",
-   "title": "金匱玉函要略述義",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱玉函要略述義"
-  },
-  {
-   "book_dir": "金匱要略_條文版",
-   "category": "jingui",
-   "title": "金匱要略_條文版",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱要略_條文版"
-  },
-  {
-   "book_dir": "金匱要略心典",
-   "category": "jingui",
-   "title": "金匱要略心典",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱要略心典"
-  },
-  {
-   "book_dir": "金匱要略方論",
-   "category": "jingui",
-   "title": "金匱要略方論",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱要略方論"
-  },
-  {
-   "book_dir": "金匱要略淺註",
-   "category": "jingui",
-   "title": "金匱要略淺註",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/金匱要略淺註"
-  },
-  {
-   "book_dir": "高注金匱要略",
-   "category": "jingui",
-   "title": "高注金匱要略",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "D",
-   "layer_label": "後世類方歸納",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/jingui/書籍/高注金匱要略"
   },
   {
    "book_dir": "中寒論辯證廣注",
@@ -1644,51 +1561,6 @@
     "menu.txt": "16ffd566ad397b0e941b7f0ec35a14483bfa2a30d0ac025f44e3acfeae95451f"
    },
    "path": "data/corpus_raw/shanghan/書籍/註解傷寒論"
-  },
-  {
-   "book_dir": "重訂通俗傷寒論",
-   "category": "shanghan",
-   "title": "重訂通俗傷寒論",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "C",
-   "layer_label": "注家解釋",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/shanghan/書籍/重訂通俗傷寒論"
-  },
-  {
-   "book_dir": "類證活人書",
-   "category": "shanghan",
-   "title": "類證活人書",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "C",
-   "layer_label": "注家解釋",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/shanghan/書籍/類證活人書"
-  },
-  {
-   "book_dir": "類證活人書_1",
-   "category": "shanghan",
-   "title": "類證活人書_1",
-   "author": "",
-   "dynasty": "",
-   "year": "",
-   "edition": "",
-   "quality": "",
-   "hermes_layer": "C",
-   "layer_label": "注家解釋",
-   "files": [],
-   "file_sha256": {},
-   "path": "data/corpus_raw/shanghan/書籍/類證活人書_1"
   },
   {
    "book_dir": "曹氏傷寒金匱發微合刊",

@@ -98,9 +98,25 @@ def similarity(a: str, b: str) -> float:
     return 2 * len(sa & sb) / (len(sa) + len(sb))
 
 
+# ---------------------------------------------------------------------------
+# Graph-variant folding (異體字校勘層)
+# ---------------------------------------------------------------------------
+# The Songben corpus writes several characters in variant glyphs that the
+# lexicon records in canonical form (e.g. 「胸脇苦滿」 vs 詞典「胸脅苦滿」,
+# 「心下痞鞕」 vs 「痞硬」). Folding maps variant → canonical so term matching
+# and evidence containment work; 「逐字」 is preserved modulo 異體字 — the
+# standard collation convention — and clause clean_text keeps original glyphs.
+# Single-char translate preserves string length, so match offsets stay valid.
+_VARIANT_MAP = str.maketrans({"脇": "脅", "鞕": "硬", "欬": "咳", "濇": "澀"})
+
+
+def fold_variants(text: str) -> str:
+    return (text or "").translate(_VARIANT_MAP)
+
+
 def contains_verbatim(haystack: str, needle: str) -> bool:
-    """Verbatim containment ignoring whitespace differences."""
-    norm = lambda s: re.sub(r"\s+", "", s)
+    """Verbatim containment ignoring whitespace and graph-variant glyphs."""
+    norm = lambda s: fold_variants(re.sub(r"\s+", "", s))
     return norm(needle) in norm(haystack)
 
 
@@ -122,7 +138,7 @@ _S2T_PAIRS = (
     "恶惡 风風 发發 热熱 无無 呕嘔 干乾 烦煩 谵譫 语語 满滿 胁脅 头頭 项項 强強 "
     "脉脈 紧緊 缓緩 数數 细細 汤湯 黄黃 龙龍 参參 调調 气氣 阳陽 阴陰 泻瀉 连連 "
     "胶膠 乌烏 当當 归歸 猪豬 姜薑 与與 后後 误誤 证證 经經 体體 实實 虚虛 师師 "
-    "硬鞕 沉沈 里裏 表表 临臨 床牀 药藥 剂劑 医醫 论論 伤傷 寒寒 杂雜 张張 机機 "
+    "沉沈 里裏 表表 临臨 床牀 药藥 剂劑 医醫 论論 伤傷 寒寒 杂雜 张張 机機 "
     "条條 辨辨 删刪 难難 红紅 紫紫 觉覺 转轉 输輸 阐闡 释釋 减減 协協 闷悶 呃呃 "
     "哕噦 衄衄 疼疼 痛痛 痞痞 厥厥 利利 秘祕 结結 胸胸 烧燒 针針 灸灸 熏熏 熨熨 "
     "悸悸 眩眩 冒冒 渴渴 饮飲 食食 谷穀 溏溏 脓膿 血血 尿尿 溲溲 汗汗 吐吐 下下 "
@@ -157,7 +173,7 @@ def s2t(text: str) -> str:
 
 
 def normalize_query(text: str) -> str:
-    return s2t(text.strip())
+    return fold_variants(s2t(text.strip()))
 
 
 def dedupe_keep_order(items: Iterable) -> List:

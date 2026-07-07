@@ -125,7 +125,8 @@ def _research(svc, body, m, q):
 
 @route("POST", r"/api/paper")
 def _paper(svc, body, m, q):
-    return svc.paper(body.get("type", "formula_pattern"), topic=body.get("topic", ""))
+    return svc.paper(body.get("type", "formula_pattern"), topic=body.get("topic", ""),
+                     use_llm=body.get("use_llm", True))
 
 
 @route("POST", r"/api/patient")

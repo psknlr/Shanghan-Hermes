@@ -138,6 +138,58 @@ def cmd_ingest(args):
             print(f"  [{b['hermes_layer']}] {b['title']} ({b['book_dir']})")
 
 
+def _load_research_or_exit(name: str):
+    import json as _json
+    p = config.RESEARCH_DIR / name
+    if not p.exists():
+        print(f"缺少 {p.name}：請先運行 `python3 -m hermes_shanghan pipeline`",
+              file=sys.stderr)
+        sys.exit(1)
+    return _json.loads(p.read_text(encoding="utf-8"))
+
+
+def cmd_dose(args):
+    _need_pipeline()
+    ratios = _load_research_or_exit("dose_ratios.json")
+    evo = _load_research_or_exit("dose_family_evolution.json")
+    if args.formula:
+        f = next((x for x in ratios["formulas"] if x["formula"] == args.formula), None)
+        if not f:
+            print(f"無劑量數據：{args.formula}", file=sys.stderr)
+            sys.exit(1)
+        _print(f)
+        edges = [e for e in evo["edges"]
+                 if args.formula in (e["base"], e["modified"]) and e["dose_deltas"]]
+        if edges:
+            _print({"dose_evolution_edges": edges})
+    else:
+        _print(_load_research_or_exit("dose_summary.json"))
+
+
+def cmd_divergence(args):
+    _need_pipeline()
+    a = _load_research_or_exit("commentary_divergence.json")
+    if args.clause:
+        rows = [r for r in a["clauses"] if args.clause in r["clause_id"]]
+        _print({"book_coverage": a["book_coverage"], "clauses": rows})
+    else:
+        _print({k: a[k] for k in ("n_books", "n_commentary_rules",
+                                  "n_clauses_multi_commentator",
+                                  "mean_term_divergence", "book_coverage",
+                                  "top_divergent_clauses", "agreement_matrix",
+                                  "commentator_fingerprints")})
+
+
+def cmd_evaluate(args):
+    _need_pipeline()
+    from .eval.runner import run_suites
+    suites = tuple(args.suite.split(",")) if args.suite != "all" \
+        else ("cloze", "cases", "grounding")
+    summary = run_suites(suites=suites, ablations=args.ablations,
+                         limit=args.limit)
+    _print(summary)
+
+
 def cmd_stats(args):
     _need_pipeline()
     from collections import Counter
@@ -349,8 +401,9 @@ def cmd_paper(args):
     art = Artifacts()
     writer = PaperWriter(art.clauses, art.initial_rules, art.formula_rules,
                          art.six_channel_rules, art.mistreatment_rules,
-                         art.differential_rules)
-    path = writer.generate(paper_type=args.type, topic=args.topic or "")
+                         art.differential_rules, commentary_rules=art.commentary_rules)
+    path = writer.generate(paper_type=args.type, topic=args.topic or "",
+                           use_llm=not args.no_llm)
     print(f"manuscript: {path}")
 
 
@@ -419,6 +472,22 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp = sub.add_parser("ingest", help="語料導入與 manifest")
     sp.set_defaults(func=cmd_ingest)
 
+    sp = sub.add_parser("dose", help="劑量計量層：藥量比/折算/家族劑量演化")
+    sp.add_argument("formula", nargs="?", default="")
+    sp.set_defaults(func=cmd_dose)
+
+    sp = sub.add_parser("divergence", help="注家分歧圖譜：覆蓋/爭點條文/一致度矩陣")
+    sp.add_argument("--clause", default="", help="按 clause_id 片段過濾")
+    sp.set_defaults(func=cmd_divergence)
+
+    sp = sub.add_parser("evaluate", help="客觀評測：遮方預測/醫案回放/證據接地率")
+    sp.add_argument("--suite", default="all",
+                    help="all 或逗號分隔：cloze,cases,grounding")
+    sp.add_argument("--ablations", action="store_true",
+                    help="對匹配器各評分組件做消融實驗")
+    sp.add_argument("--limit", type=int, default=None)
+    sp.set_defaults(func=cmd_evaluate)
+
     sp = sub.add_parser("stats", help="規則庫統計")
     sp.set_defaults(func=cmd_stats)
 
@@ -470,8 +539,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp = sub.add_parser("paper", help="自動論文生成")
     sp.add_argument("--type", default="formula_pattern",
                     choices=["formula_pattern", "six_channel_kg", "mistreatment",
-                             "network_pharmacology", "commentary_compare", "methodology"])
+                             "network_pharmacology", "commentary_compare",
+                             "methodology", "benchmark"])
     sp.add_argument("--topic", default="")
+    sp.add_argument("--no-llm", action="store_true",
+                    help="跳過增益層起草，只輸出確定性模板與數據表格")
     sp.set_defaults(func=cmd_paper)
 
     sp = sub.add_parser("skills", help="列出已編譯 Skill")

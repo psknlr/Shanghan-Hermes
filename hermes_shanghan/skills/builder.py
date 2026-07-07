@@ -358,14 +358,30 @@ class SkillBuilder:
     def _build_therapy(self) -> int:
         base = self.root / "hermes.shanghan.therapy"
         indicated = [t for t in self.therapy_rules if t.polarity == "indicated"]
+
+        # decide which subskills actually have rules before advertising them
+        # in the overview — no phantom sub-Skill references
+        sub_plan = []
+        for method, (slug, desc) in self.THERAPY_SUBSKILLS.items():
+            group = [t for t in self.therapy_rules if t.therapy_method == method]
+            related_mist = {"汗法": "誤汗", "下法": "誤下", "吐法": "誤吐"}.get(method)
+            mist = [t for t in self.therapy_rules
+                    if related_mist and t.therapy_method == related_mist]
+            prohib = [t for t in self.therapy_rules
+                      if t.therapy_method == {"汗法": "禁汗", "下法": "禁下",
+                                              "吐法": "禁吐"}.get(method)]
+            if group or prohib:
+                sub_plan.append((method, slug, desc, group, mist, prohib))
+
+        sub_list = " /\n".join(f"hermes.shanghan.therapy.{slug}"
+                               for _, slug, *_ in sub_plan)
         md = _frontmatter(
             "hermes.shanghan.therapy",
-            "治法規則總覽：汗/吐/下/和/溫/清/補/救逆/利水的適應指徵與代表方。") + """
+            "治法規則總覽：汗/吐/下/和/溫/清/補/救逆/利水的適應指徵與代表方。") + f"""
 # 治法 Skill（總覽）
 
-各治法獨立子 Skill：hermes.shanghan.therapy.sweating / purgation /
-harmonization / vomiting / warming / clearing / tonifying /
-rescue_reverse / water_regulation。
+各治法獨立子 Skill：
+{sub_list}。
 
 """ + "\n".join(
             f"## {t.therapy_method}\n{t.summary}\n- 指徵：{'、'.join(t.indications[:8]) or '—'}\n"
@@ -378,16 +394,7 @@ rescue_reverse / water_regulation。
         _write_skill(base, md, self.therapy_rules, examples)
 
         n = 1
-        for method, (slug, desc) in self.THERAPY_SUBSKILLS.items():
-            group = [t for t in self.therapy_rules if t.therapy_method == method]
-            related_mist = {"汗法": "誤汗", "下法": "誤下", "吐法": "誤吐"}.get(method)
-            mist = [t for t in self.therapy_rules
-                    if related_mist and t.therapy_method == related_mist]
-            prohib = [t for t in self.therapy_rules
-                      if t.therapy_method == {"汗法": "禁汗", "下法": "禁下",
-                                              "吐法": "禁吐"}.get(method)]
-            if not group and not prohib:
-                continue
+        for method, slug, desc, group, mist, prohib in sub_plan:
             n += 1
             body = []
             for t in group:
@@ -512,8 +519,15 @@ rescue_reverse / water_regulation。
 """ + CORE_PRINCIPLES
         examples = [{"query": "第12條桂本有沒有異文？",
                      "answer_outline": "查 variants 規則中 clause_id=SHL_SONGBEN_0012 的對齊記錄。"}]
+        # stratified commentary sample: rules are written in book order, so a
+        # flat [:200] slice would contain only the first book (成無己)
+        by_book: Dict[str, List] = {}
+        for r in self.commentary_rules:
+            by_book.setdefault(r.book, []).append(r)
+        per_book = max(1, 200 // max(1, len(by_book)))
+        comm_sample = [r for rs in by_book.values() for r in rs[:per_book]]
         _write_skill(self.root / "hermes.shanghan.variants", md,
-                     self.variant_rules[:400] + self.commentary_rules[:200], examples)
+                     self.variant_rules[:400] + comm_sample, examples)
         return 1
 
     # ------------------------------------------------------------------

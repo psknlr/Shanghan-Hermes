@@ -1,0 +1,2264 @@
+{
+ "benchmark": "prescription_cloze_loco",
+ "config": {
+  "use_outline_boost": true,
+  "use_near_match": true
+ },
+ "n_instances": 171,
+ "n_skipped_low_findings": 132,
+ "metrics": {
+  "all": {
+   "n": 171,
+   "top1": 0.1579,
+   "top3": 0.3216,
+   "top5": 0.386,
+   "mrr": 0.243,
+   "herb_precision": 0.3859,
+   "herb_recall": 0.3674,
+   "herb_f1": 0.3697
+  },
+  "attainable": {
+   "n": 140,
+   "top1": 0.1929,
+   "top3": 0.3929,
+   "top5": 0.4714,
+   "mrr": 0.2968,
+   "herb_precision": 0.4182,
+   "herb_recall": 0.4051,
+   "herb_f1": 0.406
+  },
+  "singleton_unattainable": {
+   "n": 31,
+   "top1": 0.0,
+   "top3": 0.0,
+   "top5": 0.0,
+   "mrr": 0.0,
+   "herb_precision": 0.2312,
+   "herb_recall": 0.1866,
+   "herb_f1": 0.1961
+  },
+  "attainable_zhuzhi_only": {
+   "n": 76,
+   "top1": 0.1842,
+   "top3": 0.3947,
+   "top5": 0.4474,
+   "mrr": 0.2888,
+   "herb_precision": 0.4319,
+   "herb_recall": 0.4241,
+   "herb_f1": 0.4212
+  }
+ },
+ "records": [
+  {
+   "clause_id": "SHL_SONGBEN_0012",
+   "gold": "桂枝湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.2,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0013",
+   "gold": "桂枝湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0014",
+   "gold": "桂枝加葛根湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 0.7142857142857143,
+    "f1": 0.8333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0020",
+   "gold": "桂枝加附子湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 0.42857142857142855,
+    "recall": 0.5,
+    "f1": 0.4615384615384615
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0021",
+   "gold": "桂枝去芍藥湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "柴胡加龍骨牡蠣湯",
+   "herb_prf": {
+    "precision": 0.25,
+    "recall": 0.75,
+    "f1": 0.375
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0023",
+   "gold": "桂枝麻黃各半湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.14285714285714285,
+    "f1": 0.2
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0025",
+   "gold": "桂枝湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": 2,
+   "top1": "白虎加人參湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.2,
+    "f1": 0.20000000000000004
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0026",
+   "gold": "白虎加人參湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0027",
+   "gold": "桂枝二越婢一湯",
+   "strength": "宜",
+   "attainable": false,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.14285714285714285,
+    "f1": 0.2
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0028",
+   "gold": "桂枝去桂加茯苓白朮湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "茵陳蒿湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0029",
+   "gold": "調胃承氣湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": 5,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0030",
+   "gold": "芍藥甘草湯",
+   "strength": "與",
+   "attainable": false,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0031",
+   "gold": "葛根湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "麻黃湯",
+   "herb_prf": {
+    "precision": 0.75,
+    "recall": 0.42857142857142855,
+    "f1": 0.5454545454545454
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0034",
+   "gold": "葛根黃芩黃連湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.25,
+    "f1": 0.22222222222222224
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0035",
+   "gold": "麻黃湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.4,
+    "recall": 0.5,
+    "f1": 0.4444444444444445
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0036",
+   "gold": "麻黃湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 3,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0037",
+   "gold": "小柴胡湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "麻黃湯",
+   "herb_prf": {
+    "precision": 0.25,
+    "recall": 0.14285714285714285,
+    "f1": 0.18181818181818182
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0038",
+   "gold": "大青龍湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.14285714285714285,
+    "f1": 0.16666666666666666
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0040",
+   "gold": "小青龍湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "豬苓湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0041",
+   "gold": "小青龍湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "小青龍湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0046",
+   "gold": "麻黃湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "麻黃湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0052",
+   "gold": "麻黃湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 3,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.4,
+    "recall": 0.5,
+    "f1": 0.4444444444444445
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0054",
+   "gold": "桂枝湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0055",
+   "gold": "麻黃湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.4,
+    "recall": 0.5,
+    "f1": 0.4444444444444445
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0056",
+   "gold": "桂枝湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "麻黃湯",
+   "herb_prf": {
+    "precision": 0.5,
+    "recall": 0.4,
+    "f1": 0.4444444444444445
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0061",
+   "gold": "乾薑附子湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0062",
+   "gold": "桂枝加芍藥生薑各一兩人參三兩新加湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0063",
+   "gold": "麻黃杏仁甘草石膏湯",
+   "strength": "可與",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0067",
+   "gold": "茯苓桂枝白朮甘草湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "瓜蒂散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0070",
+   "gold": "調胃承氣湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.5,
+    "recall": 0.6666666666666666,
+    "f1": 0.5714285714285715
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0071",
+   "gold": "五苓散",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "豬苓湯",
+   "herb_prf": {
+    "precision": 0.6,
+    "recall": 0.6,
+    "f1": 0.6
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0072",
+   "gold": "五苓散",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0073",
+   "gold": "五苓散",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0074",
+   "gold": "五苓散",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0076",
+   "gold": "梔子豉湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "梔子豉湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0078",
+   "gold": "梔子豉湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "梔子乾薑湯",
+   "herb_prf": {
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1": 0.5
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0079",
+   "gold": "梔子厚朴湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.5,
+    "recall": 0.6666666666666666,
+    "f1": 0.5714285714285715
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0080",
+   "gold": "梔子乾薑湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "梔子豉湯",
+   "herb_prf": {
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1": 0.5
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0082",
+   "gold": "真武湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.4,
+    "recall": 0.4,
+    "f1": 0.4000000000000001
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0091",
+   "gold": "四逆湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0092",
+   "gold": "四逆湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.3333333333333333,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0094",
+   "gold": "調胃承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 4,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.3333333333333333,
+    "f1": 0.3333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0095",
+   "gold": "桂枝湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0096",
+   "gold": "小柴胡湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "柴胡桂枝乾薑湯",
+   "herb_prf": {
+    "precision": 0.42857142857142855,
+    "recall": 0.42857142857142855,
+    "f1": 0.42857142857142855
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0097",
+   "gold": "小柴胡湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0098",
+   "gold": "小柴胡湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.6,
+    "recall": 0.42857142857142855,
+    "f1": 0.5
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0099",
+   "gold": "小柴胡湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 4,
+   "top1": "白虎加人參湯",
+   "herb_prf": {
+    "precision": 0.4,
+    "recall": 0.2857142857142857,
+    "f1": 0.3333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0100",
+   "gold": "小建中湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0103",
+   "gold": "大柴胡湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 0.7142857142857143,
+    "recall": 0.7142857142857143,
+    "f1": 0.7142857142857143
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0104",
+   "gold": "小柴胡湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0105",
+   "gold": "調胃承氣湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.3333333333333333,
+    "f1": 0.3333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0107",
+   "gold": "柴胡加龍骨牡蠣湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "調胃承氣湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.08333333333333333,
+    "f1": 0.13333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0112",
+   "gold": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.8,
+    "recall": 0.5714285714285714,
+    "f1": 0.6666666666666666
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0123",
+   "gold": "調胃承氣湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "梔子乾薑湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0124",
+   "gold": "抵當湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 5,
+   "top1": "調胃承氣湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.25,
+    "f1": 0.28571428571428575
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0125",
+   "gold": "抵當湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 3,
+   "top1": "茵陳蒿湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.25,
+    "f1": 0.28571428571428575
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0126",
+   "gold": "抵當丸",
+   "strength": "宜",
+   "attainable": false,
+   "rank": null,
+   "top1": "小青龍湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0134",
+   "gold": "大陷胸湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0135",
+   "gold": "大陷胸湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "瓜蒂散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0136",
+   "gold": "大陷胸湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "白虎加人參湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0137",
+   "gold": "大陷胸湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.5,
+    "recall": 0.6666666666666666,
+    "f1": 0.5714285714285715
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0141",
+   "gold": "文蛤散",
+   "strength": "與",
+   "attainable": false,
+   "rank": null,
+   "top1": "白虎加人參湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0146",
+   "gold": "柴胡桂枝湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.1111111111111111,
+    "f1": 0.16666666666666666
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0147",
+   "gold": "柴胡桂枝乾薑湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "豬苓湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0148",
+   "gold": "小柴胡湯",
+   "strength": "可與",
+   "attainable": true,
+   "rank": null,
+   "top1": "附子瀉心湯",
+   "herb_prf": {
+    "precision": 0.25,
+    "recall": 0.14285714285714285,
+    "f1": 0.18181818181818182
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0149",
+   "gold": "小柴胡湯",
+   "strength": "屬",
+   "attainable": true,
+   "rank": 2,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.6,
+    "recall": 0.42857142857142855,
+    "f1": 0.5
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0149",
+   "gold": "大陷胸湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0152",
+   "gold": "十棗湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0154",
+   "gold": "大黃黃連瀉心湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0155",
+   "gold": "附子瀉心湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "十棗湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0156",
+   "gold": "五苓散",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0157",
+   "gold": "生薑瀉心湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "甘草瀉心湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0158",
+   "gold": "甘草瀉心湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "生薑瀉心湯",
+   "herb_prf": {
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0159",
+   "gold": "赤石脂禹餘糧湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "桃花湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.5,
+    "f1": 0.4
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0161",
+   "gold": "旋覆代赭湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0162",
+   "gold": "麻黃杏仁甘草石膏湯",
+   "strength": "可與",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0164",
+   "gold": "桂枝湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "附子瀉心湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0165",
+   "gold": "大柴胡湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0166",
+   "gold": "瓜蒂散",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0168",
+   "gold": "白虎加人參湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 3,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 0.2857142857142857,
+    "recall": 0.4,
+    "f1": 0.3333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0169",
+   "gold": "白虎加人參湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0170",
+   "gold": "白虎加人參湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "麻黃湯",
+   "herb_prf": {
+    "precision": 0.25,
+    "recall": 0.2,
+    "f1": 0.22222222222222224
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0173",
+   "gold": "黃連湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 0.5714285714285714,
+    "recall": 0.5714285714285714,
+    "f1": 0.5714285714285714
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0174",
+   "gold": "桂枝附子湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.2,
+    "f1": 0.20000000000000004
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0174",
+   "gold": "去桂加白朮湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "抵當湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0175",
+   "gold": "甘草附子湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.4,
+    "recall": 0.5,
+    "f1": 0.4444444444444445
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0177",
+   "gold": "炙甘草湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "",
+   "herb_prf": null
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0208",
+   "gold": "大承氣湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0208",
+   "gold": "小承氣湯",
+   "strength": "可與",
+   "attainable": true,
+   "rank": null,
+   "top1": "柴胡桂枝湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0209",
+   "gold": "小承氣湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0212",
+   "gold": "大承氣湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0214",
+   "gold": "小承氣湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 4,
+   "top1": "白虎湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0215",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 2,
+   "top1": "小承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0217",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0219",
+   "gold": "白虎湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0220",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0221",
+   "gold": "梔子豉湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0222",
+   "gold": "白虎加人參湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 3,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 0.2857142857142857,
+    "recall": 0.4,
+    "f1": 0.3333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0223",
+   "gold": "豬苓湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.6,
+    "recall": 0.6,
+    "f1": 0.6
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0224",
+   "gold": "豬苓湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.6,
+    "recall": 0.6,
+    "f1": 0.6
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0225",
+   "gold": "四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "豬苓湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0228",
+   "gold": "梔子豉湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "梔子豉湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0229",
+   "gold": "小柴胡湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": 1,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0230",
+   "gold": "小柴胡湯",
+   "strength": "可與",
+   "attainable": true,
+   "rank": 1,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0231",
+   "gold": "小柴胡湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": 3,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0233",
+   "gold": "蜜煎導",
+   "strength": "宜",
+   "attainable": false,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0234",
+   "gold": "桂枝湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 4,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.2,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0235",
+   "gold": "麻黃湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 2,
+   "top1": "梔子豉湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0236",
+   "gold": "茵陳蒿湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "柴胡桂枝乾薑湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0238",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 4,
+   "top1": "梔子豉湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0240",
+   "gold": "大承氣湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0241",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0242",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 3,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0244",
+   "gold": "五苓散",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0247",
+   "gold": "麻子仁丸",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0250",
+   "gold": "小承氣湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "梔子乾薑湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0251",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 3,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0252",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0253",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 5,
+   "top1": "小承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0256",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "白虎湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0257",
+   "gold": "抵當湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "大陷胸湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.25,
+    "f1": 0.28571428571428575
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0260",
+   "gold": "茵陳蒿湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "抵當湯",
+   "herb_prf": {
+    "precision": 0.25,
+    "recall": 0.3333333333333333,
+    "f1": 0.28571428571428575
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0261",
+   "gold": "梔子檗皮湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "茵陳蒿湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0266",
+   "gold": "小柴胡湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": 1,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0301",
+   "gold": "麻黃細辛附子湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0304",
+   "gold": "附子湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.2,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0305",
+   "gold": "附子湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "",
+   "herb_prf": null
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0306",
+   "gold": "桃花湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "桃花湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0307",
+   "gold": "桃花湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 3,
+   "top1": "真武湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0309",
+   "gold": "吳茱萸湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "五苓散",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0310",
+   "gold": "豬膚湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "調胃承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0315",
+   "gold": "白通湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1": 0.6666666666666666
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0315",
+   "gold": "白通加豬膽汁湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.6666666666666666,
+    "recall": 0.4,
+    "f1": 0.5
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0316",
+   "gold": "真武湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "豬苓湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.2,
+    "f1": 0.20000000000000004
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0317",
+   "gold": "通脈四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0318",
+   "gold": "四逆散",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "豬苓湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0319",
+   "gold": "豬苓湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "小青龍湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0320",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "白虎加人參湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0321",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "抵當湯",
+   "herb_prf": {
+    "precision": 0.25,
+    "recall": 0.25,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0324",
+   "gold": "四逆湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 4,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0338",
+   "gold": "烏梅丸",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.6666666666666666,
+    "recall": 0.2,
+    "f1": 0.30769230769230765
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0350",
+   "gold": "白虎湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "白虎湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0351",
+   "gold": "當歸四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "調胃承氣湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.14285714285714285,
+    "f1": 0.2
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0353",
+   "gold": "四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "通脈四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0354",
+   "gold": "四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 3,
+   "top1": "調胃承氣湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.3333333333333333,
+    "f1": 0.3333333333333333
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0355",
+   "gold": "瓜蒂散",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "小柴胡湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0356",
+   "gold": "茯苓甘草湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.25,
+    "f1": 0.28571428571428575
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0357",
+   "gold": "麻黃升麻湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "白通加豬膽汁湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.07692307692307693,
+    "f1": 0.1111111111111111
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0370",
+   "gold": "通脈四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0372",
+   "gold": "四逆湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0373",
+   "gold": "白頭翁湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "豬苓湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0374",
+   "gold": "小承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0375",
+   "gold": "梔子豉湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 3,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0377",
+   "gold": "四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 3,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.3333333333333333,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0378",
+   "gold": "吳茱萸湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.4,
+    "recall": 0.5,
+    "f1": 0.4444444444444445
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0379",
+   "gold": "小柴胡湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.6,
+    "recall": 0.42857142857142855,
+    "f1": 0.5
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0385",
+   "gold": "四逆加人參湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0386",
+   "gold": "五苓散",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 4,
+   "top1": "麻黃湯",
+   "herb_prf": {
+    "precision": 0.25,
+    "recall": 0.2,
+    "f1": 0.22222222222222224
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0387",
+   "gold": "桂枝湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "吳茱萸湯",
+   "herb_prf": {
+    "precision": 0.5,
+    "recall": 0.4,
+    "f1": 0.4444444444444445
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0388",
+   "gold": "四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 2,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.3333333333333333,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0389",
+   "gold": "四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": 1,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0390",
+   "gold": "通脈四逆加豬膽汁湯",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_0392",
+   "gold": "燒褌散",
+   "strength": "主之",
+   "attainable": false,
+   "rank": null,
+   "top1": "",
+   "herb_prf": null
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0175",
+   "gold": "桂枝湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "四逆湯",
+   "herb_prf": {
+    "precision": 0.3333333333333333,
+    "recall": 0.2,
+    "f1": 0.25
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0176",
+   "gold": "柴胡桂枝湯",
+   "strength": "與",
+   "attainable": true,
+   "rank": null,
+   "top1": "小承氣湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0206",
+   "gold": "當歸四逆湯",
+   "strength": "主之",
+   "attainable": true,
+   "rank": null,
+   "top1": "白虎加人參湯",
+   "herb_prf": {
+    "precision": 0.2,
+    "recall": 0.14285714285714285,
+    "f1": 0.16666666666666666
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0209",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 5,
+   "top1": "甘草瀉心湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0210",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 1,
+   "top1": "大承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0211",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": null,
+   "top1": "桂枝湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0214",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 2,
+   "top1": "小承氣湯",
+   "herb_prf": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571428571428571
+   }
+  },
+  {
+   "clause_id": "SHL_SONGBEN_AUX_0217",
+   "gold": "大承氣湯",
+   "strength": "宜",
+   "attainable": true,
+   "rank": 2,
+   "top1": "當歸四逆湯",
+   "herb_prf": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+   }
+  }
+ ]
+}

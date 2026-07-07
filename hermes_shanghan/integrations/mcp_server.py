@@ -76,7 +76,12 @@ def handle(request: Dict) -> Optional[Dict]:
                 out = ShanghanAgent().ask(args.get("question", ""), args.get("role"))
             else:
                 out = get_registry().call(name, args)
-            return _result(id_, _content(out))
+            payload = _content(out)
+            # registry-level failures (unknown tool, bad channel/formula…)
+            # come back as {"error": ...} — mark them per MCP spec
+            if isinstance(out, dict) and out.get("error"):
+                payload["isError"] = True
+            return _result(id_, payload)
         except Exception as exc:  # surface as tool error, keep server alive
             return _result(id_, {"content": [{"type": "text",
                                               "text": f"tool error: {type(exc).__name__}: {exc}"}],
@@ -96,6 +101,9 @@ def serve(stdin=None, stdout=None) -> None:
         try:
             request = json.loads(line)
         except json.JSONDecodeError:
+            stdout.write(json.dumps(_error(None, -32700, "parse error"),
+                                    ensure_ascii=False) + "\n")
+            stdout.flush()
             continue
         try:
             response = handle(request)

@@ -35,18 +35,53 @@ python3 -m hermes_shanghan llm-status              # 確認後端
 ```
 
 支持的後端（經 LiteLLM，100+ provider）：Anthropic Claude、OpenAI、Azure、
-Gemini、Groq、Mistral、DeepSeek、OpenRouter、本地 Ollama 等。
+Gemini、Groq、Mistral、DeepSeek、OpenRouter、本地 Ollama 等；另內建兩個
+OpenAI 兼容網關路由：
+
+```bash
+# Azure OpenAI（litellm 原生）
+export AZURE_API_KEY=... AZURE_API_BASE=https://<res>.openai.azure.com AZURE_API_VERSION=2024-06-01
+export HERMES_LLM_MODEL=azure/<deployment-name>
+
+# Poe（OpenAI 兼容端點 api.poe.com/v1）
+export POE_API_KEY=...
+export HERMES_LLM_MODEL=poe/Claude-Sonnet-4.5
+
+# MiniMax（默認國際站 api.minimax.io/v1；國內站用 MINIMAX_API_BASE 覆蓋）
+export MINIMAX_API_KEY=...
+export HERMES_LLM_MODEL=minimax/MiniMax-M2
+export MINIMAX_API_BASE=https://api.minimaxi.com/v1   # 可選
+```
 
 | 環境變量 | 作用 | 默認 |
 |---|---|---|
 | `HERMES_LLM_PROVIDER` | `auto`/`litellm`/`local`/`scripted` | auto |
 | `HERMES_LLM_MODEL` | litellm 模型 id | anthropic/claude-opus-4-8 |
 | `HERMES_LLM_TEMPERATURE` | 採樣溫度 | 0.0 |
-| `HERMES_LLM_MAX_TOKENS` | 最大輸出 | 1536 |
-| `HERMES_LLM_CACHE` | 磁盤緩存響應（可復現） | 1 |
+| `HERMES_LLM_MAX_TOKENS` | 最大輸出下限（按任務自動分級提升） | 1536 |
+| `HERMES_LLM_CACHE` | 磁盤緩存響應（可復現；含批量抽取/批評任務） | 1 |
 | `HERMES_LLM_FALLBACK` | 調用失敗回退 `local`/`none` | local |
 
 `auto` 僅在「litellm 已安裝 **且** 檢測到 API key」時選用真實模型，否則 `local`。
+
+**max_tokens 按任務分級**：論文起草 ≥8192、證據綜合 ≥4096、規則抽取/批評
+≥2048；`HERMES_LLM_MAX_TOKENS` 設得更高時以用戶設置為準。證據綜合把條文
+**全文**（每條至多 500 字、按 clause_id 去重）交給模型，不再截斷。
+
+## LLM 起草論文（增益層）
+
+```bash
+python3 -m hermes_shanghan paper --type formula_pattern --topic 桂枝湯類方證
+python3 -m hermes_shanghan paper --type mistreatment --no-llm   # 純模板
+```
+
+`PaperWriter` 把 `data/shanghan/research/` 的計量資產（頻次表、方-證共現
+網絡、家族樹、誤治傳變路徑）壓縮成摘要交給模型，起草**引言、計量結果
+解讀、討論、結論**四節；模板繼續負責結構、方法學與全部數據表格。模型
+文本合入稿件前過 CitationGuard：核實的 clause_id 列入文末「增益層引用
+核驗」，未核實編號顯式標記「請勿採信」，`paper_meta.json` 記錄
+`llm_backend` 與完整 `citation_report`。離線時 `local` 後端經同一代碼
+路徑生成確定性解讀，全流程可測試。
 
 ## 智能體問答
 
@@ -81,8 +116,18 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 
 - `--llm-extract`：LLM 候選規則與確定性規則合併去重後，**統一過審核**。
   在 `local` 後端，LLM 鏡像規則引擎，增量為 0；真實模型才會擴大召回。
+  全部 15 種條文級規則類型均開放給 LLM（異文/成注規則屬 B/C 層對齊產物，
+  不經此路徑）。
 - `--llm-critic`：LLM 對抗式批評器作為**附加閘門**，僅能下調等級（advisory），
   不能把證據不實的規則提升放行——硬證據閘門始終優先。
+
+## 多智能體合議的專家評述
+
+接入真實模型時（`available=True`），合議庭的每位專家（方證/鑒別/六經/誤治）
+會基於**自己那一步的工具證據**追加一至三句評述（`💬`，時間線可見）；每句
+評述先過 CitationGuard——引用了證據之外的條文編號會被就地標記
+「⚠️ 含未核實條文編號」。可用 `Council(llm_specialists=False)` 關閉，
+離線 `local` 後端自動跳過。
 
 ## 8 個可調用工具（智能體 / harness 共用同一能力面）
 

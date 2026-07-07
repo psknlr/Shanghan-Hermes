@@ -73,6 +73,38 @@ def discover_books(corpus_root: Path) -> List[Dict]:
     return books
 
 
+def reconcile_vendor_manifests(corpus_root: Path) -> Dict:
+    """Compare the source archives' own book lists with what is vendored.
+
+    The upstream 7z archives ship per-category manifest_*.json files listing
+    every book they contained. Not all of those book directories were vendored
+    into this repository, so the corpus manifest records the discrepancy
+    explicitly instead of silently under-counting: which titles the vendor
+    lists, which are on disk, and which are missing per category.
+    """
+    listed_total = 0
+    missing: List[Dict] = []
+    for vendor_file in sorted(corpus_root.glob("*/manifest_*.json")):
+        category = vendor_file.parent.name
+        try:
+            entries = json.loads(vendor_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(entries, list):
+            continue
+        on_disk = {p.name for p in (vendor_file.parent / "書籍").glob("*")
+                   if p.is_dir()}
+        listed_total += len(entries)
+        for e in entries:
+            title = e.get("title", "")
+            if title and not any(str(v) in on_disk for v in e.values()):
+                missing.append({"category": category, "title": title})
+    return {"vendor_listed_count": listed_total,
+            "vendor_missing_count": len(missing),
+            "vendor_missing_books": sorted(missing,
+                                           key=lambda b: (b["category"], b["title"]))}
+
+
 def run(corpus_root: Optional[Path] = None) -> Path:
     """Build and persist the corpus manifest. Returns the manifest path."""
     config.ensure_dirs()
@@ -87,6 +119,7 @@ def run(corpus_root: Optional[Path] = None) -> Path:
         "formula_family_books": config.FORMULA_FAMILY_BOOKS,
         "layer_legend": config.LAYER_LABEL,
         "book_count": len(books),
+        **reconcile_vendor_manifests(corpus_root),
         "books": books,
     }
     out = config.MANIFEST_DIR / "corpus_manifest.json"
@@ -118,8 +151,10 @@ def read_book_text(book_dir_name: str) -> str:
     index = path / "index.txt"
     if index.exists():
         parts.append(index.read_text(encoding="utf-8", errors="replace"))
-    nums = sorted((int(p.stem), p) for p in path.glob("*.txt")
-                  if p.stem.isdigit())
+    # stems may be plain ("3") or volume-chapter ("2-15") — order numerically
+    nums = sorted((tuple(int(x) for x in p.stem.split("-")), p)
+                  for p in path.glob("*.txt")
+                  if p.stem.replace("-", "").isdigit())
     for _, p in nums:
         parts.append(p.read_text(encoding="utf-8", errors="replace"))
     return "\n".join(parts)

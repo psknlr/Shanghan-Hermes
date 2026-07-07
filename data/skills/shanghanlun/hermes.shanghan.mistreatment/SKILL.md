@@ -10,7 +10,7 @@ description: 誤治傳變圖譜：誤汗/誤下/誤吐/火逆 → 變證 → 救
 | 誤治 | 變證 | 救治方 | 證據條文（前3） | 等級 |
 |---|---|---|---|---|
 | 誤下 | 結胸 | 大陷胸湯、大陷胸丸 | SHL_SONGBEN_0131、SHL_SONGBEN_0134、SHL_SONGBEN_0135 | gold |
-| 誤下 | 痞證 | 半夏瀉心湯、甘草瀉心湯、大黃黃連瀉心湯 | SHL_SONGBEN_0149、SHL_SONGBEN_0154、SHL_SONGBEN_0155 | gold |
+| 誤下 | 痞證 | 甘草瀉心湯、大黃黃連瀉心湯 | SHL_SONGBEN_0149、SHL_SONGBEN_0154、SHL_SONGBEN_0155 | gold |
 | 誤下 | 協熱利 | 葛根黃芩黃連湯、桂枝人參湯 | SHL_SONGBEN_0034、SHL_SONGBEN_0163 | gold |
 | 誤下 | 虛煩 | 梔子豉湯、梔子生薑豉湯 | SHL_SONGBEN_0076、SHL_SONGBEN_0077、SHL_SONGBEN_0078 | gold |
 | 誤下 | 氣上衝 | 桂枝湯 | SHL_SONGBEN_0015、SHL_SONGBEN_0044、SHL_SONGBEN_0045 | gold |
@@ -22,9 +22,9 @@ description: 誤治傳變圖譜：誤汗/誤下/誤吐/火逆 → 變證 → 救
 | 火逆 | 驚狂 | 桂枝去芍藥加蜀漆牡蠣龍骨救逆湯 | SHL_SONGBEN_0112 | silver |
 | 火逆 | 煩躁 | 桂枝甘草龍骨牡蠣湯 | SHL_SONGBEN_0118 | silver |
 | 火逆 | 奔豚 | 桂枝加桂湯 | SHL_SONGBEN_0117 | silver |
-| 火逆 | 煩躁、吐逆、譫語 | 四逆湯 | SHL_SONGBEN_0029 | bronze |
+| 火逆 | 吐逆、煩躁、譫語 | 四逆湯 | SHL_SONGBEN_0029 | bronze |
 | 火逆 | 壞病、譫語 | 小柴胡湯 | SHL_SONGBEN_0267 | bronze |
-| 火逆 | 客氣動膈、胃中空虛、心中懊憹 | 梔子豉湯 | SHL_SONGBEN_0221 | bronze |
+| 火逆 | 客氣動膈、心中懊憹、胃中空虛 | 梔子豉湯 | SHL_SONGBEN_0221 | bronze |
 | 火逆 | 變證 | 附子湯 | SHL_SONGBEN_0304 | bronze |
 | 誤下 | 煩躁 | 乾薑附子湯 | SHL_SONGBEN_0061 | bronze |
 | 誤下 | 變證 | 乾薑黃芩黃連人參湯 | SHL_SONGBEN_0359 | bronze |

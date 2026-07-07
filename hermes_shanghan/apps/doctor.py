@@ -3,6 +3,8 @@
 Scores verified FormulaPatternRules against the presented findings:
   + core symptom hit ×2.0      + associated symptom hit ×1.0
   + core pulse hit ×2.0        + associated pulse hit ×1.0
+  + channel-outline hit ×1.0 (提綱證 — a finding from a channel's 提綱
+    clause, e.g. 口苦→少陽, credits formulas scoped to that channel)
   − contradiction ×2.5 (e.g. presented 無汗 vs pattern's 汗出)
   − contraindication conflict ×2.0
 
@@ -22,6 +24,11 @@ def _normalize_findings(items: List[str]) -> List[str]:
     return [normalize_query(x) for x in items if x and x.strip()]
 
 
+def _char_jaccard(a: str, b: str) -> float:
+    sa, sb = set(a), set(b)
+    return len(sa & sb) / len(sa | sb) if sa and sb else 0.0
+
+
 def _contradicts(finding: str, pattern_terms: List[str]) -> Optional[str]:
     for a, b in lexicon.CONTRADICTORY_SYMPTOMS:
         if finding == a and b in pattern_terms:
@@ -33,9 +40,27 @@ def _contradicts(finding: str, pattern_terms: List[str]) -> Optional[str]:
 
 class FormulaMatcher:
     def __init__(self, formula_rules: List[FormulaPatternRule],
-                 clause_store: Dict[str, ShanghanClause]):
+                 clause_store: Dict[str, ShanghanClause],
+                 use_outline_boost: bool = True,
+                 use_near_match: bool = True):
+        # feature flags exist so the evaluation harness can ablate each
+        # scoring component and quantify its contribution
+        self.use_outline_boost = use_outline_boost
+        self.use_near_match = use_near_match
         self.rules = [r for r in formula_rules if r.release_level != "rejected"]
         self.clauses = clause_store
+        # channel → the 提綱 clause's extracted symptoms (e.g. 少陽: 口苦/咽乾/目眩)
+        self.outline_symptoms: Dict[str, List[str]] = {}
+        for channel, num in config.CHANNEL_OUTLINE_CLAUSE.items():
+            c = clause_store.get(f"{config.ID_PREFIX_CLAUSE}{num:04d}")
+            if c:
+                self.outline_symptoms[channel] = list(c.symptoms)
+
+    def _outline_hit(self, finding: str, channels: List[str]) -> Optional[str]:
+        for ch in channels:
+            if finding in self.outline_symptoms.get(ch, ()):
+                return ch
+        return None
 
     def match(self, symptoms: List[str], pulse: Optional[List[str]] = None,
               six_channel: Optional[str] = None, top_k: int = 5,
@@ -63,6 +88,21 @@ class FormulaMatcher:
                             hits.append(f"兼證：{asym}")
                             matched = True
                             break
+                if not matched and self.use_near_match:
+                    # near-match: 胸脅苦滿 vs pattern's 胸脅滿 — same clinical
+                    # sign written with/without a qualifier character
+                    for cs in r.core_symptoms:
+                        if len(s) >= 3 and len(cs) >= 3 and _char_jaccard(s, cs) >= 0.6:
+                            score += 1.5
+                            hits.append(f"近似核心證：{cs}≈{s}")
+                            matched = True
+                            break
+                if not matched and self.use_outline_boost:
+                    ch = self._outline_hit(s, r.six_channel_scope)
+                    if ch:
+                        score += 1.0
+                        hits.append(f"提綱證：{s}（{ch}）")
+                        matched = True
                 if not matched:
                     contra = _contradicts(s, pattern_syms)
                     if contra:

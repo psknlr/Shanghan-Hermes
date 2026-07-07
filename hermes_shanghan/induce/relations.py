@@ -16,6 +16,7 @@ inverted-index prefilter, so the whole graph builds in seconds.
 """
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from typing import Dict, Iterable, List, Optional, Tuple
 
@@ -88,7 +89,7 @@ class RelationBuilder:
     def build_contraindication(self):
         for c in self.canonical:
             ctext = c.clean_text
-            for f in set(c.formula_names):
+            for f in dict.fromkeys(c.formula_names):
                 if f"不可與{f}" in ctext or f"{f}不中與" in ctext or f"不可服{f}" in ctext:
                     anchor = self._formula_anchor(f)
                     if anchor and anchor.clause_id != c.clause_id:
@@ -152,7 +153,9 @@ class RelationBuilder:
                     counts[pi] += 1
             if not counts:
                 continue
-            best = sorted(counts.items(), key=lambda kv: -kv[1])[:5]
+            # tie-break by paragraph index: counts' insertion order follows
+            # bigram-set iteration, which varies across runs
+            best = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:5]
             best_pi, best_sim = -1, 0.0
             for pi, _ in best:
                 sim = similarity(c.clean_text, paragraphs[pi][1])
@@ -196,29 +199,69 @@ class RelationBuilder:
         return rules
 
     # ------------------------------------------------------------------
-    # Commentary alignment (layer C, 註解傷寒論)
+    # Commentary alignment (layer C) — all quote-then-comment 注本
     # ------------------------------------------------------------------
     def build_commentary(self) -> List[CommentaryRule]:
+        """Align every configured commentary book clause-by-clause.
+
+        Each book follows the classical quote-then-comment layout: a
+        paragraph (near-)reproducing the 宋本 clause, followed by the
+        commentator's paragraphs. Books that paraphrase or reorganize
+        heavily simply yield low coverage — reported per book in the
+        divergence atlas, never silently padded.
+        """
+        rules: List[CommentaryRule] = []
+        for book in config.COMMENTARY_BOOKS:
+            slug, commentator = config.COMMENTARY_BOOK_INFO.get(
+                book, (f"BOOK{len(rules):02d}", ""))
+            rules.extend(self._commentary_for_book(book, slug, commentator))
+        return rules
+
+    # collation notes inside quoted clauses（趙本無「者」字 etc.）and leading
+    # clause numerals（一）— both pollute bigram scoring, both stripped from
+    # the SCORING text only (stored commentary keeps the original)
+    RE_COLLATION = re.compile(r"（[^）]{0,40}）")
+
+    @classmethod
+    def _quote_comment_split(cls, para: str) -> Tuple[str, str]:
+        """來蘇集-style paragraphs hold quote and '['-prefixed commentary in
+        ONE paragraph — split them; other books return (para, "")."""
+        head, sep, tail = para.partition("\n[")
+        return (head, tail) if sep else (para, "")
+
+    @classmethod
+    def _scoring_text(cls, quote: str) -> str:
+        return cls.RE_COLLATION.sub("", quote)
+
+    def _commentary_for_book(self, book: str, slug: str,
+                             commentator: str) -> List[CommentaryRule]:
         try:
-            paragraphs = segmenter.segment_paragraphs(config.COMMENTARY_ALIGN_BOOK)
+            paragraphs = segmenter.segment_paragraphs(book)
         except FileNotFoundError:
             return []
-        # In 註解傷寒論 the original clause paragraph is followed by Cheng
-        # Wuji's commentary paragraph(s). Identify original-clause paragraphs
-        # by alignment, then attach the paragraphs that follow them.
+        quotes = []          # (chapter, quote_part, inline_comment)
+        for ch, para in paragraphs:
+            head, inline = self._quote_comment_split(para)
+            quotes.append((ch, self._scoring_text(head), inline))
         matched: Dict[int, Tuple[ShanghanClause, float]] = {}
         index: Dict[str, List[int]] = defaultdict(list)
-        for pi, (_, para) in enumerate(paragraphs):
-            for bg in bigram_set(para):
+        for pi, (_, q, _i) in enumerate(quotes):
+            for bg in bigram_set(q):
                 index[bg].append(pi)
+        # best clause-similarity per paragraph — used both for matching and
+        # to recognize quote-LIKE paragraphs (fragments of clauses that never
+        # cleared the threshold themselves) so the commentary window never
+        # swallows the NEXT clause's canonical text as 注文
+        best_para_sim: Dict[int, float] = defaultdict(float)
         for c in self.canonical:
             counts: Dict[int, int] = defaultdict(int)
             for bg in bigram_set(c.clean_text):
                 for pi in index.get(bg, ()):
                     counts[pi] += 1
-            best = sorted(counts.items(), key=lambda kv: -kv[1])[:5]
+            best = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:5]
             for pi, _ in best:
-                sim = similarity(c.clean_text, paragraphs[pi][1])
+                sim = similarity(c.clean_text, quotes[pi][1])
+                best_para_sim[pi] = max(best_para_sim[pi], sim)
                 if sim >= COMMENT_SIM_THRESHOLD and \
                         (pi not in matched or sim > matched[pi][1]):
                     matched[pi] = (c, sim)
@@ -227,20 +270,32 @@ class RelationBuilder:
         matched_pis = sorted(matched.keys())
         for k, pi in enumerate(matched_pis):
             clause, sim = matched[pi]
-            end = matched_pis[k + 1] if k + 1 < len(matched_pis) else min(pi + 3, len(paragraphs))
-            commentary_parts = [paragraphs[q][1] for q in range(pi + 1, end)
-                                if paragraphs[q][0] == paragraphs[pi][0]][:2]
+            inline = quotes[pi][2]
+            if inline:                       # quote+comment in one paragraph
+                commentary_parts = ["[" + inline]
+            else:
+                end = matched_pis[k + 1] if k + 1 < len(matched_pis) \
+                    else min(pi + 3, len(paragraphs))
+                commentary_parts = []
+                for q in range(pi + 1, end):
+                    if paragraphs[q][0] != paragraphs[pi][0]:
+                        continue
+                    if best_para_sim.get(q, 0.0) >= 0.5:
+                        break   # next clause's quote (even a fragment)
+                    commentary_parts.append(paragraphs[q][1])
+                    if len(commentary_parts) >= 2:
+                        break
             if not commentary_parts:
                 continue
             n += 1
             rules.append(CommentaryRule(
-                commentary_rule_id=f"CR_ZHUJIE_{n:04d}",
-                clause_id=clause.clause_id, commentator="成無己",
-                book=config.COMMENTARY_ALIGN_BOOK,
+                commentary_rule_id=f"CR_{slug}_{n:04d}",
+                clause_id=clause.clause_id, commentator=commentator,
+                book=book,
                 commentary_text="\n".join(commentary_parts),
                 alignment_similarity=round(sim, 3)))
-            self._add(clause.clause_id, f"註解傷寒論:p{pi}", "commentary_support",
-                      f"成無己《註解傷寒論》對本條有注（對齊相似度{sim:.2f}）。", sim)
+            self._add(clause.clause_id, f"{book}:p{pi}", "commentary_support",
+                      f"{commentator}《{book}》對本條有注（對齊相似度{sim:.2f}）。", sim)
         return rules
 
     # ------------------------------------------------------------------

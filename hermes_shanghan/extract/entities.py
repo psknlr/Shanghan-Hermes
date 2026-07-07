@@ -18,6 +18,7 @@ from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 from .. import lexicon
 from ..schemas import ShanghanClause
+from ..textutil import fold_variants
 
 
 @dataclass
@@ -93,10 +94,11 @@ class EntityExtractor:
         names.update(lexicon.FORMULA_ALIASES.keys())
         if formula_names:
             names.update(formula_names)
-        self.formula_terms = sorted(names, key=len, reverse=True)
+        self.formula_terms = sorted(names, key=lambda t: (-len(t), t))
 
     # -- formulas with prescription strength ------------------------------
     def extract_formula_mentions(self, text: str) -> List[Dict]:
+        text = fold_variants(text)
         mentions: List[Dict] = []
         taken = [False] * len(text)
         for m in _match_terms(text, self.formula_terms, taken):
@@ -111,7 +113,8 @@ class EntityExtractor:
                 negated = True
             elif before.endswith("不可與") or before.endswith("不可服"):
                 negated = True
-            elif before.endswith("可與") or before.endswith("可服") or after.startswith("可服"):
+            elif before.endswith("可與") or before.endswith("可服") \
+                    or after.startswith("可服") or after.startswith("亦可服"):
                 strength = "可與"
             elif before.endswith("宜") or before.endswith("宜服"):
                 strength = "宜"
@@ -129,6 +132,7 @@ class EntityExtractor:
 
     # -- main entry --------------------------------------------------------
     def extract(self, text: str) -> EntityResult:
+        text = fold_variants(text)   # length-preserving; offsets stay valid
         res = EntityResult()
         taken = [False] * len(text)
 
@@ -143,18 +147,36 @@ class EntityExtractor:
             elif fm["name"] not in res.formulas:
                 res.formulas.append(fm["name"])
 
-        # 2. disease patterns (太陽中風 before 太陽病/中風)
-        for m in _match_terms(text, lexicon.DISEASE_PATTERNS, taken):
-            if m.negated:
+        # 2+4. disease patterns & symptoms — ONE longest-first pass across
+        # both vocabularies, so a short disease term (痞) can never claim a
+        # span inside a longer symptom (心下痞硬). Terms in both lists count
+        # as disease (previous precedence preserved).
+        disease_set = set(lexicon.DISEASE_PATTERNS)
+        combined = sorted(disease_set | set(lexicon.SYMPTOMS),
+                          key=lambda t: (-len(t), t))
+        for m in _match_terms(text, combined, taken):
+            if m.term in disease_set:
+                if m.negated:
+                    continue
+                if m.term not in res.disease_patterns:
+                    res.disease_patterns.append(m.term)
+                for stem, channel in lexicon.CHANNEL_IN_TEXT.items():
+                    if m.term.startswith(stem) and channel not in res.six_channels:
+                        res.six_channels.append(channel)
+                    # 合病 mentions both channels
+                    if stem in m.term and channel not in res.six_channels and ("合病" in m.term or "併病" in m.term):
+                        res.six_channels.append(channel)
                 continue
-            if m.term not in res.disease_patterns:
-                res.disease_patterns.append(m.term)
-            for stem, channel in lexicon.CHANNEL_IN_TEXT.items():
-                if m.term.startswith(stem) and channel not in res.six_channels:
-                    res.six_channels.append(channel)
-                # 合病 mentions both channels
-                if stem in m.term and channel not in res.six_channels and ("合病" in m.term or "併病" in m.term):
-                    res.six_channels.append(channel)
+            # symptom (negation-aware)
+            if m.negated:
+                neg_term = "不" + m.term
+                if neg_term not in res.negated_findings:
+                    res.negated_findings.append(neg_term)
+                continue
+            term = ("反" if m.contrary else "") + m.term
+            # canonical negated forms (無汗/不惡寒…) are first-class symptoms
+            if m.term not in res.symptoms and term not in res.symptoms:
+                res.symptoms.append(term if m.contrary else m.term)
 
         # 3. pulse — named patterns then 脈-phrases
         for m in _match_terms(text, lexicon.PULSE_NAMED_PATTERNS, taken):
@@ -169,18 +191,6 @@ class EntityExtractor:
             quals = "".join(q for q in lexicon.PULSE_QUALITIES if q in seg[1:8])
             if quals and quals not in res.pulse and not any(quals in p for p in res.pulse):
                 res.pulse.append(quals)
-
-        # 4. symptoms (negation-aware)
-        for m in _match_terms(text, lexicon.SYMPTOMS, taken):
-            if m.negated:
-                neg_term = "不" + m.term
-                if neg_term not in res.negated_findings:
-                    res.negated_findings.append(neg_term)
-                continue
-            term = ("反" if m.contrary else "") + m.term
-            # canonical negated forms (無汗/不惡寒…) are first-class symptoms
-            if m.term not in res.symptoms and term not in res.symptoms:
-                res.symptoms.append(term if m.contrary else m.term)
 
         # 5. mistreatment markers
         for mtype, pats in lexicon.MISTREATMENT_PATTERNS.items():

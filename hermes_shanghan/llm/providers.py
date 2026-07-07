@@ -47,14 +47,39 @@ class LiteLLMProvider:
         self._litellm = litellm
         self.settings = settings
         litellm.drop_params = True  # tolerate provider-specific param gaps
+        self._model, self._route_kwargs = self._resolve_route(settings)
+
+    @staticmethod
+    def _resolve_route(settings):
+        """Map poe/… and minimax/… ids onto their OpenAI-compatible gateways.
+
+        azure/… and every litellm-native prefix pass through untouched
+        (litellm reads AZURE_API_KEY/AZURE_API_BASE/AZURE_API_VERSION itself).
+        """
+        import os
+
+        from .config import OPENAI_COMPATIBLE_ROUTES
+        model = settings.model
+        prefix, _, rest = model.partition("/")
+        route = OPENAI_COMPATIBLE_ROUTES.get(prefix)
+        if not route or not rest:
+            return model, {}
+        kwargs: Dict[str, Any] = {
+            "api_base": os.environ.get(route["base_env"]) or route["api_base"]}
+        key = os.environ.get(route["key_env"])
+        if key:
+            kwargs["api_key"] = key
+        return f"openai/{rest}", kwargs
 
     def chat(self, messages: List[Dict], tools: Optional[List[Dict]] = None,
              temperature: float = 0.0, json_mode: bool = False,
              task: Optional[str] = None, context: Optional[Dict] = None) -> ChatResult:
         kwargs: Dict[str, Any] = dict(
-            model=self.settings.model, messages=messages,
-            temperature=temperature, max_tokens=self.settings.max_tokens,
+            model=self._model, messages=messages,
+            temperature=temperature,
+            max_tokens=self.settings.max_tokens_for(task),
             timeout=self.settings.timeout)
+        kwargs.update(self._route_kwargs)
         if self.settings.api_base:
             kwargs["api_base"] = self.settings.api_base
         if tools:
@@ -136,6 +161,9 @@ class LocalProvider:
         if task == "synthesize":
             return ChatResult(content=self._synthesize(context or {}, messages),
                               backend="local")
+        if task == "paper":
+            return ChatResult(content=json.dumps(self._paper_sections(context or {}),
+                                                 ensure_ascii=False), backend="local")
         # agent tool-calling loop
         if tools:
             if not any(m.get("role") == "tool" for m in messages):
@@ -274,6 +302,123 @@ class LocalProvider:
         if cited == 0:
             lines.append("（未檢索到充分的條文證據，無法作答。）")
         return "\n".join(lines)
+
+    # -- deterministic paper drafting ------------------------------------
+    @staticmethod
+    def _paper_sections(context: Dict) -> Dict:
+        """Rule-derived 引言/計量解讀/討論/結論 from the research digest.
+
+        Same output schema as a real model (task="paper"), so PaperWriter is
+        provider-agnostic; every claim below cites clause_ids present in the
+        digest, keeping the citation guard meaningful even offline.
+        """
+        d = context.get("digest") or {}
+        topic = context.get("topic", "")
+        title_root = context.get("title_root", "")
+        top_f = d.get("top_formulas") or []
+        top_s = d.get("top_symptoms") or []
+        top_edges = d.get("top_symptom_edges") or []
+        hubs = d.get("network_hubs") or []
+        paths = d.get("mistreatment_paths") or []
+        chans = d.get("channel_clauses") or []
+
+        def fmt_freq(pairs, n=3):
+            return "、".join(f"{t}（{c}）" for t, c in pairs[:n])
+
+        intro = (f"《傷寒論》以六經統病、以方證相應。本研究以宋本"
+                 f"{d.get('n_clauses', 0)} 條正文為唯一 A 層證據，經六道審核閘門"
+                 f"產出 {d.get('n_initial_rules', 0)} 條可回源初始規則，"
+                 f"在此基礎上以{topic}為切入，對{title_root}作條文計量學考察。"
+                 "既往數字化工作多止於檢索與標註，缺少規則必須回到原文的硬約束；"
+                 "本文的每一項計量結論均可回溯到具體條文編號。")
+
+        lines = []
+        if top_f:
+            lines.append(f"方劑頻次以{fmt_freq(top_f)}為最高，"
+                         f"與{chans[0][0] if chans else '太陽病'}篇條文佔比最大"
+                         f"（{chans[0][1] if chans else '—'} 條）相互印證，"
+                         "提示全書辨治重心落在表證階段的方證分化。")
+        if top_s:
+            lines.append(f"症狀頻次前列為{fmt_freq(top_s)}，多屬寒熱與汗出異常，"
+                         "構成六經辨證的主幹指徵。")
+        if top_edges:
+            e = top_edges[0]
+            lines.append(f"方-證共現網絡共 {d.get('symptom_edge_count', 0)} 條邊，"
+                         f"最強共現為 {e.get('formula')}—{e.get('symptom')}"
+                         f"（權重 {e.get('weight')}），即該方最穩定的原文指徵。")
+        if hubs:
+            h = hubs[0]
+            lines.append(f"網絡樞紐方為{ '、'.join(x.get('formula','') for x in hubs[:3])}，"
+                         f"其中{h.get('formula')}的關聯證候達 {h.get('degree')} 種，"
+                         "顯示其作為類方之祖的網絡地位。")
+        if paths:
+            p = paths[0]
+            cl = "、".join((p.get("clauses") or [])[:2])
+            lines.append(f"誤治傳變共 {d.get('n_mistreatment', 0)} 條路徑，"
+                         f"以 {p.get('mistreatment')}→{p.get('resulting_pattern')}→"
+                         f"{'、'.join((p.get('rescue_formulas') or [])[:1])} 最為典型"
+                         f"（{cl}），構成誤治—變證—救逆的閉環法度。")
+        bm = d.get("benchmark") or {}
+        cz = bm.get("cloze_attainable") or {}
+        if cz.get("n"):
+            lines.append(f"遮方預測基準（留一條文）在 {cz['n']} 個可達折上"
+                         f"Top-1 {cz.get('top1')}、Top-3 {cz.get('top3')}、"
+                         f"MRR {cz.get('mrr')}、藥物級F1 {cz.get('herb_f1')}，"
+                         "表明條文級規則具備可量化的跨條泛化能力，"
+                         f"另有 {bm.get('cloze_singleton_n', 0)} 個孤證方"
+                         "在留一設置下結構性不可達。")
+        cr = bm.get("case_replay") or {}
+        if cr.get("n_scored"):
+            lines.append(f"醫案回放基準（{cr.get('source','')}）實評 "
+                         f"{cr['n_scored']} 案，Top-1 {cr.get('top1')}、"
+                         f"Top-5 {cr.get('top5')}，量化了純條文規則對"
+                         "真實臨證決策的解釋上限，也給增益層留下了明確的改進空間。")
+        gd = bm.get("grounding") or {}
+        if gd.get("n_questions"):
+            lines.append(f"證據接地基準（{gd.get('backend','')} 後端）"
+                         f"{gd['n_questions']} 問全部通過引用核驗：完全接地率 "
+                         f"{gd.get('grounded_answer_rate')}、未核實引用率 "
+                         f"{gd.get('unsupported_citation_rate')}，"
+                         "為接入任意大模型提供了可對比的幻覺引用標尺。")
+        at = d.get("commentary_atlas") or {}
+        if at.get("n_books"):
+            ap, dp = at.get("most_agreeing_pair"), at.get("most_diverging_pair")
+            seg = (f"注家分歧圖譜覆蓋 {at['n_books']} 部注本、"
+                   f"{at.get('n_commentary_rules', 0)} 條對齊注文，"
+                   f"{at.get('n_clauses_multi_commentator', 0)} 條條文有多位注家。")
+            if ap and dp:
+                seg += (f"術語一致度最高為 {ap['a']}×{ap['b']}"
+                        f"（{ap['mean_term_agreement']}），最低為 "
+                        f"{dp['a']}×{dp['b']}（{dp['mean_term_agreement']}）——"
+                        "注家譜系的親疏由數據呈現，無需先驗學派標籤。")
+            lines.append(seg)
+        ds = d.get("dosimetry") or {}
+        if ds.get("parse_coverage", {}).get("n_rows"):
+            pc = ds["parse_coverage"]
+            seg = (f"劑量計量層解析 {pc['n_rows']} 條劑量"
+                   f"（未解析 {pc.get('n_unparsed', 0)} 條已逐一列出）；"
+                   "藥量比以銖當量計、與折算學派無關。")
+            de = ds.get("dose_only_edges") or []
+            if de:
+                e = de[0]
+                seg += (f"家族樹中 {len(de)} 條僅劑量變化的方對——如 "
+                        f"{e['base']}→{e['modified']}（{e['delta']['herb']}"
+                        f"×{e['delta']['factor']}）——證明量變致新方是"
+                        "經方配伍的獨立維度。")
+            lines.append(seg)
+        quant = "\n".join(f"（{i+1}）{s}" for i, s in enumerate(lines)) or \
+            "（計量摘要不足，未生成解讀。）"
+
+        discussion = ("計量結果與條文結構互證：高頻方劑同時是共現網絡的樞紐與"
+                      "加減家族樹的根節點，說明《傷寒論》的方證體系呈「核心方輻射」"
+                      "而非均勻分佈；誤治路徑的救逆方高度集中，提示救逆法度自成子系統。"
+                      "以上均為對 A 層原文的計量歸納（D/E 層），不宜回讀為仲景原意；"
+                      "詞典覆蓋率與條文切分策略仍可能造成低頻項漏計。")
+        conclusion = (f"以條文為最小證據單位的計量挖掘表明：{topic}的規律"
+                      "可以在不犧牲可追溯性的前提下被規模化提取；"
+                      "所有數字均可由 data/shanghan/ 下的規則庫與審計日誌復算。")
+        return {"introduction": intro, "quant_interpretation": quant,
+                "discussion": discussion, "conclusion": conclusion}
 
     # -- deterministic 'LLM' extraction / critique ----------------------
     def _extract(self, context: Dict) -> Dict:

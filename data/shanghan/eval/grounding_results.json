@@ -1,0 +1,313 @@
+{
+ "benchmark": "evidence_grounding",
+ "backend": "local",
+ "metrics": {
+  "n_questions": 30,
+  "grounded_answer_rate": 1.0,
+  "no_citation_rate": 0.0,
+  "unsupported_citation_rate": 0.0,
+  "mean_verified_per_answer": 4.3
+ },
+ "records": [
+  {
+   "kind": "formula",
+   "question": "桂枝湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "大承氣湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "小柴胡湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "四逆湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "麻黃湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "五苓散的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "梔子豉湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "調胃承氣湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "小承氣湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "白虎加人參湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "大陷胸湯的方證要點與禁忌是什麼？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "formula",
+   "question": "大柴胡湯的方證要點與禁忌是什麼？",
+   "cited": 4,
+   "verified": 4,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "differential",
+   "question": "桂枝湯與大承氣湯如何鑒別？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "differential",
+   "question": "小柴胡湯與四逆湯如何鑒別？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "differential",
+   "question": "麻黃湯與五苓散如何鑒別？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "differential",
+   "question": "梔子豉湯與調胃承氣湯如何鑒別？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "differential",
+   "question": "小承氣湯與白虎加人參湯如何鑒別？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "differential",
+   "question": "大陷胸湯與大柴胡湯如何鑒別？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "太陽病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "陽明病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "少陽病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "太陰病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "少陰病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "厥陰病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "霍亂病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "six_channel",
+   "question": "陰陽易差後勞復病的提綱與主方是什麼？",
+   "cited": 1,
+   "verified": 1,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "match",
+   "question": "病人發熱、汗出、頭痛，考慮什麼方？",
+   "cited": 9,
+   "verified": 9,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "match",
+   "question": "病人潮熱、不大便、譫語，考慮什麼方？",
+   "cited": 5,
+   "verified": 5,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "match",
+   "question": "病人嘔、往來寒熱、發熱，考慮什麼方？",
+   "cited": 9,
+   "verified": 9,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  },
+  {
+   "kind": "match",
+   "question": "病人下利清穀、下利、發熱，考慮什麼方？",
+   "cited": 9,
+   "verified": 9,
+   "unsupported": 0,
+   "quote_mismatches": 0,
+   "has_citation": true,
+   "grounded": true
+  }
+ ]
+}

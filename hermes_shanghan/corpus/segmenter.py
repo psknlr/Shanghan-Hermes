@@ -225,4 +225,4 @@ def harvest_formula_names(clauses: List[ShanghanClause]) -> List[str]:
         for fb in c.formula_blocks:
             if fb.formula_name:
                 names.append(fb.formula_name)
-    return sorted(set(names), key=len, reverse=True)
+    return sorted(set(names), key=lambda t: (-len(t), t))

@@ -76,12 +76,19 @@ class FormulaPatternInducer:
                 for d in r.if_conditions.get("disease", []):
                     disease_counter[d] += 1
 
+            # 主之-clause symptoms are the hallmark indications — they take
+            # the core slots before merely-frequent ones (stable sort keeps
+            # frequency order within each group)
             core_sym = [s for s, c in sym_counter.most_common()
-                        if c >= 2 or s in zhuzhi_sym][:8]
+                        if c >= 2 or s in zhuzhi_sym]
+            core_sym.sort(key=lambda s: s not in zhuzhi_sym)
+            core_sym = core_sym[:10]
             assoc_sym = [s for s, c in sym_counter.most_common()
-                         if s not in core_sym][:8]
+                         if s not in core_sym][:10]
             core_pulse = [p for p, c in pulse_counter.most_common()
-                          if c >= 2 or p in zhuzhi_pulse][:4]
+                          if c >= 2 or p in zhuzhi_pulse]
+            core_pulse.sort(key=lambda p: p not in zhuzhi_pulse)
+            core_pulse = core_pulse[:4]
             assoc_pulse = [p for p in pulse_counter if p not in core_pulse][:4]
             channel_scope = [ch for ch, _ in channels.most_common()]
 
@@ -149,6 +156,11 @@ class FormulaPatternInducer:
                         len(other_name) > len(r.formula):
                     a = {c["herb"] for c in r.composition}
                     b = {c["herb"] for c in other.composition}
+                    # a real 加減方 keeps most of the base recipe — the stem
+                    # match alone lets 四逆散 claim 四逆加人參湯 (= 四逆湯加
+                    # 人參, a different formula sharing one herb)
+                    if a and b and len(a & b) * 2 < len(a):
+                        continue
                     added = sorted(b - a)
                     removed = sorted(a - b)
                     r.modification_relations.append({

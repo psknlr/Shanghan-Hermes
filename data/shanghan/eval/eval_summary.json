@@ -1,0 +1,129 @@
+{
+ "suites": {
+  "cloze": {
+   "benchmark": "prescription_cloze_loco",
+   "config": {
+    "use_outline_boost": true,
+    "use_near_match": true
+   },
+   "n_instances": 171,
+   "n_skipped_low_findings": 132,
+   "metrics": {
+    "all": {
+     "n": 171,
+     "top1": 0.1579,
+     "top3": 0.3216,
+     "top5": 0.386,
+     "mrr": 0.243,
+     "herb_precision": 0.3859,
+     "herb_recall": 0.3674,
+     "herb_f1": 0.3697
+    },
+    "attainable": {
+     "n": 140,
+     "top1": 0.1929,
+     "top3": 0.3929,
+     "top5": 0.4714,
+     "mrr": 0.2968,
+     "herb_precision": 0.4182,
+     "herb_recall": 0.4051,
+     "herb_f1": 0.406
+    },
+    "singleton_unattainable": {
+     "n": 31,
+     "top1": 0.0,
+     "top3": 0.0,
+     "top5": 0.0,
+     "mrr": 0.0,
+     "herb_precision": 0.2312,
+     "herb_recall": 0.1866,
+     "herb_f1": 0.1961
+    },
+    "attainable_zhuzhi_only": {
+     "n": 76,
+     "top1": 0.1842,
+     "top3": 0.3947,
+     "top5": 0.4474,
+     "mrr": 0.2888,
+     "herb_precision": 0.4319,
+     "herb_recall": 0.4241,
+     "herb_f1": 0.4212
+    }
+   }
+  },
+  "cloze_ablations": {
+   "without_outline_boost": {
+    "n": 140,
+    "top1": 0.1929,
+    "top3": 0.3929,
+    "top5": 0.4786,
+    "mrr": 0.3001,
+    "herb_precision": 0.4182,
+    "herb_recall": 0.4051,
+    "herb_f1": 0.406
+   },
+   "without_near_match": {
+    "n": 140,
+    "top1": 0.1857,
+    "top3": 0.3857,
+    "top5": 0.4643,
+    "mrr": 0.2915,
+    "herb_precision": 0.4098,
+    "herb_recall": 0.3961,
+    "herb_f1": 0.3972
+   },
+   "full": {
+    "n": 140,
+    "top1": 0.1929,
+    "top3": 0.3929,
+    "top5": 0.4714,
+    "mrr": 0.2968,
+    "herb_precision": 0.4182,
+    "herb_recall": 0.4051,
+    "herb_f1": 0.406
+   }
+  },
+  "cases": {
+   "benchmark": "case_replay_jingfang_shiyanlu",
+   "source": "經方實驗錄",
+   "config": {
+    "use_outline_boost": true,
+    "use_near_match": true
+   },
+   "n_cases_parsed": 75,
+   "n_non_formula_titles": 23,
+   "n_out_of_scope": 16,
+   "out_of_scope_formulas": [
+    "射干麻黃湯",
+    "懸飲",
+    "桂枝加龍骨牡蠣湯",
+    "澤瀉湯",
+    "當歸建中湯",
+    "白虎加桂枝湯",
+    "皂莢丸",
+    "苓甘五味加薑辛半夏杏仁湯",
+    "豬膽汁方",
+    "黃耆建中湯"
+   ],
+   "n_insufficient_findings": 19,
+   "metrics": {
+    "n_scored": 40,
+    "top1": 0.175,
+    "top3": 0.225,
+    "top5": 0.275,
+    "mrr": 0.2071
+   }
+  },
+  "grounding": {
+   "benchmark": "evidence_grounding",
+   "backend": "local",
+   "metrics": {
+    "n_questions": 30,
+    "grounded_answer_rate": 1.0,
+    "no_citation_rate": 0.0,
+    "unsupported_citation_rate": 0.0,
+    "mean_verified_per_answer": 4.3
+   }
+  }
+ }
+}

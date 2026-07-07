@@ -1,17 +1,6 @@
 {
  "families": [
   {
-   "base": "四逆散",
-   "modifications": [
-    {
-     "modified_formula": "四逆加人參湯",
-     "relation": "加減方",
-     "added_herbs": "乾薑、人參、附子",
-     "removed_herbs": "枳實、柴胡、芍藥"
-    }
-   ]
-  },
-  {
    "base": "四逆湯",
    "modifications": [
     {

@@ -20,9 +20,11 @@ def _cache_dir() -> Path:
 
 
 def cache_key(model: str, messages: List[Dict], tools: Optional[List[Dict]],
-              temperature: float) -> str:
+              temperature: float, task: Optional[str] = None,
+              json_mode: bool = False) -> str:
     payload = json.dumps({"model": model, "messages": messages,
-                          "tools": tools or [], "temperature": temperature},
+                          "tools": tools or [], "temperature": temperature,
+                          "task": task or "", "json_mode": json_mode},
                          ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 

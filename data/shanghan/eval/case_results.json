@@ -1,0 +1,313 @@
+{
+ "benchmark": "case_replay_jingfang_shiyanlu",
+ "source": "經方實驗錄",
+ "config": {
+  "use_outline_boost": true,
+  "use_near_match": true
+ },
+ "n_cases_parsed": 75,
+ "n_non_formula_titles": 23,
+ "n_out_of_scope": 16,
+ "out_of_scope_formulas": [
+  "射干麻黃湯",
+  "懸飲",
+  "桂枝加龍骨牡蠣湯",
+  "澤瀉湯",
+  "當歸建中湯",
+  "白虎加桂枝湯",
+  "皂莢丸",
+  "苓甘五味加薑辛半夏杏仁湯",
+  "豬膽汁方",
+  "黃耆建中湯"
+ ],
+ "n_insufficient_findings": 19,
+ "metrics": {
+  "n_scored": 40,
+  "top1": 0.175,
+  "top3": 0.225,
+  "top5": 0.275,
+  "mrr": 0.2071
+ },
+ "records": [
+  {
+   "title": "第一案　桂枝湯證　其一",
+   "gold": "桂枝湯",
+   "n_findings": 5,
+   "rank": 1,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第三案　桂枝湯證　其三",
+   "gold": "桂枝湯",
+   "n_findings": 2,
+   "rank": 1,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第四案　桂枝湯證　其四",
+   "gold": "桂枝湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "四逆湯"
+  },
+  {
+   "title": "第五案　桂枝湯證　其五",
+   "gold": "桂枝湯",
+   "n_findings": 5,
+   "rank": 1,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第六案　桂枝湯證　其六",
+   "gold": "桂枝湯",
+   "n_findings": 2,
+   "rank": null,
+   "top1": "大青龍湯"
+  },
+  {
+   "title": "第七案　麻黃湯證　其一",
+   "gold": "麻黃湯",
+   "n_findings": 3,
+   "rank": 1,
+   "top1": "麻黃湯"
+  },
+  {
+   "title": "第八案　麻黃湯證　其二",
+   "gold": "麻黃湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第九案　麻黃湯證　其三",
+   "gold": "麻黃湯",
+   "n_findings": 6,
+   "rank": null,
+   "top1": "白虎加人參湯"
+  },
+  {
+   "title": "第一○案　麻黃湯證　其四",
+   "gold": "麻黃湯",
+   "n_findings": 3,
+   "rank": 4,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第一一案　麻黃湯證　其五",
+   "gold": "麻黃湯",
+   "n_findings": 4,
+   "rank": null,
+   "top1": "小柴胡湯"
+  },
+  {
+   "title": "第一五案　葛根湯證　其四",
+   "gold": "葛根湯",
+   "n_findings": 4,
+   "rank": 5,
+   "top1": "麻黃湯"
+  },
+  {
+   "title": "第一六案　葛根湯證　其五",
+   "gold": "葛根湯",
+   "n_findings": 5,
+   "rank": null,
+   "top1": "梔子豉湯"
+  },
+  {
+   "title": "第一七案　白虎湯證　其一",
+   "gold": "白虎湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "白虎加人參湯"
+  },
+  {
+   "title": "第一九案　白虎湯證　其三",
+   "gold": "白虎湯",
+   "n_findings": 2,
+   "rank": null,
+   "top1": "五苓散"
+  },
+  {
+   "title": "第二一案　麻黃杏仁甘草石膏湯證　其一",
+   "gold": "麻黃杏仁甘草石膏湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "麻黃湯"
+  },
+  {
+   "title": "第二二案  麻黃杏仁甘草石膏湯證　其二",
+   "gold": "麻黃杏仁甘草石膏湯",
+   "n_findings": 5,
+   "rank": null,
+   "top1": "麻黃湯"
+  },
+  {
+   "title": "第二三案　麻黃杏仁甘草石膏湯證　其三",
+   "gold": "麻黃杏仁甘草石膏湯",
+   "n_findings": 6,
+   "rank": null,
+   "top1": "梔子豉湯"
+  },
+  {
+   "title": "第二四案　麻黃杏仁甘草石膏湯證　其四",
+   "gold": "麻黃杏仁甘草石膏湯",
+   "n_findings": 7,
+   "rank": null,
+   "top1": "調胃承氣湯"
+  },
+  {
+   "title": "第二五案　葛根黃連黃芩湯證　其一",
+   "gold": "葛根黃芩黃連湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "大承氣湯"
+  },
+  {
+   "title": "第二六案　葛根黃連黃芩湯證　其二",
+   "gold": "葛根黃芩黃連湯",
+   "n_findings": 4,
+   "rank": null,
+   "top1": "梔子豉湯"
+  },
+  {
+   "title": "第三○案　大承氣湯證　其二",
+   "gold": "大承氣湯",
+   "n_findings": 2,
+   "rank": null,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第三一案　大承氣湯證　其三",
+   "gold": "大承氣湯",
+   "n_findings": 3,
+   "rank": 2,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第三二案　大承氣湯證　其四",
+   "gold": "大承氣湯",
+   "n_findings": 5,
+   "rank": null,
+   "top1": "白虎湯"
+  },
+  {
+   "title": "第三三案　大承氣湯證　其五",
+   "gold": "大承氣湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "通脈四逆湯"
+  },
+  {
+   "title": "第三五案　調胃承氣湯證",
+   "gold": "調胃承氣湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "白虎加人參湯"
+  },
+  {
+   "title": "第三七案　桂枝二麻黃一湯證　其二",
+   "gold": "桂枝二麻黃一湯",
+   "n_findings": 7,
+   "rank": null,
+   "top1": "小青龍湯"
+  },
+  {
+   "title": "第三九案　桂枝麻黃各半湯證　其二",
+   "gold": "桂枝麻黃各半湯",
+   "n_findings": 5,
+   "rank": null,
+   "top1": "當歸四逆湯"
+  },
+  {
+   "title": "第四○案　桂枝加大黃湯證",
+   "gold": "桂枝加大黃湯",
+   "n_findings": 2,
+   "rank": null,
+   "top1": "桂枝湯"
+  },
+  {
+   "title": "第四二案　麻黃附子甘草湯證",
+   "gold": "麻黃附子甘草湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "四逆加人參湯"
+  },
+  {
+   "title": "第五五案　炙甘草湯證　其一",
+   "gold": "炙甘草湯",
+   "n_findings": 2,
+   "rank": 1,
+   "top1": "炙甘草湯"
+  },
+  {
+   "title": "第五六案　炙甘草湯證　其二",
+   "gold": "炙甘草湯",
+   "n_findings": 2,
+   "rank": 1,
+   "top1": "炙甘草湯"
+  },
+  {
+   "title": "第五七案　炙甘草湯證　其三",
+   "gold": "炙甘草湯",
+   "n_findings": 2,
+   "rank": null,
+   "top1": "四逆湯"
+  },
+  {
+   "title": "第五八案　小建中湯證　其一",
+   "gold": "小建中湯",
+   "n_findings": 4,
+   "rank": null,
+   "top1": "大承氣湯"
+  },
+  {
+   "title": "第五九案　小建中湯證　其二",
+   "gold": "小建中湯",
+   "n_findings": 3,
+   "rank": 1,
+   "top1": "小建中湯"
+  },
+  {
+   "title": "第六四案　大陷胸湯證　其一",
+   "gold": "大陷胸湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "白虎加人參湯"
+  },
+  {
+   "title": "第六六案　桃核承氣湯證　其一",
+   "gold": "桃核承氣湯",
+   "n_findings": 3,
+   "rank": null,
+   "top1": "大承氣湯"
+  },
+  {
+   "title": "第六八案　桃核承氣湯證　其三",
+   "gold": "桃核承氣湯",
+   "n_findings": 2,
+   "rank": null,
+   "top1": "麻黃湯"
+  },
+  {
+   "title": "第七一案　抵當湯證　其三",
+   "gold": "抵當湯",
+   "n_findings": 2,
+   "rank": null,
+   "top1": "白虎湯"
+  },
+  {
+   "title": "第七三案　白頭翁湯證",
+   "gold": "白頭翁湯",
+   "n_findings": 2,
+   "rank": 3,
+   "top1": "白虎加人參湯"
+  },
+  {
+   "title": "第七五案　麻子仁丸證",
+   "gold": "麻子仁丸",
+   "n_findings": 4,
+   "rank": null,
+   "top1": "大承氣湯"
+  }
+ ]
+}

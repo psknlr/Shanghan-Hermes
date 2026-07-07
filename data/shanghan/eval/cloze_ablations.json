@@ -1,0 +1,32 @@
+{
+ "without_outline_boost": {
+  "n": 140,
+  "top1": 0.1929,
+  "top3": 0.3929,
+  "top5": 0.4786,
+  "mrr": 0.3001,
+  "herb_precision": 0.4182,
+  "herb_recall": 0.4051,
+  "herb_f1": 0.406
+ },
+ "without_near_match": {
+  "n": 140,
+  "top1": 0.1857,
+  "top3": 0.3857,
+  "top5": 0.4643,
+  "mrr": 0.2915,
+  "herb_precision": 0.4098,
+  "herb_recall": 0.3961,
+  "herb_f1": 0.3972
+ },
+ "full": {
+  "n": 140,
+  "top1": 0.1929,
+  "top3": 0.3929,
+  "top5": 0.4714,
+  "mrr": 0.2968,
+  "herb_precision": 0.4182,
+  "herb_recall": 0.4051,
+  "herb_f1": 0.406
+ }
+}

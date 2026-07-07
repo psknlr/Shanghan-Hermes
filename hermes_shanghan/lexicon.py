@@ -79,7 +79,7 @@ SYMPTOMS: List[str] = [
 ]
 # Remove tentative entries (marked with trailing ?) - kept above for review notes.
 SYMPTOMS = [s for s in SYMPTOMS if not s.endswith("?")]
-SYMPTOMS = sorted(set(SYMPTOMS), key=len, reverse=True)
+SYMPTOMS = sorted(set(SYMPTOMS), key=lambda t: (-len(t), t))
 
 # Negation prefixes used by the negation-aware matcher.
 NEGATION_PREFIX = ("不", "無", "未", "勿", "非", "莫")
@@ -108,7 +108,7 @@ PULSE_NAMED_PATTERNS: List[str] = [
     "脈不出", "脈不至", "脈不還", "脈平", "脈和", "脈陰陽俱緊", "脈陰陽俱浮",
     "脈陰陽俱虛", "尺中遲", "尺中微", "寸脈微浮", "趺陽脈",
 ]
-PULSE_NAMED_PATTERNS = sorted(set(PULSE_NAMED_PATTERNS), key=len, reverse=True)
+PULSE_NAMED_PATTERNS = sorted(set(PULSE_NAMED_PATTERNS), key=lambda t: (-len(t), t))
 RE_PULSE_PHRASE = re.compile(r"脈[^，。；！？]{0,14}")
 
 # ---------------------------------------------------------------------------
@@ -124,7 +124,7 @@ DISEASE_PATTERNS: List[str] = [
     "熱入血室", "風家", "喘家", "汗家", "淋家", "瘡家", "衄家", "亡血家", "酒客",
     "壞病", "百合病", "奔豚",
 ]
-DISEASE_PATTERNS = sorted(set(DISEASE_PATTERNS), key=len, reverse=True)
+DISEASE_PATTERNS = sorted(set(DISEASE_PATTERNS), key=lambda t: (-len(t), t))
 
 CHANNEL_IN_TEXT = {
     "太陽": "太陽病", "陽明": "陽明病", "少陽": "少陽病",
@@ -172,6 +172,9 @@ FORMULA_ALIASES: Dict[str, str] = {
     "柴胡加芒硝湯": "柴胡加芒消湯",
     "麻黃連翹赤小豆湯": "麻黃連軺赤小豆湯",
     "梔子柏皮湯": "梔子檗皮湯",
+    "葛根黃連黃芩湯": "葛根黃芩黃連湯",   # 藥序異寫（醫案文獻常見）
+    "葛根芩連湯": "葛根黃芩黃連湯",
+    "豬膽汁導": "豬膽汁方",
     "桂枝救逆湯": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
     "救逆湯": "桂枝去芍藥加蜀漆牡蠣龍骨救逆湯",
     "麻黃附子細辛湯": "麻黃細辛附子湯",
@@ -242,7 +245,7 @@ TRANSFORMATION_OUTCOMES: List[str] = [
     "虛煩", "懊憹", "心中懊憹", "筋惕肉瞤", "振振欲擗地", "胃中空虛", "客氣動膈",
     "飢不能食", "除中", "蓄血", "如狂", "其人如狂", "發狂", "短氣躁煩", "心中懊憹",
 ]
-TRANSFORMATION_OUTCOMES = sorted(set(TRANSFORMATION_OUTCOMES), key=len, reverse=True)
+TRANSFORMATION_OUTCOMES = sorted(set(TRANSFORMATION_OUTCOMES), key=lambda t: (-len(t), t))
 
 TRANSMISSION_MARKERS: List[str] = ["轉屬", "轉入", "轉繫", "傳", "屬陽明", "為傳也", "不傳"]
 

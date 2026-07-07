@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import Dict, List, Tuple
 
 from .. import lexicon
+from ..textutil import fold_variants
 from ..schemas import InitialRule, ShanghanClause
 
 
@@ -21,7 +22,8 @@ def repair(rule: InitialRule, flags: List[str],
     clause = clause_store.get(rule.clause_id)
     if clause is None:
         return rule, []
-    text = clause.clean_text + "\n".join(fb.raw_text for fb in clause.formula_blocks)
+    text = fold_variants(clause.clean_text
+                         + "\n".join(fb.raw_text for fb in clause.formula_blocks))
     applied: List[str] = []
 
     for flag in flags:

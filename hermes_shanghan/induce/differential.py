@@ -136,15 +136,20 @@ class DifferentialInducer:
             if r:
                 out.append(r)
                 done.add(tuple(sorted(names)))
-        # auto-discovery: pairs sharing ≥3 core symptoms
+        # auto-discovery: pairs with ≥2 shared core symptoms and ≥3 shared
+        # overall (core+associated). Sharing counts core+associated so the
+        # core[:8] cap ordering doesn't decide whether a pair is discoverable,
+        # while the 2-core floor keeps out background overlaps (發熱 etc.)
         names = sorted(self.by_name)
         for a, b in combinations(names, 2):
             key = tuple(sorted([a, b]))
             if key in done:
                 continue
             ra, rb = self.by_name[a], self.by_name[b]
-            shared = set(ra.core_symptoms) & set(rb.core_symptoms)
-            if len(shared) >= 3:
+            core_shared = set(ra.core_symptoms) & set(rb.core_symptoms)
+            shared = (set(ra.core_symptoms + ra.associated_symptoms)
+                      & set(rb.core_symptoms + rb.associated_symptoms))
+            if len(shared) >= 3 and len(core_shared) >= 2:
                 rid += 1
                 r = self._build_one([a, b], rid)
                 if r:
