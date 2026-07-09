@@ -206,7 +206,7 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 「⚠️ 含未核實條文編號」。可用 `Council(llm_specialists=False)` 關閉，
 離線 `local` 後端自動跳過。
 
-## 22 個可調用工具（智能體 / harness 共用同一能力面）
+## 24 個可調用工具（智能體 / harness 共用同一能力面）
 
 `shanghan_search`、`shanghan_get_clause`、`shanghan_match_formula`、
 `shanghan_hypotheses`（多假設方證分析+鑒別追問）、
@@ -224,9 +224,11 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 `shanghan_trace`（深度溯源鏈：條文/方劑/方證觀點/注家/學派五類鏈 +
 任意文本回源，見 [`docs/TRACE.md`](TRACE.md)）、
 `shanghan_citation_network`（學術計量網絡：歷代引文/共引/文獻耦合/
-朝代切片/突現/主路徑）。
+朝代切片/突現/主路徑，scope 貫穿全字段）、
+`shanghan_herb_profile`（藥證檔案：方劑/條文/劑量寫法/配伍共現，不編造藥性）、
+`shanghan_formula_explain`（方解一站式：三層症狀口徑/煎服/禁忌/類方/傳播）。
 全部只讀、回源 clause_id；模型經 function-calling 自主選擇調用。
-溯源兩工具**不在患者白名單**（方劑鏈含組成/劑量）。
+溯源/藥解/方解四工具**不在患者白名單**（含組成/劑量）。
 
 ## 深度研究循環（deep-research）
 

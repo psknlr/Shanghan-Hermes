@@ -1,6 +1,6 @@
 """Memory modules for Hermes-Shanghanlun.
 
-Seven JSON-backed stores, per the protocol:
+Core 7 protocol stores + 2 agent-layer stores (9 total), JSON-backed:
   clause_memory        — per-clause processing state
   formula_memory       — aliases, composition, modification family, clauses
   six_channel_memory   — channel rules, outline & variant clauses
@@ -8,6 +8,9 @@ Seven JSON-backed stores, per the protocol:
   critic_memory        — recurring model error patterns + examples
   skill_memory         — per-skill build history & usage notes
   paper_memory         — data/figures/conclusions used by generated papers
+  correction_memory    — agent layer: user corrections（「不是X而是Y」）
+  project_memory       — agent layer: long-running research-project state
+                         (file materializes on first use)
 
 Each store is a dict persisted at data/shanghan/memory/<name>.json with a
 small update API; stores are append-friendly and human-inspectable.

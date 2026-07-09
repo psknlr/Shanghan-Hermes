@@ -5657,6 +5657,308 @@
      "n": 13
     }
    ],
+   "bibliographic_coupling": [
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論輯義",
+     "shared_clauses": 391,
+     "jaccard": 0.992
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論輯義",
+     "shared_clauses": 390,
+     "jaccard": 0.99
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論輯義",
+     "shared_clauses": 390,
+     "jaccard": 0.99
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "張卿子傷寒論",
+     "shared_clauses": 388,
+     "jaccard": 0.99
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "仲景傷寒補亡論",
+     "shared_clauses": 388,
+     "jaccard": 0.987
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "仲景傷寒補亡論",
+     "shared_clauses": 388,
+     "jaccard": 0.987
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒論輯義",
+     "shared_clauses": 387,
+     "jaccard": 0.982
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 385,
+     "jaccard": 0.982
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 385,
+     "jaccard": 0.982
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 387,
+     "jaccard": 0.98
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 385,
+     "jaccard": 0.98
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒論輯義",
+     "shared_clauses": 388,
+     "jaccard": 0.977
+    },
+    {
+     "a": "傷寒貫珠集",
+     "b": "傷寒貫珠集_1",
+     "shared_clauses": 375,
+     "jaccard": 0.977
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 386,
+     "jaccard": 0.977
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 386,
+     "jaccard": 0.977
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒溯源集",
+     "shared_clauses": 379,
+     "jaccard": 0.974
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 384,
+     "jaccard": 0.972
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 382,
+     "jaccard": 0.972
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 380,
+     "jaccard": 0.972
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 383,
+     "jaccard": 0.97
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 380,
+     "jaccard": 0.969
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論辯證廣注",
+     "shared_clauses": 379,
+     "jaccard": 0.969
+    },
+    {
+     "a": "傷寒來蘇集",
+     "b": "傷寒論注",
+     "shared_clauses": 354,
+     "jaccard": 0.967
+    },
+    {
+     "a": "傷寒溯源集",
+     "b": "傷寒論輯義",
+     "shared_clauses": 381,
+     "jaccard": 0.967
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 381,
+     "jaccard": 0.967
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒溯源集",
+     "shared_clauses": 379,
+     "jaccard": 0.967
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 377,
+     "jaccard": 0.967
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 379,
+     "jaccard": 0.967
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒溯源集",
+     "shared_clauses": 379,
+     "jaccard": 0.967
+    },
+    {
+     "a": "傷寒論條辨_1",
+     "b": "傷寒論輯義",
+     "shared_clauses": 384,
+     "jaccard": 0.965
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒溯源集",
+     "shared_clauses": 379,
+     "jaccard": 0.964
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 377,
+     "jaccard": 0.964
+    },
+    {
+     "a": "傷寒論辯證廣注",
+     "b": "傷寒論輯義",
+     "shared_clauses": 380,
+     "jaccard": 0.964
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論辯證廣注",
+     "shared_clauses": 378,
+     "jaccard": 0.964
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 382,
+     "jaccard": 0.962
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論辯證廣注",
+     "shared_clauses": 378,
+     "jaccard": 0.962
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 378,
+     "jaccard": 0.962
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 381,
+     "jaccard": 0.96
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 381,
+     "jaccard": 0.96
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒纘論",
+     "shared_clauses": 376,
+     "jaccard": 0.959
+    },
+    {
+     "a": "傷寒溯源集",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 373,
+     "jaccard": 0.959
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒溯源集",
+     "shared_clauses": 378,
+     "jaccard": 0.959
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 378,
+     "jaccard": 0.959
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒恆論",
+     "shared_clauses": 376,
+     "jaccard": 0.959
+    },
+    {
+     "a": "傷寒纘論",
+     "b": "傷寒論輯義",
+     "shared_clauses": 377,
+     "jaccard": 0.957
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒論辯證廣注",
+     "shared_clauses": 377,
+     "jaccard": 0.957
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒論辯證廣注",
+     "shared_clauses": 375,
+     "jaccard": 0.957
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 375,
+     "jaccard": 0.957
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 377,
+     "jaccard": 0.954
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 377,
+     "jaccard": 0.954
+    }
+   ],
    "bursts": [
     {
      "clause_id": "SHL_SONGBEN_0167",
@@ -6835,6 +7137,308 @@
      "n": 10
     }
    ],
+   "bibliographic_coupling": [
+    {
+     "a": "傷寒來蘇集",
+     "b": "傷寒論注",
+     "shared_clauses": 73,
+     "jaccard": 1.0
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 202,
+     "jaccard": 0.967
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 197,
+     "jaccard": 0.966
+    },
+    {
+     "a": "傷寒貫珠集",
+     "b": "傷寒貫珠集_1",
+     "shared_clauses": 72,
+     "jaccard": 0.947
+    },
+    {
+     "a": "傷寒總病論_1",
+     "b": "傷寒總病論",
+     "shared_clauses": 61,
+     "jaccard": 0.938
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "張卿子傷寒論",
+     "shared_clauses": 246,
+     "jaccard": 0.932
+    },
+    {
+     "a": "傷寒明理論_1",
+     "b": "傷寒明理論",
+     "shared_clauses": 47,
+     "jaccard": 0.922
+    },
+    {
+     "a": "傷寒論類方",
+     "b": "傷寒論類方_1",
+     "shared_clauses": 64,
+     "jaccard": 0.889
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 202,
+     "jaccard": 0.805
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 198,
+     "jaccard": 0.792
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 202,
+     "jaccard": 0.789
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "仲景傷寒補亡論",
+     "shared_clauses": 203,
+     "jaccard": 0.787
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 206,
+     "jaccard": 0.786
+    },
+    {
+     "a": "傷寒法祖",
+     "b": "傷寒論翼",
+     "shared_clauses": 18,
+     "jaccard": 0.783
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "仲景傷寒補亡論",
+     "shared_clauses": 205,
+     "jaccard": 0.771
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 201,
+     "jaccard": 0.767
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 196,
+     "jaccard": 0.763
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 200,
+     "jaccard": 0.76
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 178,
+     "jaccard": 0.754
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 160,
+     "jaccard": 0.744
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 194,
+     "jaccard": 0.735
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒纘論",
+     "shared_clauses": 173,
+     "jaccard": 0.733
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 169,
+     "jaccard": 0.698
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒纘論",
+     "shared_clauses": 165,
+     "jaccard": 0.685
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 170,
+     "jaccard": 0.683
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 164,
+     "jaccard": 0.678
+    },
+    {
+     "a": "傷寒論條辨_1",
+     "b": "傷寒纘論",
+     "shared_clauses": 161,
+     "jaccard": 0.671
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 166,
+     "jaccard": 0.669
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 143,
+     "jaccard": 0.638
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 161,
+     "jaccard": 0.636
+    },
+    {
+     "a": "傷寒纘論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 139,
+     "jaccard": 0.623
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒懸解",
+     "shared_clauses": 130,
+     "jaccard": 0.619
+    },
+    {
+     "a": "傷寒論條辨_1",
+     "b": "傷寒懸解",
+     "shared_clauses": 128,
+     "jaccard": 0.618
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 162,
+     "jaccard": 0.618
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "傷寒恆論",
+     "shared_clauses": 44,
+     "jaccard": 0.595
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒論綱目",
+     "shared_clauses": 138,
+     "jaccard": 0.59
+    },
+    {
+     "a": "傷寒貫珠集_1",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 50,
+     "jaccard": 0.581
+    },
+    {
+     "a": "傷寒貫珠集",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 49,
+     "jaccard": 0.576
+    },
+    {
+     "a": "傷寒論條辨_1",
+     "b": "傷寒論綱目",
+     "shared_clauses": 134,
+     "jaccard": 0.575
+    },
+    {
+     "a": "曹氏傷寒金匱發微合刊",
+     "b": "傷寒論類方",
+     "shared_clauses": 46,
+     "jaccard": 0.535
+    },
+    {
+     "a": "傷寒論綱目",
+     "b": "傷寒懸解",
+     "shared_clauses": 102,
+     "jaccard": 0.526
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "傷寒貫珠集_1",
+     "shared_clauses": 51,
+     "jaccard": 0.526
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒懸解",
+     "shared_clauses": 130,
+     "jaccard": 0.516
+    },
+    {
+     "a": "傷寒溯源集",
+     "b": "傷寒貫珠集_1",
+     "shared_clauses": 60,
+     "jaccard": 0.513
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒懸解",
+     "shared_clauses": 132,
+     "jaccard": 0.508
+    },
+    {
+     "a": "曹氏傷寒金匱發微合刊",
+     "b": "傷寒來蘇集",
+     "shared_clauses": 45,
+     "jaccard": 0.506
+    },
+    {
+     "a": "曹氏傷寒金匱發微合刊",
+     "b": "傷寒論注",
+     "shared_clauses": 45,
+     "jaccard": 0.506
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 49,
+     "jaccard": 0.505
+    },
+    {
+     "a": "曹氏傷寒金匱發微合刊",
+     "b": "傷寒恆論",
+     "shared_clauses": 35,
+     "jaccard": 0.493
+    },
+    {
+     "a": "傷寒貫珠集",
+     "b": "傷寒論類方",
+     "shared_clauses": 47,
+     "jaccard": 0.485
+    }
+   ],
    "bursts": [
     {
      "clause_id": "SHL_SONGBEN_AUX_0102",
@@ -8001,6 +8605,308 @@
      "a": "SHL_SONGBEN_0255",
      "b": "SHL_SONGBEN_AUX_0213",
      "n": 37
+    }
+   ],
+   "bibliographic_coupling": [
+    {
+     "a": "傷寒來蘇集",
+     "b": "傷寒論注",
+     "shared_clauses": 427,
+     "jaccard": 0.973
+    },
+    {
+     "a": "傷寒貫珠集",
+     "b": "傷寒貫珠集_1",
+     "shared_clauses": 447,
+     "jaccard": 0.972
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 584,
+     "jaccard": 0.97
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "張卿子傷寒論",
+     "shared_clauses": 634,
+     "jaccard": 0.966
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 571,
+     "jaccard": 0.955
+    },
+    {
+     "a": "傷寒總病論_1",
+     "b": "傷寒總病論",
+     "shared_clauses": 223,
+     "jaccard": 0.941
+    },
+    {
+     "a": "傷寒明理論_1",
+     "b": "傷寒明理論",
+     "shared_clauses": 202,
+     "jaccard": 0.94
+    },
+    {
+     "a": "傷寒標本心法類萃_1",
+     "b": "傷寒標本心法類萃",
+     "shared_clauses": 15,
+     "jaccard": 0.938
+    },
+    {
+     "a": "傷寒論類方",
+     "b": "傷寒論類方_1",
+     "shared_clauses": 312,
+     "jaccard": 0.931
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 588,
+     "jaccard": 0.91
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "仲景傷寒補亡論",
+     "shared_clauses": 591,
+     "jaccard": 0.908
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 587,
+     "jaccard": 0.906
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 591,
+     "jaccard": 0.904
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "仲景傷寒補亡論",
+     "shared_clauses": 593,
+     "jaccard": 0.9
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 575,
+     "jaccard": 0.898
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 565,
+     "jaccard": 0.895
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "傷寒恆論",
+     "shared_clauses": 421,
+     "jaccard": 0.892
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 586,
+     "jaccard": 0.891
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 582,
+     "jaccard": 0.883
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 577,
+     "jaccard": 0.882
+    },
+    {
+     "a": "傷寒法祖",
+     "b": "傷寒論翼",
+     "shared_clauses": 93,
+     "jaccard": 0.877
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 430,
+     "jaccard": 0.876
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 534,
+     "jaccard": 0.875
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒纘論",
+     "shared_clauses": 549,
+     "jaccard": 0.874
+    },
+    {
+     "a": "傷寒貫珠集",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 418,
+     "jaccard": 0.874
+    },
+    {
+     "a": "曹氏傷寒金匱發微合刊",
+     "b": "傷寒恆論",
+     "shared_clauses": 404,
+     "jaccard": 0.871
+    },
+    {
+     "a": "傷寒貫珠集_1",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 416,
+     "jaccard": 0.868
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒纘論_傷寒緒論",
+     "shared_clauses": 552,
+     "jaccard": 0.867
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒纘論",
+     "shared_clauses": 569,
+     "jaccard": 0.867
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論條辨",
+     "shared_clauses": 555,
+     "jaccard": 0.864
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "曹氏傷寒金匱發微合刊",
+     "shared_clauses": 421,
+     "jaccard": 0.863
+    },
+    {
+     "a": "傷寒論輯義",
+     "b": "傷寒貫珠集_1",
+     "shared_clauses": 426,
+     "jaccard": 0.862
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 548,
+     "jaccard": 0.86
+    },
+    {
+     "a": "傷寒貫珠集",
+     "b": "傷寒恆論",
+     "shared_clauses": 407,
+     "jaccard": 0.86
+    },
+    {
+     "a": "傷寒直格_1",
+     "b": "傷寒直格",
+     "shared_clauses": 30,
+     "jaccard": 0.857
+    },
+    {
+     "a": "傷寒貫珠集_1",
+     "b": "傷寒恆論",
+     "shared_clauses": 404,
+     "jaccard": 0.851
+    },
+    {
+     "a": "仲景傷寒補亡論",
+     "b": "傷寒論條辨_1",
+     "shared_clauses": 548,
+     "jaccard": 0.85
+    },
+    {
+     "a": "傷寒溯源集",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 430,
+     "jaccard": 0.848
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒纘論",
+     "shared_clauses": 537,
+     "jaccard": 0.848
+    },
+    {
+     "a": "傷寒溯源集",
+     "b": "傷寒貫珠集_1",
+     "shared_clauses": 427,
+     "jaccard": 0.839
+    },
+    {
+     "a": "傷寒論辯證廣注",
+     "b": "傷寒論輯義",
+     "shared_clauses": 428,
+     "jaccard": 0.839
+    },
+    {
+     "a": "傷寒纘論_傷寒緒論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 516,
+     "jaccard": 0.832
+    },
+    {
+     "a": "傷寒溯源集",
+     "b": "傷寒論輯義",
+     "shared_clauses": 431,
+     "jaccard": 0.83
+    },
+    {
+     "a": "傷寒論條辨_1",
+     "b": "傷寒纘論",
+     "shared_clauses": 529,
+     "jaccard": 0.83
+    },
+    {
+     "a": "曹氏傷寒金匱發微合刊",
+     "b": "傷寒來蘇集",
+     "shared_clauses": 397,
+     "jaccard": 0.827
+    },
+    {
+     "a": "傷寒論辯證廣注",
+     "b": "傷寒貫珠集",
+     "shared_clauses": 417,
+     "jaccard": 0.821
+    },
+    {
+     "a": "張卿子傷寒論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 533,
+     "jaccard": 0.821
+    },
+    {
+     "a": "曹氏傷寒金匱發微合刊",
+     "b": "傷寒論注",
+     "shared_clauses": 393,
+     "jaccard": 0.819
+    },
+    {
+     "a": "註解傷寒論",
+     "b": "傷寒論綱目",
+     "shared_clauses": 535,
+     "jaccard": 0.814
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒論綱目",
+     "shared_clauses": 509,
+     "jaccard": 0.811
     }
    ],
    "bursts": [

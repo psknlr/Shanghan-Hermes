@@ -19,8 +19,8 @@ from typing import Dict, List, Optional
 
 from .. import config
 
-CSV_FIELDS = ["sample_id", "book", "chapter", "para_seq", "paragraph",
-              "algo_clause_id", "algo_mode", "algo_longest_run",
+CSV_FIELDS = ["sample_id", "stratum", "book", "chapter", "para_seq",
+              "paragraph", "algo_clause_id", "algo_mode", "algo_longest_run",
               "human_clause_id", "human_mode", "notes"]
 
 
@@ -41,37 +41,73 @@ def _iter_paragraphs():
             yield bdir, chapter, seq, para
 
 
-def build_sample(n: int = 50, out_path: Optional[Path] = None) -> Dict:
-    """確定性等距抽樣 n 個段落，導出標註表（含算法預測列）。"""
+def build_sample(n: int = 50, out_path: Optional[Path] = None,
+                 stratify: bool = False) -> Dict:
+    """確定性抽樣 n 個段落，導出標註表（含算法預測列）。
+
+    默認等距抽樣（最快、可復現）。``stratify=True`` 啟用分層抽樣
+    （論文級評測用）：層 = 朝代 × 算法預測模式（含「無」負例層），
+    份額按層規模比例分配、每層至少 1 個、層內等距——樣本不再被大部頭
+    或單一文本類型主導，且仍零隨機、可復現。按*預測*模式分層是評測
+    慣例（真實模式在標註前未知），最終評測建議雙人標註計一致率。"""
+    from ..corpus import downloader
     from .builder import _clause_texts
+    from .ids import dynasty_of
     from .quotation import QuotationScanner
 
     paragraphs = [p for p in _iter_paragraphs() if len(p[3]) >= 20]
     if not paragraphs:
         return {"error": "語料為空"}
-    stride = max(1, len(paragraphs) // max(1, n))
-    sample = paragraphs[::stride][:n]
-
     scanner = QuotationScanner(_clause_texts())
-    rows: List[Dict] = []
-    for i, (bdir, chapter, seq, para) in enumerate(sample, 1):
+
+    def _predict(para: str) -> Dict:
         edges, _ = scanner.scan_paragraph(para)
         clause_edges = [e for e in edges if e.get("target_kind") == "clause"]
-        best = max(clause_edges, key=lambda e: (e.get("longest_run", 0),
+        return max(clause_edges, key=lambda e: (e.get("longest_run", 0),
                                                 e.get("coverage", 0.0)),
-                   default=None)
+                   default={})
+
+    if stratify:
+        dyn_of = {b.get("book_dir", ""): dynasty_of(b)
+                  for b in downloader.load_manifest().get("books", [])}
+        strata: Dict[str, List] = {}
+        for bdir, chapter, seq, para in paragraphs:
+            best = _predict(para)
+            key = f"{dyn_of.get(bdir, '') or '未詳'}×{best.get('mode', '無')}"
+            strata.setdefault(key, []).append(
+                (bdir, chapter, seq, para, best))
+        total = len(paragraphs)
+        sample = []
+        for key in sorted(strata):
+            pool = strata[key]
+            quota = max(1, round(n * len(pool) / total))
+            stride = max(1, len(pool) // quota)
+            for item in pool[::stride][:quota]:
+                sample.append((key, *item))
+        sample = sample[:max(n, len(strata))]
+        sampling_note = (f"分層抽樣：{len(strata)} 層（朝代×預測模式，"
+                         "含負例層），比例配額、每層≥1、層內等距，零隨機。")
+    else:
+        stride = max(1, len(paragraphs) // max(1, n))
+        sample = [("等距", bdir, chapter, seq, para, _predict(para))
+                  for bdir, chapter, seq, para in paragraphs[::stride][:n]]
+        sampling_note = "等距抽樣（零隨機、可復現）；論文級評測請用 --stratify。"
+
+    rows: List[Dict] = []
+    for i, (stratum, bdir, chapter, seq, para, best) in enumerate(sample, 1):
         rows.append({
-            "sample_id": f"GS_{i:03d}", "book": bdir, "chapter": chapter,
+            "sample_id": f"GS_{i:03d}", "stratum": stratum,
+            "book": bdir, "chapter": chapter,
             "para_seq": seq, "paragraph": para[:160],
-            "algo_clause_id": (best or {}).get("clause_id", "無"),
-            "algo_mode": (best or {}).get("mode", "無"),
-            "algo_longest_run": (best or {}).get("longest_run", 0),
+            "algo_clause_id": best.get("clause_id", "無"),
+            "algo_mode": best.get("mode", "無"),
+            "algo_longest_run": best.get("longest_run", 0),
             "human_clause_id": "", "human_mode": "", "notes": "",
         })
     out = {"n_sampled": len(rows), "n_paragraph_pool": len(paragraphs),
-           "stride": stride,
-           "note": "等距抽樣（零隨機、可復現）；algo_* 列為算法預測，"
-                   "human_* 列留空供標註；標註後用 trace-gold-eval 評估。"}
+           "n_strata": len({r["stratum"] for r in rows}),
+           "note": sampling_note + " algo_* 列為算法預測，human_* 列留空"
+                   "供標註；標註後用 trace-gold-eval 評估。"}
     if out_path:
         out_path = Path(out_path)
         with out_path.open("w", encoding="utf-8-sig", newline="") as fh:

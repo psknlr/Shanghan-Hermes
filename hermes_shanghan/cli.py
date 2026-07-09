@@ -285,10 +285,10 @@ def cmd_trace_audit_citation(args):
 
 
 def cmd_trace_gold_sample(args):
-    """金標準標註表生成（A3）：確定性等距抽樣 + 算法預測列。"""
+    """金標準標註表生成（A3）：確定性抽樣（等距/分層）+ 算法預測列。"""
     _need_pipeline()
     from .trace.goldset import build_sample
-    _print(build_sample(n=args.n, out_path=args.out))
+    _print(build_sample(n=args.n, out_path=args.out, stratify=args.stratify))
 
 
 def cmd_trace_gold_eval(args):
@@ -689,9 +689,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("ref", help="條文號、方名、觀點關鍵詞、注家名、學派名或原文片段")
     sp.add_argument("--type", "-t", default="text",
                     choices=["clause", "formula", "claim", "school",
-                             "commentator", "text", "quote"],
+                             "commentator", "text", "quote", "term"],
                     help="溯源對象類型（默認 text：任意文本回源；"
-                         "quote：誤引檢測——引文能否作原文直引）")
+                         "quote：誤引檢測；term：術語譜系——最早注家/學派分佈）")
     sp.set_defaults(func=cmd_trace)
 
     sp = sub.add_parser("trace-build", help="重建溯源層資產（引文邊/計量網絡/學派/觀點）")
@@ -724,6 +724,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                         help="引文識別金標準：確定性抽樣導出標註表 CSV（附算法預測列）")
     sp.add_argument("--n", type=int, default=50)
     sp.add_argument("--out", required=True, help="輸出 CSV 路徑")
+    sp.add_argument("--stratify", action="store_true",
+                    help="分層抽樣（朝代×預測模式，論文級評測用；默認等距）")
     sp.set_defaults(func=cmd_trace_gold_sample)
 
     sp = sub.add_parser("trace-gold-eval",
