@@ -37,15 +37,17 @@ python3 -m hermes_shanghan serve        # 打開 http://127.0.0.1:8765/
 ```
 
 純標準庫實現（`http.server` + 原生 JS 單頁應用，無構建、無 CDN、離線可用；
-**移動端自適應**，頁腳標注研發來源）。14 個模塊：總覽 · **智能體（單/多智能體
+**移動端自適應**，頁腳標注研發來源）。15 個模塊：總覽 · **智能體（單/多智能體
 合議）** · 原文檢索 · 方證匹配 · 方證鑒別 · 六經教學 · 誤治傳變 · 科研挖掘 ·
 **溯源工作台**（誤引檢測/文本回源/術語譜系/方劑源流/注家爭議/學派比較）·
 **方藥檔案**（藥證+本草旁證層/方解四層口徑）· **辨證閉環**（四診採集→裁決→
-衝突審計）· 論文生成 · Skill 庫 · 接入。證據優先：答案中的
+衝突審計）· **工具台**（28 工具通用調用/笈成全庫/深度研究/評測看板/
+金標準標註閉環）· 論文生成 · Skill 庫 · 接入。證據優先：答案中的
 `clause_id` 可點擊展開條文全息（A/B/C/D/E 五層色標）；多智能體合議把「規劃→取證→
 方證/鑒別/六經/誤治專家→批評→綜合」可視化為時間線，每步附證據與引用核驗；
 接入真實大模型時每位專家對自身工具證據附一句合議評述（引用同樣過核驗）。
-詳見 [`docs/WEB_UI.md`](docs/WEB_UI.md)。
+詳見 [`docs/WEB_UI.md`](docs/WEB_UI.md)；能力成熟度與表述邊界見
+[`docs/MATURITY.md`](docs/MATURITY.md)。
 
 ## 快速開始
 
@@ -151,7 +153,7 @@ python3 -m hermes_shanghan agent "少陰病寒化與熱化怎麼區分？" --rol
 python3 -m hermes_shanghan solve "桂枝湯與麻黃湯如何鑒別？各自劑量比是多少？注家有何分歧？"
 python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
 
-# 測試（274 項：對抗性審核 + 智能體架構 + 28 工具 + 評測 + 七維研究循環 + 全庫接入
+# 測試（280 項：對抗性審核 + 智能體架構 + 28 工具 + 評測 + 七維研究循環 + 全庫接入
 #       + 可復現性/證據鏈硬化 + 溯源層（引文識別/計量網絡/五類溯源鏈）+ Colab守衛）
 python3 -m unittest discover -s tests
 
@@ -459,7 +461,7 @@ hermes_shanghan/
 ├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
 ├─ server/      service(API面) · http_server(stdlib) · static(SPA: index/css/js)
 ├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
-tests/          274 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
+tests/          280 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/library/      中醫笈成全庫（803 部，`library fetch` 自動下載，不入庫）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/溯源/論文）

@@ -567,6 +567,109 @@ views.bianzheng = async (main) => {
   main.append(out);
 };
 
+// ---------- 工具台（28 工具通用調用 / 全庫 / 深度研究 / 評測 / 標註閉環） ----------
+views.tools = async (main) => {
+  main.innerHTML = "";
+  main.append(viewHead("工具台", "28 個回源工具通用調用 · 笈成全庫 · 深度研究循環 · 評測看板 · 金標準標註閉環。"));
+  const out = el("div", {});
+
+  // -- 通用工具調用 --
+  const specs = (await api.get("/api/tools")).tools || [];
+  const sel = el("select", {}, specs.map(s => el("option", { value: s.function.name }, s.function.name)));
+  const desc = el("p", { class: "small muted" });
+  const argsBox = el("textarea", { rows: 3 });
+  function fillTemplate() {
+    const s = specs.find(x => x.function.name === sel.value); if (!s) return;
+    desc.textContent = s.function.description;
+    const props = (s.function.parameters || {}).properties || {};
+    const tpl = {};
+    Object.keys(props).forEach(k => { tpl[k] = props[k].default !== undefined ? props[k].default : (props[k].type === "array" ? [] : props[k].type === "integer" ? 0 : ""); });
+    argsBox.value = JSON.stringify(tpl, null, 1);
+  }
+  sel.addEventListener("change", fillTemplate); fillTemplate();
+  async function runTool() {
+    out.innerHTML = '<div class="loading">調用中…</div>';
+    let args; try { args = JSON.parse(argsBox.value || "{}"); } catch (e) { out.innerHTML = '<p class="muted">參數不是合法 JSON</p>'; return; }
+    const r = await api.post("/api/tool", { name: sel.value, arguments: args });
+    out.innerHTML = "";
+    if (r.evidence_level) out.append(el("div", { class: "row small" }, [el("span", { class: "pill" }, "證據層 " + r.evidence_level), r.confidence != null ? el("span", { class: "pill" }, "置信 " + r.confidence) : null]));
+    out.append(el("pre", { class: "md tbl-scroll" }, JSON.stringify(r, null, 1).slice(0, 12000)));
+  }
+  main.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "通用工具調用（結果附證據層標註）"),
+    el("div", { class: "row" }, [sel, el("button", { class: "btn", onclick: runTool }, "調用")]), desc, argsBox]));
+
+  // -- 笈成全庫 --
+  const libQ = el("input", { type: "text", placeholder: "書名/作者（編目）或原文詞句（全文），如 奔豚" });
+  async function runLib() {
+    out.innerHTML = '<div class="loading">全庫檢索中…</div>';
+    const r = await api.post("/api/tool", { name: "shanghan_library", arguments: { query: libQ.value.trim(), top_k: 6 } });
+    out.innerHTML = "";
+    if (r.available === false) { out.append(el("div", { class: "cite-banner cite-warn" }, r.hint || "全庫未下載")); return; }
+    (r.catalog_hits || []).length && out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "編目命中"), ...r.catalog_hits.map(h => el("div", { class: "kv small" }, [el("b", {}, h.id), el("span", {}, (h.author || "") + "·" + (h.dynasty || "") + " [" + (h.category || "") + "]")]))]));
+    (r.text_hits || []).length && out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "全文命中（" + r.n_text_hits + "）"), ...r.text_hits.map(h => el("div", { class: "evi" }, [el("div", { class: "ct" }, "…" + h.excerpt + "…"), el("div", { class: "meta" }, "《" + h.title + "》" + (h.author || "") + "·" + (h.dynasty || "") + " §" + h.section)]))]));
+    out.append(el("p", { class: "notice" }, r.evidence_layer || ""));
+  }
+
+  // -- 深度研究 --
+  const drQ = el("input", { type: "text", placeholder: "研究主題，如 桂枝湯類方的劑量演化" });
+  async function runDR() {
+    out.innerHTML = '<div class="loading">深度研究循環運行中（規劃→子代理→批評家）…</div>';
+    const r = await api.post("/api/deep-research", { topic: drQ.value.trim() || "桂枝湯類方源流", rounds: 3 });
+    out.innerHTML = "";
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "七維覆蓋（" + r.n_rounds + " 輪 · 後端 " + r.backend + "）"),
+      el("div", {}, Object.entries(r.coverage || {}).map(([d, n]) => el("span", { class: "pill" }, d + " ×" + n)))]));
+    (r.findings || []).forEach(f => out.append(el("div", { class: "card" }, [
+      el("div", { class: "row small" }, [el("span", { class: "pill" }, f.dimension), el("b", {}, f.module), el("span", { class: "spacer" }), el("span", { class: f.citation_ok ? "pill" : "pill warn" }, f.citation_ok ? "引用核驗✓" : "核驗⚠")]),
+      el("p", { class: "small" }, f.summary), clauseChips((f.verified_clause_ids || []).slice(0, 6))])));
+  }
+
+  // -- 評測看板 --
+  async function runEval() {
+    out.innerHTML = '<div class="loading">讀取評測指標…</div>';
+    const r = await api.post("/api/tool", { name: "shanghan_eval_metrics", arguments: {} });
+    out.innerHTML = "";
+    const suites = r.suites || {};
+    const rows = [];
+    const cz = (suites.cloze || {}).metrics || {}; if (cz.attainable) rows.push(["遮方預測（可達折）", "Top-1 " + cz.attainable.top1 + " · Top-3 " + cz.attainable.top3 + " · MRR " + cz.attainable.mrr]);
+    const cs = (suites.cases || {}).metrics || {}; if (cs.top1 != null) rows.push(["醫案回放", "Top-1 " + cs.top1 + " · MRR " + (cs.mrr || "")]);
+    const gr = (suites.grounding || {}).metrics || {}; if (gr.grounded_answer_rate != null) rows.push(["證據接地率", gr.grounded_answer_rate]);
+    const ab = (suites.agent || {}).metrics || {}; if (ab.routing_accuracy != null) rows.push(["智能體路由", ab.routing_accuracy]);
+    const tbl = el("table"); rows.forEach(([k, v]) => tbl.append(el("tr", {}, [el("th", {}, k), el("td", {}, String(v))])));
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "四大基準（確定性 · 零人工標註）"), el("div", { class: "tbl-scroll" }, tbl), el("p", { class: "small muted" }, "缺項請先運行 evaluate；引文識別自檢見 docs/TRACE.md")]));
+  }
+
+  // -- 金標準標註閉環（human-in-the-loop） --
+  async function runGold() {
+    out.innerHTML = '<div class="loading">分層抽樣中…</div>';
+    const r = await api.post("/api/gold-sample", { n: 10, stratify: true });
+    out.innerHTML = "";
+    const rows = r.rows || [];
+    const inputs = [];
+    const tbl = el("table"); tbl.append(el("tr", {}, ["段落（節選）", "算法預測", "人工：條文號（無=0）", "人工：模式"].map(h => el("th", {}, h))));
+    rows.forEach(row => {
+      const cid = el("input", { type: "text", style: "width:110px", placeholder: row.algo_clause_id });
+      const md2 = el("input", { type: "text", style: "width:70px", placeholder: row.algo_mode });
+      inputs.push([row, cid, md2]);
+      tbl.append(el("tr", {}, [el("td", { class: "small" }, row.paragraph.slice(0, 60) + "…"), el("td", { class: "small" }, row.algo_clause_id + " / " + row.algo_mode), el("td", {}, cid), el("td", {}, md2)]));
+    });
+    const evalBtn = el("button", { class: "btn", onclick: async () => {
+      const annotated = inputs.map(([row, cid, md2]) => ({ ...row, human_clause_id: cid.value.trim(), human_mode: md2.value.trim() }));
+      const ev = await api.post("/api/gold-eval", { rows: annotated });
+      out.prepend(el("div", { class: "cite-banner " + (ev.error ? "cite-warn" : "cite-ok") },
+        ev.error ? ev.error : "條文級 P " + ev.clause_level.precision + " · R " + ev.clause_level.recall + " · F1 " + ev.clause_level.f1 + (ev.mode_agreement != null ? " · 模式一致 " + ev.mode_agreement : "")));
+    } }, "計算 P/R/F1");
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "標註 " + rows.length + " 段（" + r.n_strata + " 層分層抽樣）"), el("div", { class: "tbl-scroll" }, tbl), evalBtn, el("p", { class: "small muted" }, "確認算法正確：照抄預測值；否定：填正確條文號或 0。標註者判定是金標準。")]));
+  }
+
+  main.append(el("div", { class: "grid cols-2" }, [
+    el("div", { class: "card" }, [el("div", { class: "section-title" }, "笈成全庫（803 部 · 旁證層）"), el("div", { class: "row" }, [el("div", { style: "flex:1" }, libQ), el("button", { class: "btn", onclick: runLib }, "檢索")])]),
+    el("div", { class: "card" }, [el("div", { class: "section-title" }, "深度研究循環（七維溯源）"), el("div", { class: "row" }, [el("div", { style: "flex:1" }, drQ), el("button", { class: "btn", onclick: runDR }, "運行")])]),
+    el("div", { class: "card" }, [el("div", { class: "section-title" }, "評測看板"), el("button", { class: "btn ghost", onclick: runEval }, "載入四大基準")]),
+    el("div", { class: "card" }, [el("div", { class: "section-title" }, "金標準標註閉環（human-in-the-loop）"), el("button", { class: "btn ghost", onclick: runGold }, "抽樣並標註")]),
+  ]));
+  main.append(out);
+};
+
 // ---------- router / boot ----------
 async function boot() {
   try {

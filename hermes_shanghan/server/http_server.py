@@ -181,6 +181,22 @@ def _trace(svc, body, m, q):
                      body.get("ref", ""))
 
 
+@route("GET", r"/api/tools")
+def _tools(svc, body, m, q):
+    return svc.tools()
+
+
+@route("POST", r"/api/gold-sample")
+def _gold_sample(svc, body, m, q):
+    return svc.gold_sample(n=int(body.get("n", 20)),
+                           stratify=bool(body.get("stratify", True)))
+
+
+@route("POST", r"/api/gold-eval")
+def _gold_eval(svc, body, m, q):
+    return svc.gold_eval(body.get("rows", []))
+
+
 @route("POST", r"/api/herb")
 def _herb(svc, body, m, q):
     return svc.herb(body.get("name", body.get("herb", "")))

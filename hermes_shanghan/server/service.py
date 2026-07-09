@@ -263,6 +263,18 @@ class ServiceContext:
         from ..trace.chains import trace_dispatch
         return trace_dispatch(query_type, ref)
 
+    def tools(self) -> Dict:
+        from ..integrations.tool_specs import openai_tool_specs
+        return {"tools": openai_tool_specs()}
+
+    def gold_sample(self, n: int = 20, stratify: bool = True) -> Dict:
+        from ..trace.goldset import build_sample
+        return build_sample(n=n, stratify=stratify)   # 不落盤，rows 隨響應返回
+
+    def gold_eval(self, rows) -> Dict:
+        from ..trace.goldset import evaluate_rows
+        return evaluate_rows(rows or [])
+
     def herb(self, name: str) -> Dict:
         return self.registry.call("shanghan_herb_profile", {"herb": name})
 

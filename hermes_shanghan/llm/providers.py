@@ -267,8 +267,12 @@ class LocalProvider:
         if re.search(r"(統計|多少條|頻次|計量概況|全庫)", q) and \
                 "shanghan_corpus_stats" in available:
             return call("shanghan_corpus_stats", {})
+        # 鑒別路由：簡繁與常見口語變體全覆蓋（七輪評審：路由須穩定命中）；
+        # 兩個以上方名同現時，「比較/差別/怎麼分」類問法一律走鑒別工具
         if len(formulas) >= 2 and "shanghan_differential" in available and \
-                re.search(r"(鑒別|區別|不同|對比|vs|區分)", q):
+                re.search(r"(鑒別|鉴别|區別|区别|不同|對比|对比|比較|比较|"
+                          r"vs|VS|區分|区分|分別|分别|差別|差别|差異|差异|"
+                          r"怎麼分|怎么分|如何分)", q):
             return call("shanghan_differential", {"formulas": formulas})
         if re.search(r"(誤治|誤下|誤汗|誤吐|火逆|壞病|變證|傳變)", q) and \
                 "shanghan_mistreatment" in available:

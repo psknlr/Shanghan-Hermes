@@ -448,6 +448,57 @@ class TestTraceTools(unittest.TestCase):
         # 可復現：重跑一致
         s2 = build_sample(n=16, stratify=True)
         self.assertEqual(s["rows"], s2["rows"])
+        # 七輪修復：請求 n 恰返回 n（層多於 n 時取最大 n 層，不超額）
+        self.assertEqual(len(s["rows"]), 16)
+        self.assertEqual(len(build_sample(n=6, stratify=True)["rows"]), 6)
+
+    def test_gold_eval_rows_web_roundtrip(self):
+        # human-in-the-loop 標註閉環的 Web 路徑（rows 進 rows 出，不落盤）
+        from hermes_shanghan.server.service import get_service
+        svc = get_service()
+        gs = svc.gold_sample(n=6)
+        rows = gs["rows"]
+        for r in rows:
+            r["human_clause_id"] = (r["algo_clause_id"]
+                                    if r["algo_clause_id"] != "無" else "0")
+            r["human_mode"] = r["algo_mode"]
+        ev = svc.gold_eval(rows)
+        self.assertEqual(ev["clause_level"]["f1"], 1.0)
+
+    def test_api_tools_lists_full_registry(self):
+        from hermes_shanghan.server.service import get_service
+        t = get_service().tools()
+        self.assertEqual(len(t["tools"]), len(self.reg.names()))
+
+    def test_herb_role_evidence_and_bencao_honesty(self):
+        # 七輪：方中作用證據（量變致新方事件）+ 性味提不到不編造
+        from hermes_shanghan.apps.herbal import herb_profile
+        h = herb_profile("桂枝")
+        events = {(r["base"], r["modified"], r["event"])
+                  for r in h["role_evidence"]}
+        self.assertIn(("桂枝湯", "桂枝加桂湯", "劑量調整"), events)
+        for e in h["bencao_layer"].get("excerpts", []):
+            if "nature_flavor" in e:   # 出現時必為逐字提取且帶層標
+                self.assertIn("本草層", e["nature_flavor"]["source_layer"])
+
+    def test_differential_routing_simplified_variants(self):
+        # 七輪：鑒別路由穩定命中（簡體/口語變體）
+        from hermes_shanghan.agent.agent import ShanghanAgent
+        for q in ("桂枝汤和麻黄汤怎么区分？", "桂枝湯與麻黃湯有什麼差別",
+                  "比较一下桂枝汤和麻黄汤"):
+            out = ShanghanAgent().ask(q, role="doctor")
+            self.assertIn("shanghan_differential", out["tools_used"], q)
+
+    def test_tools_workbench_static(self):
+        root = config.REPO_ROOT / "hermes_shanghan" / "server" / "static"
+        js = (root / "app.js").read_text(encoding="utf-8")
+        html = (root / "index.html").read_text(encoding="utf-8")
+        self.assertIn('data-view="tools"', html)
+        self.assertIn("views.tools", js)
+        for feature in ("/api/tools", "/api/gold-sample", "/api/gold-eval",
+                        "shanghan_library", "deep-research",
+                        "shanghan_eval_metrics"):
+            self.assertIn(feature, js)
 
     def test_term_chain(self):
         # 術語譜系：營衛不和非原文、在庫首現注家可查

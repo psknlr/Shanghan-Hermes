@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Dict, List
 
 from .. import config
@@ -57,6 +58,7 @@ def herb_profile(name: str) -> Dict:
 
     top_partners = sorted(partners.items(), key=lambda kv: (-kv[1], kv[0]))[:10]
     bencao = bencao_evidence(canonical_name)
+    roles = role_evidence(canonical_name)
     return {
         "herb": canonical_name,
         "n_formulas": len(formulas),
@@ -68,12 +70,14 @@ def herb_profile(name: str) -> Dict:
         "top_partners": [{"herb": h, "n_formulas_together": n}
                          for h, n in top_partners],
         "bencao_layer": bencao,
+        "role_evidence": roles,
         "section_evidence_levels": {
             "formulas": "A 原文直述（<F> 方塊組成）",
             "clause_ids": "A 條文實體標註",
             "dose_variants": "A 原文劑量寫法（折算屬 D 層）",
             "top_partners": "同方共現計數（可計算事實）",
             "bencao_layer": "本草層（旁證/文獻查閱，不入經文閘門）",
+            "role_evidence": "A 層可計算事件（加減味/劑量調整，不做君臣佐使歸納）",
         },
         "warnings": ["藥性/功效解釋屬本草層（見 bencao_layer，需 library "
                      "fetch），與傷寒 A 層事實嚴格分層；君臣佐使等角色歸納"
@@ -105,11 +109,47 @@ def bencao_evidence(herb: str, max_books: int = 4) -> Dict:
                      if b in h.get("title", "")), len(BENCAO_BOOKS))
         wanted.append((rank, h))
     wanted.sort(key=lambda x: (x[0], x[1].get("title", "")))
-    excerpts = [{"book": h.get("title", ""), "author": h.get("author", ""),
+    excerpts = []
+    for _, h in wanted[:max_books]:
+        text = h.get("excerpt", "")
+        entry = {"book": h.get("title", ""), "author": h.get("author", ""),
                  "dynasty": h.get("dynasty", ""), "section": h.get("section", ""),
-                 "excerpt": h.get("excerpt", "")[:120]}
-                for _, h in wanted[:max_books]]
+                 "excerpt": text[:120]}
+        # 性味結構化（僅逐字提取「味X…寒/熱/溫/涼/平」句式；提不到不編造）
+        m = re.search(r"味([㐀-鿿]{1,4}?)[，、]?\s*((?:微|大)?[寒熱温溫涼凉平])",
+                      fold_variants(text))
+        if m:
+            entry["nature_flavor"] = {"flavor": m.group(1), "nature": m.group(2),
+                                      "source_layer": "本草層逐字提取（旁證）"}
+        excerpts.append(entry)
     return {"available": True, "n_hits": res.get("n_hits", 0),
             "excerpts": excerpts,
             "note": "本草層＝旁證（藥性功效屬本草文獻，非傷寒原文直述）；"
-                    "摘錄按書·章節定位，供人工查閱核對。"}
+                    "摘錄按書·章節定位；nature_flavor 僅在原文出現「味X性Y」"
+                    "句式時逐字提取，提不到不編造。"}
+
+
+def role_evidence(herb: str) -> List[Dict]:
+    """方中作用的可計算證據：家族劑量演化中該藥的增減量/加減味事件。
+
+    「量變致新方」（桂枝湯→桂枝加桂湯 = 桂枝×1.67）是該藥在方中作用的
+    A 層可計算證據——不做君臣佐使歸納，只列事件。"""
+    import json as _json
+    evo_path = config.RESEARCH_DIR / "dose_family_evolution.json"
+    if not evo_path.exists():
+        return []
+    data = _json.loads(evo_path.read_text(encoding="utf-8"))
+    out = []
+    hq = fold_variants(herb)
+    for e in data.get("edges", []):
+        added = fold_variants(e.get("added_herbs", "") or "")
+        removed = fold_variants(e.get("removed_herbs", "") or "")
+        deltas = [d for d in e.get("dose_deltas", [])
+                  if fold_variants(d.get("herb", "")) == hq]
+        if hq in added or hq in removed or deltas:
+            out.append({"base": e.get("base", ""), "modified": e.get("modified", ""),
+                        "edge_kind": e.get("edge_kind", ""),
+                        "event": ("加味" if hq in added else
+                                  "減味" if hq in removed else "劑量調整"),
+                        "dose_deltas": deltas})
+    return out[:10]

@@ -76,17 +76,28 @@ def build_sample(n: int = 50, out_path: Optional[Path] = None,
             key = f"{dyn_of.get(bdir, '') or '未詳'}×{best.get('mode', '無')}"
             strata.setdefault(key, []).append(
                 (bdir, chapter, seq, para, best))
-        total = len(paragraphs)
+        # 輪轉配額：層按規模降序，各層先做層內等距候選（每層至多
+        # ceil(n/層數)+1 個），再逐輪各取 1 直到湊滿 n——層多於 n 時
+        # 恰取最大的 n 層各 1 個，不超額返回；全程零隨機
+        ordered = sorted(strata.items(), key=lambda kv: (-len(kv[1]), kv[0]))
+        per = max(1, -(-n // len(ordered)))          # ceil(n/層數)
+        cand = {}
+        for key, pool in ordered:
+            k = min(len(pool), per + 1)
+            stride = max(1, len(pool) // k)
+            cand[key] = pool[::stride][:k]
         sample = []
-        for key in sorted(strata):
-            pool = strata[key]
-            quota = max(1, round(n * len(pool) / total))
-            stride = max(1, len(pool) // quota)
-            for item in pool[::stride][:quota]:
-                sample.append((key, *item))
-        sample = sample[:max(n, len(strata))]
-        sampling_note = (f"分層抽樣：{len(strata)} 層（朝代×預測模式，"
-                         "含負例層），比例配額、每層≥1、層內等距，零隨機。")
+        rnd = 0
+        while len(sample) < n and any(rnd < len(c) for c in cand.values()):
+            for key, _ in ordered:
+                if len(sample) >= n:
+                    break
+                if rnd < len(cand[key]):
+                    sample.append((key, *cand[key][rnd]))
+            rnd += 1
+        sampling_note = (f"分層抽樣：{len(strata)} 層（朝代×預測模式，含負例層），"
+                         "按層規模輪轉配額（層多於 n 時取最大 n 層各 1），"
+                         "層內等距，零隨機。")
     else:
         stride = max(1, len(paragraphs) // max(1, n))
         sample = [("等距", bdir, chapter, seq, para, _predict(para))
@@ -134,12 +145,17 @@ def _norm_ref(ref: str) -> str:
 
 
 def evaluate(csv_path: Path) -> Dict:
-    """讀回已標註的金標準表，計 precision / recall / F1 與模式一致率。"""
+    """讀回已標註的金標準 CSV，計 precision / recall / F1 與模式一致率。"""
     csv_path = Path(csv_path)
     if not csv_path.exists():
         return {"error": f"文件不存在：{csv_path}"}
     with csv_path.open(encoding="utf-8-sig", newline="") as fh:
         rows = list(csv.DictReader(fh))
+    return evaluate_rows(rows)
+
+
+def evaluate_rows(rows: List[Dict]) -> Dict:
+    """行級評估（Web 標註工作台走此入口：瀏覽器內標註→直接回傳評估）。"""
     annotated = [r for r in rows if (r.get("human_clause_id") or "").strip()]
     if not annotated:
         return {"error": "無已標註行（human_clause_id 全為空）；"

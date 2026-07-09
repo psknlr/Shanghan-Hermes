@@ -52,7 +52,8 @@ python3 -m hermes_shanghan serve
 
 `GET /api/stats`、`/api/llm/status`、`/api/skills`、`/api/formulas`、`/api/channels`、
 `GET /api/clause/<ref>`；`POST /api/search|match|differential|teach|mistreatment|`
-`research|paper|agent|council|patient|tool|trace|herb|formula-explain`。全部返回 JSON，結構與 CLI 一致。
+`research|paper|agent|council|patient|tool|trace|herb|formula-explain|`
+`gold-sample|gold-eval`；`GET /api/tools`（28 工具規格，工具台數據源）。全部返回 JSON，結構與 CLI 一致。
 `POST /api/trace {"type": "clause|formula|claim|school|commentator|text",
 "ref": "…"}` 返回五類溯源鏈報告（詳見 [`docs/TRACE.md`](TRACE.md)）。
 

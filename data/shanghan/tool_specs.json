@@ -355,6 +355,283 @@
      "required": []
     }
    }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_hypotheses",
+    "description": "多假設方證分析（醫師/教學端）：依症狀脈象返回並列候選方證假設，每個假設帶支持證據/反證/缺失關鍵證，並生成鑒別追問；證據不足時建議先補充四診信息而非給單一答案。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "symptoms": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "pulse": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "six_channel": {
+       "type": "string"
+      },
+      "top_k": {
+       "type": "integer",
+       "default": 4
+      }
+     },
+     "required": [
+      "symptoms"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_library",
+    "description": "中醫笈成全庫快速查閱（800+ 部醫籍，文獻旁證層/非經文層）：按書名/作者/朝代/分類檢索編目；按原文詞句全文檢索（返回書·章節定位的摘錄）；或按書名+章節閱讀原書。庫未下載時提示 `library fetch`。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "檢索詞：書名/作者（編目）或原文詞句（全文）"
+      },
+      "book": {
+       "type": "string",
+       "description": "可選書名——直接閱讀該書"
+      },
+      "section": {
+       "type": "string",
+       "description": "可選章節名（配合 book）"
+      },
+      "category": {
+       "type": "string",
+       "description": "可選分類過濾：醫案/方書/本草/溫病/傷寒…"
+      },
+      "top_k": {
+       "type": "integer",
+       "default": 5
+      }
+     },
+     "required": []
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_trace",
+    "description": "深度溯源鏈：條文（原文→異文→注家→歷代引用→計量）、方劑（首見→組成→類方劑量演化→方名傳播）、方證觀點（原文直述檢驗→注家首倡時間線→學派立場）、注家（學派/指紋/被轉引樞紐度）、學派（範式/一致度）、任意文本回源。多觀點並存，證據分級標註。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query_type": {
+       "type": "string",
+       "enum": [
+        "clause",
+        "formula",
+        "claim",
+        "school",
+        "commentator",
+        "text",
+        "quote",
+        "term",
+        "dispute",
+        "compare"
+       ],
+       "description": "溯源對象類型；quote=誤引檢測；dispute=注家爭議結構化（條文號）；compare=學派/注家比較（A vs B）"
+      },
+      "ref": {
+       "type": "string",
+       "description": "條文號/方名/觀點關鍵詞/注家名/學派名/原文片段"
+      }
+     },
+     "required": [
+      "query_type",
+      "ref"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_citation_network",
+    "description": "學術計量網絡（確定性科學計量）：歷代著作→條文引文邊的引用網絡、被引最多條文、共引條文對、著作文獻耦合、朝代時間切片、突現分析、主路徑。可選 target（條文號或方名）返回該對象的傳播計量；scope 控制被引榜範圍（canonical=正文398條[默認]/auxiliary=輔助篇章/all）。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "target": {
+       "type": "string",
+       "description": "可選：條文號（如 12）或方名（如 桂枝湯）"
+      },
+      "scope": {
+       "type": "string",
+       "enum": [
+        "canonical",
+        "auxiliary",
+        "all"
+       ],
+       "default": "canonical",
+       "description": "被引榜範圍：正文/輔助篇章/混排"
+      },
+      "top_k": {
+       "type": "integer",
+       "default": 8
+      }
+     },
+     "required": []
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_herb_profile",
+    "description": "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "herb": {
+       "type": "string",
+       "description": "藥名，如 桂枝"
+      }
+     },
+     "required": [
+      "herb"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_formula_explain",
+    "description": "方解檔案（一站式）：首見條文、三層症狀口徑（首見方證/全書聚合/特殊上下文）、組成劑量比、煎服法、禁忌、類方鑒別、方名傳播、方證觀點分級。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string",
+       "description": "方名，如 桂枝湯"
+      }
+     },
+     "required": [
+      "formula"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_intake",
+    "description": "四診信息採集：把患者自然敘述整理為結構化四診表（主訴/病程/寒熱/汗/渴飲/二便/胸脅腹/痛/眠/舌/脈/誤治史/藥後反應）+ 缺失關鍵信息 + 追問建議。只整理信息，不做匹配不做診斷（患者端安全）。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string",
+       "description": "患者的自然語言敘述"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_adjudicate",
+    "description": "方證多假設裁決（醫師/教學端）：候選方證各附支持證/反證/缺失證/禁忌衝突，輸出三態裁決（傾向A/傾向B/不能裁決）+「為什麼還不能定方」+ 三個關鍵追問。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "symptoms": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "pulse": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "six_channel": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "symptoms"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_conflict_audit",
+    "description": "方證衝突審計（醫師端）：候選方 × 呈現表現 → 衝突項（核心證/兼證衝突）/衝突條文/是否禁忌/改判候選/應補問。比 top-k 匹配更安全的定位方式。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "formula": {
+       "type": "string"
+      },
+      "symptoms": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "pulse": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "formula",
+      "symptoms"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "shanghan_mistreatment_simulate",
+    "description": "誤治傳變路徑模擬：某經 × 某誤治 → 變證分支 → 救逆方 → 條文依據；多步鏈為組合視圖並如實標註（每步錨定原文，鏈非原文連續敘述）。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "channel": {
+       "type": "string",
+       "default": "太陽病"
+      },
+      "mistreatment": {
+       "type": "string",
+       "description": "誤汗/誤下/誤吐/火逆；留空列全部"
+      },
+      "steps": {
+       "type": "integer",
+       "default": 1
+      }
+     },
+     "required": []
+    }
+   }
   }
  ],
  "anthropic_tools": [
@@ -653,6 +930,253 @@
      "top_k": {
       "type": "integer",
       "default": 3
+     }
+    },
+    "required": []
+   }
+  },
+  {
+   "name": "shanghan_hypotheses",
+   "description": "多假設方證分析（醫師/教學端）：依症狀脈象返回並列候選方證假設，每個假設帶支持證據/反證/缺失關鍵證，並生成鑒別追問；證據不足時建議先補充四診信息而非給單一答案。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "symptoms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "pulse": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "six_channel": {
+      "type": "string"
+     },
+     "top_k": {
+      "type": "integer",
+      "default": 4
+     }
+    },
+    "required": [
+     "symptoms"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_library",
+   "description": "中醫笈成全庫快速查閱（800+ 部醫籍，文獻旁證層/非經文層）：按書名/作者/朝代/分類檢索編目；按原文詞句全文檢索（返回書·章節定位的摘錄）；或按書名+章節閱讀原書。庫未下載時提示 `library fetch`。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "query": {
+      "type": "string",
+      "description": "檢索詞：書名/作者（編目）或原文詞句（全文）"
+     },
+     "book": {
+      "type": "string",
+      "description": "可選書名——直接閱讀該書"
+     },
+     "section": {
+      "type": "string",
+      "description": "可選章節名（配合 book）"
+     },
+     "category": {
+      "type": "string",
+      "description": "可選分類過濾：醫案/方書/本草/溫病/傷寒…"
+     },
+     "top_k": {
+      "type": "integer",
+      "default": 5
+     }
+    },
+    "required": []
+   }
+  },
+  {
+   "name": "shanghan_trace",
+   "description": "深度溯源鏈：條文（原文→異文→注家→歷代引用→計量）、方劑（首見→組成→類方劑量演化→方名傳播）、方證觀點（原文直述檢驗→注家首倡時間線→學派立場）、注家（學派/指紋/被轉引樞紐度）、學派（範式/一致度）、任意文本回源。多觀點並存，證據分級標註。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "query_type": {
+      "type": "string",
+      "enum": [
+       "clause",
+       "formula",
+       "claim",
+       "school",
+       "commentator",
+       "text",
+       "quote",
+       "term",
+       "dispute",
+       "compare"
+      ],
+      "description": "溯源對象類型；quote=誤引檢測；dispute=注家爭議結構化（條文號）；compare=學派/注家比較（A vs B）"
+     },
+     "ref": {
+      "type": "string",
+      "description": "條文號/方名/觀點關鍵詞/注家名/學派名/原文片段"
+     }
+    },
+    "required": [
+     "query_type",
+     "ref"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_citation_network",
+   "description": "學術計量網絡（確定性科學計量）：歷代著作→條文引文邊的引用網絡、被引最多條文、共引條文對、著作文獻耦合、朝代時間切片、突現分析、主路徑。可選 target（條文號或方名）返回該對象的傳播計量；scope 控制被引榜範圍（canonical=正文398條[默認]/auxiliary=輔助篇章/all）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "target": {
+      "type": "string",
+      "description": "可選：條文號（如 12）或方名（如 桂枝湯）"
+     },
+     "scope": {
+      "type": "string",
+      "enum": [
+       "canonical",
+       "auxiliary",
+       "all"
+      ],
+      "default": "canonical",
+      "description": "被引榜範圍：正文/輔助篇章/混排"
+     },
+     "top_k": {
+      "type": "integer",
+      "default": 8
+     }
+    },
+    "required": []
+   }
+  },
+  {
+   "name": "shanghan_herb_profile",
+   "description": "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "herb": {
+      "type": "string",
+      "description": "藥名，如 桂枝"
+     }
+    },
+    "required": [
+     "herb"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_formula_explain",
+   "description": "方解檔案（一站式）：首見條文、三層症狀口徑（首見方證/全書聚合/特殊上下文）、組成劑量比、煎服法、禁忌、類方鑒別、方名傳播、方證觀點分級。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "formula": {
+      "type": "string",
+      "description": "方名，如 桂枝湯"
+     }
+    },
+    "required": [
+     "formula"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_intake",
+   "description": "四診信息採集：把患者自然敘述整理為結構化四診表（主訴/病程/寒熱/汗/渴飲/二便/胸脅腹/痛/眠/舌/脈/誤治史/藥後反應）+ 缺失關鍵信息 + 追問建議。只整理信息，不做匹配不做診斷（患者端安全）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "text": {
+      "type": "string",
+      "description": "患者的自然語言敘述"
+     }
+    },
+    "required": [
+     "text"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_adjudicate",
+   "description": "方證多假設裁決（醫師/教學端）：候選方證各附支持證/反證/缺失證/禁忌衝突，輸出三態裁決（傾向A/傾向B/不能裁決）+「為什麼還不能定方」+ 三個關鍵追問。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "symptoms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "pulse": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "six_channel": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "symptoms"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_conflict_audit",
+   "description": "方證衝突審計（醫師端）：候選方 × 呈現表現 → 衝突項（核心證/兼證衝突）/衝突條文/是否禁忌/改判候選/應補問。比 top-k 匹配更安全的定位方式。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "formula": {
+      "type": "string"
+     },
+     "symptoms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "pulse": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    },
+    "required": [
+     "formula",
+     "symptoms"
+    ]
+   }
+  },
+  {
+   "name": "shanghan_mistreatment_simulate",
+   "description": "誤治傳變路徑模擬：某經 × 某誤治 → 變證分支 → 救逆方 → 條文依據；多步鏈為組合視圖並如實標註（每步錨定原文，鏈非原文連續敘述）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "channel": {
+      "type": "string",
+      "default": "太陽病"
+     },
+     "mistreatment": {
+      "type": "string",
+      "description": "誤汗/誤下/誤吐/火逆；留空列全部"
+     },
+     "steps": {
+      "type": "integer",
+      "default": 1
      }
     },
     "required": []

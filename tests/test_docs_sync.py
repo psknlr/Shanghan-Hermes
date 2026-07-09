@@ -52,6 +52,17 @@ class TestDocsSync(unittest.TestCase):
         self.assertIsNotNone(m)
         self.assertEqual(int(m.group(1)), self.n_tools)
 
+    def test_committed_tool_specs_asset_in_sync(self):
+        # 隨庫 tool_specs.json 必須與運行時註冊表同步（七輪評審抓到 18≠28）
+        import json
+        spec = json.loads((ROOT / "data" / "shanghan" / "tool_specs.json")
+                          .read_text(encoding="utf-8"))
+        names = {t["function"]["name"] for t in spec["openai_tools"]}
+        from hermes_shanghan.agent.tools import get_registry
+        self.assertEqual(names, set(get_registry().names()),
+                         "運行 export-tools --out data/shanghan/tool_specs.json 同步")
+        self.assertEqual(len(spec["anthropic_tools"]), self.n_tools)
+
 
 if __name__ == "__main__":
     unittest.main()
