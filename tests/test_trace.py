@@ -362,6 +362,105 @@ class TestTraceTools(unittest.TestCase):
         self.assertTrue(f["differentials"])
         self.assertTrue(f["contraindications"] is not None)
 
+    def test_coupling_scoped(self):
+        # 四輪問題 2：文獻耦合逐 scope（著作條文集先過濾再算 Jaccard）
+        from hermes_shanghan.trace.builder import load_network
+        net = load_network()
+        for scope in ("canonical", "auxiliary", "all"):
+            self.assertIn("bibliographic_coupling", net["scoped"][scope])
+        c = self.reg.call("shanghan_citation_network", {"scope": "canonical"})
+        x = self.reg.call("shanghan_citation_network", {"scope": "auxiliary"})
+        self.assertNotEqual(c["bibliographic_coupling"],
+                            x["bibliographic_coupling"])
+
+    def test_coupling_scope_semantics_synthetic(self):
+        # 合成邊驗證耦合按域計算：兩書共享 12 條正文 + 12 條輔助
+        from hermes_shanghan.trace.scientometrics import build_network
+        edges = []
+        for b in ("甲書", "乙書"):
+            for i in range(1, 13):
+                for cid in (f"SHL_SONGBEN_{i:04d}", f"SHL_SONGBEN_AUX_{i:04d}"):
+                    edges.append({"target_kind": "clause", "clause_id": cid,
+                                  "book_dir": b, "book": b, "author": "",
+                                  "dynasty": "清", "layer": "C", "mode": "暗引",
+                                  "coverage": 1.0, "longest_run": 20,
+                                  "para_seq": i})
+        net = build_network(edges, [])
+        for scope in ("canonical", "auxiliary"):
+            pair = net["scoped"][scope]["bibliographic_coupling"][0]
+            self.assertEqual(pair["shared_clauses"], 12)
+        self.assertEqual(net["scoped"]["all"]["bibliographic_coupling"][0]
+                         ["shared_clauses"], 24)
+
+    def test_audit_self_vs_relay_commentary(self):
+        # 四輪問題 3：本書注文 ≠ 後世轉引
+        from hermes_shanghan.schemas import read_jsonl
+        from hermes_shanghan.trace.builder import _clause_texts
+        from hermes_shanghan.trace.quotation import audit_citation
+        cr = read_jsonl(config.RULES_COMMENTARY_DIR / "commentary_rules.jsonl")
+        texts = _clause_texts()
+        laisu = audit_citation("傷寒來蘇集", "SHL_SONGBEN_0012", texts, cr)
+        laisu_comment_modes = {e["mode"] for e in laisu["edges"]
+                               if "注文" in e["mode"]}
+        for m in laisu_comment_modes:
+            self.assertIn("self_commentary", m)   # 柯琴書中命中柯琴注=本書注文
+        zqz = audit_citation("張卿子傷寒論", "SHL_SONGBEN_0012", texts, cr)
+        relay = [e for e in zqz["edges"] if "relay_commentary" in e["mode"]]
+        self.assertTrue(relay)                     # 張卿子本轉引成無己注
+        self.assertTrue(any("成無己" in f for e in relay for f in e["flags"]))
+
+    def test_herb_and_explain_registered_as_tools(self):
+        # 四輪問題 4：藥解/方解成為完整註冊表工具（自動導出 MCP/OpenAI 規格）
+        names = self.reg.names()
+        self.assertIn("shanghan_herb_profile", names)
+        self.assertIn("shanghan_formula_explain", names)
+        h = self.reg.call("shanghan_herb_profile", {"herb": "桂枝"})
+        self.assertEqual(h["evidence_level"], "A")
+        f = self.reg.call("shanghan_formula_explain", {"formula": "桂枝湯"})
+        self.assertEqual(f["evidence_level"], "mixed")
+        # 患者模式不暴露（含劑量）
+        scoped = self.reg.for_role("patient")
+        self.assertNotIn("shanghan_herb_profile", scoped.names())
+        self.assertNotIn("shanghan_formula_explain", scoped.names())
+
+    def test_symptom_layers_three_tier(self):
+        # 四輪問題 5：首見/全書聚合/特殊上下文三層口徑
+        from hermes_shanghan.trace.chains import formula_explain
+        f = formula_explain("桂枝湯")
+        layers = f["symptom_layers"]
+        self.assertEqual(layers["first_attestation"]["clause_id"],
+                         "SHL_SONGBEN_0012")
+        self.assertIn("嗇嗇惡寒", layers["first_attestation"]["symptoms"])
+        self.assertTrue(layers["aggregate_all_clauses"])
+        ctx15 = next(s for s in layers["special_context"]
+                     if s["clause_id"] == "SHL_SONGBEN_0015")
+        self.assertIn("誤治", ctx15["context"])
+        self.assertIn("不得徑作標準方證核心證", layers["note"])
+
+    def test_goldset_stratified(self):
+        # 四輪問題 6：分層抽樣（朝代×預測模式，零隨機）
+        from hermes_shanghan.trace.goldset import build_sample
+        s = build_sample(n=16, stratify=True)
+        self.assertGreaterEqual(s["n_strata"], 3)
+        strata = {r["stratum"] for r in s["rows"]}
+        self.assertTrue(any("×無" in st for st in strata))   # 含負例層
+        # 可復現：重跑一致
+        s2 = build_sample(n=16, stratify=True)
+        self.assertEqual(s["rows"], s2["rows"])
+
+    def test_term_chain(self):
+        # 術語譜系：營衛不和非原文、在庫首現注家可查
+        from hermes_shanghan.trace.chains import term_chain
+        t = term_chain("營衛不和")
+        self.assertEqual(t["verbatim_in_original"], [])
+        self.assertIn("後世術語", t["evidence_grade"])
+        self.assertTrue(t["commentarial_chronology"])
+        self.assertTrue(t["related_claims"])
+        # 原文逐字術語（胃家實，第180條提綱）
+        t2 = term_chain("胃家實")
+        self.assertIn("SHL_SONGBEN_0180", t2["verbatim_in_original"])
+        self.assertIn("原文逐字", t2["evidence_grade"])
+
     def test_scan_library_with_fixture(self):
         # 全庫掃描（引用方=任意醫籍）：合成最小庫驗證端到端，不依賴真實下載
         import tempfile

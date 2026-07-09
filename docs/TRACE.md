@@ -153,6 +153,17 @@ python3 -m hermes_shanghan trace-scan-full --out /tmp/edges.jsonl
 claims 增 `first_proponent`/`term_first_use`（觀點譜系）·
 `herb`（藥證檔案）· `formula-explain`（方解一站式）。
 
+## 七c、四輪評審意見採納記錄
+
+全部六項採納（詳表見 [`AGENT_ROADMAP.md`](AGENT_ROADMAP.md) 第四輪落地補充）：
+文獻耦合逐 scope 重算（合成邊單元測試驗證語義）· `trace-audit-citation`
+區分本書注文（self_commentary）與後世轉引（relay_commentary）·
+藥解/方解升級為註冊表工具（24 工具，規格自動導出）+ `POST /api/herb`、
+`/api/formula-explain` · 方解三層症狀口徑（首見/全書聚合/特殊上下文）·
+金標準 `--stratify` 分層抽樣（朝代×預測模式，零隨機）· 術語譜系鏈
+（`-t term`：A 層逐字檢驗→在庫首現注家→學派分佈）· memory 文檔同步
+（Core 7 + 2 agent-layer）。
+
 ## 八、已知邊界（如實聲明）
 
 - 引文檢測以宋本條文（含輔助篇章）為靶集；《金匱》條文、方後注不在靶集。

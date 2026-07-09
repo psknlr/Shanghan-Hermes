@@ -73,6 +73,14 @@ TOOL_META: Dict[str, Dict] = {
         "evidence_level": "D",
         "limitations": ["計量指標由逐字引文邊確定性推導；語料最晚傳播層為民國，"
                         "現代引用需經 modern 接口導入"]},
+    "shanghan_herb_profile": {
+        "evidence_level": "A",
+        "limitations": ["僅含可計算事實（方劑/條文/劑量寫法/配伍共現）；"
+                        "藥性功效解釋屬本草層未隨庫，不編造"]},
+    "shanghan_formula_explain": {
+        "evidence_level": "mixed",
+        "limitations": ["一站式檔案混合 A/C/D 層與引文邊，逐節層級見 "
+                        "section_evidence_levels；三層症狀口徑見 symptom_layers.note"]},
 }
 
 _RELEASE_CONFIDENCE = {"gold": 0.9, "silver": 0.75, "bronze": 0.6}
@@ -305,7 +313,7 @@ class ToolRegistry:
                 "query_type": {"type": "string",
                                "enum": ["clause", "formula", "claim",
                                         "school", "commentator", "text",
-                                        "quote"],
+                                        "quote", "term"],
                                "description": "溯源對象類型；quote=誤引檢測"
                                               "（一段引文能否作原文直引）"},
                 "ref": {"type": "string",
@@ -328,6 +336,23 @@ class ToolRegistry:
                 "top_k": {"type": "integer", "default": 8}},
              "required": []},
             self._t_citation_network)
+        self._add(
+            "shanghan_herb_profile",
+            "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現"
+            "網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。",
+            {"type": "object", "properties": {
+                "herb": {"type": "string", "description": "藥名，如 桂枝"}},
+             "required": ["herb"]},
+            self._t_herb_profile)
+        self._add(
+            "shanghan_formula_explain",
+            "方解檔案（一站式）：首見條文、三層症狀口徑（首見方證/全書聚合/"
+            "特殊上下文）、組成劑量比、煎服法、禁忌、類方鑒別、方名傳播、"
+            "方證觀點分級。",
+            {"type": "object", "properties": {
+                "formula": {"type": "string", "description": "方名，如 桂枝湯"}},
+             "required": ["formula"]},
+            self._t_formula_explain)
 
     # -- research-layer helpers -----------------------------------------
     @staticmethod
@@ -610,6 +635,14 @@ class ToolRegistry:
                 "n_text_hits": text.get("n_hits", 0),
                 "scan_capped": text.get("scan_capped", False)}
 
+    def _t_herb_profile(self, herb):
+        from ..apps.herbal import herb_profile
+        return {"tool": "shanghan_herb_profile", **herb_profile(herb)}
+
+    def _t_formula_explain(self, formula):
+        from ..trace.chains import formula_explain
+        return {"tool": "shanghan_formula_explain", **formula_explain(formula)}
+
     def _t_trace(self, query_type, ref):
         from ..trace.chains import trace_dispatch
         res = trace_dispatch(query_type, ref)
@@ -674,7 +707,10 @@ class ToolRegistry:
         out["bursts"] = scoped.get("bursts", net.get("bursts", []))[:top_k]
         out["main_paths"] = scoped.get(
             "main_paths", net.get("main_paths", []))[:3]
-        out["bibliographic_coupling"] = net["bibliographic_coupling"][:top_k]
+        # 文獻耦合也按 scope（著作條文集先過濾再算 Jaccard——書對字段不含
+        # clause_id，審計器掃不到，故靠逐 scope 重算 + 單元測試保證）
+        out["bibliographic_coupling"] = scoped.get(
+            "bibliographic_coupling", net["bibliographic_coupling"])[:top_k]
         return out
 
     # -- tool implementations ------------------------------------------

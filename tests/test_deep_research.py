@@ -25,7 +25,7 @@ class TestResearchModules(unittest.TestCase):
         cls.reg = get_registry()
 
     def test_registry_tool_count(self):
-        self.assertEqual(len(self.reg.specs()), 22)
+        self.assertEqual(len(self.reg.specs()), 24)
         names = self.reg.names()
         for t in ("shanghan_divergence_atlas", "shanghan_dose",
                   "shanghan_corpus_stats", "shanghan_eval_metrics"):

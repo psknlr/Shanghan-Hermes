@@ -500,6 +500,10 @@ def audit_citation(book_dir: str, clause_id: str,
     ctext = scanner.index.texts.get(clause_id, "")
     if not ctext:
         return {"error": f"未找到條文 {clause_id}"}
+    # 文獻學語義：被審計書自身（或同一注家）的注文命中是「本書注文解釋」
+    # （self_commentary），只有他書命中注文才是「後世轉引」（relay_commentary）
+    self_info = config.COMMENTARY_BOOK_INFO.get(book_dir)
+    self_commentator = self_info[1] if self_info else ""
 
     rows = []
     for seq, (chapter, para) in enumerate(paragraphs):
@@ -518,9 +522,18 @@ def audit_citation(book_dir: str, clause_id: str,
             if e["target_kind"] == "clause" and 0 < cov < 0.3:
                 flags.append("片段引用（覆蓋率<0.3）：存在斷章風險，"
                              "結論部分未必被引及，需人工核上下文")
+            mode_label = e["mode"]
             if e["target_kind"] == "commentary":
-                flags.append(f"經由注文轉引（{e.get('via_commentator', '')}"
-                             f"《{e.get('via_book', '')}》），非直接引經文")
+                is_self = (e.get("via_book") == book_dir or
+                           (self_commentator and
+                            e.get("via_commentator") == self_commentator))
+                if is_self:
+                    mode_label = "本書注文（self_commentary）"
+                    flags.append("本注本自身注文解釋條文，非後世轉引")
+                else:
+                    mode_label = "轉引注文（relay_commentary）"
+                    flags.append(f"經由注文轉引（{e.get('via_commentator', '')}"
+                                 f"《{e.get('via_book', '')}》），非直接引經文")
             if e["mode"] == "改寫":
                 flags.append("改寫判定為相似度提示（無逐字片段），可靠性低")
             if run >= 16 and amb == 1 and e["target_kind"] == "clause":
@@ -531,7 +544,7 @@ def audit_citation(book_dir: str, clause_id: str,
                 reliability = "低"
             rows.append({"chapter": chapter, "para_seq": seq,
                          "paragraph_excerpt": para[:80],
-                         "mode": e["mode"], "marker": e.get("marker", ""),
+                         "mode": mode_label, "marker": e.get("marker", ""),
                          "longest_run": run, "coverage": cov,
                          "ambiguity": amb, "matched_span": e.get("matched_span", ""),
                          "reliability": reliability, "flags": flags})

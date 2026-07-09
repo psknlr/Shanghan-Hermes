@@ -263,6 +263,12 @@ class ServiceContext:
         from ..trace.chains import trace_dispatch
         return trace_dispatch(query_type, ref)
 
+    def herb(self, name: str) -> Dict:
+        return self.registry.call("shanghan_herb_profile", {"herb": name})
+
+    def formula_explain(self, name: str) -> Dict:
+        return self.registry.call("shanghan_formula_explain", {"formula": name})
+
 
 _SERVICE: Optional[ServiceContext] = None
 

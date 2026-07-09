@@ -492,6 +492,45 @@ def formula_explain(name: str) -> Dict:
                 "supporting_clauses": d.get("supporting_clauses", [])[:3]})
         if len(differentials) >= 3:
             break
+
+    # 三層症狀口徑（評審問題 5）：首見方證核心證 ≠ 全書相關表現 ≠ 特殊
+    # 上下文（誤治/禁忌/傳變）證——混排會讓醫師把全書聚合誤讀為標準核心證
+    clauses = _clauses()
+    first_id = chain["first_attestation"]["clause_id"]
+    first_c = clauses.get(first_id, {})
+    aggregate: Dict[str, int] = {}
+    special = []
+    all_support = (chain["supporting_clauses"]["canonical"]
+                   + chain["supporting_clauses"]["auxiliary"])
+    for cid in all_support:
+        c = clauses.get(cid)
+        if not c:
+            continue
+        ctx = []
+        if c.get("mistreatment_terms"):
+            ctx.append("誤治")
+        if c.get("contraindication_terms"):
+            ctx.append("禁忌")
+        if c.get("transformation_terms"):
+            ctx.append("傳變")
+        for s in c.get("symptoms", []):
+            aggregate[s] = aggregate.get(s, 0) + 1
+        if ctx:
+            special.append({"clause_id": cid, "context": ctx,
+                            "symptoms": c.get("symptoms", [])[:6]})
+    symptom_layers = {
+        "first_attestation": {"clause_id": first_id,
+                              "symptoms": first_c.get("symptoms", []),
+                              "pulse": first_c.get("pulse", [])},
+        "aggregate_all_clauses": [
+            {"symptom": s, "n_clauses": n}
+            for s, n in sorted(aggregate.items(),
+                               key=lambda kv: (-kv[1], kv[0]))[:15]],
+        "special_context": special[:10],
+        "note": "首見層=首見條文直接所載；聚合層=全書相關條文表現總和"
+                "（含誤治/禁忌/變證上下文），不得徑作標準方證核心證；"
+                "特殊上下文層單列以防誤讀。",
+    }
     return {
         "chain_type": "方解檔案",
         "formula": formula,
@@ -499,6 +538,7 @@ def formula_explain(name: str) -> Dict:
         "supporting_clauses": chain["supporting_clauses"],
         "core_symptoms": rule.get("core_symptoms", []),
         "core_pulse": rule.get("core_pulse", []),
+        "symptom_layers": symptom_layers,
         "associated_symptoms": rule.get("associated_symptoms", [])[:8],
         "composition": chain["composition"],
         "dose_ratios": chain["dose_ratios"],
@@ -514,11 +554,98 @@ def formula_explain(name: str) -> Dict:
         "section_evidence_levels": {
             **chain["section_evidence_levels"],
             "core_symptoms": "D 方證規則歸納（證據錨定 A 層條文）",
+            "symptom_layers": "A 條文實體標註（三層口徑分列，見其 note）",
             "contraindications": "A 原文禁例",
             "differentials": "D 鑒別歸納（supporting_clauses 回源）",
         },
         "warnings": chain["warnings"] + [
             "方義解釋（如調和營衛）見 claims 分級，不混入原文字段。"],
+    }
+
+
+# ---------------------------------------------------------------------------
+# 6c. 術語譜系鏈（某術語是否原文、最早在庫注家、學派分佈、傳播路徑）
+# ---------------------------------------------------------------------------
+def term_chain(term: str) -> Dict:
+    """回答「營衛不和最早何時出現？」「少陽樞機不利是否原文？」類問題。"""
+    matcher = builder.get_matcher()
+    q = fold_variants("".join(ch for ch in normalize_query(term)
+                              if "㐀" <= ch <= "鿿"))
+    if len(q) < 2:
+        return {"error": "術語過短"}
+
+    # A 層逐字檢驗
+    verbatim = [cid for cid in sorted(matcher.index.texts)
+                if q in matcher.index.texts[cid]][:10]
+
+    # C 層使用譜：哪些注家用過、最早何時（以在庫九注本為限）
+    registry = builder.load_registry()
+    dyn_of_dir = {w["book_dir"]: w["dynasty"] for w in registry["works"]}
+    schools_reg = builder.load_schools()
+    member_school = schools_reg.get("commentator_school", {})
+    usage: Dict[str, Dict] = {}
+    for r in read_jsonl(config.RULES_COMMENTARY_DIR / "commentary_rules.jsonl"):
+        if q not in fold_variants(r.get("commentary_text", "")):
+            continue
+        commentator = r.get("commentator", "")
+        dyn = dyn_of_dir.get(r.get("book", ""), "")
+        entry = usage.setdefault(commentator, {
+            "commentator": commentator, "book": r.get("book", ""),
+            "dynasty": dyn, "dynasty_order": dynasty_order(dyn),
+            "school_id": member_school.get(commentator, ""),
+            "n_passages": 0, "clause_ids": []})
+        entry["n_passages"] += 1
+        if r.get("clause_id") not in entry["clause_ids"]:
+            entry["clause_ids"].append(r.get("clause_id", ""))
+    chronology = sorted(usage.values(),
+                        key=lambda e: (e["dynasty_order"], e["commentator"]))
+    for e in chronology:
+        e["clause_ids"] = e["clause_ids"][:5]
+
+    # 關聯方證觀點與相關原文表達
+    related_claims = []
+    for c in builder.load_claims().get("claims", []):
+        if any(fold_variants(t) == q or q in fold_variants(t)
+               or fold_variants(t) in q for t in c.get("interpretive_terms", [])):
+            related_claims.append({
+                "claim_id": c["claim_id"], "formula": c["formula"],
+                "evidence_grade": c["evidence_grade"],
+                "related_original_terms": c.get("terms_verbatim_in_original", {}),
+                "term_first_use": c.get("term_first_use", {})})
+
+    school_dist: Dict[str, int] = {}
+    for e in chronology:
+        if e["school_id"]:
+            school_dist[e["school_id"]] = school_dist.get(e["school_id"], 0) + 1
+
+    if verbatim:
+        grade = "原文逐字（A 層）"
+    elif chronology:
+        first = chronology[0]
+        grade = (f"後世術語：在庫首現 {first['commentator']}"
+                 f"（{first['dynasty']}《{first['book']}》）")
+    else:
+        grade = "庫內未見（原文與九注本皆無逐字出現）"
+    modern = modern_echo_for(verbatim) if verbatim else {
+        "available": False, "note": "無 A 層錨點，現代回聲不適用。"}
+
+    return {
+        "chain_type": "術語譜系鏈",
+        "query": term,
+        "verbatim_in_original": verbatim,
+        "commentarial_chronology": chronology,
+        "school_distribution": {k: school_dist[k] for k in sorted(school_dist)},
+        "related_claims": related_claims,
+        "evidence_grade": grade,
+        "modern": modern,
+        "section_evidence_levels": {
+            "verbatim_in_original": "A 原文逐字檢驗",
+            "commentarial_chronology": "C 注家使用譜（按朝代排序）",
+            "school_distribution": "posthoc_induction 學派歸納",
+            "related_claims": "方證觀點庫（分級見各條）",
+        },
+        "warnings": ["「最早」以在庫九注本為限，散佚注釋不可考；"
+                     "術語未見於庫內不等於歷史上不存在。"],
     }
 
 
@@ -601,7 +728,7 @@ def trace_dispatch(query_type: str, ref: str) -> Dict:
     dispatch = {"clause": clause_chain, "formula": formula_chain,
                 "claim": claim_chain, "school": school_chain,
                 "commentator": commentator_chain, "text": text_trace,
-                "quote": quote_check}
+                "quote": quote_check, "term": term_chain}
     fn = dispatch.get(query_type)
     if fn is None:
         return {"error": f"未知溯源對象類型 {query_type}",

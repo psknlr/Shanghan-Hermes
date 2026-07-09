@@ -117,13 +117,14 @@ python3 -m hermes_shanghan trace-network --scope auxiliary
 python3 -m hermes_shanghan trace-scan-library --category 醫案
 python3 -m hermes_shanghan trace-scan-library --out /tmp/library_edges.jsonl
 
-# 誤引檢測：一段「引文」能否作為原文直引（逐片段判定+關聯方證觀點）
+# 誤引檢測 / 術語譜系（最早注家/學派分佈/原文相關表達）
 python3 -m hermes_shanghan trace "营卫不和，桂枝汤主之" -t quote
+python3 -m hermes_shanghan trace 營衛不和 -t term
 
 # 引文邊審計 / Scope 一致性審計 / 金標準標註閉環
 python3 -m hermes_shanghan trace-audit-citation --book 傷寒來蘇集 --clause 12
 python3 -m hermes_shanghan trace-audit-scope
-python3 -m hermes_shanghan trace-gold-sample --n 50 --out gold.csv   # 標註後：
+python3 -m hermes_shanghan trace-gold-sample --n 50 --out gold.csv --stratify   # 分層抽樣；標註後：
 python3 -m hermes_shanghan trace-gold-eval --file gold.csv           # P/R/F1
 
 # 藥證檔案 · 方解一站式（智能體路線圖見 docs/AGENT_ROADMAP.md）
@@ -137,7 +138,7 @@ python3 -m hermes_shanghan agent "少陰病寒化與熱化怎麼區分？" --rol
 python3 -m hermes_shanghan solve "桂枝湯與麻黃湯如何鑒別？各自劑量比是多少？注家有何分歧？"
 python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
 
-# 測試（246 項：對抗性審核 + 智能體架構 + 22 工具 + 評測 + 七維研究循環 + 全庫接入
+# 測試（253 項：對抗性審核 + 智能體架構 + 24 工具 + 評測 + 七維研究循環 + 全庫接入
 #       + 可復現性/證據鏈硬化 + 溯源層（引文識別/計量網絡/五類溯源鏈）+ Colab守衛）
 python3 -m unittest discover -s tests
 
@@ -184,14 +185,15 @@ python3 -m hermes_shanghan tool-call shanghan_differential --args '{"formulas":[
 python3 -m hermes_shanghan export-tools --out tools.json
 ```
 
-**接入智能體框架**（22 個只讀回源工具 + 1 個智能體工具，三種 harness 共用同一能力面；
+**接入智能體框架**（24 個只讀回源工具 + 1 個智能體工具，三種 harness 共用同一能力面；
 模型經 function-calling **自主選擇調用**）。除檢索/匹配/鑒別/六經/誤治外，還包括：
 分歧圖譜 · 劑量計量 · 全庫統計 · 評測指標 · **異文對勘**（B層）· **關係圖譜遍歷**
 （多跳推理）· **治法法度** · **禁忌檢查**（複合推理：方+證候→衝突/法度禁例）·
 **劑量換算計算器**（確定性，免模型心算）· **醫案檢索**（實驗錄旁證+經文錨點）·
 **全庫文獻查閱**（中醫笈成 800+ 部：編目/全文/按章閱讀，文獻旁證層）·
 **深度溯源鏈**（條文/方劑/方證觀點/注家/學派五類鏈）·
-**學術計量網絡**（歷代引文/共引/耦合/切片/突現/主路徑）：
+**學術計量網絡**（歷代引文/共引/耦合/切片/突現/主路徑，scope 貫穿全字段）·
+**藥證檔案** · **方解一站式**（三層症狀口徑）：
 
 | Harness | 接入方式 |
 |---|---|
@@ -435,7 +437,7 @@ hermes_shanghan/
 ├─ paper/       writer（8 類論文 + LLM 增益層）· charts（純標準庫 SVG 統計圖）
 ├─ memory/      store（9 個記憶模塊，含 correction/project）
 ├─ llm/         config · cache · prompts · providers(litellm/local/scripted) · client
-├─ agent/       tools(22 工具+ScopedRegistry+患者白名單+結果緩存) · citation_guard
+├─ agent/       tools(24 工具+ScopedRegistry+患者白名單+結果緩存) · citation_guard
 │               · agent(ReAct+反思自糾+工具預算) · planner(任務圖規劃)
 │               · evidence_binder(句級 claim→證據綁定) · hypothesis(多假設+鑒別追問)
 │               · complex_agent(任務圖編排) · session(會話記憶+糾錯記憶)
@@ -444,7 +446,7 @@ hermes_shanghan/
 ├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
 ├─ server/      service(API面) · http_server(stdlib) · static(SPA: index/css/js)
 ├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
-tests/          246 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
+tests/          253 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/library/      中醫笈成全庫（803 部，`library fetch` 自動下載，不入庫）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/溯源/論文）

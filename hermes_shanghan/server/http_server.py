@@ -181,6 +181,16 @@ def _trace(svc, body, m, q):
                      body.get("ref", ""))
 
 
+@route("POST", r"/api/herb")
+def _herb(svc, body, m, q):
+    return svc.herb(body.get("name", body.get("herb", "")))
+
+
+@route("POST", r"/api/formula-explain")
+def _formula_explain(svc, body, m, q):
+    return svc.formula_explain(body.get("name", body.get("formula", "")))
+
+
 # --------------------------------------------------------------------------
 def make_handler(service: ServiceContext):
     class Handler(BaseHTTPRequestHandler):

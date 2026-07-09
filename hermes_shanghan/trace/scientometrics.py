@@ -169,19 +169,23 @@ def build_network(edges: List[Dict], book_stats: List[Dict]) -> Dict:
                                     key=lambda kv: (-kv[1], kv[0]))[:50]]
     cocitation = cocitation_scoped["all"]
 
-    # ---- 文獻耦合：共享被引條文集的著作對 --------------------------------
-    coupling = []
-    for i in range(len(works_ranked)):
-        for j in range(i + 1, len(works_ranked)):
-            a, b = works_ranked[i], works_ranked[j]
-            inter = len(a["clauses"] & b["clauses"])
-            union = len(a["clauses"] | b["clauses"])
-            if inter >= 10 and union:
-                coupling.append({"a": a["book_dir"], "b": b["book_dir"],
-                                 "shared_clauses": inter,
+    # ---- 文獻耦合：共享被引條文集的著作對（逐 scope：條文集先按域過濾） ----
+    coupling_scoped: Dict[str, List[Dict]] = {}
+    for scope, pred in scope_pred.items():
+        rows = []
+        scoped_sets = [(w["book_dir"], {c for c in w["clauses"] if pred(c)})
+                       for w in works_ranked]
+        for i in range(len(scoped_sets)):
+            for j in range(i + 1, len(scoped_sets)):
+                (da, sa), (db, sb) = scoped_sets[i], scoped_sets[j]
+                inter = len(sa & sb)
+                union = len(sa | sb)
+                if inter >= 10 and union:
+                    rows.append({"a": da, "b": db, "shared_clauses": inter,
                                  "jaccard": round(inter / union, 3)})
-    coupling.sort(key=lambda r: (-r["jaccard"], r["a"], r["b"]))
-    coupling = coupling[:50]
+        rows.sort(key=lambda r: (-r["jaccard"], r["a"], r["b"]))
+        coupling_scoped[scope] = rows[:50]
+    coupling = coupling_scoped["all"]
 
     # ---- 時間切片 --------------------------------------------------------
     slices: Dict[str, Dict] = {}
@@ -274,9 +278,11 @@ def build_network(edges: List[Dict], book_stats: List[Dict]) -> Dict:
         "time_slices": time_slices,
         "bursts": bursts,
         "main_paths": main_paths,
-        # scope 一致視圖：canonical/auxiliary/all 各自的共引/突現/主路徑
-        # （頂層同名字段為向後兼容視圖：cocitation/bursts=all，main_paths=canonical）
+        # scope 一致視圖：canonical/auxiliary/all 各自的共引/耦合/突現/主路徑
+        # （頂層同名字段為向後兼容視圖：cocitation/coupling/bursts=all，
+        #   main_paths=canonical）
         "scoped": {scope: {"cocitation_pairs": cocitation_scoped[scope],
+                           "bibliographic_coupling": coupling_scoped[scope],
                            "bursts": bursts_scoped[scope],
                            "main_paths": main_paths_scoped[scope]}
                    for scope in ("canonical", "auxiliary", "all")},
