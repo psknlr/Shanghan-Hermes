@@ -49,6 +49,13 @@ class TestColabNotebook(unittest.TestCase):
                                                   formula_chain,
                                                   school_chain, text_trace)
         from hermes_shanghan.trace.quotation import scan_library         # noqa
+        from hermes_shanghan.apps.bianzheng import (adjudicate,          # noqa
+                                                    conflict_audit,
+                                                    intake_parse,
+                                                    mistreatment_simulate)
+        from hermes_shanghan.trace.chains import (compare_chain,         # noqa
+                                                  dispute_chain,
+                                                  quote_check)
 
     def test_research_assets_referenced_exist(self):
         blob = "".join("".join(c["source"]) for c in self.nb["cells"]
@@ -61,8 +68,14 @@ class TestColabNotebook(unittest.TestCase):
     def test_trace_section_present(self):
         blob = "".join("".join(c["source"]) for c in self.nb["cells"])
         for feature in ("text_trace", "formula_chain", "claim_chain",
-                        "shanghan_citation_network", "scan_library"):
+                        "shanghan_citation_network", "scan_library",
+                        "intake_parse", "quote_check", "dispute_chain",
+                        "compare_chain", "ngrok"):
             self.assertIn(feature, blob)
+
+    def test_attribution_present(self):
+        blob = "".join("".join(c["source"]) for c in self.nb["cells"])
+        self.assertIn("醫哲未來人工智能研究院", blob)
 
 
 if __name__ == "__main__":

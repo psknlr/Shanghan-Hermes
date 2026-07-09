@@ -722,9 +722,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("ref", help="條文號、方名、觀點關鍵詞、注家名、學派名或原文片段")
     sp.add_argument("--type", "-t", default="text",
                     choices=["clause", "formula", "claim", "school",
-                             "commentator", "text", "quote", "term"],
+                             "commentator", "text", "quote", "term",
+                             "dispute", "compare"],
                     help="溯源對象類型（默認 text：任意文本回源；"
-                         "quote：誤引檢測；term：術語譜系——最早注家/學派分佈）")
+                         "quote：誤引檢測；term：術語譜系；dispute：注家爭議結構化；compare：學派/注家比較（A vs B））")
     sp.set_defaults(func=cmd_trace)
 
     sp = sub.add_parser("trace-build", help="重建溯源層資產（引文邊/計量網絡/學派/觀點）")

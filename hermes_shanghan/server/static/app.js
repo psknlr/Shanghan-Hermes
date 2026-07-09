@@ -380,6 +380,193 @@ function chipPicker(options, placeholder) {
   return { node: el("div", {}, [ci.node, list]), values: ci.values };
 }
 
+// ---------- 溯源工作台（誤引檢測 / 文本回源 / 術語 / 方劑 / 爭議 / 比較） ----------
+const TRACE_MODES = {
+  quote: ["誤引檢測", "粘貼一段「引文」，逐片段判定：原文直引 / 後世歸納語 / 庫內無出處", "营卫不和，桂枝汤主之"],
+  text: ["文本回源", "任意文本回源到條文（簡繁/異體字皆可）", "观其脉证，知犯何逆，随证治之"],
+  term: ["術語譜系", "某術語是否原文？在庫首現注家與學派分佈", "營衛不和"],
+  formula: ["方劑源流", "首見條文 → 方名傳播（含異名歸並）→ 歷代引用", "桂枝湯"],
+  dispute: ["注家爭議", "條文號 → 各家觀點 · 貼近原文程度 · 分歧類型（不裁決）", "12"],
+  compare: ["學派比較", "兩注家/學派對照：範式 · 指紋 · 一致度 · 高分歧條文", "柯琴 vs 尤怡"],
+};
+views.trace = async (main) => {
+  main.innerHTML = "";
+  main.append(viewHead("溯源工作台", "引文審核 · 知識譜系追蹤。每個結論附證據層級標註。"));
+  let mode = "quote";
+  const seg = el("div", { class: "seg wrap" }, Object.keys(TRACE_MODES).map((k, i) =>
+    el("button", { class: i === 0 ? "on" : "", onclick: e => { mode = k; [...seg.children].forEach(b => b.classList.remove("on")); e.target.classList.add("on"); inp.placeholder = TRACE_MODES[k][2]; hint.textContent = TRACE_MODES[k][1]; } }, TRACE_MODES[k][0])));
+  const inp = el("textarea", { rows: 2, placeholder: TRACE_MODES.quote[2] });
+  const hint = el("p", { class: "small muted" }, TRACE_MODES.quote[1]);
+  const out = el("div", {});
+  async function run() {
+    const ref = inp.value.trim(); if (!ref) return;
+    out.innerHTML = '<div class="loading">溯源中…</div>';
+    const r = await api.post("/api/trace", { type: mode, ref });
+    out.innerHTML = "";
+    if (r.error) { out.append(el("div", { class: "cite-banner cite-warn" }, r.error)); return; }
+    renderTrace(out, mode, r);
+  }
+  main.append(el("div", { class: "card" }, [seg, hint, inp, el("div", { class: "row", style: "margin-top:8px" }, [el("span", { class: "spacer" }), el("button", { class: "btn", onclick: run }, "追溯")])]));
+  main.append(out);
+};
+function secBadge(t) { return el("span", { class: "pill" }, t); }
+function renderTrace(out, mode, r) {
+  if (mode === "quote") {
+    const ok = (r.verdict || "").includes("可作原文直引");
+    out.append(el("div", { class: "cite-banner " + (ok ? "cite-ok" : "cite-warn") }, r.verdict || ""));
+    (r.fragments || []).forEach(f => {
+      const cls = f.verdict === "原文逐字" ? "frag-a" : f.verdict.includes("後世") ? "frag-c" : "frag-x";
+      out.append(el("div", { class: "card frag " + cls }, [
+        el("div", { class: "row" }, [el("b", { class: "classical" }, f.fragment), el("span", { class: "pill" }, f.verdict)]),
+        f.verbatim_in && f.verbatim_in.length ? clauseChips(f.verbatim_in) : null,
+        (f.related_claims || []).map(c => el("div", { class: "small muted" }, "關聯觀點 " + c.claim_id + "（" + c.evidence_grade + "）：原文相關表達 " + Object.keys(c.related_original_terms || {}).join("、"))),
+        f.posthoc_terms && f.posthoc_terms.length ? el("div", { class: "small muted" }, "後世術語：" + f.posthoc_terms.join("、")) : null,
+      ]));
+    });
+    (r.warnings || []).forEach(w => out.append(el("p", { class: "notice" }, w)));
+  } else if (mode === "term") {
+    out.append(el("div", { class: "cite-banner cite-ok" }, r.citable_statement || r.evidence_grade || ""));
+    if ((r.verbatim_in_original || []).length) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "原文逐字出現"), clauseChips(r.verbatim_in_original)]));
+    const tbl = el("table"); tbl.append(el("tr", {}, ["朝代", "注家", "注本", "學派", "用例"].map(h => el("th", {}, h))));
+    (r.commentarial_chronology || []).forEach(e2 => tbl.append(el("tr", {}, [el("td", {}, e2.dynasty), el("td", {}, e2.commentator), el("td", {}, e2.book), el("td", {}, e2.school_id || ""), el("td", {}, e2.n_passages + " 段 " ), ])));
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "注家使用譜（在庫九注本）"), tbl]));
+  } else if (mode === "dispute") {
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, [clauseChip(r.clause.clause_id), " 條文"]), el("p", { class: "classical" }, r.clause.text)]));
+    const tbl = el("table"); tbl.append(el("tr", {}, ["朝代", "注家", "學派", "貼近原文", "後世術語", "取徑", "節錄"].map(h => el("th", {}, h))));
+    (r.views || []).forEach(v => tbl.append(el("tr", {}, [el("td", {}, v.dynasty), el("td", {}, v.commentator), el("td", { class: "small" }, v.school), el("td", {}, String(v.closeness_to_original)), el("td", { class: "small" }, (v.posthoc_terms || []).join("、")), el("td", { class: "small" }, (v.analytic_focus || []).join("/")), el("td", { class: "small muted" }, v.excerpt)])));
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "各家觀點（" + r.n_commentators + " 家 · 分歧類型：" + (r.divergence_types_present || []).join("、") + "）"), el("div", { class: "tbl-scroll" }, tbl)]));
+    out.append(el("p", { class: "notice" }, r.undecidable_note));
+  } else if (mode === "compare") {
+    out.append(el("div", { class: "grid cols-2" }, [r.a, r.b].map(s => el("div", { class: "card" }, [
+      el("h3", {}, s.name), el("div", { class: "kv small" }, [el("b", {}, "學派"), el("span", {}, s.school)]),
+      el("div", { class: "kv small" }, [el("b", {}, "範式"), el("span", {}, s.paradigm)]),
+      s.fingerprint_terms && s.fingerprint_terms.length ? el("div", {}, s.fingerprint_terms.map(secBadge)) : null]))));
+    if (r.agreement) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "實測一致度"), el("p", {}, "共注條文 " + r.agreement.n_shared_clauses + " · 術語一致度 " + r.agreement.mean_term_agreement)]));
+    if ((r.top_divergent_clauses || []).length) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "高分歧條文"), ...r.top_divergent_clauses.map(t => el("div", { class: "kv small" }, [clauseChip(t.clause_id), el("span", {}, "分歧 " + t.term_divergence)]))]));
+    out.append(el("p", { class: "notice" }, r.reading_note || ""));
+  } else if (mode === "formula") {
+    const fa = r.first_attestation || {};
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "首見（宋本條文序）"), el("div", { class: "row" }, [clauseChip(fa.clause_id), el("span", { class: "small muted" }, fa.note)]), el("p", { class: "small" }, fa.core_pattern)]));
+    const nt = r.name_transmission || {};
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "方名傳播"), el("p", {}, nt.total_mentions + " 次 / " + nt.n_books + " 部書"),
+      ...(nt.aliases || []).map(a => el("div", { class: "evi" }, [el("div", { class: "ct" }, "異名「" + a.alias + "」" + (a.same_formula ? "（同方）" : "（不可合併）") + "：" + a.alias_mentions + " 次 / " + a.alias_n_books + " 部書"), el("div", { class: "meta" }, a.source)]))]));
+    const cit = r.citations_of_clauses || {};
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "歷代引用（" + (cit.n_citing_books || 0) + " 部書）"),
+      ...((cit.by_dynasty || []).map(d => el("div", { class: "kv small" }, [el("b", {}, d.dynasty), el("span", {}, d.books.map(b => b.book).join("、"))])))]));
+    (r.claims || []).forEach(c => out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "方證觀點 " + c.claim_id), el("p", {}, c.claim), el("span", { class: "pill" }, c.evidence_grade)])));
+  } else { // text / claim / fallback
+    if (r.matches) {
+      out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "回源命中"), ...r.matches.map(m => el("div", { class: "kv small" }, [clauseChip(m.clause_id), el("span", {}, "片段 " + (m.longest_run || 0) + " 字 · 覆蓋 " + (m.coverage || 0))]))]));
+      if (!r.matches.length) { out.append(el("p", { class: "muted" }, r.note || "")); if (r.library_candidates && r.library_candidates.hits) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "全庫候選出處（旁證）"), ...r.library_candidates.hits.map(h => el("div", { class: "kv small" }, [el("b", {}, h.title), el("span", {}, h.author + "·" + h.dynasty + " §" + h.section)]))])); }
+    }
+    if (r.clause) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, [clauseChip(r.clause.clause_id), " 原文"]), el("p", { class: "classical" }, r.clause.text)]));
+    if (r.claim) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, r.claim_id || "方證觀點"), el("p", {}, r.claim), el("span", { class: "pill" }, r.evidence_grade)]));
+    if (r.citations) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "歷代引用 " + r.citations.n_citing_books + " 部書"), ...(r.citations.by_dynasty || []).map(d => el("div", { class: "kv small" }, [el("b", {}, d.dynasty), el("span", {}, d.books.map(b => b.book + "(" + (b.modes ? Object.entries(b.modes).map(([m2, n2]) => m2 + n2).join(" ") : "") + ")").join("、"))]))]));
+    if (r.main_path) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "主路徑"), el("p", { class: "small" }, r.main_path.map(p => p.dynasty + "·" + p.book).join(" → "))]));
+  }
+  if (r.section_evidence_levels) out.append(el("details", { class: "card small" }, [el("summary", {}, "逐節證據層級"), ...Object.entries(r.section_evidence_levels).map(([k, v]) => el("div", { class: "kv small" }, [el("b", {}, k), el("span", { class: "muted" }, v)]))]));
+}
+
+// ---------- 方藥檔案（藥證 / 方解） ----------
+views.herbs = async (main) => {
+  main.innerHTML = "";
+  main.append(viewHead("方藥檔案", "藥證檔案（A-derived，不編造藥性）與方解一站式（四層症狀口徑）。"));
+  const hIn = el("input", { type: "text", placeholder: "藥名，如 桂枝" });
+  const fIn = el("input", { type: "text", placeholder: "方名，如 桂枝湯" });
+  const out = el("div", {});
+  async function runHerb() {
+    out.innerHTML = '<div class="loading">生成藥證檔案…</div>';
+    const r = await api.post("/api/herb", { name: hIn.value.trim() });
+    out.innerHTML = "";
+    if (r.error) { out.append(el("p", { class: "muted" }, r.error)); return; }
+    out.append(el("div", { class: "grid cols-2" }, [
+      el("div", { class: "card" }, [el("div", { class: "section-title" }, r.herb + " · 出現"), el("p", {}, r.n_formulas + " 方 · " + r.n_clauses + " 條"), clauseChips((r.clause_ids || []).slice(0, 10))]),
+      el("div", { class: "card" }, [el("div", { class: "section-title" }, "配伍共現（同方計數）"), ...(r.top_partners || []).map(p => el("div", { class: "kv small" }, [el("b", {}, p.herb), el("span", {}, p.n_formulas_together + " 方同用")]))]),
+    ]));
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "原文劑量寫法"), el("div", {}, (r.dose_variants || []).map(secBadge))]));
+    const bc = r.bencao_layer || {};
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "本草層（旁證）"),
+      bc.available ? el("div", {}, (bc.excerpts || []).map(e2 => el("div", { class: "evi" }, [el("div", { class: "ct" }, e2.excerpt), el("div", { class: "meta" }, "《" + e2.book + "》" + e2.author + "·" + e2.dynasty + " §" + e2.section)]))) : el("p", { class: "muted small" }, bc.note || "")]));
+    (r.warnings || []).forEach(w => out.append(el("p", { class: "notice" }, w)));
+  }
+  async function runFormula() {
+    out.innerHTML = '<div class="loading">生成方解…</div>';
+    const r = await api.post("/api/formula-explain", { name: fIn.value.trim() });
+    out.innerHTML = "";
+    if (r.error) { out.append(el("p", { class: "muted" }, r.error)); return; }
+    const L = r.symptom_layers || {};
+    const layerCard = (title, body) => el("div", { class: "card" }, [el("div", { class: "section-title" }, title), body]);
+    out.append(el("div", { class: "grid cols-2" }, [
+      layerCard("① 首見方證（" + (L.first_attestation || {}).clause_id + "）", el("div", {}, [...((L.first_attestation || {}).symptoms || []).map(secBadge), ...(((L.first_attestation || {}).pulse || []).map(p => el("span", { class: "pill" }, "脈" + p)))])),
+      layerCard("② 規則歸納核心證（D 層）", el("div", {}, ((L.rule_induced_core || {}).symptoms || []).map(secBadge))),
+      layerCard("③ 全書聚合（含頻次）", el("div", {}, (L.aggregate_all_clauses || []).slice(0, 12).map(s => el("span", { class: "pill" }, s.symptom + "×" + s.n_clauses)))),
+      layerCard("④ 特殊上下文（誤治/禁忌/傳變）", el("div", {}, (L.special_context || []).map(s => el("div", { class: "kv small" }, [clauseChip(s.clause_id), el("span", {}, "[" + s.context.join("/") + "] " + (s.symptoms || []).join("、"))])))),
+    ]));
+    out.append(el("p", { class: "notice" }, L.note || ""));
+    const adm = r.administration || {};
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "煎服法（原文）"),
+      adm.preparation ? el("div", { class: "kv small" }, [el("b", {}, "煎法"), el("span", {}, adm.preparation)]) : null,
+      adm.administration ? el("div", { class: "kv small" }, [el("b", {}, "服法"), el("span", {}, adm.administration)]) : null,
+      el("div", { class: "cite-banner cite-warn" }, adm.warning || "")]));
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "組成"), el("div", { class: "small" }, (r.composition || []).map(x => x.herb + (x.dose_processing ? "（" + x.dose_processing + "）" : "")).join("　"))]));
+    if ((r.differentials || []).length) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "類方鑒別"), ...r.differentials.map(d => el("div", { class: "kv small" }, [el("b", {}, "vs " + d.vs.join("、")), el("span", {}, (d.key_discriminators || []).join("；"))]))]));
+  }
+  main.append(el("div", { class: "grid cols-2" }, [
+    el("div", { class: "card" }, [el("div", { class: "section-title" }, "藥證檔案"), el("div", { class: "row" }, [el("div", { style: "flex:1" }, hIn), el("button", { class: "btn", onclick: runHerb }, "生成")])]),
+    el("div", { class: "card" }, [el("div", { class: "section-title" }, "方解一站式"), el("div", { class: "row" }, [el("div", { style: "flex:1" }, fIn), el("button", { class: "btn", onclick: runFormula }, "生成")])]),
+  ]));
+  main.append(out);
+};
+
+// ---------- 辨證閉環（四診採集 / 裁決 / 衝突審計） ----------
+views.bianzheng = async (main) => {
+  main.innerHTML = "";
+  main.append(viewHead("辨證閉環", "四診採集（信息整理）→ 多假設裁決 → 方證衝突審計。醫師/教學輔助，不替代臨床。"));
+  const txt = el("textarea", { rows: 2, placeholder: "自然敘述，如：发热，怕冷，出汗，头痛，服退烧药后腹泻" });
+  const out = el("div", {});
+  async function runIntake() {
+    out.innerHTML = '<div class="loading">整理中…</div>';
+    const r = await api.post("/api/tool", { name: "shanghan_intake", arguments: { text: txt.value } });
+    out.innerHTML = "";
+    const rows = [["主訴", r.chief_complaint], ["病程", (r.timeline || []).join("、")], ["寒熱", (r.cold_heat || []).join("、")], ["汗", (r.sweating || []).join("、")], ["渴飲", (r.thirst_drinking || []).join("、")], ["二便", (r.stool_urine || []).join("、")], ["胸脅", (r.chest_hypochondrium || []).join("、")], ["心腹", (r.epigastrium_abdomen || []).join("、")], ["痛", (r.pain_location || []).join("、")], ["眠", (r.sleep || []).join("、")], ["脈", (r.pulse || []).join("、")], ["誤治史", (r.prior_mistreatment || []).join("、")], ["藥後", (r.medication_response || []).join("、")]];
+    const tbl = el("table"); rows.forEach(([k, v]) => tbl.append(el("tr", {}, [el("th", {}, k), el("td", {}, v || "—")])));
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "結構化四診表"), el("div", { class: "tbl-scroll" }, tbl)]));
+    out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "缺失關鍵信息 → 追問"), ...(r.next_questions || []).map(q => el("div", { class: "kv small" }, [el("b", {}, "?"), el("span", {}, q)]))]));
+    out.append(el("p", { class: "notice" }, r.note || ""));
+    // 醫師端一鍵送裁決
+    const allSyms = ["cold_heat", "sweating", "thirst_drinking", "stool_urine", "chest_hypochondrium", "epigastrium_abdomen", "pain_location", "sleep", "other_findings"].flatMap(k => r[k] || []);
+    if (allSyms.length) out.append(el("button", { class: "btn", onclick: () => runAdj(allSyms, r.pulse || []) }, "→ 送入多假設裁決（醫師端）"));
+  }
+  async function runAdj(symptoms, pulse) {
+    out.append(el("div", { class: "loading" }, "裁決中…"));
+    const r = await api.post("/api/tool", { name: "shanghan_adjudicate", arguments: { symptoms, pulse } });
+    out.append(el("div", { class: "cite-banner " + (r.verdict && r.verdict.startsWith("傾向") ? "cite-ok" : "cite-warn") }, "裁決：" + r.verdict + " —— " + r.rationale));
+    (r.candidates || []).forEach(h => out.append(el("div", { class: "card" }, [
+      el("div", { class: "row" }, [el("h3", {}, h.formula), el("span", { class: "pill" }, "信心 " + (h.confidence || ""))]),
+      el("div", { class: "kv small" }, [el("b", {}, "支持"), el("span", {}, (h.support || []).join("、") || "—")]),
+      el("div", { class: "kv small" }, [el("b", {}, "反證"), el("span", {}, (h.against || []).join("、") || "—")]),
+      el("div", { class: "kv small" }, [el("b", {}, "缺失"), el("span", {}, (h.missing_key_findings || []).join("、") || "—")]),
+      (h.contraindication_hits || []).length ? el("div", { class: "cite-banner cite-warn" }, "禁忌衝突：" + h.contraindication_hits.map(c => c.presented).join("、")) : null,
+    ])));
+    (r.key_questions || []).forEach(q => out.append(el("p", { class: "notice" }, "追問：" + q)));
+  }
+  const cf = el("input", { type: "text", placeholder: "方名，如 桂枝湯" });
+  const cs = el("input", { type: "text", placeholder: "呈現表現（逗號分隔），如 無汗,發熱" });
+  async function runConflict() {
+    out.innerHTML = '<div class="loading">審計中…</div>';
+    const r = await api.post("/api/tool", { name: "shanghan_conflict_audit", arguments: { formula: cf.value.trim(), symptoms: cs.value.split(/[,，、]/).map(s => s.trim()).filter(Boolean) } });
+    out.innerHTML = "";
+    if (r.error) { out.append(el("p", { class: "muted" }, r.error)); return; }
+    out.append(el("div", { class: "cite-banner " + (r.severity === "無衝突" ? "cite-ok" : "cite-warn") }, r.formula + " · 衝突嚴重度：" + r.severity));
+    (r.conflicts || []).forEach(c => out.append(el("div", { class: "card" }, [el("div", { class: "row" }, [el("b", {}, "呈現「" + c.presented + "」 vs 方證期望「" + c.pattern_expects + "」"), el("span", { class: "pill" }, c.strength)]), clauseChips(c.supporting_clauses)])));
+    if ((r.reassign_candidates || []).length) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "改判候選（定位提示）"), ...r.reassign_candidates.map(a => el("div", { class: "kv small" }, [el("b", {}, a.candidate), el("span", {}, "因「" + a.conflict + "」")]))]));
+    (r.should_ask || []).forEach(q => out.append(el("p", { class: "notice" }, "應補問：" + q)));
+  }
+  main.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "① 四診信息採集（患者端安全：只整理不診斷）"), txt, el("div", { class: "row", style: "margin-top:8px" }, [el("span", { class: "spacer" }), el("button", { class: "btn", onclick: runIntake }, "整理四診表")])]));
+  main.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "② 方證衝突審計（醫師端）"), el("div", { class: "row" }, [cf, el("div", { style: "flex:1" }, cs), el("button", { class: "btn", onclick: runConflict }, "審計")])]));
+  main.append(out);
+};
+
 // ---------- router / boot ----------
 async function boot() {
   try {

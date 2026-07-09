@@ -56,6 +56,7 @@ def herb_profile(name: str) -> Dict:
             clause_ids.append(c["clause_id"])
 
     top_partners = sorted(partners.items(), key=lambda kv: (-kv[1], kv[0]))[:10]
+    bencao = bencao_evidence(canonical_name)
     return {
         "herb": canonical_name,
         "n_formulas": len(formulas),
@@ -66,12 +67,49 @@ def herb_profile(name: str) -> Dict:
         "n_dose_records": len(dose_rows),
         "top_partners": [{"herb": h, "n_formulas_together": n}
                          for h, n in top_partners],
+        "bencao_layer": bencao,
         "section_evidence_levels": {
             "formulas": "A 原文直述（<F> 方塊組成）",
             "clause_ids": "A 條文實體標註",
             "dose_variants": "A 原文劑量寫法（折算屬 D 層）",
             "top_partners": "同方共現計數（可計算事實）",
+            "bencao_layer": "本草層（旁證/文獻查閱，不入經文閘門）",
         },
-        "warnings": ["藥性/功效解釋屬本草層與注文層，非傷寒論原文直述，"
-                     "本檔案不編造；君臣佐使等角色歸納屬後世方論。"],
+        "warnings": ["藥性/功效解釋屬本草層（見 bencao_layer，需 library "
+                     "fetch），與傷寒 A 層事實嚴格分層；君臣佐使等角色歸納"
+                     "屬後世方論，本檔案不編造。"],
     }
+
+
+# ---------------------------------------------------------------------------
+# 本草證據層（旁證：神農本草經等原文摘錄，嚴格分層，不入經文閘門）
+# ---------------------------------------------------------------------------
+BENCAO_BOOKS = ["神農本草經", "名醫別錄", "本草經集注", "證類本草", "本草綱目"]
+
+
+def bencao_evidence(herb: str, max_books: int = 4) -> Dict:
+    """從中醫笈成全庫的本草類書中取該藥的原文摘錄（書·章節定位）。
+
+    嚴格分層：傷寒 A 層=方劑/劑量/配伍事實；本草層=藥性功效（旁證，
+    出處供查閱，不進入經文層證據閘門）。庫未下載時如實返回不可用。"""
+    from ..corpus import library
+    if not library.is_available():
+        return {"available": False,
+                "note": "本草層需先下載全庫（`library fetch`）；"
+                        "傷寒 A 層事實不受影響。"}
+    lib = library.Library()
+    res = lib.grep(herb, category="本草", limit=max_books * 2, per_book=1)
+    wanted = []
+    for h in res.get("hits", []):
+        rank = next((i for i, b in enumerate(BENCAO_BOOKS)
+                     if b in h.get("title", "")), len(BENCAO_BOOKS))
+        wanted.append((rank, h))
+    wanted.sort(key=lambda x: (x[0], x[1].get("title", "")))
+    excerpts = [{"book": h.get("title", ""), "author": h.get("author", ""),
+                 "dynasty": h.get("dynasty", ""), "section": h.get("section", ""),
+                 "excerpt": h.get("excerpt", "")[:120]}
+                for _, h in wanted[:max_books]]
+    return {"available": True, "n_hits": res.get("n_hits", 0),
+            "excerpts": excerpts,
+            "note": "本草層＝旁證（藥性功效屬本草文獻，非傷寒原文直述）；"
+                    "摘錄按書·章節定位，供人工查閱核對。"}

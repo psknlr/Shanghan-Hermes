@@ -331,9 +331,8 @@ class ToolRegistry:
                 "query_type": {"type": "string",
                                "enum": ["clause", "formula", "claim",
                                         "school", "commentator", "text",
-                                        "quote", "term"],
-                               "description": "溯源對象類型；quote=誤引檢測"
-                                              "（一段引文能否作原文直引）"},
+                                        "quote", "term", "dispute", "compare"],
+                               "description": "溯源對象類型；quote=誤引檢測；dispute=注家爭議結構化（條文號）；compare=學派/注家比較（A vs B）"},
                 "ref": {"type": "string",
                         "description": "條文號/方名/觀點關鍵詞/注家名/學派名/原文片段"}},
              "required": ["query_type", "ref"]},

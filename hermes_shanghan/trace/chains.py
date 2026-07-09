@@ -216,13 +216,21 @@ def formula_chain(name: str) -> Dict:
         evolution = [e for e in data.get("edges", [])
                      if formula in (e.get("base", ""), e.get("modified", ""))]
 
-    mentions = next((f for f in builder.load_formula_mentions().get("formulas", [])
-                     if f.get("formula") == formula), None)
+    all_mentions = builder.load_formula_mentions().get("formulas", [])
+    mentions = next((f for f in all_mentions if f.get("formula") == formula), None)
     mention_rows = []
     if mentions:
         mention_rows = sorted(
             mentions["by_book"],
             key=lambda b: (dynasty_order(b.get("dynasty", "")), b.get("book_dir", "")))
+    # 異名歸並（編輯性對照表 + 組成比對）：異名計量與正名分列，不混計
+    from .aliases import aliases_for
+    alias_info = []
+    for a in aliases_for(formula):
+        am = next((f for f in all_mentions if f.get("formula") == a["alias"]), None)
+        alias_info.append({**a,
+                           "alias_mentions": (am or {}).get("total_mentions", 0),
+                           "alias_n_books": (am or {}).get("n_books", 0)})
 
     claims = [c for c in builder.load_claims().get("claims", [])
               if c.get("formula") == formula]
@@ -250,7 +258,8 @@ def formula_chain(name: str) -> Dict:
         "family_dose_evolution": evolution,
         "name_transmission": {"total_mentions": (mentions or {}).get("total_mentions", 0),
                               "n_books": (mentions or {}).get("n_books", 0),
-                              "by_book": mention_rows[:15]},
+                              "by_book": mention_rows[:15],
+                              "aliases": alias_info},
         "claims": [{"claim_id": c["claim_id"], "claim": c["claim"],
                     "evidence_grade": c["evidence_grade"]} for c in claims],
         "anchor_commentaries": _commentaries_for(anchor, schools_reg)[:6] if anchor else [],
@@ -272,8 +281,9 @@ def formula_chain(name: str) -> Dict:
             "citations_of_clauses": "引文邊（跨書逐字回源）",
             "modern": "現代導入層（用戶自備，不隨庫分發）",
         },
-        "warnings": ["主治演變與方義解釋屬注文層歸納；方名計量為逐字統計，"
-                     "不含異名（異名歸併屬後續工作，如實聲明）。"],
+        "warnings": ["主治演變與方義解釋屬注文層歸納；方名計量為逐字統計；"
+                     "異名（如陽旦湯）經編輯性對照表歸並且與正名分列計量，"
+                     "組成存疑者標不可合併（見 name_transmission.aliases）。"],
     }
 
 
@@ -584,6 +594,179 @@ def formula_explain(name: str) -> Dict:
 
 
 # ---------------------------------------------------------------------------
+# 6d. 注家爭議結構化（呈現證據結構，不裁決對錯）
+# ---------------------------------------------------------------------------
+_DISPUTE_TYPE_CUES = {
+    "訓詁": ["音", "義", "讀", "字", "謂之", "訓", "古文", "作"],
+    "方證": ["湯", "方", "證", "主之", "宜"],
+    "病機": ["氣", "陽", "陰", "虛", "實", "營", "衛", "榮", "樞機", "表裏", "寒熱"],
+    "治法": ["汗", "下法", "吐法", "和解", "溫", "清", "補", "當", "法"],
+    "劑量": ["兩", "銖", "升", "枚", "劑"],
+}
+
+
+def dispute_chain(ref: str) -> Dict:
+    """某條文的注家爭議結構化呈現：分歧類型 · 各家觀點 · 貼近原文程度 ·
+    後世發揮程度 · 不可裁決處。只呈現證據結構，不判對錯。"""
+    from ..lexicon import POSTHOC_TERMS
+
+    clauses = _clauses()
+    c = _resolve_clause(ref, clauses)
+    if c is None:
+        return {"error": f"未找到條文 {ref}"}
+    cid = c["clause_id"]
+    ctext_folded = fold_variants(c.get("clean_text", ""))
+    schools_reg = builder.load_schools()
+    member_school = schools_reg.get("commentator_school", {})
+    school_names = {s["school_id"]: s["name"] for s in schools_reg.get("schools", [])}
+    registry = builder.load_registry()
+    dyn_of_dir = {w["book_dir"]: w["dynasty"] for w in registry["works"]}
+
+    atlas_path = config.RESEARCH_DIR / "commentary_divergence.json"
+    atlas_row = {}
+    if atlas_path.exists():
+        atlas = json.loads(atlas_path.read_text(encoding="utf-8"))
+        atlas_row = next((r for r in atlas.get("clauses", [])
+                          if r.get("clause_id") == cid), {})
+
+    views = []
+    seen = set()
+    for r in read_jsonl(config.RULES_COMMENTARY_DIR / "commentary_rules.jsonl"):
+        if r.get("clause_id") != cid or r.get("commentator") in seen:
+            continue
+        seen.add(r.get("commentator"))
+        text = r.get("commentary_text", "")
+        folded = fold_variants(text)
+        # 貼近原文程度：注文與條文的字二元組重合率（可計算指標）
+        closeness = round(similarity_pct(folded, ctext_folded), 3)
+        posthoc = [t for t in POSTHOC_TERMS if fold_variants(t) in folded]
+        cues = {k: [w for w in ws if w in folded]
+                for k, ws in _DISPUTE_TYPE_CUES.items()}
+        focus = sorted((k for k in cues if cues[k]),
+                       key=lambda k: -len(cues[k]))[:2]
+        sid = member_school.get(r.get("commentator", ""), "")
+        views.append({
+            "commentator": r.get("commentator", ""),
+            "book": r.get("book", ""),
+            "dynasty": dyn_of_dir.get(r.get("book", ""), ""),
+            "school": school_names.get(sid, ""),
+            "excerpt": text[:100],
+            "closeness_to_original": closeness,
+            "posthoc_terms": posthoc[:5],
+            "posthoc_degree": round(len(posthoc) / max(1, len(folded) / 50), 3),
+            "analytic_focus": focus,
+        })
+    views.sort(key=lambda v: (dynasty_order(v["dynasty"]), v["commentator"]))
+    focus_types = sorted({f for v in views for f in v["analytic_focus"]})
+    return {
+        "chain_type": "注家爭議結構化",
+        "query": ref,
+        "clause": {"clause_id": cid, "text": c.get("clean_text", "")},
+        "n_commentators": len(views),
+        "term_divergence": atlas_row.get("term_divergence"),
+        "distinctive_terms": atlas_row.get("distinctive_terms", {}),
+        "views": views,
+        "divergence_types_present": focus_types,
+        "undecidable_note": "各家分歧屬解釋範式差異（訓詁/方證/病機/治法取徑"
+                            "不同），文本層面不可裁決對錯；「貼近原文程度」為"
+                            "字面重合率，高≠正確、低≠錯誤。",
+        "paper_writing_hint": "論文寫法建議：按朝代列各家觀點→報告 term_divergence"
+                              " 與指紋術語→分析解釋範式差異→不下對錯結論，"
+                              "以「證據結構」與「適用邊界」收束。",
+        "section_evidence_levels": {
+            "views": "C 注家解釋 + 可計算指標（重合率/術語密度）",
+            "divergence_types_present": "E 啟發式分類（提示詞表，僅供定位）",
+            "distinctive_terms": "C 層計算資產（分歧圖譜）",
+        },
+        "warnings": ["分歧類型為提示詞表啟發式（E 層），僅供研究定位；"
+                     "多觀點並存，不做裁決。"],
+    }
+
+
+def similarity_pct(a: str, b: str) -> float:
+    from ..textutil import similarity
+    return similarity(a, b)
+
+
+# ---------------------------------------------------------------------------
+# 6e. 學派/注家比較（「柯琴 vs 尤怡」）
+# ---------------------------------------------------------------------------
+def compare_chain(ref: str) -> Dict:
+    """兩注家（或兩學派）對照：範式 · 指紋術語 · 一致度 · 高分歧條文 ·
+    引用網絡差異。輸入如「柯琴 vs 尤怡」「錯簡重訂 vs 以法類證」。"""
+    parts = [p.strip() for p in
+             re.split(r"\s*(?:vs|VS|對比|对比|×)\s*", ref) if p.strip()]
+    if len(parts) != 2:
+        return {"error": "輸入格式：A vs B（兩注家名或兩學派名）", "query": ref}
+
+    schools_reg = builder.load_schools()
+    member_school = schools_reg.get("commentator_school", {})
+    schools = {s["school_id"]: s for s in schools_reg.get("schools", [])}
+
+    atlas_path = config.RESEARCH_DIR / "commentary_divergence.json"
+    atlas = (json.loads(atlas_path.read_text(encoding="utf-8"))
+             if atlas_path.exists() else {})
+
+    def _side(name: str) -> Dict:
+        q = normalize_query(name)
+        # 注家名 or 學派名
+        commentator = next((c for c in sorted(member_school)
+                            if q in fold_variants(c)), "")
+        school = None
+        if commentator:
+            school = schools.get(member_school.get(commentator, ""))
+        else:
+            school = next((s for s in schools.values()
+                           if q in fold_variants(s["name"])), None)
+        fingerprints = (atlas.get("commentator_fingerprints", {})
+                        .get(commentator, [])[:8] if commentator else [])
+        return {"name": name, "commentator": commentator,
+                "school": (school or {}).get("name", ""),
+                "paradigm": (school or {}).get("paradigm", ""),
+                "works": ([m for s in ([school] if school else [])
+                           for m in s.get("members", [])
+                           if not commentator or m["name"] == commentator]),
+                "fingerprint_terms": [f.get("term", "") for f in fingerprints]}
+
+    a, b = _side(parts[0]), _side(parts[1])
+    if not (a["commentator"] or a["school"]) or not (b["commentator"] or b["school"]):
+        return {"error": f"未識別比較對象：{parts}", "query": ref,
+                "known_commentators": sorted(member_school)}
+
+    agreement = next(
+        (row for row in atlas.get("agreement_matrix", [])
+         if {row.get("a"), row.get("b")} == {a["commentator"], b["commentator"]}),
+        None) if a["commentator"] and b["commentator"] else None
+
+    # 高分歧條文（兩家同注且術語剖面差異最大）
+    top_divergent = []
+    if a["commentator"] and b["commentator"]:
+        for row in atlas.get("clauses", []):
+            if a["commentator"] in row.get("commentators", []) \
+                    and b["commentator"] in row.get("commentators", []):
+                top_divergent.append({"clause_id": row["clause_id"],
+                                      "term_divergence": row.get("term_divergence"),
+                                      "clause_text": row.get("clause_text", "")[:40]})
+        top_divergent.sort(key=lambda r: -(r["term_divergence"] or 0))
+        top_divergent = top_divergent[:8]
+
+    return {
+        "chain_type": "學派/注家比較",
+        "query": ref,
+        "a": a, "b": b,
+        "agreement": agreement,
+        "top_divergent_clauses": top_divergent,
+        "reading_note": "一致度與分歧條文為 C 層實測；範式/學派歸屬為"
+                        " posthoc_induction；比較呈現證據結構，不裁決高下。",
+        "section_evidence_levels": {
+            "agreement": "C 層實測一致度（分歧圖譜）",
+            "top_divergent_clauses": "C 層實測（術語剖面 Jaccard）",
+            "paradigm": "posthoc_induction 學派歸納",
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # 6c. 術語譜系鏈（某術語是否原文、最早在庫注家、學派分佈、傳播路徑）
 # ---------------------------------------------------------------------------
 def term_chain(term: str) -> Dict:
@@ -757,7 +940,8 @@ def trace_dispatch(query_type: str, ref: str) -> Dict:
     dispatch = {"clause": clause_chain, "formula": formula_chain,
                 "claim": claim_chain, "school": school_chain,
                 "commentator": commentator_chain, "text": text_trace,
-                "quote": quote_check, "term": term_chain}
+                "quote": quote_check, "term": term_chain,
+                "dispute": dispute_chain, "compare": compare_chain}
     fn = dispatch.get(query_type)
     if fn is None:
         return {"error": f"未知溯源對象類型 {query_type}",

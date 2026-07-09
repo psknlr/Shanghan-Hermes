@@ -87,9 +87,10 @@ def build_all(verbose: bool = False) -> Dict[str, int]:
     _write_json("citation_network.json", network)
     stats["cited_clauses"] = network["overview"]["n_clauses_cited"]
 
-    # 4. 方名源流
+    # 4. 方名源流（含可安全歸並的異名，如陽旦湯；異名與正名分列計量）
+    from .aliases import alias_names
     formula_rules = read_jsonl(config.RULES_FORMULA_DIR / "formula_pattern_rules.jsonl")
-    names = [r.get("formula", "") for r in formula_rules]
+    names = [r.get("formula", "") for r in formula_rules] + alias_names()
     mentions = formula_mentions(names, verbose=verbose)
     _write_json("formula_mentions.json", mentions)
     stats["formulas_mentioned"] = mentions["n_formulas_mentioned"]

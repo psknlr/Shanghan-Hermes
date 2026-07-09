@@ -462,6 +462,73 @@ class TestTraceTools(unittest.TestCase):
         self.assertIn("SHL_SONGBEN_0180", t2["verbatim_in_original"])
         self.assertIn("原文逐字", t2["evidence_grade"])
 
+    def test_dispute_chain_structured_no_verdict(self):
+        # 注家爭議結構化：呈現證據結構，不裁決對錯
+        from hermes_shanghan.trace.chains import dispute_chain
+        d = dispute_chain("12")
+        self.assertEqual(d["chain_type"], "注家爭議結構化")
+        self.assertGreaterEqual(d["n_commentators"], 5)
+        v0 = d["views"][0]
+        for key in ("closeness_to_original", "posthoc_terms", "analytic_focus",
+                    "school", "dynasty"):
+            self.assertIn(key, v0)
+        self.assertIn("不可裁決", d["undecidable_note"])
+        self.assertIn("E 啟發式", d["section_evidence_levels"]
+                      ["divergence_types_present"])
+
+    def test_compare_chain(self):
+        from hermes_shanghan.trace.chains import compare_chain
+        c = compare_chain("柯琴 vs 尤怡")
+        self.assertEqual(c["a"]["commentator"], "柯琴")
+        self.assertEqual(c["b"]["commentator"], "尤怡")
+        self.assertTrue(c["agreement"])
+        self.assertTrue(c["top_divergent_clauses"])
+        self.assertIn("error", compare_chain("柯琴"))   # 格式校驗
+
+    def test_formula_aliases_merged_but_separate(self):
+        # 異名歸並：陽旦湯計量與正名分列；歧義名標不可合併
+        from hermes_shanghan.trace.builder import load_formula_mentions
+        from hermes_shanghan.trace.chains import formula_chain
+        r = formula_chain("桂枝湯")
+        aliases = r["name_transmission"]["aliases"]
+        yd = next(a for a in aliases if a["alias"] == "陽旦湯")
+        self.assertTrue(yd["same_formula"])
+        self.assertGreater(yd["alias_mentions"], 10)
+        # 陽旦湯在計量資產中獨立成行（不混入桂枝湯計數）
+        names = {f["formula"] for f in load_formula_mentions()["formulas"]}
+        self.assertIn("陽旦湯", names)
+        xch = formula_chain("小柴胡湯")["name_transmission"]["aliases"]
+        self.assertFalse(next(a for a in xch
+                              if a["alias"] == "柴胡湯")["same_formula"])
+
+    def test_bencao_layer_gated_and_labeled(self):
+        from hermes_shanghan.apps.herbal import bencao_evidence, herb_profile
+        h = herb_profile("桂枝")
+        self.assertIn("bencao_layer", h)
+        self.assertIn("旁證", h["section_evidence_levels"]["bencao_layer"])
+        from hermes_shanghan.corpus import library
+        if library.is_available():
+            bc = bencao_evidence("桂枝")
+            self.assertTrue(bc["available"])
+            self.assertTrue(bc["excerpts"])
+            self.assertIn("旁證", bc["note"])
+        else:
+            self.assertFalse(bencao_evidence("桂枝")["available"])
+
+    def test_webui_static_has_new_views_and_attribution(self):
+        # 前端：新模塊在冊 + 移動端媒體查詢 + 研發來源標識
+        root = config.REPO_ROOT / "hermes_shanghan" / "server" / "static"
+        html = (root / "index.html").read_text(encoding="utf-8")
+        js = (root / "app.js").read_text(encoding="utf-8")
+        css = (root / "app.css").read_text(encoding="utf-8")
+        self.assertIn("醫哲未來人工智能研究院", html)
+        for view in ("trace", "herbs", "bianzheng"):
+            self.assertIn(f'data-view="{view}"', html)
+            self.assertIn(f"views.{view}", js)
+        self.assertIn("@media (max-width: 820px)", css)
+        self.assertIn("/api/trace", js)
+        self.assertIn("shanghan_intake", js)
+
     def test_scan_library_with_fixture(self):
         # 全庫掃描（引用方=任意醫籍）：合成最小庫驗證端到端，不依賴真實下載
         import tempfile
