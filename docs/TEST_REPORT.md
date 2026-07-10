@@ -10,7 +10,7 @@
 | Python | 3.11.15（倉庫最低要求 ≥ 3.9） |
 | 操作系統 | Linux 6.18（x86_64 容器） |
 | 第三方依賴 | 無（純標準庫；`litellm`/`py7zr` 均為可選） |
-| 測試總數 | 407 項 / 26 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
+| 測試總數 | 446 項 / 28 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
 | 全量耗時 | `python3 -m unittest discover -s tests`：**約 20–40 秒**（見下） |
 | 網絡需求 | **零**（默認全部離線） |
 | 7z 需求 | **零**（僅 `library fetch` 可選功能需要 `py7zr` 或系統 p7zip） |
@@ -68,6 +68,8 @@
 | 控制面 | test_console | 十二輪：運行中心 API（異步啟動/輪詢/審批/導出）、Artifact 防穿越、評測端點、雙 UI 在位與認證頭、結構化指代解析（主語優先防偽成功）、Colab P0 守衛（固定版本/ensure_server/冪等克隆/零硬編碼統計） |
 | 證據完整性 | test_evidence_integrity | 十一輪對抗回歸：零檢索猜編號不過閘、台賬 Broker 強不變量、患者 key 全鏈路（clause 不回退 student+出口投影）、intake 圖分支、結構化臨床動作、引文歸屬綁定、無引用不放行、參數深校驗、版本單源 |
 | 來源治理 | test_provenance | 十輪：work_type 分類（未登記書目 fail-closed 到 P，證據層不由目錄名決定）、全庫供應鏈（URL allowlist/強制哈希/路徑穿越/symlink/壓縮比）、EvidenceRecord 逐證據來源對象、方證論證結構（反證條文/隱含假設/不可裁決） |
+| 全量古籍智能體 | test_classics | 十五輪：遞歸編目（三層嵌套/隔代繼承/父子正文不重計）、Passage 穩定 ID（跨 PYTHONHASHSEED 進程）、分層檢索（布爾/座標/計數/逐層解釋/誠實封頂）、P 層證據逐字重驗（篡改即抓）、引文溯源時間有序+反證搜索、統計語義分離（全庫書目≠規則庫）、ClassicsAgent 研究留痕、harness classics 模式全鏈路（Broker P 台賬+偽造 psg 阻斷+「最早」結論政策閘）、DomainPlugin 可執行、深研全庫維度誠實跳過、驗收審計、UI 在位 |
+| 論文圖形工廠 | test_paper_figs | 十五輪：sha256 穩定 ID（跨進程字節級可復現）、逐論文類型圖組（兩兩不同）、版本化輸出（內容指紋修訂目錄+冪等）、正文引用圖+正式圖例、逐 panel Source Data+數據指紋、SVG 物理尺寸/無障礙/字號下限/標籤不截斷、GraphML+凍結佈局、CVD 檢查真實落盤、fail-fast 非法類型、劑量假設區間圖、熱圖色階+共注 n、摘要不過度宣稱 |
 | 文檔同步 | test_notebook | Colab 守衛（nbformat/可編譯/API 存在/溯源節在冊） |
 | 全庫 | test_library | 編目/索引/檢索（合成夾具，不下載） |
 

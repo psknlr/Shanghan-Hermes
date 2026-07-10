@@ -25,7 +25,7 @@ class TestResearchModules(unittest.TestCase):
         cls.reg = get_registry()
 
     def test_registry_tool_count(self):
-        self.assertEqual(len(self.reg.specs()), 28)
+        self.assertEqual(len(self.reg.specs()), 36)   # 28 領域 + 8 classics
         names = self.reg.names()
         for t in ("shanghan_divergence_atlas", "shanghan_dose",
                   "shanghan_corpus_stats", "shanghan_eval_metrics"):
@@ -131,12 +131,15 @@ class TestProvenancePaper(unittest.TestCase):
                               out_dir=Path(tmp))
             text = path.read_text(encoding="utf-8")
             figs = sorted(p.name for p in Path(tmp).glob("fig*.svg"))
+            assets = {p.name for p in Path(tmp).iterdir()}
         self.assertIn("深度研究循環溯源發現", text)
         self.assertIn("循環軌跡", text)
-        self.assertIn("fig5_formula_frequency.svg", text)
-        self.assertIn("fig5_formula_frequency.svg", " ".join(figs))
-        self.assertIn("fig6_commentator_agreement.svg", " ".join(figs))
-        self.assertIn("fig7_dose_totals.svg", " ".join(figs))
+        # 十五輪 P0-2：溯源論文有自己的圖組（類方源流+注家詮釋史），
+        # 不再平鋪頻次/劑量/評測圖
+        self.assertIn("fig_commentator_agreement.svg", text)
+        self.assertIn("fig_commentator_agreement.svg", " ".join(figs))
+        self.assertNotIn("fig_benchmark.svg", " ".join(figs))
+        self.assertIn("fig_formula_family.graphml", assets)
 
 
 if __name__ == "__main__":

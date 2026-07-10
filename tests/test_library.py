@@ -51,6 +51,13 @@ def make_fixture(root: Path) -> None:
         encoding="utf-8")
     sub.joinpath("1.txt").write_text(
         "=====太陽篇=====\n\n往來寒熱，胸脇苦滿。\n", encoding="utf-8")
+    # 4) depth-3 nested sub-sub-book（十五輪 P0-3：遞歸解析守衛——
+    #    以前的一層遍歷會把它整個丟掉）
+    deep = sub / "丙氏傷寒注補遺"
+    deep.mkdir()
+    deep.joinpath("index.txt").write_text(
+        "<book>\n書名=丙氏傷寒注補遺\n</book>\n\n=====補遺=====\n\n"
+        "奔豚氣上衝，甚則腹痛。\n", encoding="utf-8")
     catalog = library.build_catalog(root, archive_sha256="fixture")
     library.build_char_index(root, catalog)
 
@@ -70,11 +77,29 @@ class TestLibraryParsing(unittest.TestCase):
     def test_catalog_units_and_inheritance(self):
         cat = self.lib.catalog
         self.assertEqual(cat["n_books"], 3)
-        self.assertEqual(cat["n_units"], 4)          # +1 nested sub-book
+        self.assertEqual(cat["n_units"], 5)          # 嵌套子書+三層子子書
         sub = self.lib.info("丙氏全書/丙氏傷寒注")
         self.assertEqual(sub["parent"], "丙氏全書")
         self.assertEqual(sub["category"], "綜合")     # inherited from parent
         self.assertEqual(self.lib.info("甲乙經考")["extra"]["備考"], "測試用")
+
+    def test_recursive_nesting_any_depth(self):
+        # 十五輪 P0-3：A/B/C 三層每級都是文本單元，元數據沿最近祖先繼承
+        cat = self.lib.catalog
+        self.assertEqual(cat["max_depth"], 3)
+        deep = self.lib.info("丙氏全書/丙氏傷寒注/丙氏傷寒注補遺")
+        self.assertIsNotNone(deep)
+        self.assertEqual(deep["parent"], "丙氏全書/丙氏傷寒注")
+        self.assertEqual(deep["category"], "綜合")    # 隔代繼承
+        self.assertEqual(deep["author"], "張試")
+        # 父/子正文互不重複計入：各單元 files 只含本目錄文件
+        mid = self.lib.info("丙氏全書/丙氏傷寒注")
+        self.assertEqual(mid["files"], ["index.txt", "1.txt"])
+        self.assertEqual(deep["files"], ["index.txt"])
+        # 三層正文可被全文檢索到
+        out = self.lib.grep("奔豚氣上衝")
+        self.assertEqual(out["hits"][0]["book_id"],
+                         "丙氏全書/丙氏傷寒注/丙氏傷寒注補遺")
 
     def test_reading_order_decimal_stems_menu_excluded(self):
         files = self.lib.info("乙部方書")["files"]

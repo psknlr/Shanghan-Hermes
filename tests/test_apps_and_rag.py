@@ -156,7 +156,9 @@ class TestSkillsAndRules(unittest.TestCase):
                             "參考文獻", "Cover Letter"):
                 self.assertIn(section, text)
             assets = {p.name for p in Path(td).iterdir()}
-            self.assertIn("fig4_clause_topic_clusters.mmd.md", assets)
+            self.assertIn("fig_clause_topics.mmd.md", assets)
+            self.assertIn("figures_manifest.json", assets)
+            self.assertIn("source_data", assets)
             self.assertIn("table4_variant_comparison.csv", assets)
 
     def test_merged_rules_reference_not_replace(self):

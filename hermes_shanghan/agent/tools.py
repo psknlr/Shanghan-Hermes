@@ -160,6 +160,29 @@ TOOL_META: Dict[str, Dict] = {
         "evidence_level": "D",
         "limitations": ["單步路徑逐條錨定原文；多步鏈為組合視圖（假設路徑），"
                         "非原文連續敘述"]},
+    # —— classics 全庫工具族（十五輪 P0-2：P 層是一等證據，不再是
+    # 「證據系統之外的文本」；逐條 verbatim+座標+quote_hash 可重驗）——
+    "classics_search_passages": {
+        "evidence_level": "P",
+        "limitations": ["文獻旁證層：可回源重驗，不進入 A 層經文閘門；"
+                        "scan_capped 時零命中≠全庫不存在"]},
+    "classics_read_passage": {"evidence_level": "P"},
+    "classics_compare_witnesses": {
+        "evidence_level": "P",
+        "limitations": ["傳本歸組按折疊書名，同名異書需人工消歧"]},
+    "classics_trace_citation": {
+        "evidence_level": "P",
+        "limitations": ["在庫首現≠歷史首現；反證搜索的部分匹配候選需人工核驗"]},
+    "classics_resolve_term": {
+        "evidence_level": "P",
+        "limitations": ["僅異體折疊與出現概況；通假/古今詞/同義映射屬規劃層"]},
+    "classics_concept_drift": {
+        "evidence_level": "P",
+        "limitations": ["頻次漂移≠語義漂移；計數受 per_book/max_scan 封頂"]},
+    "classics_library_stats": {
+        "evidence_level": "P",
+        "limitations": ["統計對象是笈成全庫書目，非傷寒論規則庫"]},
+    "classics_export_evidence_packet": {"evidence_level": "P"},
 }
 
 _RELEASE_CONFIDENCE = {"gold": 0.9, "silver": 0.75, "bronze": 0.6}
@@ -172,6 +195,11 @@ PATIENT_SAFE_TOOLS: List[str] = [
     "shanghan_relations", "shanghan_variants", "shanghan_divergence_atlas",
     "shanghan_corpus_stats", "shanghan_eval_metrics", "shanghan_library",
     "shanghan_intake",   # 就診信息整理：無方/無劑量/無診斷，患者端安全
+    # classics 全庫查閱族：只讀文獻層，與 shanghan_library 同等暴露口徑
+    "classics_search_passages", "classics_read_passage",
+    "classics_compare_witnesses", "classics_trace_citation",
+    "classics_resolve_term", "classics_concept_drift",
+    "classics_library_stats", "classics_export_evidence_packet",
 ]
 
 
@@ -210,6 +238,15 @@ class ToolRegistry:
             return hashlib.sha256(m.read_bytes()).hexdigest()[:12]
         except OSError:
             return "no-manifest"
+
+    @staticmethod
+    def _library_fp() -> str:
+        """笈成全庫指紋（編目路徑+mtime）：換庫/重建編目即變。"""
+        cat = config.LIBRARY_DIR / "catalog.json"
+        try:
+            return f"{cat}@{cat.stat().st_mtime_ns}"
+        except OSError:
+            return f"{cat}@absent"
 
     def audit_tail(self, n: int = 20) -> List[Dict]:
         return list(self.audit_log)[-n:]
@@ -317,7 +354,9 @@ class ToolRegistry:
             self._t_dose)
         self._add(
             "shanghan_corpus_stats",
-            "規則庫計量統計：條文/規則/關係/方證頻次/六經分佈等全庫數字（科研引用用）。",
+            "傷寒論規則庫統計（領域統計，**非**笈成全庫統計）：條文/規則/"
+            "關係/方證頻次/六經分佈等數字（科研引用用）。全庫書目統計請用 "
+            "classics_library_stats。",
             {"type": "object", "properties": {}},
             self._t_corpus_stats)
         self._add(
@@ -496,6 +535,10 @@ class ToolRegistry:
                 "steps": {"type": "integer", "default": 1}},
              "required": []},
             self._t_mistreatment_simulate)
+        # 十五輪 P0-1：classics_* 工具族（全量古籍平台層，獨立於傷寒論
+        # 領域）——同一 Registry 註冊，自動獲得 Broker 台賬/軌跡/預算/契約
+        from ..classics.tools import register_classics_tools
+        register_classics_tools(self._add)
 
     # -- research-layer helpers -----------------------------------------
     @staticmethod
@@ -573,6 +616,8 @@ class ToolRegistry:
             if c.six_channel:
                 channel[c.six_channel] += 1
         return {"tool": "shanghan_corpus_stats",
+                "semantic": "傷寒論規則庫（領域）統計；笈成全庫書目統計見 "
+                            "classics_library_stats——兩者語義嚴格分離",
                 "initial_rules": len(rules),
                 "release_levels": dict(levels),
                 "formula_pattern_rules": len(self.art.formula_rules),
@@ -1132,7 +1177,12 @@ class ToolRegistry:
         if problem:
             return _audit({"tool": name, "error": f"參數校驗失敗：{problem}",
                            "expected_schema": tool.parameters})
-        key = "::".join([name, TOOLS_VERSION, self._corpus_fp,
+        # 十五輪：全庫類工具緩存鍵含**庫指紋**（庫換版/測試換庫緩存自然
+        # 失效——傷寒論語料指紋管不到笈成全庫）
+        fp = self._corpus_fp
+        if name.startswith("classics_") or name == "shanghan_library":
+            fp = f"{fp}+{self._library_fp()}"
+        key = "::".join([name, TOOLS_VERSION, fp,
                          json.dumps(arguments, ensure_ascii=False,
                                     sort_keys=True, default=str)])
         with self._lock:

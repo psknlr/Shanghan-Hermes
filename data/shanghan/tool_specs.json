@@ -213,7 +213,7 @@
    "type": "function",
    "function": {
     "name": "shanghan_corpus_stats",
-    "description": "規則庫計量統計：條文/規則/關係/方證頻次/六經分佈等全庫數字（科研引用用）。",
+    "description": "傷寒論規則庫統計（領域統計，**非**笈成全庫統計）：條文/規則/關係/方證頻次/六經分佈等數字（科研引用用）。全庫書目統計請用 classics_library_stats。",
     "parameters": {
      "type": "object",
      "properties": {}
@@ -633,6 +633,232 @@
      "required": []
     }
    }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_search_passages",
+    "description": "全量古籍分層檢索（L0 元數據→L1 字符倒排→L2 逐字驗證，逐層可解釋）：布爾 AND/OR/NOT、鄰近窗口、全量命中計數與字符座標；返回 P 層段級證據（verbatim+quote_hash 可重驗）。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "AND 檢索項（空白分詞）"
+      },
+      "any_terms": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "OR 項：至少命中其一"
+      },
+      "not_terms": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "description": "排除項"
+      },
+      "near": {
+       "type": "integer",
+       "default": 0,
+       "description": ">0 時前兩個 AND 項須在該字符窗口內共現"
+      },
+      "category": {
+       "type": "string"
+      },
+      "dynasty": {
+       "type": "string"
+      },
+      "author": {
+       "type": "string"
+      },
+      "work": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "default": 8
+      },
+      "per_book": {
+       "type": "integer",
+       "default": 3
+      },
+      "max_scan": {
+       "type": "integer",
+       "default": 200
+      },
+      "order": {
+       "type": "string",
+       "description": "relevance|dynasty"
+      }
+     },
+     "required": []
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_read_passage",
+    "description": "按 passage_id（或 著作+章節）閱讀全庫某一段：整段扁平化正文 + P 層證據記錄（可重驗）。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "passage_id": {
+       "type": "string"
+      },
+      "work": {
+       "type": "string",
+       "description": "著作名/單元 id"
+      },
+      "section": {
+       "type": "string"
+      },
+      "max_chars": {
+       "type": "integer",
+       "default": 4000
+      }
+     },
+     "required": []
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_compare_witnesses",
+    "description": "同一著作不同傳本（Witness）對照：按書名歸組傳本清單；帶探針詞時返回各傳本命中段對照與兩兩相似度。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "work": {
+       "type": "string"
+      },
+      "query": {
+       "type": "string",
+       "description": "可選探針詞句"
+      },
+      "limit": {
+       "type": "integer",
+       "default": 6
+      }
+     },
+     "required": [
+      "work"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_trace_citation",
+    "description": "引文溯源：全庫時間有序檢索（按朝代排序的逐字命中）+ 反證搜索（截半探針找更早部分匹配候選）。誠實標注：在庫首現≠歷史首現。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "quote": {
+       "type": "string",
+       "description": "≥4 字引文"
+      },
+      "max_scan": {
+       "type": "integer",
+       "default": 300
+      },
+      "top": {
+       "type": "integer",
+       "default": 12
+      }
+     },
+     "required": [
+      "quote"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_resolve_term",
+    "description": "術語解析：異體字折疊形、變體字符、全庫出現概況（分類/朝代分佈）。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "term": {
+       "type": "string"
+      },
+      "max_scan": {
+       "type": "integer",
+       "default": 120
+      }
+     },
+     "required": [
+      "term"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_concept_drift",
+    "description": "概念漂移計量：術語出現按朝代分桶（著作數/命中段數/代表著作），時間有序；掃描封頂如實標注。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "term": {
+       "type": "string"
+      },
+      "category": {
+       "type": "string"
+      },
+      "max_scan": {
+       "type": "integer",
+       "default": 300
+      }
+     },
+     "required": [
+      "term"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_library_stats",
+    "description": "中醫笈成全庫統計：書目數/文本單元數/嵌套深度/分類/朝代分佈/指紋。（傷寒論規則庫統計請用 shanghan_corpus_stats——語義嚴格分離。）",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "classics_export_evidence_packet",
+    "description": "P 層證據包導出：按 passage_id 物化整段記錄並逐字重驗（verbatim+座標+quote_hash），附庫指紋——供論文與人工複核。",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "passage_ids": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "topic": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "passage_ids"
+     ]
+    }
+   }
   }
  ],
  "anthropic_tools": [
@@ -814,7 +1040,7 @@
   },
   {
    "name": "shanghan_corpus_stats",
-   "description": "規則庫計量統計：條文/規則/關係/方證頻次/六經分佈等全庫數字（科研引用用）。",
+   "description": "傷寒論規則庫統計（領域統計，**非**笈成全庫統計）：條文/規則/關係/方證頻次/六經分佈等數字（科研引用用）。全庫書目統計請用 classics_library_stats。",
    "input_schema": {
     "type": "object",
     "properties": {}
@@ -1182,9 +1408,439 @@
     },
     "required": []
    }
+  },
+  {
+   "name": "classics_search_passages",
+   "description": "全量古籍分層檢索（L0 元數據→L1 字符倒排→L2 逐字驗證，逐層可解釋）：布爾 AND/OR/NOT、鄰近窗口、全量命中計數與字符座標；返回 P 層段級證據（verbatim+quote_hash 可重驗）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "query": {
+      "type": "string",
+      "description": "AND 檢索項（空白分詞）"
+     },
+     "any_terms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "OR 項：至少命中其一"
+     },
+     "not_terms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "排除項"
+     },
+     "near": {
+      "type": "integer",
+      "default": 0,
+      "description": ">0 時前兩個 AND 項須在該字符窗口內共現"
+     },
+     "category": {
+      "type": "string"
+     },
+     "dynasty": {
+      "type": "string"
+     },
+     "author": {
+      "type": "string"
+     },
+     "work": {
+      "type": "string"
+     },
+     "limit": {
+      "type": "integer",
+      "default": 8
+     },
+     "per_book": {
+      "type": "integer",
+      "default": 3
+     },
+     "max_scan": {
+      "type": "integer",
+      "default": 200
+     },
+     "order": {
+      "type": "string",
+      "description": "relevance|dynasty"
+     }
+    },
+    "required": []
+   }
+  },
+  {
+   "name": "classics_read_passage",
+   "description": "按 passage_id（或 著作+章節）閱讀全庫某一段：整段扁平化正文 + P 層證據記錄（可重驗）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "passage_id": {
+      "type": "string"
+     },
+     "work": {
+      "type": "string",
+      "description": "著作名/單元 id"
+     },
+     "section": {
+      "type": "string"
+     },
+     "max_chars": {
+      "type": "integer",
+      "default": 4000
+     }
+    },
+    "required": []
+   }
+  },
+  {
+   "name": "classics_compare_witnesses",
+   "description": "同一著作不同傳本（Witness）對照：按書名歸組傳本清單；帶探針詞時返回各傳本命中段對照與兩兩相似度。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "work": {
+      "type": "string"
+     },
+     "query": {
+      "type": "string",
+      "description": "可選探針詞句"
+     },
+     "limit": {
+      "type": "integer",
+      "default": 6
+     }
+    },
+    "required": [
+     "work"
+    ]
+   }
+  },
+  {
+   "name": "classics_trace_citation",
+   "description": "引文溯源：全庫時間有序檢索（按朝代排序的逐字命中）+ 反證搜索（截半探針找更早部分匹配候選）。誠實標注：在庫首現≠歷史首現。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "quote": {
+      "type": "string",
+      "description": "≥4 字引文"
+     },
+     "max_scan": {
+      "type": "integer",
+      "default": 300
+     },
+     "top": {
+      "type": "integer",
+      "default": 12
+     }
+    },
+    "required": [
+     "quote"
+    ]
+   }
+  },
+  {
+   "name": "classics_resolve_term",
+   "description": "術語解析：異體字折疊形、變體字符、全庫出現概況（分類/朝代分佈）。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "term": {
+      "type": "string"
+     },
+     "max_scan": {
+      "type": "integer",
+      "default": 120
+     }
+    },
+    "required": [
+     "term"
+    ]
+   }
+  },
+  {
+   "name": "classics_concept_drift",
+   "description": "概念漂移計量：術語出現按朝代分桶（著作數/命中段數/代表著作），時間有序；掃描封頂如實標注。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "term": {
+      "type": "string"
+     },
+     "category": {
+      "type": "string"
+     },
+     "max_scan": {
+      "type": "integer",
+      "default": 300
+     }
+    },
+    "required": [
+     "term"
+    ]
+   }
+  },
+  {
+   "name": "classics_library_stats",
+   "description": "中醫笈成全庫統計：書目數/文本單元數/嵌套深度/分類/朝代分佈/指紋。（傷寒論規則庫統計請用 shanghan_corpus_stats——語義嚴格分離。）",
+   "input_schema": {
+    "type": "object",
+    "properties": {}
+   }
+  },
+  {
+   "name": "classics_export_evidence_packet",
+   "description": "P 層證據包導出：按 passage_id 物化整段記錄並逐字重驗（verbatim+座標+quote_hash），附庫指紋——供論文與人工複核。",
+   "input_schema": {
+    "type": "object",
+    "properties": {
+     "passage_ids": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "topic": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "passage_ids"
+    ]
+   }
   }
  ],
  "contracts": [
+  {
+   "name": "classics_compare_witnesses",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [
+    "傳本歸組按折疊書名，同名異書需人工消歧"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "6932484e94bcbb80",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
+  {
+   "name": "classics_concept_drift",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [
+    "頻次漂移≠語義漂移；計數受 per_book/max_scan 封頂"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "f384e6e658eecb0b",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
+  {
+   "name": "classics_export_evidence_packet",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "0db3730236d4d9e4",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
+  {
+   "name": "classics_library_stats",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [
+    "統計對象是笈成全庫書目，非傷寒論規則庫"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "9e2fcd061b033258",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
+  {
+   "name": "classics_read_passage",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "9729364a8bc70c82",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
+  {
+   "name": "classics_resolve_term",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [
+    "僅異體折疊與出現概況；通假/古今詞/同義映射屬規劃層"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "c6f5ca963dc42d0c",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
+  {
+   "name": "classics_search_passages",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [
+    "文獻旁證層：可回源重驗，不進入 A 層經文閘門；scan_capped 時零命中≠全庫不存在"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "bb2705855e45e040",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
+  {
+   "name": "classics_trace_citation",
+   "version": "1.2.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "P",
+   "limitations": [
+    "在庫首現≠歷史首現；反證搜索的部分匹配候選需人工核驗"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "0f41c270acd415a3",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
+  },
   {
    "name": "shanghan_adjudicate",
    "version": "1.2.0",

@@ -348,29 +348,48 @@ def _unit_entry(unit_dir: Path, unit_id: str, root: Path,
     }
 
 
+def _walk_units(base: Path, dir_: Path, root: Path, parent: Optional[Dict],
+                units: List[Dict]) -> Optional[Dict]:
+    """遞歸收集文本單元（十五輪 P0-3：任意層級嵌套子書，不再只走一層）。
+
+    每個目錄一個單元；``files`` 只含**本目錄**的正文文件，父/子正文
+    由構造保證互不重複計入。元數據（分類/朝代/作者）沿最近祖先繼承。
+    無正文且無子單元的非頂層目錄剪除（不虛增編目）。
+    """
+    unit_id = dir_.relative_to(base).as_posix()
+    entry = _unit_entry(dir_, unit_id, root,
+                        parent=parent["id"] if parent else "")
+    entry["depth"] = unit_id.count("/") + 1
+    if parent:
+        for field in ("category", "dynasty", "author"):
+            entry[field] = entry[field] or parent[field]
+    units.append(entry)
+    children: List[str] = []
+    for child in sorted(c for c in dir_.iterdir() if c.is_dir()):
+        sub = _walk_units(base, child, root, entry, units)
+        if sub is not None:
+            children.append(sub["id"])
+    entry["sub_books"] = children
+    if not entry["files"] and not children and parent is not None:
+        units.remove(entry)          # 空目錄不是文本單元
+        return None
+    return entry
+
+
 def build_catalog(root: Optional[Path] = None, archive_sha256: str = "",
                   source_url: str = "", extractor: str = "") -> Dict:
-    """Walk the extracted flat layout into one entry per text unit.
+    """Walk the extracted layout into one entry per text unit.
 
     A *unit* is a directory holding readable text: a top-level book, or a
     nested sub-book (e.g. 醫宗金鑑/訂正仲景全書傷寒論註) with its own
-    metadata. Sub-books inherit missing 分類/朝代 from their parent.
+    metadata — **at any nesting depth** (recursive walk). Sub-books inherit
+    missing 分類/朝代/作者 from their nearest ancestor.
     """
     root = library_root(root)
     base = books_dir(root)
     units: List[Dict] = []
     for book in sorted(p for p in base.iterdir() if p.is_dir()):
-        entry = _unit_entry(book, book.name, root)
-        subs = sorted(c for c in book.iterdir() if c.is_dir())
-        entry["sub_books"] = [f"{book.name}/{c.name}" for c in subs]
-        units.append(entry)
-        for c in subs:
-            sub = _unit_entry(c, f"{book.name}/{c.name}", root,
-                              parent=book.name)
-            sub["sub_books"] = []
-            for field in ("category", "dynasty", "author"):
-                sub[field] = sub[field] or entry[field]
-            units.append(sub)
+        _walk_units(base, book, root, None, units)
     units.sort(key=lambda u: u["id"])
     from collections import Counter
     cats = Counter(u["category"] for u in units if not u["parent"])
@@ -380,6 +399,7 @@ def build_catalog(root: Optional[Path] = None, archive_sha256: str = "",
         "extractor": extractor,
         "n_books": sum(1 for u in units if not u["parent"]),
         "n_units": len(units),
+        "max_depth": max((u["depth"] for u in units), default=0),
         "categories": dict(sorted(cats.items(), key=lambda kv: (-kv[1], kv[0]))),
         "units": units,
     }

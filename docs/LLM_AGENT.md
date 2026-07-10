@@ -206,7 +206,7 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 「⚠️ 含未核實條文編號」。可用 `Council(llm_specialists=False)` 關閉，
 離線 `local` 後端自動跳過。
 
-## 28 個可調用工具（智能體 / harness 共用同一能力面）
+## 36 個可調用工具（智能體 / harness 共用同一能力面）
 
 `shanghan_search`、`shanghan_get_clause`、`shanghan_match_formula`、
 `shanghan_hypotheses`（多假設方證分析+鑒別追問）、
@@ -230,6 +230,17 @@ python3 -m hermes_shanghan pipeline --llm-extract --llm-critic
 辨證閉環四工具：`shanghan_intake`（四診採集，患者端唯一辨證類白名單）、
 `shanghan_adjudicate`（多假設三態裁決）、`shanghan_conflict_audit`（方證衝突
 審計）、`shanghan_mistreatment_simulate`（誤治傳變模擬）。
+
+**classics 全庫工具族（十五輪，8 個，P 層證據面——獨立於傷寒論領域）**：
+`classics_search_passages`（分層檢索：L0 元數據→L1 字符倒排→L2 逐字驗證，
+布爾/鄰近/命中座標/全量計數，逐層可解釋）、`classics_read_passage`（按
+passage_id/著作+章節閱讀，附可重驗 P 層記錄）、`classics_compare_witnesses`
+（同著作傳本對照）、`classics_trace_citation`（時間有序引文檢索+反證搜索，
+在庫首現≠歷史首現如實標注）、`classics_resolve_term`（術語異體折疊與出現
+概況）、`classics_concept_drift`（朝代分桶概念漂移計量）、
+`classics_library_stats`（笈成全庫書目統計，與 shanghan_corpus_stats 語義
+嚴格分離）、`classics_export_evidence_packet`（P 層證據包導出：verbatim+
+座標+quote_hash 逐字重驗）。
 全部只讀、回源 clause_id；模型經 function-calling 自主選擇調用。
 溯源/藥解/方解四工具**不在患者白名單**（含組成/劑量）。
 

@@ -230,6 +230,47 @@ class TracedRegistry:
                                  被返回」，外層審計對此類引用響亮標注
         並保留 excerpt / retrieval_query 供 UI 逐條複核。逐工具聲明式
         evidence_records 契約見路線圖（現階段为分類式登記，如實標注）。"""
+        query = ""
+        if isinstance(arguments, dict):
+            query = str(arguments.get("query")
+                        or arguments.get("formula")
+                        or arguments.get("ref") or "")[:60]
+        ledger = self._state.evidence_ledger.setdefault(self._node, [])
+
+        # —— P 層（全庫文獻）證據登記（十五輪 P0-2）：classics 工具在結果
+        # 中攜帶結構化 passage_evidence（verbatim+座標+quote_hash，工具層
+        # 構造保證正文確實返回）——Broker 綁定 tool_call_id/span_id 後入賬
+        p_seen = {(r.get("passage_id"), r["tool"]) for r in ledger
+                  if r.get("passage_id")}
+        for rec in (out.get("passage_evidence") or []):
+            if not (isinstance(rec, dict) and rec.get("passage_id")
+                    and rec.get("verbatim_text") and rec.get("quote_hash")):
+                continue
+            if (rec["passage_id"], tool) in p_seen:
+                continue
+            if len(ledger) >= self.MAX_LEDGER_RECORDS:
+                break
+            ledger.append({
+                "passage_id": rec["passage_id"],
+                "evidence_level": "P",
+                "work_id": rec.get("work_id"),
+                "work_title": rec.get("work_title"),
+                "section": rec.get("section"),
+                "char_start": rec.get("char_start"),
+                "char_end": rec.get("char_end"),
+                "quote_hash": rec["quote_hash"],
+                "excerpt": rec["verbatim_text"][:60],
+                "tool": tool,
+                "tool_call_id": span_id,
+                "span_id": span_id,
+                "source_hash": rec["quote_hash"],
+                "evidence_role": "primary_text_returned",
+                "retrieval_query": rec.get("retrieval_query") or query or None,
+                "corpus_fingerprint": self._state.spec.corpus_version,
+                "registered_by": "capability_broker",
+            })
+            p_seen.add((rec["passage_id"], tool))
+
         try:
             blob = json.dumps(out, ensure_ascii=False, default=str)
         except Exception:
@@ -241,13 +282,8 @@ class TracedRegistry:
             store = self._base.art.clause_store()
         except Exception:
             return
-        query = ""
-        if isinstance(arguments, dict):
-            query = str(arguments.get("query")
-                        or arguments.get("formula")
-                        or arguments.get("ref") or "")[:60]
-        ledger = self._state.evidence_ledger.setdefault(self._node, [])
-        seen = {(r["clause_id"], r["tool"]) for r in ledger}
+        seen = {(r.get("clause_id"), r["tool"]) for r in ledger
+                if r.get("clause_id")}
         for cid in ids:
             c = store.get(cid)
             if c is None or (cid, tool) in seen:

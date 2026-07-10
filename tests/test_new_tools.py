@@ -20,7 +20,7 @@ class TestNewTools(unittest.TestCase):
 
     def test_registry_tool_count(self):
         names = self.reg.names()
-        self.assertEqual(len(names), 28)
+        self.assertEqual(len(names), 36)   # 28 領域 + 8 classics
         for t in ("shanghan_variants", "shanghan_relations", "shanghan_therapy",
                   "shanghan_contraindication_check", "shanghan_dose_convert",
                   "shanghan_case_search", "shanghan_trace",

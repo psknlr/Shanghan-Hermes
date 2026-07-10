@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 
 from ... import config
 
-RUN_MODES = ("agent", "council", "deep-research", "solve", "tool")
+RUN_MODES = ("agent", "council", "deep-research", "solve", "tool", "classics")
 RUN_STATUSES = ("queued", "created", "running", "paused", "failed",
                 "completed", "blocked", "rejected", "cancelling", "cancelled")
 

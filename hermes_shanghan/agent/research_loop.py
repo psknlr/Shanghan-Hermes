@@ -49,9 +49,17 @@ MODULES = {
     "shanghan_case_search": ("醫案例證", "經方實驗錄真實診案（旁證+經文錨點）"),
     "shanghan_trace": ("引文傳播", "深度溯源鏈：條文/方劑/方證觀點/注家/學派"),
     "shanghan_citation_network": ("引文傳播", "歷代引文網絡/共引/時間切片/主路徑"),
+    # 十五輪 P1-4：全庫文獻是**常規研究維度**（庫就緒時），不再只是可選工具
+    "classics_trace_citation": ("全庫文獻", "全庫時間有序引文檢索+反證搜索"
+                                            "（在庫首現候選）"),
+    "classics_search_passages": ("全庫文獻", "全庫分層檢索（P 層段級證據）"),
 }
 DIMENSIONS = ["原文源流", "異文注家", "方證計量", "劑量計量", "客觀評測",
               "醫案例證", "引文傳播"]
+# 全庫維度按庫就緒狀態動態加入（庫未下載時如實跳過並在缺口報告聲明，
+# 不偽裝覆蓋）
+LIBRARY_DIMENSION = "全庫文獻"
+LIBRARY_MODULES = {"classics_trace_citation", "classics_search_passages"}
 
 # 聚合統計類模塊：合法產出是數字/比例/矩陣而非條文引用（藥量比、頻次、
 # 一致度、計量網絡）——覆蓋要求是「工具成功 + 有數據」（DATA_FOUND），
@@ -80,6 +88,8 @@ GAP_SUGGESTIONS = {
     "客觀評測": "先運行 evaluate 生成基準，再調 shanghan_eval_metrics",
     "醫案例證": "調用 shanghan_case_search（經方實驗錄旁證 + 經文錨點）",
     "引文傳播": "調用 shanghan_trace（溯源鏈）或 shanghan_citation_network（歷代引文計量）",
+    "全庫文獻": "先 `library fetch` 就緒全庫，再調 classics_trace_citation"
+                "（時間有序+反證）/ classics_search_passages（P 層段級證據）",
 }
 
 
@@ -105,6 +115,12 @@ class DeepResearcher:
         self.client = client or get_client()
         self.registry = registry or get_registry()
         self.max_rounds = max_rounds
+        # 十五輪 P1-4：庫就緒 → 全庫文獻成為常規研究維度；未就緒 → 如實
+        # 跳過（缺口報告聲明），不偽裝覆蓋
+        from ..corpus import library as _libmod
+        self.library_available = _libmod.is_available()
+        self.dimensions = DIMENSIONS + ([LIBRARY_DIMENSION]
+                                        if self.library_available else [])
 
     # ------------------------------------------------------------------
     def run(self, topic: str) -> Dict[str, Any]:
@@ -147,12 +163,12 @@ class DeepResearcher:
             f["status"] = self._finding_status(f, rep)
             all_ids += rep.verified_ids
         status_by_dim = {d: self._dimension_status(state["findings"], d)
-                         for d in DIMENSIONS}
+                         for d in self.dimensions}
         # coverage 保持計數口徑（只計「真覆蓋」的發現：FAILED/EMPTY 不算）
         coverage = {d: sum(1 for f in state["findings"]
                            if f["dimension"] == d
                            and f.get("status") in _COVERING)
-                    for d in DIMENSIONS}
+                    for d in self.dimensions}
         gaps = self._gaps(state)
         return {"topic": topic, "backend": self.client.backend,
                 "research_questions": refine_questions(topic, formulas),
@@ -167,6 +183,9 @@ class DeepResearcher:
                                 "suggestion": GAP_SUGGESTIONS.get(d, "")}
                                for d in gaps],
                 "evidence_clause_ids": sorted(set(all_ids)),
+                "library_dimension": ("active" if self.library_available else
+                                      "skipped_unavailable（全庫未就緒："
+                                      "library fetch 後自動成為常規維度）"),
                 "findings": state["findings"]}
 
     # ------------------------------------------------------------------
@@ -178,6 +197,9 @@ class DeepResearcher:
             return "VERIFIED"
         # 循環中期 verified_clause_ids 尚未計算，用本模塊自產 id 作證據代理
         if f.get("verified_clause_ids") or f.get("_result_ids"):
+            return "EVIDENCE_FOUND"
+        # 全庫模塊：P 層段級證據（passage_id）即為證據——不冒充 A 層引用
+        if f.get("passage_ids") or f.get("_passage_ids"):
             return "EVIDENCE_FOUND"
         if f.get("module") in AGGREGATE_MODULES:
             return "DATA_FOUND"
@@ -199,7 +221,7 @@ class DeepResearcher:
             status = f.get("status") or self._finding_status(f)
             if status in _COVERING:
                 covered.add(f["dimension"])
-        return [d for d in DIMENSIONS if d not in covered]
+        return [d for d in self.dimensions if d not in covered]
 
     def _plan(self, topic: str, formulas: List[str], state) -> List[Dict]:
         """LLM plans module calls; local backend plans by coverage gaps."""
@@ -258,7 +280,15 @@ class DeepResearcher:
                           "args": ({"query_type": "formula", "ref": f0} if f0
                                    else {"query_type": "text", "ref": topic}),
                           "reason": "歷代引用與傳播路徑"})
-        return tasks[:7]
+        if LIBRARY_DIMENSION in gaps:
+            probe = f0 or topic[:8]
+            tasks.append({"module": "classics_trace_citation",
+                          "args": {"quote": probe},
+                          "reason": "全庫時間有序召回→早期候選→反證搜索"})
+            tasks.append({"module": "classics_search_passages",
+                          "args": {"query": probe, "limit": 6},
+                          "reason": "全庫廣泛召回（P 層段級證據）"})
+        return tasks[:8]
 
     # ------------------------------------------------------------------
     def _subagent(self, topic: str, task: Dict) -> Dict:
@@ -270,9 +300,13 @@ class DeepResearcher:
         from .citation_guard import RE_CLAUSE_ID
         own_ids = list(dict.fromkeys(RE_CLAUSE_ID.findall(
             json.dumps(result, ensure_ascii=False, default=str))))
+        passage_ids = [r.get("passage_id") for r in
+                       (result.get("passage_evidence") or [])
+                       if isinstance(r, dict)] if isinstance(result, dict) else []
         return {"dimension": dimension, "module": module, "args": args,
                 "summary": summary,
                 "_result_ids": own_ids,
+                "passage_ids": [p for p in passage_ids if p][:12],
                 "error": result.get("error") if isinstance(result, dict) else None}
 
     def _summarize(self, topic: str, module: str, result: Dict) -> str:
@@ -356,6 +390,28 @@ class DeepResearcher:
                     f"{ov.get('n_citing_works', 0)} 部引用著作、"
                     f"覆蓋條文 {ov.get('n_clauses_cited', 0)} 條；"
                     f"存疑標記 {ov.get('n_marker_unresolved', 0)} 處（多為引他書）。")
+        if module == "classics_trace_citation":
+            e = r.get("earliest_in_library")
+            counter = (r.get("counter_search") or {}) \
+                .get("earlier_partial_candidates", [])
+            if not e:
+                return ("全庫引文檢索未見逐字載錄" +
+                        ("（掃描封頂，非全庫定論）。"
+                         if r.get("scan_capped") else "。"))
+            return (f"「{r.get('quote', '')[:16]}」在庫首現候選："
+                    f"{e['dynasty'] or '?'}《{e['title']}》〔{e['passage_id']}〕"
+                    f"（共 {r.get('n_attestations', 0)} 處時間有序載錄；"
+                    f"反證搜索得更早部分匹配 {len(counter)} 個，需人工核驗；"
+                    "在庫首現≠歷史首現）。")
+        if module == "classics_search_passages":
+            hs = r.get("hits", [])
+            if not hs:
+                return ("全庫廣泛召回無命中" +
+                        ("（掃描封頂）。" if r.get("scan_capped") else "。"))
+            works = "、".join(dict.fromkeys(
+                f"《{h['title']}》" for h in hs[:4]))
+            return (f"全庫召回 {len(hs)} 段（{works} 等），P 層段級證據"
+                    f"〔{hs[0]['passage_id']}〕等已入台賬。")
         if module in ("shanghan_six_channel", "shanghan_differential"):
             d = r.get("differential") or {}
             if d:

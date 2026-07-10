@@ -30,7 +30,9 @@ PAPER_TYPES = {
     "formula_pattern": "《傷寒論》方證規律挖掘",
     "six_channel_kg": "《傷寒論》六經辨證知識圖譜",
     "mistreatment": "《傷寒論》誤治傳變規則研究",
-    "network_pharmacology": "《傷寒論》方劑網絡藥理學前置研究",
+    # 十五輪 十三.1：不冒充網絡藥理學（無化合物/靶點/PPI/富集）——如實
+    # 命名為共現網絡研究，定位為網絡藥理學的古籍證據前置層
+    "network_pharmacology": "《傷寒論》方劑—證候共現網絡研究（網絡藥理學前置）",
     "commentary_compare": "《傷寒論》方劑歷代注釋比較",
     "methodology": "《傷寒論》古籍數據挖掘與智能體方法學研究",
     "benchmark": "《傷寒論》規則系統客觀評測（遮方預測/醫案回放/證據接地）",
@@ -246,7 +248,9 @@ class PaperWriter:
                  topic: str = "", out_dir: Optional[Path] = None,
                  use_llm: bool = True) -> Path:
         if paper_type not in PAPER_TYPES:
-            paper_type = "formula_pattern"
+            # 十五輪 十三.2：fail-fast——不得靜默退回默認類型生成另一篇論文
+            raise ValueError(f"未知論文類型 {paper_type!r}"
+                             f"（可用：{sorted(PAPER_TYPES)}）")
         title_root = PAPER_TYPES[paper_type]
         topic = topic or {"formula_pattern": "桂枝湯類方證",
                           "six_channel_kg": "六經辨證體系",
@@ -256,10 +260,19 @@ class PaperWriter:
                           "methodology": "Hermes自主審核框架",
                           "benchmark": "遮方預測與醫案回放基準",
                           "provenance": "桂枝湯類方源流"}[paper_type]
-        slug = f"{paper_type}_{time.strftime('%Y%m%d')}"
-        out = out_dir or (config.PAPER_DIR / slug)
-        out.mkdir(parents=True, exist_ok=True)
         s = self._stats()
+        # 十五輪 P0-3：版本化輸出——修訂目錄按**內容指紋**尋址（同輸入
+        # 同目錄=冪等重生成；輸入變化=新修訂目錄），不再按日期覆蓋。
+        # revisions.json 追加式記錄修訂史（審稿修改/語料換版可回溯）。
+        revision = self._revision_id(paper_type, topic, s)
+        if out_dir is None:
+            base = config.PAPER_DIR / paper_type
+            out = base / f"rev_{revision}"
+            out.mkdir(parents=True, exist_ok=True)
+            self._record_revision(base, revision, topic)
+        else:
+            out = Path(out_dir)
+            out.mkdir(parents=True, exist_ok=True)
 
         # provenance papers run the deep-research loop first; its dossier
         # becomes both a results section and drafting-layer input
@@ -269,7 +282,9 @@ class PaperWriter:
             self._dossier = DeepResearcher().run(topic)
 
         # ---------- figures & tables (reproducible assets) -----------------
-        figures = self._emit_figures(out, paper_type, s)
+        fig_out = self._emit_figures(out, paper_type, s)
+        figures = fig_out["figs"]
+        fig_labels = fig_out["fig_labels"]
         tables = self._emit_tables(out, s)
 
         # ---------- augmentation layer: LLM drafts from the research digest
@@ -287,7 +302,7 @@ class PaperWriter:
 
         abstract = f"""目的：將《傷寒論》宋本條文轉化為可回源、可審核的結構化規則體系，並以{topic}為例驗證方法可行性。
 方法：以宋本（趙開美本）現代編號{ s['n_clauses']}條為唯一原文證據層（A層），桂林古本等為異文層（B層），成無己注為注釋層（C層）；經條文切分、否定感知實體抽取、條文級初始規則抽取，再通過 Schema 校驗、證據回源驗證、語義審查、對抗式批評（ShanghanCritic）、自動修復與共識評級六道閘門完成自主審核。
-結果：共獲得初始規則{ s['n_initial_rules']}條（gold {gold}、silver {silver}、bronze {bronze}），方證規則{ s['n_formula_rules']}個，誤治傳變路徑{ s['n_mistreatment']}條，鑒別規則{ s['n_differential']}組；高頻方劑為{ '、'.join(f for f, _ in top_f)}。每條結論均可追溯至條文編號。
+結果：共獲得初始規則{ s['n_initial_rules']}條（gold {gold}、silver {silver}、bronze {bronze}），方證規則{ s['n_formula_rules']}個，誤治傳變路徑{ s['n_mistreatment']}條，鑒別規則{ s['n_differential']}組；高頻方劑為{ '、'.join(f for f, _ in top_f)}。證據分層聲明：原文事實逐條錨定條文編號（A層）；聚合統計、注家一致度與模型評測屬派生指標，錨定其數據資產與代碼指紋（D/E層），不以單條條文冒充依據。
 結論：條文級證據回源 + 模型自主審核可在不犧牲可追溯性的前提下規模化提取《傷寒論》知識，為方證研究、知識圖譜與臨床輔助提供可驗證的數據底座。
 關鍵詞：傷寒論；方證對應；六經辨證；知識圖譜；規則挖掘；證據回源"""
 
@@ -320,7 +335,8 @@ InitialRule → FormulaPatternRule → SixChannelRule → TherapyRule →
 MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 圖譜（同方族/鑒別/誤治傳變/禁忌/傳變/異文/注釋支持七類邊）。"""
 
-        results = self._results_section(paper_type, s, topic, digest)
+        results = self._results_section(paper_type, s, topic, digest,
+                                        fig_labels=fig_labels)
 
         intro_body = drafted.get("introduction") or (
             "《傷寒論》以六經統病、以方證相應，其條文之間存在並列、遞進、"
@@ -389,7 +405,7 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 同意投稿。懇請審閱。
 
 通訊作者敬上
-{time.strftime('%Y-%m-%d')}"""
+（稿件修訂 rev_{revision}；語料指紋見 paper_meta.json——日期於投稿時填寫）"""
 
         parts = [
             f"# {title}", "## 摘要\n\n" + abstract,
@@ -401,17 +417,34 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
             parts.append(quant_section)
         parts += [
             discussion, conclusion,
+            self._legends_section(fig_out["legends"]),
             "## 圖表清單\n\n" + "\n".join(f"- {f}" for f in figures + tables),
             references, cover_letter,
             "## Supplementary Materials\n\n- S1 規則庫 rules_initial/initial_rules.jsonl\n"
             "- S2 審計日誌 audit/audit_log.jsonl\n- S3 條文關係圖 relations/clause_relations.jsonl\n"
-            "- S4 共現網絡與家族樹 research/*.json",
+            "- S4 共現網絡與家族樹 research/*.json\n"
+            "- S5 Source Data source_data/（逐 panel CSV，見 figures_manifest.json）\n"
+            "- S6 Figure QA figure_qa/qa_report.json（含 CVD 模擬 ΔE 實測）",
         ]
         manuscript = "\n\n".join(parts)
         (out / "manuscript.md").write_text(manuscript, encoding="utf-8")
+        (out / "figure_legends.json").write_text(
+            json.dumps(fig_out["legends"], ensure_ascii=False, indent=1),
+            encoding="utf-8")
+        # 十五輪 十七：Figure QA 是發布門禁——硬違例即失敗，不靜默出廠
+        from .figure_qa import run_qa
+        qa = run_qa(out, fig_out["emitted"], manuscript, fig_out["legends"])
+        if not qa["ok"]:
+            raise RuntimeError("Figure QA 硬違例："
+                               + "；".join(qa["hard_violations"]))
         meta = {"paper_type": paper_type, "title": title, "topic": topic,
+                "revision": f"rev_{revision}",
                 "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                 "figures": figures, "tables": tables,
+                "figure_plan": list(fig_labels),
+                "figure_qa": {"ok": qa["ok"],
+                              "soft_issues": qa["soft_issues"],
+                              "palette_cvd_ok": qa["palette_cvd"]["ok"]},
                 "llm_backend": draft.get("backend", "disabled"),
                 "llm_sections": sorted(drafted.keys()),
                 "citation_report": (report.to_dict() if report is not None else None),
@@ -422,14 +455,74 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
         return out / "manuscript.md"
 
     # ------------------------------------------------------------------
+    def _revision_id(self, paper_type: str, topic: str, s: Dict) -> str:
+        """修訂指紋：語料 manifest + 論文類型 + 主題 + 統計快照——同輸入
+        冪等，變輸入開新目錄（P0-3：不覆蓋、可回溯、可比對）。"""
+        import hashlib
+        m = config.MANIFEST_DIR / "corpus_manifest.json"
+        corpus = hashlib.sha256(m.read_bytes()).hexdigest()[:12] \
+            if m.exists() else "no-manifest"
+        stats_blob = json.dumps(
+            {k: v for k, v in sorted(s.items())
+             if k not in ("formula_freq", "channel_clauses")},
+            ensure_ascii=False, sort_keys=True, default=str)
+        return hashlib.sha256(
+            f"{corpus}|{paper_type}|{topic}|{stats_blob}".encode()).hexdigest()[:12]
+
+    @staticmethod
+    def _record_revision(base: Path, revision: str, topic: str) -> None:
+        path = base / "revisions.json"
+        entries = []
+        if path.exists():
+            try:
+                entries = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                entries = []
+        if not any(e.get("revision") == f"rev_{revision}" for e in entries):
+            entries.append({"revision": f"rev_{revision}", "topic": topic,
+                            "first_generated_at": time.strftime("%Y-%m-%dT%H:%M:%S")})
+            path.write_text(json.dumps(entries, ensure_ascii=False, indent=1),
+                            encoding="utf-8")
+
+    @staticmethod
+    def _legends_section(legends: Dict[str, Dict]) -> str:
+        """正式 Figure Legends（十五輪 P0-6）：每圖標題/panel/n/數據源/
+        誤差定義/證據層/Source Data 指向。"""
+        if not legends:
+            return "## 圖例（Figure Legends）\n\n（本論文類型無圖組。）"
+        blocks = ["## 圖例（Figure Legends）", ""]
+        for leg in legends.values():
+            panels = "；".join(f"({p}) {d}" for p, d in leg["panels"].items())
+            blocks.append(
+                f"**{leg['fig_no']}｜{leg['title']}** {panels}。"
+                f"n：{leg['n']}。數據來源：{leg['data_source']}。"
+                f"誤差/統計定義：{leg['error_definition']}。"
+                f"證據層級：{leg['evidence_level']}。"
+                f"Source Data：{'、'.join('source_data/' + f for f in leg['source_data'])}。"
+                + (f"備註：{leg['abbreviations']}。" if leg["abbreviations"] else ""))
+        return "\n\n".join(blocks)
+
+    # ------------------------------------------------------------------
     def _data_section(self, s: Dict) -> str:
         rows = "\n".join(f"| {ch} | {n} |" for ch, n in s["channel_clauses"].most_common())
         return (f"宋本條文 {s['n_clauses']} 條（含霍亂、陰陽易差後勞復附篇），"
                 f"六經分佈如下：\n\n| 六經 | 條文數 |\n|---|---|\n{rows}")
 
     def _results_section(self, paper_type: str, s: Dict, topic: str,
-                         digest: Dict) -> str:
+                         digest: Dict,
+                         fig_labels: Optional[Dict[str, str]] = None) -> str:
+        fig_labels = fig_labels or {}
         lines = ["## 4 結果", ""]
+        # 十五輪 P0-5：圖組進入論證鏈——按編號順序給出每張圖回答的科學
+        # 問題與主信息（正文引用，不是文末附件清單）
+        if fig_labels:
+            from .figspec import FIGURE_SPECS
+            nav = []
+            for key, label in fig_labels.items():
+                sp = FIGURE_SPECS[key]
+                nav.append(f"如 {label} 所示，{sp.main_message}"
+                           f"（回答：{sp.scientific_question}）")
+            lines.append("### 4.0 圖組導覽\n" + "；".join(nav) + "。")
         lines.append(f"### 4.1 規則庫總體\n共 {s['n_initial_rules']} 條初始規則："
                      + "、".join(f"{k} {v}條" for k, v in sorted(s['rule_types'].items(),
                                                               key=lambda kv: -kv[1])[:8])
@@ -437,13 +530,17 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
                        f"{s['levels'].get('silver',0)} / bronze {s['levels'].get('bronze',0)}。")
         top = s["formula_freq"].most_common(10)
         lines.append("### 4.2 高頻方劑\n| 方劑 | 條文數 |\n|---|---|\n" +
-                     "\n".join(f"| {f} | {n} |" for f, n in top))
+                     "\n".join(f"| {f} | {n} |" for f, n in top) +
+                     (f"\n\n（分佈與計數口徑見 {fig_labels['formula_freq']} "
+                      "及其圖例。）" if "formula_freq" in fig_labels else ""))
         n_sub = 2
 
         if paper_type in ("mistreatment", "methodology"):
             n_sub += 1
             paths = self.mistreatment_rules[:8]
-            lines.append(f"### 4.{n_sub} 誤治傳變路徑（節選）\n| 誤治 | 變證 | 救治方 | 證據條文 |\n|---|---|---|---|\n" +
+            ref = (f"（完整路徑網絡見 {fig_labels['mistreatment_paths']}。）"
+                   if "mistreatment_paths" in fig_labels else "")
+            lines.append(f"### 4.{n_sub} 誤治傳變路徑（節選）{ref}\n| 誤治 | 變證 | 救治方 | 證據條文 |\n|---|---|---|---|\n" +
                          "\n".join(f"| {m.mistreatment_type} | {m.resulting_pattern} | "
                                    f"{'、'.join(m.rescue_formulas[:2])} | "
                                    f"{'、'.join(m.supporting_clauses[:2])} |" for m in paths))
@@ -472,11 +569,21 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
             lines.append(f"### 4.{n_sub} 多注家對齊示例\n" +
                          self._commentary_table(topic))
             n_sub += 1
-            lines.append(f"### 4.{n_sub} 注家分歧圖譜\n" + self._atlas_tables())
+            ref = (f"（一致度矩陣與共注 n 見 {fig_labels['commentator_agreement']}。）"
+                   if "commentator_agreement" in fig_labels else "")
+            lines.append(f"### 4.{n_sub} 注家分歧圖譜{ref}\n" + self._atlas_tables())
 
         if paper_type == "network_pharmacology":
             n_sub += 1
-            lines.append(f"### 4.{n_sub} 劑量計量層\n" + self._dose_tables())
+            ref = (f"（折算假設區間見 {fig_labels['dose_totals']}。）"
+                   if "dose_totals" in fig_labels else "")
+            lines.append(f"### 4.{n_sub} 劑量計量層{ref}\n" + self._dose_tables())
+            n_sub += 1
+            lines.append(f"### 4.{n_sub} 研究定位聲明\n本研究是**方劑—證候"
+                         "共現網絡**分析（古籍證據層），不含化合物/靶點/"
+                         "蛋白互作/富集分析與分子驗證——不冒充傳統意義的"
+                         "網絡藥理學；其價值在為後續網絡藥理學研究提供"
+                         "可回源的經典證據前置圖譜。")
 
         if paper_type == "methodology":
             n_sub += 1
@@ -484,7 +591,10 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 
         if paper_type == "benchmark":
             n_sub += 1
-            lines.append(f"### 4.{n_sub} 客觀評測結果\n" + self._benchmark_tables())
+            ref = (f"（指標總覽見 {fig_labels['benchmark']}；各任務樣本量"
+                   "見其 Source Data。）" if "benchmark" in fig_labels else "")
+            lines.append(f"### 4.{n_sub} 客觀評測結果{ref}\n"
+                         + self._benchmark_tables())
 
         if paper_type == "provenance" and self._dossier:
             n_sub += 1
@@ -688,42 +798,188 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
                 f"bronze {levels.get('bronze',0)} / rejected {levels.get('rejected',0)}。")
 
     # ------------------------------------------------------------------
-    def _emit_figures(self, out: Path, paper_type: str, s: Dict) -> List[str]:
+    # Figure Factory（十五輪 十四）：FIGURE_PLANS 驅動——每種論文類型有
+    # 自己的圖組；每張圖帶結構化圖例、逐 panel Source Data、manifest；
+    # 網絡圖同時輸出 GraphML + 邊表 CSV + 確定性 layout.json（投稿級
+    # 渲染交給 Graphviz/Gephi，本層保證數據與佈局可復現）。
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _write_csv(path: Path, header: List[str], rows: List[List]) -> str:
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(header)
+            w.writerows(rows)
+        return path.name
+
+    @staticmethod
+    def _write_graphml(path: Path, nodes: List[str],
+                       edges: List[Dict]) -> None:
+        from xml.sax.saxutils import escape
+        from .figspec import stable_id
+        lines = ["<?xml version='1.0' encoding='UTF-8'?>",
+                 "<graphml xmlns='http://graphml.graphdrawing.org/xmlns'>",
+                 "<key id='label' for='node' attr.name='label' attr.type='string'/>",
+                 "<key id='kind' for='edge' attr.name='kind' attr.type='string'/>",
+                 "<graph edgedefault='directed'>"]
+        for n in nodes:
+            lines.append(f"<node id='{stable_id('n', n)}'>"
+                         f"<data key='label'>{escape(n)}</data></node>")
+        for e in edges:
+            lines.append(f"<edge source='{stable_id('n', e['src'])}' "
+                         f"target='{stable_id('n', e['dst'])}'>"
+                         f"<data key='kind'>{escape(e.get('kind', ''))}</data>"
+                         f"</edge>")
+        lines += ["</graph>", "</graphml>"]
+        path.write_text("\n".join(lines), encoding="utf-8")
+
+    @staticmethod
+    def _write_layout(path: Path, nodes: List[str]) -> None:
+        """確定性環形佈局座標（固定 renderer 前的座標凍結基線）。"""
+        import math
+        from .figspec import stable_id
+        n = max(1, len(nodes))
+        coords = {stable_id("n", name): {
+            "label": name,
+            "x": round(math.cos(2 * math.pi * i / n), 4),
+            "y": round(math.sin(2 * math.pi * i / n), 4)}
+            for i, name in enumerate(nodes)}
+        path.write_text(json.dumps({"layout": "deterministic-circular",
+                                    "nodes": coords},
+                                   ensure_ascii=False, indent=1),
+                        encoding="utf-8")
+
+    def _emit_figures(self, out: Path, paper_type: str, s: Dict) -> Dict:
+        from .figspec import FIGURE_PLANS, FIGURE_SPECS, stable_id
+        sd = out / "source_data"
+        sd.mkdir(exist_ok=True)
+        plan = FIGURE_PLANS[paper_type]
+        emitted: List[Dict] = []
+        legends: Dict[str, Dict] = {}
+        fig_labels: Dict[str, str] = {}
         figs: List[str] = []
-        # Fig1: channel-formula distribution (mermaid)
-        mer = ["```mermaid", "graph LR"]
+        manifest: List[Dict] = []
+        n_fig = 0
+        for key in plan:
+            spec = FIGURE_SPECS[key]
+            fig_no = f"Fig.{n_fig + 1}"
+            result = getattr(self, f"_fig_{key}")(out, sd, s, fig_no, spec)
+            if result.get("skipped"):
+                manifest.append({"key": key, "skipped": True,
+                                 "skip_reason": result["skip_reason"]})
+                emitted.append({"fig_no": "", "key": key, "file": "",
+                                "skipped": True,
+                                "skip_reason": result["skip_reason"]})
+                continue
+            n_fig += 1
+            fig_labels[key] = fig_no
+            figs.append(f"{fig_no} {spec.legend.title} ({result['file']})")
+            leg = spec.legend
+            legends[key] = {"fig_no": fig_no, "title": leg.title,
+                            "panels": leg.panels, "n": leg.n,
+                            "data_source": leg.data_source,
+                            "error_definition": leg.error_definition,
+                            "evidence_level": leg.evidence_level,
+                            "abbreviations": leg.abbreviations,
+                            "source_data": result["source_data"]}
+            import hashlib as _hl
+            data_hash = _hl.sha256(b"".join(
+                (sd / f).read_bytes() for f in result["source_data"])).hexdigest()[:16]
+            manifest.append({
+                "figure_id": fig_no, "key": key, "file": result["file"],
+                "title": leg.title,
+                "scientific_question": spec.scientific_question,
+                "main_message": spec.main_message,
+                "renderer": spec.renderer,
+                "width_mm": spec.width_mm(),
+                "panels": [p.panel_id for p in spec.panels],
+                "uncertainty": [p.uncertainty for p in spec.panels],
+                "data_sha256": data_hash,
+                "spec_sha256": stable_id("spec", repr(spec))[5:],
+                "source_data": result["source_data"],
+                "extra_assets": result.get("extra", []),
+            })
+            emitted.append({"fig_no": fig_no, "key": key,
+                            "file": result["file"], "skipped": False})
+        (out / "figures_manifest.json").write_text(
+            json.dumps({"paper_type": paper_type, "plan": plan,
+                        "figures": manifest,
+                        "note": "網絡圖投稿級渲染：用隨附 GraphML+layout.json"
+                                " 經 Graphviz/Gephi/Cytoscape 導出 SVG/PDF"
+                                "（stdlib 不做低質量佈局冒充投稿圖）"},
+                       ensure_ascii=False, indent=1), encoding="utf-8")
+        return {"figs": figs, "emitted": emitted, "legends": legends,
+                "fig_labels": fig_labels}
+
+    # —— per-figure emitters ————————————————————————————————
+    def _fig_channel_formula(self, out, sd, s, fig_no, spec) -> Dict:
+        from .figspec import stable_id
+        rows, mer = [], ["```mermaid", "graph LR"]
         for scr in self.six_channel_rules:
             ch = scr.six_channel
             mer.append(f'  {config.CHANNEL_PINYIN.get(ch, ch)}["{ch}"]')
             for f in scr.main_formulas[:4]:
                 fid = f["formula"]
                 mer.append(f'  {config.CHANNEL_PINYIN.get(ch, ch)} --> '
-                           f'f{abs(hash(fid)) % 9999}["{fid} ({f["clause_count"]})"]')
+                           f'{stable_id("f", fid)}["{fid} ({f["clause_count"]})"]')
+                rows.append([ch, fid, f["clause_count"]])
         mer.append("```")
-        (out / "fig1_channel_formula.mmd.md").write_text("\n".join(mer), encoding="utf-8")
-        figs.append("Fig.1 六經-方劑分佈圖 (fig1_channel_formula.mmd.md)")
+        name = "fig_channel_formula.mmd.md"
+        (out / name).write_text("\n".join(mer), encoding="utf-8")
+        src = self._write_csv(sd / f"{fig_no.replace('.', '')}a_channel_formula.csv",
+                              ["six_channel", "formula", "clause_count"], rows)
+        return {"file": name, "source_data": [src]}
 
-        # Fig2: mistreatment path graph (DOT)
+    def _fig_mistreatment_paths(self, out, sd, s, fig_no, spec) -> Dict:
         dot = ["digraph mistreatment {", "  rankdir=LR;"]
+        nodes, edges, rows = [], [], []
         for m in self.mistreatment_rules:
             a, b = m.mistreatment_type, m.resulting_pattern
             dot.append(f'  "{a}" -> "{b}";')
+            edges.append({"src": a, "dst": b, "kind": "transforms"})
+            rows.append([a, b, "", "transforms"])
+            nodes += [a, b]
             for f in m.rescue_formulas[:2]:
                 dot.append(f'  "{b}" -> "{f}" [style=dashed];')
+                edges.append({"src": b, "dst": f, "kind": "rescued_by"})
+                rows.append([b, f, "", "rescued_by"])
+                nodes.append(f)
         dot.append("}")
-        (out / "fig2_mistreatment_paths.dot").write_text("\n".join(dot), encoding="utf-8")
-        figs.append("Fig.2 誤治-變證路徑圖 (fig2_mistreatment_paths.dot)")
+        name = "fig_mistreatment_paths.dot"
+        (out / name).write_text("\n".join(dot), encoding="utf-8")
+        nodes = list(dict.fromkeys(nodes))
+        self._write_graphml(out / "fig_mistreatment_paths.graphml", nodes, edges)
+        self._write_layout(out / "fig_mistreatment_paths.layout.json", nodes)
+        src = self._write_csv(sd / f"{fig_no.replace('.', '')}a_mistreatment_edges.csv",
+                              ["source", "target", "weight", "kind"], rows)
+        return {"file": name, "source_data": [src],
+                "extra": ["fig_mistreatment_paths.graphml",
+                          "fig_mistreatment_paths.layout.json"]}
 
-        # Fig3: formula family tree (DOT)
+    def _fig_formula_family(self, out, sd, s, fig_no, spec) -> Dict:
         dot = ["digraph family {", "  rankdir=LR;"]
+        nodes, edges, rows = [], [], []
         for r in self.formula_rules:
             for mrel in r.modification_relations:
                 dot.append(f'  "{r.formula}" -> "{mrel["modified_formula"]}";')
+                edges.append({"src": r.formula,
+                              "dst": mrel["modified_formula"],
+                              "kind": "modification"})
+                rows.append([r.formula, mrel["modified_formula"]])
+                nodes += [r.formula, mrel["modified_formula"]]
         dot.append("}")
-        (out / "fig3_formula_family.dot").write_text("\n".join(dot), encoding="utf-8")
-        figs.append("Fig.3 方劑家族樹 (fig3_formula_family.dot)")
+        name = "fig_formula_family.dot"
+        (out / name).write_text("\n".join(dot), encoding="utf-8")
+        nodes = list(dict.fromkeys(nodes))
+        self._write_graphml(out / "fig_formula_family.graphml", nodes, edges)
+        self._write_layout(out / "fig_formula_family.layout.json", nodes)
+        src = self._write_csv(sd / f"{fig_no.replace('.', '')}a_family_edges.csv",
+                              ["base_formula", "modified_formula"], rows)
+        return {"file": name, "source_data": [src],
+                "extra": ["fig_formula_family.graphml",
+                          "fig_formula_family.layout.json"]}
 
-        # Fig4: clause topic clusters — channel × dominant theme grouping
+    def _fig_clause_topics(self, out, sd, s, fig_no, spec) -> Dict:
+        from .figspec import stable_id
         clusters: Dict[str, Dict[str, List[int]]] = {}
         for c in self.clauses:
             if not c.six_channel:
@@ -740,72 +996,142 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
                 theme = "脈證關係"
             else:
                 theme = "病證界定"
-            clusters.setdefault(c.six_channel, {}).setdefault(theme, []).append(c.clause_number)
+            clusters.setdefault(c.six_channel, {}).setdefault(theme, []) \
+                .append(c.clause_number)
         mer = ["```mermaid", "graph TD"]
+        rows = []
         for ch, themes in clusters.items():
             chid = config.CHANNEL_PINYIN.get(ch, ch)
             mer.append(f'  {chid}["{ch}"]')
             for theme, nums in sorted(themes.items(), key=lambda kv: -len(kv[1])):
-                tid = f"{chid}_{abs(hash(theme)) % 999}"
+                tid = stable_id("t", f"{ch}|{theme}")
                 sample = "、".join(str(n) for n in nums[:5])
-                mer.append(f'  {chid} --> {tid}["{theme} ({len(nums)}條，如{sample}…)"]')
+                mer.append(f'  {chid} --> {tid}["{theme} ({len(nums)}條，'
+                           f'如{sample}…)"]')
+                rows.append([ch, theme, len(nums),
+                             "、".join(str(n) for n in nums[:8])])
         mer.append("```")
-        (out / "fig4_clause_topic_clusters.mmd.md").write_text("\n".join(mer), encoding="utf-8")
-        figs.append("Fig.4 條文主題聚類圖 (fig4_clause_topic_clusters.mmd.md)")
+        name = "fig_clause_topics.mmd.md"
+        (out / name).write_text("\n".join(mer), encoding="utf-8")
+        src = self._write_csv(sd / f"{fig_no.replace('.', '')}a_clause_topics.csv",
+                              ["six_channel", "theme", "n_clauses",
+                               "example_clause_numbers"], rows)
+        return {"file": name, "source_data": [src]}
 
-        # Fig5+: statistical SVG figures (stdlib charts.py; direct-labeled,
-        # CVD-validated palette; CSV tables alongside are the table view)
-        from .charts import grouped_hbar_chart, heatmap, hbar_chart
-        (out / "fig5_formula_frequency.svg").write_text(
-            hbar_chart(s["formula_freq"].most_common(10),
-                       "高頻方劑（載方條文數）", "宋本 398 條正文，A 層直計"),
+    def _fig_formula_freq(self, out, sd, s, fig_no, spec) -> Dict:
+        from .charts import hbar_chart
+        pairs = s["formula_freq"].most_common(10)
+        name = "fig_formula_frequency.svg"
+        (out / name).write_text(
+            hbar_chart(pairs, "宋本正文中各方劑的載方條文數（前 10）",
+                       "n=398 條正文；一條條文含多方時分別計數",
+                       width_mm=spec.width_mm(),
+                       desc=spec.main_message,
+                       x_label="載方條文數（A 層全量計數）"),
             encoding="utf-8")
-        figs.append("Fig.5 高頻方劑條形圖 (fig5_formula_frequency.svg)")
+        src = self._write_csv(sd / f"{fig_no.replace('.', '')}a_formula_frequency.csv",
+                              ["formula", "clause_count"],
+                              [[f, n] for f, n in pairs])
+        return {"file": name, "source_data": [src]}
 
+    def _fig_commentator_agreement(self, out, sd, s, fig_no, spec) -> Dict:
+        from .charts import heatmap
         atlas = self._load_research("commentary_divergence.json")
-        if atlas.get("agreement_matrix"):
-            comms = sorted({p[k] for p in atlas["agreement_matrix"]
-                            for k in ("a", "b")})
-            vals = {(p["a"], p["b"]): p["mean_term_agreement"]
-                    for p in atlas["agreement_matrix"]}
-            (out / "fig6_commentator_agreement.svg").write_text(
-                heatmap(comms, vals, "注家術語一致度矩陣",
-                        "9 注本條文級對齊；深色=更一致（D/E 層歸納）"),
-                encoding="utf-8")
-            figs.append("Fig.6 注家一致度熱圖 (fig6_commentator_agreement.svg)")
+        if not atlas.get("agreement_matrix"):
+            return {"skipped": True,
+                    "skip_reason": "commentary_divergence.json 未生成"
+                                   "（先運行 pipeline）"}
+        comms = sorted({p[k] for p in atlas["agreement_matrix"]
+                        for k in ("a", "b")})
+        vals = {(p["a"], p["b"]): p["mean_term_agreement"]
+                for p in atlas["agreement_matrix"]}
+        ns = {(p["a"], p["b"]): p["n_shared_clauses"]
+              for p in atlas["agreement_matrix"]}
+        name = "fig_commentator_agreement.svg"
+        (out / name).write_text(
+            heatmap(comms, vals, "注家術語一致度矩陣",
+                    "色階=平均術語一致度；格內 n=共注條文數（各對不同）；"
+                    "詞彙級下界，不等於觀點一致",
+                    width_mm=spec.width_mm(), desc=spec.main_message,
+                    cell_n=ns),
+            encoding="utf-8")
+        srcs = [self._write_csv(
+                    sd / f"{fig_no.replace('.', '')}a_agreement.csv",
+                    ["commentator_a", "commentator_b", "mean_term_agreement"],
+                    [[a, b, v] for (a, b), v in sorted(vals.items())]),
+                self._write_csv(
+                    sd / f"{fig_no.replace('.', '')}b_shared_clause_counts.csv",
+                    ["commentator_a", "commentator_b", "n_shared_clauses"],
+                    [[a, b, v] for (a, b), v in sorted(ns.items())])]
+        return {"file": name, "source_data": srcs}
 
+    def _fig_dose_totals(self, out, sd, s, fig_no, spec) -> Dict:
+        from .charts import interval_chart
         ratios = self._load_research("dose_ratios.json")
-        if ratios.get("formulas"):
-            top = sorted(ratios["formulas"],
-                         key=lambda f: -f["total_weight_g"]["kaogu"])[:6]
-            rows = [(f["formula"], [f["total_weight_g"]["kaogu"],
-                                    f["total_weight_g"]["duliangheng"],
-                                    f["total_weight_g"]["zhezhuan"]]) for f in top]
-            (out / "fig7_dose_totals.svg").write_text(
-                grouped_hbar_chart(rows, ["考古實測", "度量衡史", "明清折算"],
-                                   "全方總重量（g，僅計重量類藥）",
-                                   "三家折算並存（後世考證，D/E 層）"),
-                encoding="utf-8")
-            figs.append("Fig.7 劑量三家折算圖 (fig7_dose_totals.svg)")
+        if not ratios.get("formulas"):
+            return {"skipped": True,
+                    "skip_reason": "dose_ratios.json 未生成（先運行 pipeline）"}
+        top = sorted(ratios["formulas"],
+                     key=lambda f: -f["total_weight_g"]["kaogu"])[:6]
+        rows = [(f["formula"], [f["total_weight_g"]["kaogu"],
+                                f["total_weight_g"]["duliangheng"],
+                                f["total_weight_g"]["zhezhuan"]]) for f in top]
+        name = "fig_dose_totals.svg"
+        (out / name).write_text(
+            interval_chart(rows, ["考古實測", "度量衡史", "明清折算"],
+                           "全方總重量的折算假設區間（g，僅計重量類藥）",
+                           "三家折算=學術假設情景，非測量值；"
+                           "不構成臨床劑量建議",
+                           width_mm=spec.width_mm(), desc=spec.main_message,
+                           x_label="總重量（g；區間=折算學派差異）"),
+            encoding="utf-8")
+        src = self._write_csv(sd / f"{fig_no.replace('.', '')}a_dose_scenarios.csv",
+                              ["formula", "school", "total_weight_g"],
+                              [[f["formula"], sch, f["total_weight_g"][k]]
+                               for f in top
+                               for sch, k in (("考古實測", "kaogu"),
+                                              ("度量衡史", "duliangheng"),
+                                              ("明清折算", "zhezhuan"))])
+        return {"file": name, "source_data": [src]}
 
+    def _fig_benchmark(self, out, sd, s, fig_no, spec) -> Dict:
+        from .charts import hbar_chart
         ev = self._load_eval()
         cz = ev.get("cloze", {}).get("metrics", {}).get("attainable", {})
-        if cz.get("n"):
-            cs = ev.get("cases", {}).get("metrics", {})
-            gr = ev.get("grounding", {}).get("metrics", {})
-            pairs = [("遮方 Top-1", cz.get("top1", 0)),
-                     ("遮方 Top-3", cz.get("top3", 0)),
-                     ("遮方 Top-5", cz.get("top5", 0)),
-                     ("遮方 MRR", cz.get("mrr", 0)),
-                     ("醫案 Top-1", cs.get("top1", 0)),
-                     ("醫案 MRR", cs.get("mrr", 0)),
-                     ("接地率", gr.get("grounded_answer_rate", 0))]
-            (out / "fig8_benchmark.svg").write_text(
-                hbar_chart(pairs, "客觀評測基準", "遮方=LOCO 可達折；醫案=經方實驗錄",
-                           value_fmt="{:.2f}"),
-                encoding="utf-8")
-            figs.append("Fig.8 評測基準條形圖 (fig8_benchmark.svg)")
-        return figs
+        if not cz.get("n"):
+            return {"skipped": True,
+                    "skip_reason": "評測未運行（先執行 evaluate）"}
+        cs = ev.get("cases", {}).get("metrics", {})
+        gr = ev.get("grounding", {}).get("metrics", {})
+        pairs = [("遮方 Top-1", cz.get("top1", 0)),
+                 ("遮方 Top-3", cz.get("top3", 0)),
+                 ("遮方 Top-5", cz.get("top5", 0)),
+                 ("遮方 MRR", cz.get("mrr", 0)),
+                 ("醫案 Top-1", cs.get("top1", 0)),
+                 ("醫案 MRR", cs.get("mrr", 0)),
+                 ("接地率", gr.get("grounded_answer_rate", 0))]
+        name = "fig_benchmark.svg"
+        (out / name).write_text(
+            hbar_chart(pairs, "客觀評測基準",
+                       "各任務指標語義與樣本量不同，不可跨行比大小；"
+                       "點估計（單次評測，無 CI）",
+                       value_fmt="{:.2f}", width_mm=spec.width_mm(),
+                       desc=spec.main_message,
+                       x_label="指標值（0–1；遮方=LOCO 可達折，醫案=經方實驗錄）"),
+            encoding="utf-8")
+        src = self._write_csv(sd / f"{fig_no.replace('.', '')}a_benchmark_metrics.csv",
+                              ["metric", "value", "task_n"],
+                              [["遮方 Top-1", cz.get("top1", 0), cz.get("n", "")],
+                               ["遮方 Top-3", cz.get("top3", 0), cz.get("n", "")],
+                               ["遮方 Top-5", cz.get("top5", 0), cz.get("n", "")],
+                               ["遮方 MRR", cz.get("mrr", 0), cz.get("n", "")],
+                               ["醫案 Top-1", cs.get("top1", 0),
+                                cs.get("n_scored", "")],
+                               ["醫案 MRR", cs.get("mrr", 0),
+                                cs.get("n_scored", "")],
+                               ["接地率", gr.get("grounded_answer_rate", 0),
+                                gr.get("n_questions", "")]])
+        return {"file": name, "source_data": [src]}
 
     def _emit_tables(self, out: Path, s: Dict) -> List[str]:
         tables: List[str] = []

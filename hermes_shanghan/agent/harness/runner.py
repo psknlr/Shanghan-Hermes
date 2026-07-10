@@ -76,10 +76,12 @@ def _ledger_ids_verified(state) -> List[str]:
                     "台賬只能由工具執行後的 Broker 寫入")
             # 十四輪 P0-四：只有「條文正文確實返回」的記錄才進發布允許集。
             # id_mention_only 僅供關係導航/待檢索提示——編號在工具 JSON
-            # 出現過不構成發布依據（模型根本沒讀到正文）
+            # 出現過不構成發布依據（模型根本沒讀到正文）。
+            # 十五輪 P0-2：P 層記錄以 passage_id 為證據身份（分層並列，
+            # 不冒充 A 層條文）
             if r.get("evidence_role") == "primary_text_returned":
-                ids.append(r["clause_id"])
-    return sorted(set(ids))
+                ids.append(r.get("clause_id") or r.get("passage_id"))
+    return sorted({i for i in ids if i})
 
 
 def save_state(state: RunState) -> None:
@@ -480,8 +482,9 @@ class HarnessRunner:
                 # TracedRegistry（Broker 在工具成功執行後登記結構化記錄），
                 # 節點只回讀本節點名下已登記的證據 id 作摘要
                 res.evidence_ids = sorted({
-                    r["clause_id"]
-                    for r in state.evidence_ledger.get(node.node_id, [])})[:40]
+                    r.get("clause_id") or r.get("passage_id") or ""
+                    for r in state.evidence_ledger.get(node.node_id, [])}
+                    - {""})[:40]
                 state.node_outputs[node.node_id] = out
                 res.status = "ok"
                 res.error = None
@@ -572,6 +575,12 @@ class HarnessRunner:
                 out = ComplexAgent(client=self.client,
                                    registry=reg).solve(spec.user_query,
                                                        role=spec.role)
+            elif spec.mode == "classics":
+                # 十五輪：第二套智能體——全量古籍研究（P 層證據面），
+                # 工具面同樣經 TracedRegistry → Broker 台賬
+                from ...classics.agent import ClassicsAgent
+                out = ClassicsAgent(registry=reg.for_role(spec.role)) \
+                    .ask(spec.user_query, role=spec.role)
             elif spec.mode == "tool":
                 # Tool Run：單工具經 Broker（span/台賬/預算/角色裁剪）執行
                 req = json.loads(spec.user_query)
@@ -627,6 +636,42 @@ class HarnessRunner:
             if spec.evidence_policy == "strict_round" and not refused \
                     and not allowed and rep.has_any_citation:
                 outer["ok"] = False
+            # —— P 層（全庫文獻）引用獨立複核（十五輪 P0-2）：psg 引用
+            # 同樣只認 Broker 台賬（primary_text_returned）；引用台賬外
+            # 的 passage_id 視同偽造引用（進 unsupported → blocked）
+            from ...classics.model import RE_PASSAGE_ID
+            cited_p = list(dict.fromkeys(
+                RE_PASSAGE_ID.findall(state.final_answer or "")))
+            allowed_p = {r["passage_id"]
+                         for recs in state.evidence_ledger.values()
+                         for r in recs if r.get("passage_id")
+                         and r.get("evidence_role") == "primary_text_returned"}
+            verified_p = [p for p in cited_p if p in allowed_p]
+            unsupported_p = [p for p in cited_p if p not in allowed_p]
+            if cited_p:
+                outer["passage_citations"] = {"verified": verified_p,
+                                              "unsupported": unsupported_p}
+            if verified_p:
+                outer["has_any_citation"] = True
+                # 僅引 P 層且無 A 層違例時，P 層核驗通過即證據閘通過
+                if not unsupported_p and not rep.unsupported_ids \
+                        and not rep.outside_evidence_ids:
+                    outer["ok"] = True
+            if unsupported_p:
+                outer["ok"] = False
+                outer["unsupported"] = list(outer["unsupported"]) + unsupported_p
+            # 按結論類型的最低證據層策略（classics 模式；違例=證據失敗，
+            # citation_failure 不可審批豁免）
+            if spec.mode == "classics":
+                from ...classics.evidence import conclusion_policy_check
+                p_recs = [r for recs in state.evidence_ledger.values()
+                          for r in recs if r.get("passage_id")]
+                violations = conclusion_policy_check(
+                    state.final_answer or "", p_recs,
+                    [t["tool"] for t in state.tool_calls])
+                if violations:
+                    outer["ok"] = False
+                    outer["conclusion_policy_violations"] = violations
             exec_out["agent_self_report"] = inner
             exec_out["citation_report"] = outer      # 權威報告覆蓋
             # 台賬中被引用證據若僅以編號出現（正文未返回），響亮標注
@@ -635,7 +680,7 @@ class HarnessRunner:
                               for recs in state.evidence_ledger.values()
                               for r in recs
                               if r.get("evidence_role") == "id_mention_only"
-                              and r["clause_id"] in cited})
+                              and r.get("clause_id") in cited})
             if id_only:
                 outer["id_only_cited"] = id_only
             return {"citation_report": outer, "agent_self_report": inner,
@@ -726,8 +771,9 @@ def export_run(run_id: str, fmt: str = "md") -> Optional[str]:
         lines.append(f"- 審批：{a['trigger']} → {a.get('status', 'pending')}"
                      + (f"（{a.get('approver', '')}）" if a.get("approver") else ""))
     lines += ["", "## 最終回答", "", state.final_answer or "（無）"]
-    ids = sorted({r["clause_id"] for recs in state.evidence_ledger.values()
-                  for r in recs if isinstance(r, dict)})
+    ids = sorted({r.get("clause_id") or r.get("passage_id") or ""
+                  for recs in state.evidence_ledger.values()
+                  for r in recs if isinstance(r, dict)} - {""})
     lines += ["", "## 證據台賬（Broker 登記，含 tool_call/span 綁定）", "",
               "、".join(ids) or "（無）"]
     return "\n".join(lines)

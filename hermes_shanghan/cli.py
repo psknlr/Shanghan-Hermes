@@ -69,6 +69,16 @@ def cmd_agent(args):
         _print(out)
 
 
+def cmd_classics(args):
+    # 第二套智能體：全量古籍研究（獨立於傷寒論規則庫，無需 pipeline）
+    from .classics.agent import ClassicsAgent
+    out = ClassicsAgent().ask(args.question, role=args.role or "researcher")
+    if args.answer_only:
+        print(out.get("answer", ""))
+    else:
+        _print(out)
+
+
 def cmd_llm_extract(args):
     _need_pipeline()
     from .rag.clause_rag import ClauseRAG
@@ -150,6 +160,17 @@ def cmd_library(args):
         return
     if act == "status":
         print(json.dumps(library.status(), ensure_ascii=False, indent=1))
+        return
+    if act == "audit":
+        # 十五輪 六：全庫驗收審計（解析率/編碼/元數據缺失/嵌套/重複/抽樣）
+        from .classics.audit import acceptance_report
+        report = acceptance_report(sample=args.limit if args.limit != 12 else 0)
+        print(json.dumps(report, ensure_ascii=False, indent=1))
+        if report.get("available"):
+            out_path = library.library_root() / "audit_report.json"
+            out_path.write_text(json.dumps(report, ensure_ascii=False,
+                                           indent=1), encoding="utf-8")
+            print(f"-- 報告已寫入 {out_path}", file=sys.stderr)
         return
     if not library.is_available():
         print("全庫未就緒：請先運行 `python3 -m hermes_shanghan library fetch`",
@@ -742,6 +763,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("--answer-only", action="store_true")
     sp.set_defaults(func=cmd_agent)
 
+    sp = sub.add_parser("classics",
+                        help="全量古籍智能體（第二套：全庫檢索/引文溯源/"
+                             "概念漂移/傳本對照，P 層證據可重驗）")
+    sp.add_argument("question")
+    sp.add_argument("--role", choices=list(safety.ROLES))
+    sp.add_argument("--answer-only", action="store_true")
+    sp.set_defaults(func=cmd_classics)
+
     sp = sub.add_parser("llm-extract", help="LLM 抽取單條規則並過審核閘門")
     sp.add_argument("clause", help="條文號或 clause_id")
     sp.set_defaults(func=cmd_llm_extract)
@@ -770,7 +799,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp = sub.add_parser("library",
                         help="中醫笈成全庫（800+ 部）：自動下載/編目檢索/全文查閱")
     sp.add_argument("action", choices=["fetch", "status", "search", "grep",
-                                       "toc", "read", "categories"])
+                                       "toc", "read", "categories", "audit"])
     sp.add_argument("query", nargs="?", default="",
                     help="檢索詞（search/grep）或書名（toc/read）")
     sp.add_argument("--category", default="", help="按分類過濾，如 醫案/本草/溫病")

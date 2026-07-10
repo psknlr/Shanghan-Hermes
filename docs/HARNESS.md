@@ -2,6 +2,15 @@
 
 回應「頂級 harness」評審（八輪十二方向 + 九輪動態審計 + 十一輪 P0 復現）。
 
+## 〇-00、十五輪：P 層證據面 + classics 運行模式（第二套智能體入 Harness）
+
+| 項 | 落地 |
+|---|---|
+| P 層一等證據 | classics 工具結果攜帶結構化 passage_evidence（verbatim+字符座標+quote_hash）→ **Broker 唯一寫入台賬**（evidence_level="P"，primary_text_returned by construction）——全庫文獻不再是「證據系統之外的文本」，也不冒充 A 層 |
+| psg 引用獨立複核 | guard 節點對回答中的 `psg_*` 引用執行台賬比對：台賬外引用=偽造引用 → **blocked**（與 SHL 條文同一口徑）；僅引 P 層且核驗通過 → 證據閘通過 |
+| 按結論類型最低證據層 | CONCLUSION_EVIDENCE_POLICY 落地可檢測行：宋本原文記載→須 A 層編號；「最早/首見」→須 classics_trace_citation（時間有序+反證搜索）；「普遍討論」→須 ≥2 著作來源。違例=citation_failure（十四輪類型學：**不可審批豁免**） |
+| classics 運行模式 | RUN_MODES 增 "classics"，dispatch 經 TracedRegistry 全鏈路；ClassicsAgent 研究留痕（檢索計劃/已查書目/反證候選/首現候選/待人工核驗）隨 run 輸出可審 |
+
 ## 〇-0、十四輪 P0 修復（「無證據鏈，不成回答」補完最後缺口）
 
 | P0 | 修復 |

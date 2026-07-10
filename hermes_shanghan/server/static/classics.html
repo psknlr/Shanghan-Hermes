@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hermes · 全量古籍工作台</title>
+<style>
+:root{--bg:#f7f6f3;--card:#fff;--ink:#1b1a17;--ink2:#6b6a66;--line:#e6e4df;
+--brand:#8a2f2f;--ok:#1baf7a;--warn:#eda100;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Noto Serif CJK TC","Songti TC",serif;background:var(--bg);
+color:var(--ink);padding:14px;max-width:1200px;margin:0 auto;}
+h1{font-size:1.25rem;margin-bottom:2px;}
+.sub{color:var(--ink2);font-size:.8rem;margin-bottom:10px;}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+nav button{padding:7px 14px;border:1px solid var(--line);background:var(--card);
+border-radius:8px;cursor:pointer;font-family:inherit;font-size:.85rem;}
+nav button.on{background:var(--brand);color:#fff;border-color:var(--brand);}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:12px;margin-bottom:10px;}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;}
+input,select{padding:7px 9px;border:1px solid var(--line);border-radius:7px;
+font-family:inherit;font-size:.85rem;}
+input[type=text]{flex:1;min-width:160px;}
+button.act{padding:7px 14px;background:var(--brand);color:#fff;border:none;
+border-radius:7px;cursor:pointer;font-family:inherit;}
+pre{white-space:pre-wrap;word-break:break-all;font-size:.78rem;
+background:#faf9f6;border:1px solid var(--line);border-radius:8px;
+padding:10px;max-height:420px;overflow:auto;}
+.hit{border-left:3px solid var(--brand);padding:6px 10px;margin:6px 0;
+background:#faf9f6;border-radius:0 8px 8px 0;font-size:.85rem;}
+.hit .loc{color:var(--ink2);font-size:.75rem;}
+.tag{display:inline-block;font-size:.7rem;padding:1px 8px;border-radius:9px;
+background:#f0eee9;color:var(--ink2);margin-right:4px;}
+.basket{font-size:.78rem;color:var(--ink2);}
+a{color:var(--brand);}
+.pane{display:none;} .pane.on{display:block;}
+.small{font-size:.75rem;color:var(--ink2);}
+</style>
+</head>
+<body>
+<h1>全量古籍工作台 <span class="tag">classics · 第二套智能體</span></h1>
+<div class="sub">中醫笈成全庫（803 部級）· P 層證據（verbatim+座標+quote_hash 可重驗）·
+獨立於傷寒論智能體 ｜ <a href="/static/console.html">運行中心</a> ·
+<a href="/static/index.html">傷寒論工作台</a></div>
+
+<div class="row"><input type="password" id="token" placeholder="API Key（Bearer）">
+<button class="act" onclick="saveToken()">保存</button>
+<span id="who" class="small"></span></div>
+
+<nav>
+<button id="nb-lib" class="on" onclick="show('lib')">書庫管理</button>
+<button id="nb-search" onclick="show('search')">研究檢索</button>
+<button id="nb-read" onclick="show('read')">古籍閱讀</button>
+<button id="nb-agent" onclick="show('agent')">智能體工作台</button>
+</nav>
+
+<!-- 書庫管理 -->
+<div id="p-lib" class="pane on card">
+<div class="row"><button class="act" onclick="libStats()">全庫狀態與統計</button>
+<span class="small">下載校驗指紋 / 書目數 / 嵌套深度 / 分類朝代分佈（classics_library_stats）</span></div>
+<pre id="lib-out">（未加載——全庫需先 `python3 -m hermes_shanghan library fetch`；
+驗收審計：`python3 -m hermes_shanghan library audit`）</pre>
+</div>
+
+<!-- 研究檢索 -->
+<div id="p-search" class="pane card">
+<div class="row">
+<input type="text" id="q" placeholder="AND 檢索詞（空白分詞），如：奔豚 氣上衝">
+<input type="text" id="q-not" placeholder="排除詞（可空）" style="max-width:130px">
+<input type="text" id="q-cat" placeholder="分類" style="max-width:90px">
+<input type="text" id="q-dyn" placeholder="朝代" style="max-width:80px">
+<select id="q-order"><option value="relevance">相關序</option>
+<option value="dynasty">朝代序（首現）</option></select>
+<button class="act" onclick="doSearch()">分層檢索</button>
+<button class="act" style="background:#555" onclick="doTrace()">引文溯源</button>
+<button class="act" style="background:#555" onclick="doDrift()">概念漂移</button>
+</div>
+<div class="small">L0 元數據 → L1 字符倒排 → L2 逐字驗證（每層可解釋）；
+命中帶全量計數與字符座標；scan_capped 如實標注。</div>
+<div id="hits"></div>
+<div class="card"><b>證據籃</b> <span class="basket" id="basket-n">0 段</span>
+<button onclick="exportPacket()">導出證據包（逐字重驗）</button>
+<pre id="packet" style="max-height:200px">（勾選命中段後導出——書名/章節/摘錄/hash 對應性由重驗保證）</pre></div>
+<pre id="search-raw" style="max-height:220px"></pre>
+</div>
+
+<!-- 古籍閱讀 -->
+<div id="p-read" class="pane card">
+<div class="row"><input type="text" id="r-book" placeholder="書名，如 傷寒論_宋本">
+<button class="act" onclick="loadToc()">目錄</button></div>
+<div class="row"><input type="text" id="r-sec" placeholder="章節名（自目錄點選）">
+<button class="act" onclick="readSec()">閱讀</button>
+<button class="act" style="background:#555" onclick="compareWit()">傳本對照</button></div>
+<div id="toc" class="small" style="max-height:160px;overflow:auto"></div>
+<pre id="read-out">（原文為扁平化正字呈現；影印頁對齊屬路線層，如實聲明）</pre>
+</div>
+
+<!-- 智能體 -->
+<div id="p-agent" class="pane card">
+<div class="row"><input type="text" id="a-q"
+ placeholder="研究問題，如：「奔豚」最早見於哪部醫書？／「往來寒熱」歷代演變">
+<button class="act" onclick="askAgent()">經 Harness 運行</button></div>
+<div class="small">mode=classics：發布閘門獨立複核 psg 引用（只認 Broker 台賬），
+「最早」類結論須時間有序檢索+反證搜索，違例不可審批豁免。</div>
+<div id="a-status" class="small"></div>
+<pre id="a-answer">（回答）</pre>
+<b class="small">研究留痕：檢索計劃 / 已查書目 / 反證候選 / 首現候選 / 待人工核驗</b>
+<pre id="a-log" style="max-height:260px"></pre>
+</div>
+
+<script>
+function $(s){return document.querySelector(s);}
+function hdrs(extra){const t=localStorage.getItem("hermes_token");
+const h=Object.assign({"Content-Type":"application/json"},extra||{});
+if(t)h["Authorization"]="Bearer "+t;return h;}
+function saveToken(){localStorage.setItem("hermes_token",$("#token").value.trim());whoami();}
+$("#token").value=localStorage.getItem("hermes_token")||"";
+async function whoami(){try{const r=await fetch("/api/whoami",{headers:hdrs()});
+const j=await r.json();$("#who").textContent=j.effective_role?("身份："+j.effective_role):"";}catch(e){}}
+whoami();
+function show(k){for(const p of ["lib","search","read","agent"]){
+$("#p-"+p).classList.toggle("on",p===k);$("#nb-"+p).classList.toggle("on",p===k);}}
+async function tool(name,args){const r=await fetch("/api/tool",{method:"POST",
+headers:hdrs(),body:JSON.stringify({name:name,arguments:args||{}})});
+return await r.json();}
+
+async function libStats(){$("#lib-out").textContent="加載中…";
+$("#lib-out").textContent=JSON.stringify(await tool("classics_library_stats",{}),null,1);}
+
+let BASKET=[];
+function renderHits(out){const el=$("#hits");el.innerHTML="";
+(out.hits||[]).forEach(h=>{const d=document.createElement("div");d.className="hit";
+d.innerHTML=`<label><input type="checkbox" value="${h.passage_id}"> `+
+`<b>《${h.title}》</b>·${h.section||"—"} <span class="tag">${h.dynasty||"?"}·${h.author||"?"}</span>`+
+`<span class="tag">命中×${h.n_occurrences}</span><span class="tag">座標 ${h.char_start}</span></label>`+
+`<div>…${h.excerpt}…</div><div class="loc">${h.passage_id} · ${h.work_id}/${h.file}</div>`;
+d.querySelector("input").onchange=e=>{if(e.target.checked)BASKET.push(h.passage_id);
+else BASKET=BASKET.filter(x=>x!==h.passage_id);$("#basket-n").textContent=BASKET.length+" 段";};
+el.appendChild(d);});
+if(out.scan_capped)el.innerHTML+="<div class='small'>⚠ 掃描封頂：零/少命中≠全庫不存在（調大 max_scan）</div>";}
+async function doSearch(){const out=await tool("classics_search_passages",
+{query:$("#q").value,not_terms:$("#q-not").value?[$("#q-not").value]:[],
+category:$("#q-cat").value,dynasty:$("#q-dyn").value,order:$("#q-order").value});
+renderHits(out);$("#search-raw").textContent=JSON.stringify(out.retrieval_layers||out,null,1);}
+async function doTrace(){const out=await tool("classics_trace_citation",{quote:$("#q").value});
+renderHits({hits:out.attestations_time_ordered,scan_capped:out.scan_capped});
+$("#search-raw").textContent=JSON.stringify({earliest_in_library:out.earliest_in_library,
+counter_search:out.counter_search,honesty:out.honesty},null,1);}
+async function doDrift(){const out=await tool("classics_concept_drift",{term:$("#q").value});
+$("#hits").innerHTML="";$("#search-raw").textContent=JSON.stringify(out,null,1);}
+async function exportPacket(){if(!BASKET.length){alert("先勾選命中段");return;}
+const out=await tool("classics_export_evidence_packet",{passage_ids:BASKET,topic:$("#q").value});
+$("#packet").textContent=JSON.stringify(out.packet?{packet_id:out.packet.packet_id,
+n_records:out.packet.n_records,verification:out.packet.verification,
+library_fingerprint:out.packet.library_fingerprint}:out,null,1);}
+
+async function loadToc(){const out=await tool("shanghan_library",{book:$("#r-book").value});
+if(out.error){$("#toc").textContent=out.error;return;}
+const out2=await tool("classics_read_passage",{work:$("#r-book").value});
+$("#read-out").textContent=out2.text||JSON.stringify(out2,null,1);
+const r=await fetch("/api/tool",{method:"POST",headers:hdrs(),
+body:JSON.stringify({name:"shanghan_library",arguments:{book:$("#r-book").value}})});
+const j=await r.json();
+$("#toc").innerHTML=(j.toc||[]).map(t=>`<a href="#" onclick="$('#r-sec').value='${t}';readSec();return false">${t}</a>`).join(" ｜ ")||"（無目錄或見正文）";}
+async function readSec(){const out=await tool("classics_read_passage",
+{work:$("#r-book").value,section:$("#r-sec").value});
+$("#read-out").textContent=out.error?(out.error+"\n目錄："+(out.toc||[]).join("、")):out.text;}
+async function compareWit(){const out=await tool("classics_compare_witnesses",
+{work:$("#r-book").value,query:$("#r-sec").value});
+$("#read-out").textContent=JSON.stringify(out,null,1);}
+
+async function askAgent(){$("#a-status").textContent="啟動 classics 運行…";
+const r=await fetch("/api/runs",{method:"POST",headers:hdrs(),
+body:JSON.stringify({query:$("#a-q").value,mode:"classics",role:"researcher"})});
+const j=await r.json();if(j.error){$("#a-status").textContent=j.error;return;}
+const rid=j.run_id;
+for(let i=0;i<120;i++){await new Promise(s=>setTimeout(s,600));
+const d=await(await fetch("/api/runs/"+rid,{headers:hdrs()})).json();
+$("#a-status").textContent=`run ${rid} · ${d.status} · 發布=${(d.release||{}).decision||"—"}`;
+if(["completed","paused","failed","blocked"].includes(d.status)){
+$("#a-answer").textContent=d.final_answer||"（無答案——見發布決策）";
+const out=await(await fetch("/api/runs/"+rid+"/output/execute",{headers:hdrs()})).json();
+const o=(out.output||{});
+$("#a-log").textContent=JSON.stringify({research_log:o.research_log,
+audit:o.audit,evidence:(o.passage_evidence||[]).length+" 段 P 層證據入台賬"},null,1);
+break;}}}
+</script>
+</body>
+</html>

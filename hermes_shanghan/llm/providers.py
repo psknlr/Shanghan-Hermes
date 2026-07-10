@@ -204,6 +204,12 @@ class LocalProvider:
         channel = next((c for c in _SIX_CHANNELS if c in q or c[:-1] in q), None)
 
         m_title = re.search(r"《([^》]{2,14})》", q_raw)
+        # 十五輪 P1-3：「全庫有多少部書」是**笈成全庫**書目統計，不是
+        # 傷寒論規則庫統計——語義分離，各答各的
+        if "classics_library_stats" in available and \
+                re.search(r"(全庫|全库|笈成)[^。]{0,8}(多少部|幾部|几部|收錄)"
+                          r"|多少部(醫)?書", q):
+            return call("classics_library_stats", {})
         if "shanghan_library" in available and \
                 not re.search(r"(統計|多少條|頻次|計量概況|評測|接地率)", q) and \
                 (re.search(r"(笈成|全庫|文獻|古籍|醫籍|歷代醫書|後世醫[家書]|哪些書|哪部書|查書|書目)", q)

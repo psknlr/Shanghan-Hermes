@@ -41,7 +41,7 @@ python3 -m hermes_shanghan serve        # 打開 http://127.0.0.1:8765/
 合議）** · 原文檢索 · 方證匹配 · 方證鑒別 · 六經教學 · 誤治傳變 · 科研挖掘 ·
 **溯源工作台**（誤引檢測/文本回源/術語譜系/方劑源流/注家爭議/學派比較）·
 **方藥檔案**（藥證+本草旁證層/方解四層口徑）· **辨證閉環**（四診採集→裁決→
-衝突審計）· **工具台**（28 工具通用調用/笈成全庫/深度研究/評測看板/
+衝突審計）· **工具台**（36 工具通用調用/笈成全庫/深度研究/評測看板/
 金標準標註閉環）· 論文生成 · Skill 庫 · 接入。證據優先：答案中的
 `clause_id` 可點擊展開條文全息（A/B/C/D/E 五層色標）；多智能體合議把「規劃→取證→
 方證/鑒別/六經/誤治專家→批評→綜合」可視化為時間線，每步附證據與引用核驗；
@@ -159,7 +159,13 @@ python3 -m hermes_shanghan agent "少陰病寒化與熱化怎麼區分？" --rol
 python3 -m hermes_shanghan solve "桂枝湯與麻黃湯如何鑒別？各自劑量比是多少？注家有何分歧？"
 python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
 
-# 測試（407 項：對抗性審核 + 智能體架構 + 28 工具 + 評測 + 七維研究循環 + 全庫接入 + 治理探針
+# 第二套智能體：全量古籍研究（獨立於傷寒論規則庫；十五輪）
+# 分層檢索/引文溯源（時間有序+反證）/概念漂移/傳本對照——P 層證據
+# （verbatim+字符座標+quote_hash）逐字可重驗，「在庫首現≠歷史首現」如實標注
+python3 -m hermes_shanghan classics "「奔豚」最早見於哪部醫書？"
+python3 -m hermes_shanghan library audit         # 全庫驗收審計（--sample N 抽樣金標準）
+
+# 測試（446 項：對抗性審核 + 智能體架構 + 36 工具 + 評測 + 七維研究循環 + 全庫接入 + 治理探針
 #       + 可復現性/證據鏈硬化 + 溯源層（引文識別/計量網絡/五類溯源鏈）+ Colab守衛）
 python3 -m unittest discover -s tests
 
@@ -206,7 +212,7 @@ python3 -m hermes_shanghan tool-call shanghan_differential --args '{"formulas":[
 python3 -m hermes_shanghan export-tools --out tools.json
 ```
 
-**接入智能體框架**（28 個只讀回源工具 + 1 個智能體工具，三種 harness 共用同一能力面；
+**接入智能體框架**（36 個只讀回源工具（28 傷寒論領域 + 8 classics 全庫平台層）+ 1 個智能體工具，三種 harness 共用同一能力面；
 模型經 function-calling **自主選擇調用**）。除檢索/匹配/鑒別/六經/誤治外，還包括：
 分歧圖譜 · 劑量計量 · 全庫統計 · 評測指標 · **異文對勘**（B層）· **關係圖譜遍歷**
 （多跳推理）· **治法法度** · **禁忌檢查**（複合推理：方+證候→衝突/法度禁例）·
@@ -458,7 +464,9 @@ hermes_shanghan/
 ├─ paper/       writer（8 類論文 + LLM 增益層）· charts（純標準庫 SVG 統計圖）
 ├─ memory/      store（9 個記憶模塊，含 correction/project）
 ├─ llm/         config · cache · prompts · providers(litellm/local/scripted) · client
-├─ agent/       tools(28 工具+ScopedRegistry+患者白名單+結果緩存) · citation_guard
+├─ classics/    全量古籍智能體（十五輪）：Passage/Span 模型 · 分層檢索 ·
+│               P 層證據面（可重驗）· ClassicsAgent · 全庫驗收審計
+├─ agent/       tools(36 工具+ScopedRegistry+患者白名單+結果緩存) · citation_guard
 │               · agent(ReAct+反思自糾+工具預算) · planner(任務圖規劃)
 │               · evidence_binder(句級 claim→證據綁定) · hypothesis(多假設+鑒別追問)
 │               · complex_agent(任務圖編排) · session(會話記憶+糾錯記憶)
@@ -467,7 +475,7 @@ hermes_shanghan/
 ├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
 ├─ server/      service(API面) · http_server(stdlib) · static(SPA: index/css/js)
 ├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
-tests/          407 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
+tests/          446 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/library/      中醫笈成全庫（803 部，`library fetch` 自動下載，不入庫）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/溯源/論文）
