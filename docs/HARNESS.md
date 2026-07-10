@@ -1,6 +1,17 @@
 # Agent 執行 Harness（狀態圖 · 可恢復 · 可觀測 · 可審計）
 
-回應「頂級 harness」評審（八輪十二方向 + 九輪動態審計）。目標架構：
+回應「頂級 harness」評審（八輪十二方向 + 九輪動態審計 + 十一輪 P0 復現）。
+
+## 〇、十一輪 P0 修復（部署前必須項，全部落地 + 對抗回歸測試）
+
+| P0 | 修復 |
+|---|---|
+| 模型輸出自我登記為證據 | **台賬唯一寫入口 = Capability Broker**（TracedRegistry 在工具成功執行後登記結構化記錄：clause_id + tool_call_id + span_id + source_hash + 語料指紋 + registered_by）；`RE_CLAUSE_ID.findall(節點輸出)` 登記機制**已刪除**；台賬讀取前過強不變量校驗（違例即拋錯）；agent/complex 零取證時 allowed=空集而非 None——「猜中真實編號」零檢索不再通過 strict_round（測試：`test_zero_tool_guess_fails_strict_round`） |
+| 患者 GET clause 角色回退 student | **RequestContext 不可變全鏈路**：生效角色只在策略層裁定一次，全部路由顯式接收 ctx，業務路由禁止讀 body/query role；患者投影在**序列化出口**再次執行（formula_blocks/組成/劑量/煎服法等鍵強制移除）——雙保險（測試：患者 key 端到端） |
+| intake 只記錄不分支 | intake 輸出強類型 TriageDecision，**圖執行器**依 continue_execution 分支：紅旗/意圖攔截 → execute 與 evidence_audit 標 skipped_by_triage，直接進發布閘門——不再依賴各業務引擎自行記得攔截 |
+| strict_round 無證據仍放行 | 無任何可核驗引用的非拒答回答 → review_required（不再 pass_with_warning）；患者端違規檢測改**結構化臨床動作抽取**（推薦/劑量/煎服/加減四類，不再是四關鍵詞黑名單） |
+
+目標架構：
 
 ```text
 Hermes Harness =
@@ -34,8 +45,10 @@ Hermes Harness =
 
 | 方向 | 差距與計劃 |
 |---|---|
-| 2+. 圖原生細粒度編排 | v2 仍把模式引擎整體作為 execute 節點；把檢索/專家/批評/綜合拆成獨立 typed 節點（input/output schema、節點級預算/緩存/取消）列下輪 |
-| 3+. durable execution | 現為單進程 JSON checkpoint + 文件鎖：無 lease/心跳/exactly-once/DLQ；副作用工具（現全只讀）加入前必須先補 |
+| 2+. 圖原生細粒度編排 | v2 仍把模式引擎整體作為 execute 節點（intake 已真分支）；把檢索/專家/批評/綜合拆成獨立 typed 節點（input/output schema、節點級預算/緩存/取消）列下輪 |
+| 3+. durable execution | 單進程 JSON checkpoint + 文件鎖 + **逐節點心跳**（600s 殘留判定不誤傷活運行）；SQLite WAL 狀態庫（runs/attempts/leases/events 表）、CAS 狀態版本、exactly-once/DLQ 列研究版路線；stdlib HTTP 定位為開發服務（共享態已加鎖：工具緩存/會話表/限流桶/記憶原子寫），生產走 ASGI |
+| 5++. 語義蘊含（L2）| 三層驗證：L1 確定性（編號/逐字/**歸屬綁定**——引文按最近引用標記綁定條文，錯掛出 attribution_warning）已落地；L2 supports/contradicts 需模型後端；L3 人工（爭議訓詁/最早來源）走 review_required |
+| 反證義務 | argument 鏈已對方證輸出反證條文；「高風險任務強制 counterevidence 檢索」（鑒別/最早提出/禁忌）列下輪 |
 | 5+. MCP progress notification | tasks 已可輪詢；服務端主動 progress 推送需雙向流改造 |
 | 8+. 身份聯邦 | Principal 已服務端化；JWT/OIDC/反代映射屬部署層，接口留在 policy.resolve_principal |
 | 9. 專家獨立 evidence packet | 見 AGENT_ROADMAP「多智能體專家獨立性」設計（分層檢索隔離+匿名 claim 評審+主動反證） |

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hermes-shanghan"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Hermes-Shanghanlun: autonomous rule mining and skill generation system for Shanghan Lun (Treatise on Cold Damage)"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -30,6 +30,9 @@ llm = ["litellm>=1.40"]
 
 [project.scripts]
 hermes-shanghan = "hermes_shanghan.cli:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "hermes_shanghan._version.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["hermes_shanghan*"]

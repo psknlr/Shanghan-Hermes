@@ -14,7 +14,7 @@ import threading
 import time
 from collections import deque
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from .. import config
 from ..schemas import read_jsonl
@@ -195,6 +195,11 @@ class ToolRegistry:
         # 環形審計日誌：每次調用的 {tool, ok, ms, cache_hit}（輕量常駐；
         # harness 運行下另有 span 級 JSONL 軌跡）
         self.audit_log: deque = deque(maxlen=256)
+        # ThreadingHTTPServer 下的共享狀態鎖（十一輪 九：緩存/計數並發安全）
+        self._lock = threading.Lock()
+        # 超時熔斷：超時的工作線程仍在後台運行（無法強殺），滯留過多時
+        # 熔斷新調用而不是無限堆線程
+        self._zombie_threads: List[threading.Thread] = []
         self._register_all()
 
     @staticmethod
@@ -1023,13 +1028,22 @@ class ToolRegistry:
             return ScopedRegistry(self, PATIENT_SAFE_TOOLS)
         return self
 
-    @staticmethod
-    def _run_with_timeout(func: Callable, kwargs: Dict, timeout: float):
+    MAX_ZOMBIE_THREADS = 8
+
+    def _run_with_timeout(self, func: Callable, kwargs: Dict, timeout: float):
         """契約 timeout_s 的運行時執行：工作線程 + join(timeout)。超時拋
         ToolTimeout（守護線程繼續完成但結果丟棄——只讀工具無副作用可棄）。
+        滯留線程超閾值時熔斷（circuit breaker）：連續超時不再無限堆線程。
         timeout<=0 時內聯執行（調試/剖析用）。"""
         if timeout <= 0:
             return func(**kwargs)
+        with self._lock:
+            self._zombie_threads = [t for t in self._zombie_threads
+                                    if t.is_alive()]
+            if len(self._zombie_threads) >= self.MAX_ZOMBIE_THREADS:
+                raise ToolTimeout(
+                    f"circuit open：{len(self._zombie_threads)} 個超時工具"
+                    "線程仍在運行，熔斷新調用（等待滯留線程結束）")
         box: Dict[str, Any] = {}
 
         def _target():
@@ -1042,29 +1056,42 @@ class ToolRegistry:
         th.start()
         th.join(timeout)
         if th.is_alive():
+            with self._lock:
+                self._zombie_threads.append(th)
             raise ToolTimeout(f"timeout after {timeout}s")
         if "exc" in box:
             raise box["exc"]
         return box.get("result")
 
+    @staticmethod
+    def _safe_exc(exc: BaseException) -> str:
+        """異常信息進錯誤信封前脫敏：去倉庫絕對路徑 + 截斷（信封可能
+        原樣返回給外部調用方）。"""
+        msg = str(exc).replace(str(config.REPO_ROOT), "<repo>")
+        return f"{type(exc).__name__}: {msg[:200]}"
+
     def call(self, name: str, arguments: Dict) -> Dict:
         """Capability-Broker 管道（九輪 P0-8）：
         默認拒絕（未知工具）→ 參數修復/校驗 → 緩存（版本化鍵）→
-        超時執行 → 輸出形狀/大小校驗 → 分層蓋章 → 審計。"""
+        超時執行（熔斷保護）→ 輸出形狀/大小校驗 → 分層蓋章 → 審計。"""
         t0 = time.time()
+        repairs: List[Dict] = []
 
         def _audit(out: Dict, cache_hit: bool = False) -> Dict:
-            self.audit_log.append(
-                {"tool": name, "ok": "error" not in out, "cache_hit": cache_hit,
-                 "ms": int((time.time() - t0) * 1000),
-                 "at": time.strftime("%Y-%m-%dT%H:%M:%S")})
+            entry = {"tool": name, "ok": "error" not in out,
+                     "cache_hit": cache_hit,
+                     "ms": int((time.time() - t0) * 1000),
+                     "at": time.strftime("%Y-%m-%dT%H:%M:%S")}
+            if repairs:
+                entry["repairs"] = repairs
+            self.audit_log.append(entry)
             return out
 
         tool = self._tools.get(name)
         if tool is None:      # 默認拒絕：不在註冊表=不可調用
             return _audit({"error": f"unknown tool: {name}",
                            "available": self.names()})
-        arguments = self._coerce_args(tool, dict(arguments or {}))
+        arguments, repairs = self._coerce_args(tool, dict(arguments or {}))
         problem = self._validate_args(tool, arguments)
         if problem:
             return _audit({"tool": name, "error": f"參數校驗失敗：{problem}",
@@ -1072,26 +1099,31 @@ class ToolRegistry:
         key = "::".join([name, TOOLS_VERSION, self._corpus_fp,
                          json.dumps(arguments, ensure_ascii=False,
                                     sort_keys=True, default=str)])
-        cached = self._cache.get(key)
-        if cached is not None:
-            self.cache_hits += 1
-            out = copy.deepcopy(cached)
+        with self._lock:
+            cached = self._cache.get(key)
+            if cached is not None:
+                self.cache_hits += 1
+                out = copy.deepcopy(cached)
+            else:
+                self.cache_misses += 1
+                out = None
+        if out is not None:
             out["cache_hit"] = True
             return _audit(out, cache_hit=True)
-        self.cache_misses += 1
         timeout = _tool_timeout()
         try:
             result = self._run_with_timeout(tool.func, arguments, timeout)
-        except ToolTimeout:
+        except ToolTimeout as exc:
             return _audit({"tool": name,
-                           "error": f"tool {name} timeout：超過契約 "
-                                    f"timeout_s={timeout:g}s，結果丟棄",
+                           "error": f"tool {name} timeout：{exc}"
+                                    f"（契約 timeout_s={timeout:g}s）",
                            "hint": "縮小參數範圍；長任務走 MCP tasks/submit"})
         except TypeError as exc:
-            return _audit({"error": f"bad arguments for {name}: {exc}"})
+            return _audit({"error": f"bad arguments for {name}: "
+                                    f"{self._safe_exc(exc)}"})
         except Exception as exc:  # never crash the agent on a tool error
             return _audit({"error": f"tool {name} failed: "
-                                    f"{type(exc).__name__}: {exc}"})
+                                    f"{self._safe_exc(exc)}"})
         # 輸出形狀契約：工具必須返回 dict（非 dict 視為契約違例）
         if not isinstance(result, dict):
             return _audit({"tool": name,
@@ -1105,9 +1137,10 @@ class ToolRegistry:
                            "error": f"結果超過契約上限 {MAX_RESULT_BYTES} bytes",
                            "hint": "縮小 top_k/limit 參數或分頁調用"})
         if "error" not in result:
-            if len(self._cache) >= self._cache_size:
-                self._cache.pop(next(iter(self._cache)))
-            self._cache[key] = copy.deepcopy(result)
+            with self._lock:
+                if len(self._cache) >= self._cache_size:
+                    self._cache.pop(next(iter(self._cache)))
+                self._cache[key] = copy.deepcopy(result)
         return _audit(result)
 
     def contracts(self) -> List[Dict]:
@@ -1116,25 +1149,43 @@ class ToolRegistry:
 
     # -- envelope helpers -------------------------------------------------
     @staticmethod
-    def _coerce_args(tool: Tool, arguments: Dict) -> Dict:
+    def _coerce_args(tool: Tool, arguments: Dict) -> Tuple[Dict, List[Dict]]:
         """Repair common LLM slips (top_k="6", symptoms="惡寒") instead of
-        failing the call."""
+        failing the call. 每次修復記錄 {arg, from, to, reason} 進審計
+        （十一輪 八.2）；布爾只接受明確真/假詞——"banana" 不再被靜默
+        修成 False，交由校驗報錯。"""
         props = tool.parameters.get("properties", {})
+        repairs: List[Dict] = []
         for k, v in list(arguments.items()):
             want = props.get(k, {}).get("type")
             if want == "integer" and isinstance(v, str) and v.strip().isdigit():
                 arguments[k] = int(v)
+                repairs.append({"arg": k, "from": v, "to": arguments[k],
+                                "reason": "string→integer"})
             elif want == "array" and isinstance(v, str):
                 arguments[k] = [s for s in
                                 (x.strip() for x in
                                  v.replace("，", ",").replace("、", ",").split(","))
                                 if s]
+                repairs.append({"arg": k, "from": v, "to": arguments[k],
+                                "reason": "string→array（頓號/逗號切分）"})
             elif want == "boolean" and isinstance(v, str):
-                arguments[k] = v.strip().lower() in ("true", "1", "yes", "是")
-        return arguments
+                low = v.strip().lower()
+                if low in ("true", "1", "yes", "是"):
+                    arguments[k] = True
+                elif low in ("false", "0", "no", "否"):
+                    arguments[k] = False
+                else:
+                    continue      # 不明字符串不猜——留給類型校驗報錯
+                repairs.append({"arg": k, "from": v, "to": arguments[k],
+                                "reason": "string→boolean（明確真假詞）"})
+        return arguments, repairs
 
     @staticmethod
     def _validate_args(tool: Tool, arguments: Dict) -> Optional[str]:
+        """JSON-Schema 子集深校驗（十一輪 八.2）：必填/未知/類型 +
+        enum / minimum / maximum / maxItems / 數組元素類型 / pattern /
+        maxLength。"""
         props = tool.parameters.get("properties", {})
         required = tool.parameters.get("required", [])
         # an explicitly-passed empty list is a legal value（pulse-only 方證
@@ -1147,12 +1198,34 @@ class ToolRegistry:
         if unknown:
             return f"未知參數 {'、'.join(unknown)}（可用：{'、'.join(props)}）"
         type_map = {"string": str, "integer": int, "boolean": bool,
-                    "array": list, "object": dict}
+                    "array": list, "object": dict, "number": (int, float)}
+        import re as _re
         for k, v in arguments.items():
-            want = props.get(k, {}).get("type")
+            spec = props.get(k, {})
+            want = spec.get("type")
             py = type_map.get(want)
             if py and v is not None and not isinstance(v, py):
                 return f"參數 {k} 應為 {want}"
+            if v is None:
+                continue
+            if "enum" in spec and v not in spec["enum"]:
+                return f"參數 {k}={v!r} 不在枚舉 {spec['enum']}"
+            if isinstance(v, (int, float)) and not isinstance(v, bool):
+                if "minimum" in spec and v < spec["minimum"]:
+                    return f"參數 {k}={v} 低於下限 {spec['minimum']}"
+                if "maximum" in spec and v > spec["maximum"]:
+                    return f"參數 {k}={v} 超過上限 {spec['maximum']}"
+            if isinstance(v, list):
+                if "maxItems" in spec and len(v) > spec["maxItems"]:
+                    return f"參數 {k} 元素數 {len(v)} 超過 {spec['maxItems']}"
+                item_t = type_map.get((spec.get("items") or {}).get("type"))
+                if item_t and any(not isinstance(x, item_t) for x in v):
+                    return f"參數 {k} 的元素應為 {spec['items']['type']}"
+            if isinstance(v, str):
+                if "maxLength" in spec and len(v) > spec["maxLength"]:
+                    return f"參數 {k} 長度 {len(v)} 超過 {spec['maxLength']}"
+                if "pattern" in spec and not _re.search(spec["pattern"], v):
+                    return f"參數 {k} 不匹配 pattern {spec['pattern']}"
         return None
 
     def _stamp(self, name: str, result: Any) -> Any:

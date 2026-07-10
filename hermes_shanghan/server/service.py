@@ -250,27 +250,34 @@ class ServiceContext:
 
     def chat(self, question: str, session_id: str = "",
              role: str = None, subject: str = "anonymous") -> Dict:
+        import threading
         import time
         import uuid
         from ..agent.session import AgentSession
         if not hasattr(self, "_sessions"):
             self._sessions = {}
+            self._sessions_lock = threading.Lock()
         sid = str(session_id or "").strip()
         generated = False
         if not sid or sid == "default":
             sid = uuid.uuid4().hex[:16]
             generated = True
         key = f"{subject}:{sid}"
-        self._gc_sessions()
-        entry = self._sessions.get(key)
-        if entry is None:
-            entry = {"sess": AgentSession(client=self.llm,
-                                          registry=self.registry,
-                                          namespace=subject),
-                     "last": time.time()}
-            self._sessions[key] = entry
-        entry["last"] = time.time()
-        out = entry["sess"].ask(question, role=role)
+        # 併發安全（十一輪 九）：會話表加鎖；同一會話的兩個併發請求
+        # 經 per-session 鎖串行化（history/ledger 不被交叉寫壞）
+        with self._sessions_lock:
+            self._gc_sessions()
+            entry = self._sessions.get(key)
+            if entry is None:
+                entry = {"sess": AgentSession(client=self.llm,
+                                              registry=self.registry,
+                                              namespace=subject),
+                         "last": time.time(),
+                         "lock": threading.Lock()}
+                self._sessions[key] = entry
+            entry["last"] = time.time()
+        with entry["lock"]:
+            out = entry["sess"].ask(question, role=role)
         out.setdefault("session", {})
         out["session"]["session_id"] = sid
         out["session"]["namespace"] = subject
@@ -328,6 +335,130 @@ class ServiceContext:
 
     def formula_explain(self, name: str) -> Dict:
         return self.registry.call("shanghan_formula_explain", {"formula": name})
+
+    # -- 運行中心（十二輪：Harness 控制面進 UI）--------------------------
+    def runs_list(self, limit: int = 30) -> Dict:
+        from ..agent.harness import list_runs
+        return {"runs": list_runs(limit=limit)}
+
+    def run_detail(self, run_id: str) -> Dict:
+        from ..agent.harness.runner import load_run, run_dir
+        from ..agent.harness.tracing import TraceStore
+        st = load_run(run_id)
+        if st is None:
+            return {"error": f"未找到 run {run_id}"}
+        d = st.to_dict()
+        events = TraceStore(run_dir(run_id)).read()
+        d["spans"] = [{k: e.get(k) for k in
+                       ("span_id", "parent_span_id", "span_type", "name",
+                        "duration_ms", "error", "evidence_ids", "metadata")}
+                      for e in events][-120:]
+        return d
+
+    def run_start(self, query: str, mode: str = "agent",
+                  role: str = "researcher", max_steps: int = 6,
+                  max_tool_calls: int = 12) -> Dict:
+        """異步啟動：先返回 run_id，後台線程執行；前端輪詢 run_detail。"""
+        import threading
+        from ..agent.harness import HarnessRunner
+        from ..agent.harness.state import new_run_id
+        if not (query or "").strip():
+            return {"error": "query 不能為空"}
+        rid = new_run_id(query)
+
+        def _work():
+            try:
+                HarnessRunner().start(query, mode=mode, role=role,
+                                      max_steps=max_steps,
+                                      max_tool_calls=max_tool_calls,
+                                      run_id=rid)
+            except Exception:
+                import traceback
+                traceback.print_exc()
+
+        threading.Thread(target=_work, daemon=True).start()
+        return {"run_id": rid, "status": "started",
+                "hint": "輪詢 GET /api/runs/<run_id> 查看節點軌跡與發布裁定"}
+
+    def run_action(self, run_id: str, action: str,
+                   approver: str = "") -> Dict:
+        from ..agent.harness import HarnessRunner
+        from ..agent.harness.runner import export_run
+        if action == "approve":
+            st = HarnessRunner().resume(run_id, approve=True,
+                                        approver=approver or "console")
+        elif action == "reject":
+            st = HarnessRunner().resume(run_id, reject=True,
+                                        approver=approver or "console")
+        elif action == "resume":
+            st = HarnessRunner().resume(run_id)
+        elif action == "replay":
+            out = HarnessRunner().replay(run_id)
+            return out or {"error": f"未找到 run {run_id}"}
+        elif action == "export":
+            md = export_run(run_id, "md")
+            return {"run_id": run_id, "markdown": md} if md else \
+                {"error": f"未找到 run {run_id}"}
+        else:
+            return {"error": f"未知動作 {action}",
+                    "supported": ["approve", "reject", "resume", "replay",
+                                  "export"]}
+        if st is None:
+            return {"error": f"未找到 run {run_id}"}
+        return {"run_id": run_id, "status": st.status,
+                "release": st.release, "pending_review": st.pending_review}
+
+    # -- 評測（十二輪：評測運行進 UI）------------------------------------
+    def eval_trajectory(self) -> Dict:
+        from ..eval.trajectory import trajectory_eval
+        return trajectory_eval()
+
+    def eval_perturbation(self) -> Dict:
+        from ..eval.trajectory import perturbation_eval
+        return perturbation_eval()
+
+    # -- Artifact（十二輪：論文/運行導出下載，防路徑穿越）----------------
+    def artifacts(self) -> Dict:
+        out = []
+        for base, kind in ((config.PAPER_DIR, "paper"),
+                           (config.RUNS_DIR, "run")):
+            if not base.exists():
+                continue
+            for p in sorted(base.rglob("*")):
+                if p.is_file() and p.suffix in (".md", ".json", ".csv",
+                                                ".jsonl", ".svg"):
+                    out.append({"kind": kind,
+                                "path": str(p.relative_to(config.SHANGHAN_DIR)),
+                                "bytes": p.stat().st_size})
+        return {"artifacts": out[:200],
+                "note": "下載走 /api/artifact?path=…（僅限 papers/ 與 runs/，"
+                        "路徑穿越一律拒絕）"}
+
+    def artifact_read(self, rel_path: str) -> Dict:
+        base = config.SHANGHAN_DIR.resolve()
+        target = (base / (rel_path or "")).resolve()
+        allowed = (base / "papers", base / "runs")
+        if not any(str(target).startswith(str(a.resolve()) + os.sep)
+                   or target == a.resolve() for a in allowed) \
+                or not target.is_file():
+            return {"error": "路徑不合法或文件不存在（僅限 papers/ 與 runs/）"}
+        if target.stat().st_size > 1_500_000:
+            return {"error": "文件超過下載上限 1.5MB，請用倉庫/磁盤方式獲取"}
+        return {"path": rel_path,
+                "content": target.read_text(encoding="utf-8",
+                                            errors="replace")}
+
+    # -- 治理面板 ---------------------------------------------------------
+    def governance(self) -> Dict:
+        from .._version import __version__
+        from ..agent.harness.release_gate import ROLE_RELEASE_POLICY
+        from ..health import readyz
+        return {"version": __version__,
+                "readyz": readyz(),
+                "role_release_policy": ROLE_RELEASE_POLICY,
+                "tool_audit_tail": self.registry.audit_tail(30),
+                "note": "角色上限由服務端身份綁定（HERMES_API_KEYS）；"
+                        "前端角色選擇只是請求，不是權限"}
 
 
 _SERVICE: Optional[ServiceContext] = None

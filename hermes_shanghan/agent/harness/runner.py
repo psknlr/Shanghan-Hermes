@@ -38,6 +38,26 @@ def run_dir(run_id: str) -> Path:
     return config.RUNS_DIR / run_id
 
 
+def _ledger_ids_verified(state) -> List[str]:
+    """證據台賬完整性校驗（十一輪 P0-1 強不變量）：每條記錄必須由
+    Capability Broker 登記且綁定 tool_call_id / span_id / source_hash /
+    本 run 的語料指紋——違反即拋錯（寧可炸也不放行偽證據）。"""
+    ids: List[str] = []
+    for node_id, recs in state.evidence_ledger.items():
+        for r in recs:
+            if not (isinstance(r, dict) and r.get("tool_call_id")
+                    and r.get("span_id") and r.get("source_hash")
+                    and r.get("registered_by") == "capability_broker"
+                    and r.get("corpus_fingerprint")
+                    == state.spec.corpus_version):
+                raise RuntimeError(
+                    f"evidence ledger 完整性違例（node={node_id}）："
+                    "記錄缺少 Broker 綁定字段或語料指紋不符——"
+                    "台賬只能由工具執行後的 Broker 寫入")
+            ids.append(r["clause_id"])
+    return sorted(set(ids))
+
+
 def save_state(state: RunState) -> None:
     d = run_dir(state.spec.run_id)
     d.mkdir(parents=True, exist_ok=True)
@@ -112,6 +132,13 @@ class _RunLock:
                  .encode())
         return self
 
+    def touch(self) -> None:
+        """心跳：長運行逐節點刷新鎖 mtime，600s 殘留判定不會誤傷活運行。"""
+        try:
+            os.utime(self.path)
+        except OSError:
+            pass
+
     def __exit__(self, *exc):
         if self._fd is not None:
             os.close(self._fd)
@@ -120,16 +147,20 @@ class _RunLock:
 
 
 class HarnessRunner:
-    def __init__(self, registry=None):
+    def __init__(self, registry=None, client=None):
         from ..tools import get_registry
         self.base_registry = registry or get_registry()
+        # 依賴注入：模式引擎的 client 由控制器決定（測試可注入假後端）
+        self.client = client
 
     # ------------------------------------------------------------------
     def start(self, query: str, mode: str = "agent", role: str = "researcher",
-              max_steps: int = 6, max_tool_calls: int = 12) -> RunState:
+              max_steps: int = 6, max_tool_calls: int = 12,
+              run_id: str = "") -> RunState:
         versions = spec_versions()
-        spec = RunSpec(run_id=new_run_id(query), user_query=query, role=role,
-                       mode=mode, max_steps=max_steps,
+        # run_id 可由調用方預生成（運行中心異步啟動：先拿 id 再後台執行）
+        spec = RunSpec(run_id=run_id or new_run_id(query), user_query=query,
+                       role=role, mode=mode, max_steps=max_steps,
                        max_tool_calls=max_tool_calls, **versions)
         state = RunState(spec=spec, plan=_default_plan(mode))
         state.nodes = {n.node_id: NodeResult(node_id=n.node_id)
@@ -209,7 +240,7 @@ class HarnessRunner:
     # ------------------------------------------------------------------
     def _execute(self, state: RunState) -> RunState:
         spec = state.spec
-        with _RunLock(run_dir(spec.run_id)):
+        with _RunLock(run_dir(spec.run_id)) as lock:
             state.status = "running"
             save_state(state)
             trace = TraceStore(run_dir(spec.run_id),
@@ -223,17 +254,37 @@ class HarnessRunner:
                 root.set_input(spec.to_dict())
                 for node in state.plan:
                     res = state.nodes[node.node_id]
-                    if res.status == "ok":            # resume：已完成節點跳過
+                    # resume：已完成節點跳過；triage 分支標記的節點不執行
+                    if res.status in ("ok", "skipped_by_triage"):
                         continue
-                    if any(state.nodes[d].status not in ("ok", "degraded")
+                    if any(state.nodes[d].status not in
+                           ("ok", "degraded", "skipped_by_triage")
                            for d in node.inputs):
                         res.status = "skipped"
                         save_state(state)
                         continue
                     self._run_node(state, node, res, trace, root.span_id,
                                    budget)
+                    lock.touch()          # 心跳：活運行不被殘留判定接管
                     state.budget_snapshot = budget.snapshot()
                     save_state(state)
+                    # 圖分支（十一輪 P0-4）：intake 的控制決策說停就停——
+                    # execute/evidence_audit 被跳過，直接進發布閘門
+                    if node.node_id == "intake":
+                        dec = (state.node_outputs.get("intake", {})
+                               .get("triage_decision") or {})
+                        if dec and not dec.get("continue_execution", True):
+                            state.final_answer = dec.get("message", "")
+                            state.node_outputs["execute"] = {
+                                "refused": True,
+                                "message": state.final_answer,
+                                "refused_intents": dec.get("intents", []),
+                                "triage_outcome": dec.get("outcome")}
+                            for skip_id in ("execute", "evidence_audit"):
+                                if skip_id in state.nodes:
+                                    state.nodes[skip_id].status = \
+                                        "skipped_by_triage"
+                            save_state(state)
                     if state.status in ("failed", "paused", "blocked"):
                         break
                 root.set_output({"status": state.status,
@@ -257,9 +308,13 @@ class HarnessRunner:
                         sp.metadata["backend"] = out["backend"]
                 res.duration_ms = int((time.time() - t0) * 1000)
                 res.output_digest = _digest(out)
-                blob = json.dumps(out, ensure_ascii=False, default=str)
-                res.evidence_ids = sorted(set(RE_CLAUSE_ID.findall(blob)))[:40]
-                state.evidence_ledger[node.node_id] = res.evidence_ids
+                # 十一輪 P0-1：**不再**用正則從節點輸出提取 clause_id 進
+                # 台賬——模型輸出不能自我登記為證據。台賬唯一寫入口是
+                # TracedRegistry（Broker 在工具成功執行後登記結構化記錄），
+                # 節點只回讀本節點名下已登記的證據 id 作摘要
+                res.evidence_ids = sorted({
+                    r["clause_id"]
+                    for r in state.evidence_ledger.get(node.node_id, [])})[:40]
                 state.node_outputs[node.node_id] = out
                 res.status = "ok"
                 res.error = None
@@ -290,15 +345,37 @@ class HarnessRunner:
                   span_id: str, budget: RunBudget) -> Dict:
         spec = state.spec
         if node.node_type == "intake":
+            # 十一輪 P0-4：intake 輸出**強類型控制決策**，由圖執行器分支
+            # ——不再只記事件然後繼續執行（安全決策屬控制器，不屬提示詞）
             from ... import safety
-            triage = getattr(safety, "red_flag_triage", None)
-            flag = triage(spec.user_query) if callable(triage) else None
-            out = {"role": spec.role, "red_flag": bool(flag),
-                   "triage": flag or None}
+            decision = {"outcome": "safe", "continue_execution": True,
+                        "message": "", "intents": []}
+            flag = safety.red_flag_triage(spec.user_query) \
+                if spec.role == "patient" else None
             if flag:
                 state.guardrail_events.append({"event": "red_flag_triage",
                                                "detail": str(flag)[:200]})
-            return out
+                payload = safety.governed(dict(flag), "patient")
+                decision = {"outcome": "emergency_redirect",
+                            "continue_execution": False,
+                            "message": payload.get("message")
+                            or payload.get("answer")
+                            or "檢測到急症紅旗信號，請立即就醫。",
+                            "intents": flag.get("red_flags", [])}
+            elif spec.role == "patient":
+                guard = safety.patient_intent_guard(spec.user_query)
+                if guard:
+                    state.guardrail_events.append(
+                        {"event": "intent_guard_refused",
+                         "intents": guard.get("refused_intents", [])})
+                    payload = safety.governed(dict(guard), "patient")
+                    decision = {"outcome": "refused_intent",
+                                "continue_execution": False,
+                                "message": payload.get("message")
+                                or payload.get("answer") or "該請求已被拒絕。",
+                                "intents": guard.get("refused_intents", [])}
+            return {"role": spec.role, "red_flag": bool(flag),
+                    "triage": flag or None, "triage_decision": decision}
 
         if node.node_type == "execute":
             # 所有模式的依賴只能從此注入（不得自行 get_registry()）：
@@ -307,23 +384,26 @@ class HarnessRunner:
                                  budget)
             if spec.mode == "agent":
                 from ..agent import ShanghanAgent
-                out = ShanghanAgent(registry=reg, max_steps=spec.max_steps,
+                out = ShanghanAgent(client=self.client, registry=reg,
+                                    max_steps=spec.max_steps,
                                     max_tool_calls=spec.max_tool_calls) \
                     .ask(spec.user_query, role=spec.role)
             elif spec.mode == "council":
                 from ..multi_agent import Council
-                out = Council(registry=reg).deliberate(spec.user_query,
+                out = Council(client=self.client,
+                              registry=reg).deliberate(spec.user_query,
                                                        role=spec.role)
             elif spec.mode == "deep-research":
                 from ..research_loop import DeepResearcher
-                out = DeepResearcher(registry=reg,
+                out = DeepResearcher(client=self.client, registry=reg,
                                      max_rounds=spec.max_steps).run(spec.user_query)
                 # 全部發現進入回答（不只前 4 條——七維研究不得靜默丟維度）
                 out.setdefault("answer", "；".join(
                     f.get("summary", "") for f in out.get("findings", [])))
             elif spec.mode == "solve":
                 from ..complex_agent import ComplexAgent
-                out = ComplexAgent(registry=reg).solve(spec.user_query,
+                out = ComplexAgent(client=self.client,
+                                   registry=reg).solve(spec.user_query,
                                                        role=spec.role)
             else:
                 raise ValueError(f"未知模式 {spec.mode}")
@@ -338,15 +418,18 @@ class HarnessRunner:
             exec_out = state.node_outputs.get("execute", {})
             report = exec_out.get("citation_report")
             if not report:
-                allowed = sorted({i for ids in state.evidence_ledger.values()
-                                  for i in ids})
+                # 允許引用集 = 台賬（僅 Broker 寫入）中通過完整性校驗的
+                # 記錄——每條必須綁定 tool_call/span/source_hash/語料指紋
+                allowed = _ledger_ids_verified(state)
                 guard = CitationGuard(self.base_registry.art.clause_store())
                 rep = guard.check(state.final_answer or "", allowed_ids=allowed)
                 report = {"ok": rep.ok, "has_any_citation": rep.has_any_citation,
                           "verified": rep.verified_ids,
                           "unsupported": rep.unsupported_ids}
                 exec_out["citation_report"] = report
-            return {"citation_report": report}
+            return {"citation_report": report,
+                    "ledger_records": sum(len(v) for v in
+                                          state.evidence_ledger.values())}
 
         if node.node_type == "release":
             exec_out = state.node_outputs.get("execute", {})
@@ -419,6 +502,8 @@ def export_run(run_id: str, fmt: str = "md") -> Optional[str]:
         lines.append(f"- 審批：{a['trigger']} → {a.get('status', 'pending')}"
                      + (f"（{a.get('approver', '')}）" if a.get("approver") else ""))
     lines += ["", "## 最終回答", "", state.final_answer or "（無）"]
-    ids = sorted({i for ids in state.evidence_ledger.values() for i in ids})
-    lines += ["", "## 證據台賬", "", "、".join(ids) or "（無）"]
+    ids = sorted({r["clause_id"] for recs in state.evidence_ledger.values()
+                  for r in recs if isinstance(r, dict)})
+    lines += ["", "## 證據台賬（Broker 登記，含 tool_call/span 綁定）", "",
+              "、".join(ids) or "（無）"]
     return "\n".join(lines)

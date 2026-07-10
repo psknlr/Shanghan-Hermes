@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hermes 運行中心 · 傷寒論智能體平台</title>
+<style>
+:root{--bg:#0f1419;--panel:#171e26;--line:#2a3542;--fg:#dce6f0;--dim:#8fa3b8;
+--acc:#5eb3fa;--ok:#4cc38a;--warn:#e5b567;--bad:#e5716b;--mono:ui-monospace,Menlo,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font:14px/1.6 -apple-system,"PingFang TC","Microsoft JhengHei",sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+header h1{font-size:16px;font-weight:600}
+header .sub{color:var(--dim);font-size:12px}
+header .who{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12px;flex-wrap:wrap}
+input,select,textarea,button{background:#0c1117;color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:13px}
+button{cursor:pointer;background:#1c2836}button:hover{border-color:var(--acc)}
+button.pri{background:var(--acc);color:#06121f;border-color:var(--acc);font-weight:600}
+button.warn{border-color:var(--bad);color:var(--bad)}
+.layout{display:flex;min-height:calc(100vh - 92px)}
+nav{width:150px;border-right:1px solid var(--line);padding:10px 0;flex-shrink:0}
+nav button{display:block;width:100%;text-align:left;background:none;border:none;border-left:3px solid transparent;border-radius:0;padding:9px 14px;color:var(--dim)}
+nav button.active{color:var(--fg);border-left-color:var(--acc);background:#141c25}
+main{flex:1;padding:16px;overflow-x:auto;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+.card h2{font-size:14px;margin-bottom:10px;color:var(--acc)}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--dim);font-weight:500}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;border:1px solid var(--line)}
+.tag.completed,.tag.pass{color:var(--ok);border-color:var(--ok)}
+.tag.paused,.tag.review_required,.tag.pass_with_warning{color:var(--warn);border-color:var(--warn)}
+.tag.failed,.tag.blocked,.tag.rejected,.tag.failed_closed{color:var(--bad);border-color:var(--bad)}
+.tag.running{color:var(--acc);border-color:var(--acc)}
+pre{background:#0c1117;border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto;font-family:var(--mono);font-size:12px;max-height:420px;white-space:pre-wrap}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.dim{color:var(--dim);font-size:12px}
+.chat{max-height:420px;overflow:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.msg{padding:8px 12px;border-radius:10px;max-width:86%;white-space:pre-wrap;font-size:13px}
+.msg.u{align-self:flex-end;background:#1e3a56}
+.msg.a{align-self:flex-start;background:#1a232e;border:1px solid var(--line)}
+.kv{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.stat{font-size:22px;font-weight:700;color:var(--acc)}
+@media(max-width:760px){.layout{flex-direction:column}nav{width:100%;display:flex;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line)}nav button{white-space:nowrap;border-left:none;border-bottom:3px solid transparent}nav button.active{border-bottom-color:var(--acc)}}
+footer{padding:10px 16px;border-top:1px solid var(--line);color:var(--dim);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Hermes 運行中心</h1>
+  <span class="sub">統一控制面：運行 · 會話 · 評測 · Artifact · 治理 ｜ <a href="/" style="color:var(--acc)">← 經典 UI</a></span>
+  <span class="who">
+    <span id="who" class="kv">身份載入中…</span>
+    <input id="token" type="password" placeholder="訪問 token（未配置鑒權可留空）" size="22">
+    <button onclick="saveToken()">保存</button>
+  </span>
+</header>
+<div class="layout">
+  <nav id="nav">
+    <button data-v="overview" class="active">總覽</button>
+    <button data-v="runs">運行中心</button>
+    <button data-v="chat">會話</button>
+    <button data-v="evals">評測</button>
+    <button data-v="annotate">標註</button>
+    <button data-v="artifacts">Artifact</button>
+    <button data-v="governance">治理</button>
+  </nav>
+  <main id="main"></main>
+</div>
+<footer>研發：<b>醫哲未來人工智能研究院</b>（YiZhe Future AI Research Institute）· 無證據鏈，不成回答 · 角色由服務端身份裁定，前端選擇僅為請求</footer>
+<script>
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function hdrs(extra){const t=localStorage.getItem("hermes_token");const h=Object.assign({},extra||{});if(t)h["Authorization"]="Bearer "+t;return h;}
+async function GET(p){const r=await fetch(p,{headers:hdrs()});if(!r.ok&&r.status!==503)throw new Error(r.status+" "+(await r.text()).slice(0,200));return r.json();}
+async function POST(p,b){const r=await fetch(p,{method:"POST",headers:hdrs({"Content-Type":"application/json"}),body:JSON.stringify(b||{})});if(!r.ok)throw new Error(r.status+" "+(await r.text()).slice(0,200));return r.json();}
+function saveToken(){localStorage.setItem("hermes_token",$("#token").value.trim());whoami();}
+let WHO={};
+async function whoami(){try{WHO=await GET("/api/whoami");$("#who").textContent=`主體 ${WHO.principal_id} · 上限 ${WHO.role_ceiling} · 生效 ${WHO.effective_role||"（按問題推斷）"}`;}catch(e){$("#who").textContent="未授權（請輸入 token）";}}
+$("#token").value=localStorage.getItem("hermes_token")||"";
+const views={};
+function nav(v){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.v===v));views[v]();}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>nav(b.dataset.v));
+const tag=s=>`<span class="tag ${esc(s)}">${esc(s)}</span>`;
+
+// ─── 總覽 ───────────────────────────────────────────────────────────────
+views.overview=async()=>{
+  $("#main").innerHTML=`<div class="card"><h2>系統總覽</h2><div class="grid" id="ov"></div></div>
+  <div class="card"><h2>就緒探針（/readyz——假健康防護）</h2><div id="rz" class="dim">載入中…</div></div>`;
+  try{const g=await GET("/api/governance");const s=await GET("/api/stats");
+    $("#ov").innerHTML=[["版本",g.version],["條文",s.clauses],["初始規則",s.initial_rules],
+      ["方證規則",s.formula_pattern_rules],["注文規則",s.commentary_rules],["審計記錄",s.audits]]
+      .map(([k,v])=>`<div><div class="dim">${k}</div><div class="stat">${esc(v)}</div></div>`).join("");
+    const rz=g.readyz;$("#rz").innerHTML=`<p>ready: ${tag(rz.ready?"pass":"failed")}</p><table><tr><th>檢查</th><th>狀態</th><th>詳情</th></tr>`+
+      rz.checks.map(c=>`<tr><td>${esc(c.check)}</td><td>${tag(c.ok?"pass":"failed")}</td><td class="dim">${esc(c.detail)}</td></tr>`).join("")+"</table>";
+  }catch(e){$("#ov").innerHTML=`<div class="dim">${esc(e.message)}</div>`;}
+};
+
+// ─── 運行中心 ───────────────────────────────────────────────────────────
+let RUN_TIMER=null;
+views.runs=async()=>{
+  clearInterval(RUN_TIMER);
+  $("#main").innerHTML=`<div class="card"><h2>發起運行（Harness：intake→execute→evidence_audit→release_gate）</h2>
+    <div class="row"><input id="rq" size="42" placeholder="查詢，如：惡寒發熱，汗出，脈浮緩，應當用什麼方？">
+    <select id="rm"><option>agent</option><option>council</option><option>deep-research</option><option>solve</option></select>
+    <select id="rr"><option>doctor</option><option>researcher</option><option>student</option><option>patient</option></select>
+    <input id="rb" type="number" value="12" min="1" max="24" title="工具預算" style="width:64px">
+    <button class="pri" onclick="startRun()">啟動</button></div>
+    <div class="dim">運行角色仍受服務端身份上限鉗制；醫師端候選方將 paused 等待審批。</div></div>
+    <div class="card"><h2>任務列表 <button onclick="loadRuns()" style="float:right">刷新</button></h2><div id="runlist">載入中…</div></div>
+    <div class="card" id="rundetail" style="display:none"></div>`;
+  loadRuns();RUN_TIMER=setInterval(loadRuns,4000);
+};
+async function startRun(){
+  try{const o=await POST("/api/runs",{query:$("#rq").value,mode:$("#rm").value,run_role:$("#rr").value,max_tool_calls:+$("#rb").value});
+    if(o.error){alert(o.error);return;}loadRuns();setTimeout(()=>showRun(o.run_id),1200);}catch(e){alert(e.message);}
+}
+async function loadRuns(){
+  try{const o=await GET("/api/runs");
+    $("#runlist").innerHTML=o.runs.length?`<table><tr><th>run_id</th><th>狀態</th><th>模式/角色</th><th>查詢</th><th></th></tr>`+
+      o.runs.map(r=>`<tr><td class="kv">${esc(r.run_id)}</td><td>${tag(r.status)}</td><td>${esc(r.mode)}/${esc(r.role)}</td><td class="dim">${esc(r.query)}</td>
+      <td><button onclick="showRun('${esc(r.run_id)}')">詳情</button></td></tr>`).join("")+"</table>":"<span class='dim'>（尚無運行）</span>";
+  }catch(e){$("#runlist").innerHTML=`<span class="dim">${esc(e.message)}</span>`;}
+}
+async function showRun(id){
+  const d=await GET("/api/runs/"+id);const c=$("#rundetail");c.style.display="block";
+  if(d.error){c.innerHTML=`<div class="dim">${esc(d.error)}</div>`;return;}
+  const nodes=Object.entries(d.nodes||{}).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${tag(v.status)}</td><td>${v.attempts}次/${v.duration_ms}ms</td><td class="dim">${esc(v.error||"")}</td></tr>`).join("");
+  const tools=(d.tool_calls||[]).map(t=>`<tr><td>${esc(t.tool)}</td><td class="kv">${esc(t.span_id)}</td><td class="dim">${esc(t.error||"—")}</td></tr>`).join("");
+  const ledger=Object.values(d.evidence_ledger||{}).flat();
+  const led=ledger.map(r=>`<tr><td class="kv">${esc(r.clause_id)}</td><td class="kv">${esc(r.tool)}</td><td class="kv">${esc((r.source_hash||"").slice(0,8))}</td></tr>`).join("");
+  const appr=(d.approval_requests||[]).map(a=>`<tr><td>${esc(a.trigger)}</td><td>${tag(a.status)}</td><td class="dim">${esc(a.reason)}</td></tr>`).join("");
+  c.innerHTML=`<h2>Run ${esc(id)} ${tag(d.status)} · 發布：${tag((d.release||{}).decision||"—")}</h2>
+    <div class="row">
+      <button onclick="runAct('${esc(id)}','approve')">✓ 批准（重跑下游閘門）</button>
+      <button class="warn" onclick="runAct('${esc(id)}','reject')">✗ 駁回</button>
+      <button onclick="runAct('${esc(id)}','replay')">重放</button>
+      <button onclick="runExport('${esc(id)}')">導出 MD</button></div>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div><h2>節點軌跡（DAG）</h2><table><tr><th>節點</th><th>狀態</th><th>耗時</th><th>錯誤</th></tr>${nodes}</table>
+        <h2 style="margin-top:10px">審批請求</h2><table>${appr||"<tr><td class='dim'>（無）</td></tr>"}</table></div>
+      <div><h2>工具調用（${(d.tool_calls||[]).length}）· 預算 ${esc(JSON.stringify(d.budget_snapshot||{}))}</h2><table>${tools||"<tr><td class='dim'>（無）</td></tr>"}</table>
+        <h2 style="margin-top:10px">證據台賬（Broker 登記 ${ledger.length} 條）</h2><table><tr><th>clause</th><th>tool</th><th>hash</th></tr>${led||"<tr><td class='dim'>（空）</td></tr>"}</table></div></div>
+    <h2 style="margin-top:10px">最終回答</h2><pre>${esc(d.final_answer||"（無）")}</pre>
+    <h2>發布裁定</h2><pre>${esc(JSON.stringify(d.release||{},null,1))}</pre>`;
+  c.scrollIntoView({behavior:"smooth"});
+}
+async function runAct(id,act){try{const o=await POST(`/api/runs/${id}/${act}`,{approver:WHO.principal_id||"console"});alert(JSON.stringify(o,null,1).slice(0,600));showRun(id);loadRuns();}catch(e){alert(e.message);}}
+async function runExport(id){const o=await POST(`/api/runs/${id}/export`,{});const w=window.open("");w.document.write("<pre>"+esc(o.markdown||o.error)+"</pre>");}
+
+// ─── 會話（真多輪：session_id 回傳續接 + 結構化指代解析）─────────────────
+let SESSION_ID="";
+views.chat=async()=>{
+  $("#main").innerHTML=`<div class="card"><h2>多輪會話（/api/chat · session_id 服務端生成並續接）</h2>
+    <div class="chat" id="chatlog"></div>
+    <div class="row"><input id="cq" size="46" placeholder="如：桂枝湯的方證要點？——追問：它的劑量比呢？">
+    <button class="pri" onclick="sendChat()">發送</button>
+    <button onclick="SESSION_ID='';$('#chatlog').innerHTML='';$('#sess').textContent='（新會話）'">新會話</button></div>
+    <div class="dim" id="sess">（新會話）</div></div>`;
+  $("#cq").addEventListener("keydown",e=>{if(e.key==="Enter")sendChat();});
+};
+async function sendChat(){
+  const q=$("#cq").value.trim();if(!q)return;$("#cq").value="";
+  const log=$("#chatlog");log.insertAdjacentHTML("beforeend",`<div class="msg u">${esc(q)}</div>`);
+  log.insertAdjacentHTML("beforeend",`<div class="msg a" id="pending">…</div>`);log.scrollTop=1e9;
+  try{const o=await POST("/api/chat",{question:q,session_id:SESSION_ID});
+    const s=o.session||{};SESSION_ID=s.session_id||SESSION_ID;
+    const rr=s.reference_resolution||{};
+    let meta=`回合 ${s.turn} · 錨點 ${(s.anchors||[]).join("、")||"—"}`;
+    if(rr.status==="resolved")meta+=` · 指代「${rr.mention}」→ ${rr.resolved}（置信 ${rr.confidence}）`;
+    else if(rr.status==="unresolved")meta+=` · ⚠ 指代未解析：${rr.note||""}`;
+    $("#pending").outerHTML=`<div class="msg a">${esc((o.answer||o.message||"").slice(0,2400))}\n\n<span class="dim">${esc(meta)}</span></div>`;
+    $("#sess").textContent=`session_id: ${SESSION_ID} · 命名空間: ${s.namespace||"—"}`;log.scrollTop=1e9;
+  }catch(e){$("#pending").outerHTML=`<div class="msg a">請求失敗：${esc(e.message)}</div>`;}
+}
+
+// ─── 評測 ───────────────────────────────────────────────────────────────
+views.evals=async()=>{
+  $("#main").innerHTML=`<div class="card"><h2>評測運行（閉集回歸護欄——口徑見 docs/MATURITY.md，禁止作能力宣傳）</h2>
+    <div class="row"><button class="pri" onclick="runEval('trajectory')">軌跡評測（工具路由/越權/拒答）</button>
+    <button class="pri" onclick="runEval('perturbation')">故障注入（異常/空結果恢復）</button></div>
+    <div id="evout" class="dim">（researcher 及以上角色可運行）</div></div>`;
+};
+async function runEval(kind){$("#evout").innerHTML="運行中…";
+  try{const o=await POST("/api/eval/"+kind,{});$("#evout").innerHTML=`<pre>${esc(JSON.stringify(o,null,1))}</pre>`;}
+  catch(e){$("#evout").innerHTML=esc(e.message);}}
+
+// ─── 標註（金標準抽樣→人工→回讀評估）────────────────────────────────────
+views.annotate=async()=>{
+  $("#main").innerHTML=`<div class="card"><h2>引文金標準標註閉環</h2>
+    <div class="row"><input id="gn" type="number" value="10" min="4" max="60" style="width:70px">
+    <button class="pri" onclick="goldSample()">抽樣</button><button onclick="goldEval()">提交評估</button></div>
+    <div id="gold" class="dim">分層抽樣 → 逐條標注 correct/incorrect → 評估 P/R/F1（單標註閉環；雙人+κ 見路線圖）</div></div>`;
+};
+let GOLD=[];
+async function goldSample(){const o=await POST("/api/gold-sample",{n:+$("#gn").value,stratify:true});GOLD=o.rows||[];
+  $("#gold").innerHTML=`<table><tr><th>書</th><th>條文</th><th>模式</th><th>覆蓋</th><th>判定</th></tr>`+GOLD.map((r,i)=>
+  `<tr><td>${esc(r.book)}</td><td class="kv">${esc(r.clause_id)}</td><td>${esc(r.mode)}</td><td>${esc(r.coverage)}</td>
+  <td><select id="g${i}"><option value="">未標</option><option>correct</option><option>incorrect</option></select></td></tr>`).join("")+"</table>";}
+async function goldEval(){GOLD.forEach((r,i)=>r.human_label=$("#g"+i)?.value||"");
+  const o=await POST("/api/gold-eval",{rows:GOLD.filter(r=>r.human_label)});
+  $("#gold").insertAdjacentHTML("beforeend",`<pre>${esc(JSON.stringify(o,null,1))}</pre>`);}
+
+// ─── Artifact ───────────────────────────────────────────────────────────
+views.artifacts=async()=>{
+  $("#main").innerHTML=`<div class="card"><h2>Artifact（論文/運行導出，路徑穿越防護）</h2><div id="arts">載入中…</div></div><div class="card" id="artview" style="display:none"></div>`;
+  try{const o=await GET("/api/artifacts");
+    $("#arts").innerHTML=o.artifacts.length?`<table><tr><th>類型</th><th>路徑</th><th>大小</th><th></th></tr>`+
+      o.artifacts.map(a=>`<tr><td>${esc(a.kind)}</td><td class="kv">${esc(a.path)}</td><td>${a.bytes}B</td>
+      <td><button onclick="viewArt('${esc(a.path)}')">查看</button></td></tr>`).join("")+"</table>":
+      "<span class='dim'>（暫無——生成論文或運行 Harness 後出現）</span>";
+  }catch(e){$("#arts").innerHTML=esc(e.message);}
+};
+async function viewArt(p){const o=await GET("/api/artifact?path="+encodeURIComponent(p));const c=$("#artview");c.style.display="block";
+  c.innerHTML=`<h2>${esc(p)}</h2><pre>${esc(o.content||o.error)}</pre>`;c.scrollIntoView();}
+
+// ─── 治理 ───────────────────────────────────────────────────────────────
+views.governance=async()=>{
+  $("#main").innerHTML=`<div class="card"><h2>治理面板</h2><div id="gov">載入中…</div></div>`;
+  try{const g=await GET("/api/governance");
+    $("#gov").innerHTML=`<p class="dim">${esc(g.note)}</p>
+      <h2>角色發布策略</h2><table>${Object.entries(g.role_release_policy).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="dim">${esc(v)}</td></tr>`).join("")}</table>
+      <h2 style="margin-top:10px">工具審計尾部（環形日誌）</h2>
+      <table><tr><th>工具</th><th>ok</th><th>緩存</th><th>耗時</th><th>時間</th></tr>${(g.tool_audit_tail||[]).map(a=>
+      `<tr><td class="kv">${esc(a.tool)}</td><td>${tag(a.ok?"pass":"failed")}</td><td>${a.cache_hit?"HIT":"—"}</td><td>${a.ms}ms</td><td class="dim">${esc(a.at)}</td></tr>`).join("")}</table>`;
+  }catch(e){$("#gov").innerHTML=esc(e.message);}
+};
+
+whoami();views.overview();
+</script>
+</body>
+</html>

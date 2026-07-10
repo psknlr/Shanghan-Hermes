@@ -25,7 +25,8 @@ from ..agent.tools import get_registry
 # 版本協商：客戶端請求的版本在支持列表內則回顯，否則回退到基線
 SUPPORTED_PROTOCOL_VERSIONS = ("2025-06-18", "2025-03-26", "2024-11-05")
 PROTOCOL_VERSION = SUPPORTED_PROTOCOL_VERSIONS[-1]
-SERVER_INFO = {"name": "hermes-shanghanlun", "version": "0.3.0"}
+from .._version import __version__
+SERVER_INFO = {"name": "hermes-shanghanlun", "version": __version__}
 
 # ---------------------------------------------------------------------------
 # 實驗性長任務（tasks/*，對齊 MCP 2025-11-25 experimental tasks 形態）：
@@ -37,6 +38,16 @@ SERVER_INFO = {"name": "hermes-shanghanlun", "version": "0.3.0"}
 _TASKS: Dict[str, Dict] = {}
 _TASK_LOCK = threading.Lock()
 MAX_TASKS = 64
+TASK_TTL_S = 900          # 終態任務 15 分鐘後回收（in-memory，非 durable）
+
+
+def _prune_tasks() -> None:
+    """調用方須持有 _TASK_LOCK。過期終態任務回收（TTL）。"""
+    now = time.time()
+    for k in [k for k, v in _TASKS.items()
+              if v["status"] in ("completed", "failed", "cancelled")
+              and now - v["started_at"] > TASK_TTL_S]:
+        _TASKS.pop(k, None)
 
 
 def _tasks_submit(params: Dict) -> Dict:
@@ -46,6 +57,7 @@ def _tasks_submit(params: Dict) -> Dict:
         raise KeyError(f"unknown tool: {name}")
     task_id = uuid.uuid4().hex[:16]
     with _TASK_LOCK:
+        _prune_tasks()
         if len(_TASKS) >= MAX_TASKS:      # 只回收已終態的舊任務
             for k in [k for k, v in _TASKS.items()
                       if v["status"] in ("completed", "failed", "cancelled")]:
@@ -83,7 +95,9 @@ def _tasks_submit(params: Dict) -> Dict:
 def _task_view(t: Dict) -> Dict:
     return {"task_id": t["task_id"], "tool": t["tool"], "status": t["status"],
             "elapsed_ms": int((time.time() - t["started_at"]) * 1000),
-            "error": t["error"]}
+            "error": t["error"],
+            "durability": "in-memory experimental（服務重啟即失，TTL 15min；"
+                          "非 MCP durable tasks 完整實現）"}
 
 
 def _tasks_status(params: Dict) -> Dict:

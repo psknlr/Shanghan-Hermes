@@ -124,7 +124,7 @@ class ComplexAgent:
         allowed = sorted({cid for r in results
                           for cid in r.get("evidence_clause_ids", [])})
         guard = CitationGuard(self.registry.art.clause_store())
-        report = guard.check(final, allowed_ids=allowed if allowed else None)
+        report = guard.check(final, allowed_ids=allowed)   # 空集≠免檢（十一輪 P0-1）
         criteria = self._criteria_check(plan, final)
         if criteria["unmet"]:
             final += ("\n\n⚠️ 覆蓋提示：本回答尚未明確覆蓋——"

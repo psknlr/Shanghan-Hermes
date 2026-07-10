@@ -64,9 +64,13 @@ class MemoryStore:
             del lst[: len(lst) - max_items]
 
     def save(self):
+        # 原子寫（十一輪 九）：ThreadingHTTPServer 下兩個請求同時 save
+        # 不會留下半寫 JSON
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(self.data, ensure_ascii=False, indent=1),
-                             encoding="utf-8")
+        tmp = self.path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(self.data, ensure_ascii=False, indent=1),
+                       encoding="utf-8")
+        tmp.replace(self.path)
 
 
 class MemoryHub:

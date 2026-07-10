@@ -35,6 +35,42 @@ FORMULA_CANDIDATE_TOOLS = frozenset(
 
 CLAIM_GROUNDING_WARN = 0.6      # 句級接地率低於此值 → 響亮標注（不改變決策）
 
+# 結構化臨床動作抽取（十一輪 六：角色安全不靠關鍵詞黑名單——先把輸出
+# 轉成動作對象，再由策略裁定）。確定性正則，覆蓋推薦/劑量/煎服/加減。
+import re as _re
+
+_ACTION_PATTERNS = [
+    ("medication_recommendation",
+     _re.compile(r"[一-鿿]{1,6}(?:湯|丸|散|飲)(?:主之|可服|宜服|服之|"
+                 r"可與|可考慮)|建議(?:服用|使用)")),
+    ("dosing_instruction",
+     _re.compile(r"(?:每日|一日)\s*[一二三四五六七八九十\d]+\s*(?:次|服)|"
+                 r"[一二三四五六七八九十百\d]+(?:兩|銖|升|枚|克|g)\b|劑量")),
+    ("administration_instruction",
+     _re.compile(r"煎服|溫服|頓服|分溫|水煎|先煮|去滓")),
+    ("modification_plan", _re.compile(r"加減|[去加][一-鿿]{1,4}(?:一兩|二兩|三兩)")),
+    ("treatment_directive", _re.compile(r"主之|處方|服用")),
+]
+
+
+def clinical_actions(text: str) -> List[Dict]:
+    """把回答文本掃描為結構化臨床動作清單（確定性）。"""
+    out: List[Dict] = []
+    for action_type, rx in _ACTION_PATTERNS:
+        m = rx.search(text or "")
+        if m:
+            out.append({"action_type": action_type, "cue": m.group(0)[:24]})
+    return out
+
+
+# 角色 × 最低發布要求（十一輪 六：按角色配置發布策略，不再一刀切）
+ROLE_RELEASE_POLICY = {
+    "patient": "不得出現任何可執行診療動作（clinical_actions 非空即 blocked）",
+    "student": "非拒答回答須有可核驗引用（無引用→review_required）",
+    "researcher": "非拒答回答須有可核驗引用（無引用→review_required）",
+    "doctor": "方證候選必須人工確認（doctor_formula_candidates→paused）",
+}
+
 
 def evaluate(spec, output: Dict[str, Any],
              approved: FrozenSet[str] = frozenset(),
@@ -82,16 +118,19 @@ def evaluate(spec, output: Dict[str, Any],
     gates["safety_gate"] = {"ok": True, "refused": refused,
                             "refused_intents": output.get("refused_intents", [])}
 
-    # 3. role gate：患者端輸出不得含方藥指令（違規=角色越界，硬阻斷；
-    #    不再誤記為 citation_failure）
+    # 3. role gate：患者端輸出不得含**任何可執行診療動作**——先抽取
+    #    結構化動作再由策略裁定（不再是四個關鍵詞的黑名單）
     role_ok = True
+    actions: List[Dict] = []
     if spec.role == "patient" and not refused:
-        blob = str(output.get("answer", ""))
-        role_ok = not any(k in blob for k in ("主之", "劑量", "服用", "處方"))
-    gates["role_gate"] = {"ok": role_ok}
+        actions = clinical_actions(str(output.get("answer", "")))
+        role_ok = not actions
+    gates["role_gate"] = {"ok": role_ok, "clinical_actions": actions,
+                          "policy": ROLE_RELEASE_POLICY.get(spec.role, "")}
     if not role_ok:
-        blocked.append("role_violation：患者端輸出疑似含方藥指令——"
-                       "角色隔離失效屬硬故障，人工批准不可放行")
+        blocked.append("role_violation：患者端輸出含可執行診療動作（"
+                       + "、".join(a["action_type"] for a in actions)
+                       + "）——角色隔離失效屬硬故障，人工批准不可放行")
 
     # 4. uncertainty gate：多假設未決/需要補問
     needs = bool(output.get("needs_clarification")) or \
@@ -113,14 +152,23 @@ def evaluate(spec, output: Dict[str, Any],
         review.append("paper_generation")
         reasons.append(HUMAN_REVIEW_TRIGGERS["paper_generation"])
 
+    # 角色發布策略（十一輪 六）：strict_round 下無任何可核驗引用的非拒答
+    # 回答不再 pass_with_warning——古籍事實性結論必須有證據，交人工審核
+    if not has_cite and not refused and not unsupported:
+        review.append("citation_failure")
+        reasons.append("回答未含任何可核驗條文編號（evidence_policy="
+                       "strict_round：無證據鏈不放行）")
+
     review = sorted(set(review) - set(approved))
     warnings: List[str] = []
-    if not has_cite and not refused:
-        warnings.append("回答未含可核驗條文編號——已響亮標注")
     grounding = (output.get("claims") or {}).get("claim_grounding_rate")
     if grounding is not None and grounding < CLAIM_GROUNDING_WARN and not refused:
         warnings.append(f"句級接地率 {grounding} 低於 {CLAIM_GROUNDING_WARN}"
                         "（詞彙級下界指標）——結論須逐句對照證據台賬")
+    attribution = list(cr.get("attribution_warnings") or [])
+    if attribution:
+        warnings.append(f"引文歸屬存疑 {len(attribution)} 處（文字錯掛條文）"
+                        "——見 citation_report.attribution_warnings")
 
     if blocked:
         decision = "blocked"

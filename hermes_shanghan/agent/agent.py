@@ -100,9 +100,11 @@ class ShanghanAgent:
         # is sent back with the verdict for another bounded attempt
         guard = CitationGuard(registry.art.clause_store())
         # strict grounding: citations must come from THIS round's tool
-        # evidence, not merely exist somewhere in the corpus
+        # evidence, not merely exist somewhere in the corpus.
+        # 十一輪 P0-1：零工具調用時 allowed 是**空集**而非 None——模型猜中
+        # 真實條文編號不能免檢（存在≠取證），strict_round 必須 fail-closed
         allowed = self._clause_ids_from(tool_results)
-        report = guard.check(final, allowed_ids=allowed if tool_results else None)
+        report = guard.check(final, allowed_ids=allowed)
         rounds = 0
         while rounds < self.max_repair_rounds and \
                 (report.unsupported_ids or report.outside_evidence_ids or
@@ -130,7 +132,7 @@ class ShanghanAgent:
                 break
             final = retry
             allowed = self._clause_ids_from(tool_results)
-            report = guard.check(final, allowed_ids=allowed if tool_results else None)
+            report = guard.check(final, allowed_ids=allowed)
 
         # multi-hypothesis layer: when this round did formula matching,
         # upgrade top-k into parallel hypotheses + 鑒別追問 (亮點功能一)
@@ -141,7 +143,7 @@ class ShanghanAgent:
             trace.add("hypotheses", n=len(hyp_payload["hypotheses"]),
                       needs_clarification=hyp_payload["needs_clarification"])
             allowed = self._clause_ids_from(tool_results)
-            report = guard.check(final, allowed_ids=allowed if tool_results else None)
+            report = guard.check(final, allowed_ids=allowed)
 
         # claim→evidence binding: sentence-level audit of what supports what
         from .evidence_binder import EvidenceBinder

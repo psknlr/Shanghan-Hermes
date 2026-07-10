@@ -1,9 +1,24 @@
 "use strict";
 // ---------- tiny helpers ----------
 const $ = (s, r = document) => r.querySelector(s);
+// 認證（十二輪 P0：啟用 HERMES_API_KEYS/SERVER_TOKEN 後 UI 仍可用）：
+// token 存 localStorage('hermes_token')，所有請求帶 Authorization 頭；
+// 401 時提示設置（新運行中心 /console.html 有 token 輸入框，同一存儲鍵）
+function authHeaders() {
+  const t = localStorage.getItem("hermes_token");
+  return t ? { "Authorization": "Bearer " + t } : {};
+}
 const api = {
-  async get(p) { const r = await fetch(p); return r.json(); },
-  async post(p, b) { const r = await fetch(p, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b || {}) }); return r.json(); },
+  async get(p) {
+    const r = await fetch(p, { headers: authHeaders() });
+    if (r.status === 401) throw new Error("401 未授權：請在 /console.html 設置訪問 token");
+    return r.json();
+  },
+  async post(p, b) {
+    const r = await fetch(p, { method: "POST", headers: { "Content-Type": "application/json", ...authHeaders() }, body: JSON.stringify(b || {}) });
+    if (r.status === 401) throw new Error("401 未授權：請在 /console.html 設置訪問 token");
+    return r.json();
+  },
 };
 function el(tag, attrs, children) {
   const e = document.createElement(tag);

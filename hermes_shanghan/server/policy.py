@@ -113,3 +113,61 @@ def effective_role(principal: PrincipalContext,
 def allow_min_role(principal: PrincipalContext, min_role: str) -> bool:
     """端點級能力矩陣：主體上限低於端點最低角色即拒絕。"""
     return principal.rank >= ROLE_RANK.get(min_role, 0)
+
+
+@dataclass(frozen=True)
+class RequestContext:
+    """不可變請求上下文（十一輪 P0-2）：所有路由顯式接收，業務代碼
+    **禁止**自行從 body/query 取 role 或設默認角色——生效角色只此一處。
+    effective_role=None 僅出現在 doctor 上限主體未聲明角色時（交由智能體
+    按問題推斷，推斷結果仍在上限之內）。"""
+    principal_id: str
+    tenant_id: str
+    role_ceiling: str
+    effective_role: Optional[str]
+    request_id: str
+    purpose_of_use: str = "classical_text_research"
+
+    def role_or(self, default: str) -> str:
+        """受限主體永遠拿到自己的生效角色；只有全權主體未聲明時才用
+        路由默認值（默認值不可能高於上限——上限即 doctor）。"""
+        return self.effective_role or default
+
+
+# 患者端序列化出口投影：無論業務函數是否記得脫敏，這些字段一律移除
+# （處方結構/組成劑量/煎服法/加減方案——可執行診療信息不出患者面）
+PATIENT_FORBIDDEN_KEYS = frozenset({
+    "formula_blocks", "composition", "administration_notes", "dose_ratios",
+    "dose", "family_dose_evolution", "modification_relations",
+    "matched_formula_patterns", "hypotheses", "rescue_formulas",
+})
+
+
+def project_for_role(payload, role: Optional[str]):
+    """角色投影（序列化出口，Business result → Role Projection →
+    Response）。目前只有 patient 有強制刪除集；其他角色原樣通過。"""
+    if role != "patient" or not isinstance(payload, (dict, list)):
+        return payload
+    removed: list = []
+
+    def _strip(obj):
+        if isinstance(obj, dict):
+            out = {}
+            for k, v in obj.items():
+                if k in PATIENT_FORBIDDEN_KEYS:
+                    removed.append(k)
+                    continue
+                out[k] = _strip(v)
+            return out
+        if isinstance(obj, list):
+            return [_strip(x) for x in obj]
+        return obj
+
+    projected = _strip(payload)
+    if isinstance(projected, dict) and removed:
+        projected["_role_projection"] = {
+            "role": "patient",
+            "removed_fields": sorted(set(removed)),
+            "note": "患者端序列化出口投影：處方結構/劑量/煎服法等可執行"
+                    "診療信息已強制移除（不依賴業務函數自行脫敏）"}
+    return projected

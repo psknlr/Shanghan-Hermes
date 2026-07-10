@@ -41,6 +41,24 @@ API_KEYS = policy.parse_api_keys(os.environ.get("HERMES_API_KEYS", ""))
 OPEN_PATHS = ("/api/health", "/livez", "/readyz")
 
 
+import threading
+
+_RATE_LOCK = threading.Lock()
+
+# 請求體整數參數的統一上下限（計算型 DoS 防護：算完才檢查響應大小為時已晚）
+_INT_CAPS = {"top_k": (1, 50), "rounds": (1, 6), "max_steps": (1, 12),
+             "n": (1, 200), "limit": (1, 100), "per_book": (1, 10)}
+
+
+def _clamp_body(body: Dict) -> None:
+    for key, (lo, hi) in _INT_CAPS.items():
+        if key in body:
+            try:
+                body[key] = max(lo, min(hi, int(body[key])))
+            except (TypeError, ValueError):
+                body[key] = lo
+
+
 def _json_body(handler: BaseHTTPRequestHandler) -> Dict:
     length = int(handler.headers.get("Content-Length", 0) or 0)
     if length <= 0:
@@ -50,9 +68,9 @@ def _json_body(handler: BaseHTTPRequestHandler) -> Dict:
     raw = handler.rfile.read(length)
     try:
         out = json.loads(raw.decode("utf-8"))
-        return out if isinstance(out, dict) else {}
     except Exception:
-        return {}
+        raise ValueError("invalid_json")     # 400，不再靜默轉成 {}
+    return out if isinstance(out, dict) else {}
 
 
 # route table: (method, regex, handler, min_role, wants_principal)
@@ -63,7 +81,7 @@ def route(method: str, pattern: str, min_role: str = "patient"):
     rx = re.compile(f"^{pattern}$")
 
     def deco(fn):
-        wants = "principal" in inspect.signature(fn).parameters
+        wants = "ctx" in inspect.signature(fn).parameters
         ROUTES.append((method, rx, fn, min_role, wants))
         return fn
     return deco
@@ -71,162 +89,227 @@ def route(method: str, pattern: str, min_role: str = "patient"):
 
 # --------------------------------------------------------------------------
 @route("GET", r"/api/health")
-def _health(svc, body, m, q):
+def _health(svc, body, m, q, ctx=None):
     return {"ok": True, "ready": svc.ready(), "backend": svc.llm.backend}
 
 
 @route("GET", r"/api/stats")
-def _stats(svc, body, m, q):
+def _stats(svc, body, m, q, ctx=None):
     return svc.stats()
 
 
 @route("GET", r"/api/llm/status")
-def _llm_status(svc, body, m, q):
+def _llm_status(svc, body, m, q, ctx=None):
     return svc.llm_status()
 
 
 @route("GET", r"/api/formulas")
-def _formulas(svc, body, m, q):
+def _formulas(svc, body, m, q, ctx=None):
     return svc.list_formulas()
 
 
 @route("GET", r"/api/channels")
-def _channels(svc, body, m, q):
+def _channels(svc, body, m, q, ctx=None):
     return svc.channels()
 
 
 @route("GET", r"/api/skills")
-def _skills(svc, body, m, q):
+def _skills(svc, body, m, q, ctx=None):
     return svc.skills()
 
 
 @route("POST", r"/api/search")
-def _search(svc, body, m, q):
+def _search(svc, body, m, q, ctx=None):
     return svc.search(body.get("query", ""), top_k=int(body.get("top_k", 8)),
                       six_channel=body.get("six_channel"), formula=body.get("formula"),
                       field=body.get("field"), expand=bool(body.get("expand")))
 
 
 @route("GET", r"/api/clause/([^/]+)")
-def _clause(svc, body, m, q):
-    return svc.explain_clause(m.group(1), role=(q.get("role", ["student"])[0]))
+def _clause(svc, body, m, q, ctx=None):
+    # 角色只來自 RequestContext（十一輪 P0-2）：患者主體即便不傳
+    # role 參數也拿不到 student 默認值
+    return svc.explain_clause(m.group(1), role=ctx.role_or("student"))
 
 
 @route("POST", r"/api/explain")
-def _explain(svc, body, m, q):
-    return svc.explain_clause(body.get("ref"), role=body.get("role", "student"))
+def _explain(svc, body, m, q, ctx=None):
+    return svc.explain_clause(body.get("ref"), role=ctx.role_or("student"))
 
 
 @route("POST", r"/api/match", min_role="student")
-def _match(svc, body, m, q):
+def _match(svc, body, m, q, ctx=None):
     return svc.match(body.get("symptoms", []), pulse=body.get("pulse", []),
                      six_channel=body.get("six_channel"), top_k=int(body.get("top_k", 5)))
 
 
 @route("POST", r"/api/differential", min_role="student")
-def _diff(svc, body, m, q):
+def _diff(svc, body, m, q, ctx=None):
     return svc.differential(body.get("formulas", []))
 
 
 @route("POST", r"/api/teach", min_role="student")
-def _teach(svc, body, m, q):
+def _teach(svc, body, m, q, ctx=None):
     return svc.teach(body.get("channel", "太陽病"))
 
 
 @route("POST", r"/api/mistreatment", min_role="student")
-def _mistreat(svc, body, m, q):
+def _mistreat(svc, body, m, q, ctx=None):
     return svc.mistreatment(body.get("query"))
 
 
 @route("POST", r"/api/formula", min_role="student")
-def _formula(svc, body, m, q):
+def _formula(svc, body, m, q, ctx=None):
     return svc.formula_rule(body.get("formula", ""))
 
 
 @route("POST", r"/api/research", min_role="researcher")
-def _research(svc, body, m, q):
+def _research(svc, body, m, q, ctx=None):
     return svc.research(body.get("topic", ""), outputs=body.get("outputs"))
 
 
 @route("POST", r"/api/paper", min_role="researcher")
-def _paper(svc, body, m, q):
+def _paper(svc, body, m, q, ctx=None):
     return svc.paper(body.get("type", "formula_pattern"), topic=body.get("topic", ""),
                      use_llm=body.get("use_llm", True))
 
 
 @route("POST", r"/api/complex")
-def _complex(svc, body, m, q):
-    return svc.complex(body.get("question", ""), role=body.get("role"))
+def _complex(svc, body, m, q, ctx=None):
+    return svc.complex(body.get("question", ""), role=ctx.effective_role)
 
 
 @route("POST", r"/api/chat")
-def _chat(svc, body, m, q, principal=None):
+def _chat(svc, body, m, q, ctx=None):
     # session 以服務端主體命名空間隔離（防 fixation/串話）；未帶 session_id
     # 時服務端生成並隨響應回傳
     return svc.chat(body.get("question", ""),
                     session_id=str(body.get("session_id", "") or ""),
-                    role=body.get("role"),
-                    subject=(principal.subject_id if principal else "anonymous"))
+                    role=ctx.effective_role,
+                    subject=(ctx.principal_id if ctx else "anonymous"))
 
 
 @route("POST", r"/api/deep-research", min_role="researcher")
-def _deep_research(svc, body, m, q):
+def _deep_research(svc, body, m, q, ctx=None):
     return svc.deep_research(body.get("topic", ""),
                              rounds=int(body.get("rounds", 3)))
 
 
 @route("POST", r"/api/patient")
-def _patient(svc, body, m, q):
+def _patient(svc, body, m, q, ctx=None):
     return svc.patient(body.get("question", ""))
 
 
 @route("POST", r"/api/agent")
-def _agent(svc, body, m, q):
-    return svc.agent(body.get("question", ""), role=body.get("role"),
+def _agent(svc, body, m, q, ctx=None):
+    return svc.agent(body.get("question", ""), role=ctx.effective_role,
                      max_steps=int(body.get("max_steps", 5)))
 
 
 @route("POST", r"/api/council")
-def _council(svc, body, m, q):
-    return svc.council(body.get("question", ""), role=body.get("role"))
+def _council(svc, body, m, q, ctx=None):
+    return svc.council(body.get("question", ""), role=ctx.effective_role)
 
 
 @route("POST", r"/api/tool")
-def _tool(svc, body, m, q, principal=None):
+def _tool(svc, body, m, q, ctx=None):
     return svc.tool_call(body.get("name", ""), body.get("arguments", {}),
-                         role=body.get("role", ""),
-                         subject=(principal.subject_id if principal else ""))
+                         role=(ctx.effective_role or ""),
+                         subject=(ctx.principal_id if ctx else ""))
 
 
 @route("POST", r"/api/trace")
-def _trace(svc, body, m, q):
+def _trace(svc, body, m, q, ctx=None):
     return svc.trace(body.get("type", body.get("query_type", "text")),
                      body.get("ref", ""))
 
 
 @route("GET", r"/api/tools")
-def _tools(svc, body, m, q):
+def _tools(svc, body, m, q, ctx=None):
     return svc.tools()
 
 
 @route("POST", r"/api/gold-sample", min_role="student")
-def _gold_sample(svc, body, m, q):
+def _gold_sample(svc, body, m, q, ctx=None):
     return svc.gold_sample(n=int(body.get("n", 20)),
                            stratify=bool(body.get("stratify", True)))
 
 
 @route("POST", r"/api/gold-eval", min_role="student")
-def _gold_eval(svc, body, m, q):
+def _gold_eval(svc, body, m, q, ctx=None):
     return svc.gold_eval(body.get("rows", []))
 
 
 @route("POST", r"/api/herb", min_role="student")
-def _herb(svc, body, m, q):
+def _herb(svc, body, m, q, ctx=None):
     return svc.herb(body.get("name", body.get("herb", "")))
 
 
+# -- 運行中心 / 評測 / Artifact / 治理（十二輪新控制面）---------------------
+@route("GET", r"/api/whoami")
+def _whoami(svc, body, m, q, ctx=None):
+    # 前端角色選擇只是請求；真正的上限與生效角色由服務端裁定並回顯
+    return {"principal_id": ctx.principal_id, "tenant_id": ctx.tenant_id,
+            "role_ceiling": ctx.role_ceiling,
+            "effective_role": ctx.effective_role,
+            "request_id": ctx.request_id}
+
+
+@route("GET", r"/api/runs", min_role="student")
+def _runs(svc, body, m, q, ctx=None):
+    return svc.runs_list(limit=int((q.get("limit", ["30"]))[0]))
+
+
+@route("GET", r"/api/runs/([A-Za-z0-9_\-]+)", min_role="student")
+def _run_detail(svc, body, m, q, ctx=None):
+    return svc.run_detail(m.group(1))
+
+
+@route("POST", r"/api/runs", min_role="student")
+def _run_start(svc, body, m, q, ctx=None):
+    # 運行角色受服務端上限鉗制：ctx.effective_role 優先；全權主體可指定
+    role = ctx.effective_role or body.get("run_role") or "researcher"
+    return svc.run_start(body.get("query", ""),
+                         mode=body.get("mode", "agent"), role=role,
+                         max_steps=int(body.get("max_steps", 6)),
+                         max_tool_calls=int(body.get("max_tool_calls", 12)))
+
+
+@route("POST", r"/api/runs/([A-Za-z0-9_\-]+)/(approve|reject|resume|replay|export)",
+       min_role="doctor")
+def _run_action(svc, body, m, q, ctx=None):
+    return svc.run_action(m.group(1), m.group(2),
+                          approver=str(body.get("approver", ""))
+                          or ctx.principal_id)
+
+
+@route("POST", r"/api/eval/trajectory", min_role="researcher")
+def _eval_traj(svc, body, m, q, ctx=None):
+    return svc.eval_trajectory()
+
+
+@route("POST", r"/api/eval/perturbation", min_role="researcher")
+def _eval_pert(svc, body, m, q, ctx=None):
+    return svc.eval_perturbation()
+
+
+@route("GET", r"/api/artifacts", min_role="student")
+def _artifacts(svc, body, m, q, ctx=None):
+    return svc.artifacts()
+
+
+@route("GET", r"/api/artifact", min_role="student")
+def _artifact(svc, body, m, q, ctx=None):
+    return svc.artifact_read((q.get("path", [""]))[0])
+
+
+@route("GET", r"/api/governance", min_role="student")
+def _governance(svc, body, m, q, ctx=None):
+    return svc.governance()
+
+
 @route("POST", r"/api/formula-explain", min_role="student")
-def _formula_explain(svc, body, m, q):
+def _formula_explain(svc, body, m, q, ctx=None):
     return svc.formula_explain(body.get("name", body.get("formula", "")))
 
 
@@ -249,7 +332,8 @@ def make_handler(service: ServiceContext):
             self.send_header("Content-Type", ctype + ("; charset=utf-8"
                              if ctype.startswith(("text", "application/json")) else ""))
             self.send_header("Content-Length", str(len(data)))
-            if not AUTH_TOKEN:      # open CORS only in tokenless local mode
+            # open CORS 只在完全無憑證的本地開發模式（任一鑒權配置在場即關）
+            if not AUTH_TOKEN and not API_KEYS:
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Access-Control-Allow-Headers", "Content-Type")
                 self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
@@ -306,20 +390,26 @@ def make_handler(service: ServiceContext):
                 ip = self.client_address[0]
                 window = int(_time.time() // 60)
                 key = (ip, window)
-                _RATE_BUCKET.setdefault(key, 0)
-                _RATE_BUCKET[key] += 1
-                if len(_RATE_BUCKET) > 4096:    # 防字典無界增長
-                    for k in [k for k in _RATE_BUCKET if k[1] < window]:
-                        _RATE_BUCKET.pop(k, None)
-                if _RATE_BUCKET[key] > RATE_LIMIT_PER_MIN:
+                with _RATE_LOCK:      # ThreadingHTTPServer 下的共享計數
+                    _RATE_BUCKET.setdefault(key, 0)
+                    _RATE_BUCKET[key] += 1
+                    if len(_RATE_BUCKET) > 4096:    # 防字典無界增長
+                        for k in [k for k in _RATE_BUCKET if k[1] < window]:
+                            _RATE_BUCKET.pop(k, None)
+                    limited = _RATE_BUCKET[key] > RATE_LIMIT_PER_MIN
+                if limited:
                     self._send(429, {"error": "rate limited"})
                     return
             try:
                 body = _json_body(self) if method == "POST" else {}
-            except ValueError:
-                self._send(413, {"error": "request body too large"})
+            except ValueError as ve:
+                if str(ve) == "invalid_json":       # 非法 JSON → 400，不再靜默 {}
+                    self._send(400, {"error": "invalid JSON body"})
+                else:
+                    self._send(413, {"error": "request body too large"})
                 return
-            for rmethod, rx, fn, min_role, wants_principal in ROUTES:
+            _clamp_body(body)          # top_k/rounds/max_steps 等統一上下限
+            for rmethod, rx, fn, min_role, wants_ctx in ROUTES:
                 if rmethod != method:
                     continue
                 mt = rx.match(path)
@@ -334,17 +424,12 @@ def make_handler(service: ServiceContext):
                                          "required_role": min_role,
                                          "your_ceiling": principal.role_ceiling})
                         return
-                    # 請求體/查詢串 role 只能降級，不可越過身份上限
+                    # 生效角色只此一處裁定；業務路由不得再讀 body/query role
+                    import uuid as _uuid
                     try:
-                        if "role" in body or "role" in query or \
-                                principal.rank < policy.ROLE_RANK["doctor"]:
-                            requested = body.get("role") or \
-                                (query.get("role", [None])[0])
-                            eff = policy.effective_role(principal, requested)
-                            if "role" in body or eff is not None:
-                                body["role"] = eff
-                            if "role" in query:
-                                query["role"] = [eff or "student"]
+                        requested = body.pop("role", None) or \
+                            (query.get("role", [None])[0])
+                        eff = policy.effective_role(principal, requested)
                     except policy.PolicyDenied as pd:
                         print(f"[policy-denied] {method} {path} "
                               f"subject={principal.subject_id} {pd.reason}")
@@ -353,14 +438,21 @@ def make_handler(service: ServiceContext):
                                          "requested_role": pd.requested,
                                          "your_ceiling": pd.ceiling})
                         return
+                    ctx = policy.RequestContext(
+                        principal_id=principal.subject_id,
+                        tenant_id=principal.tenant_id,
+                        role_ceiling=principal.role_ceiling,
+                        effective_role=eff,
+                        request_id=_uuid.uuid4().hex[:12])
                     try:
-                        kwargs = {"principal": principal} if wants_principal \
-                            else {}
+                        kwargs = {"ctx": ctx} if wants_ctx else {}
                         result = fn(service, body, mt, query, **kwargs)
+                        # 患者投影在序列化出口再次執行（不只依賴業務函數）
+                        result = policy.project_for_role(result,
+                                                         ctx.effective_role)
                         blob = json.dumps(result, ensure_ascii=False,
                                           default=str)
                         if len(blob.encode("utf-8")) > MAX_RESPONSE_BYTES:
-                            import uuid as _uuid
                             tid = _uuid.uuid4().hex[:12]
                             print(f"[response-too-large trace_id={tid}] "
                                   f"{method} {path}")
@@ -370,7 +462,6 @@ def make_handler(service: ServiceContext):
                             return
                         self._send(200, result)
                     except Exception as exc:
-                        import uuid as _uuid
                         tid = _uuid.uuid4().hex[:12]
                         print(f"[error trace_id={tid}] {method} {path}")
                         traceback.print_exc()   # full detail server-side only

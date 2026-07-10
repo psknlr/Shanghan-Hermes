@@ -49,6 +49,7 @@ class AgentSession:
     def ask(self, question: str, role: Optional[str] = None) -> Dict[str, Any]:
         role = role or self.role
         self._record_corrections(question)
+        resolution = self._resolve_reference(question)
         contextual = self._contextualize(question)
         if RE_COMPOUND.search(question):
             agent = ComplexAgent(client=self.client, registry=self.registry)
@@ -60,8 +61,42 @@ class AgentSession:
         out["session"] = {"turn": len(self.history),
                           "contextualized": contextual != question,
                           "anchors": list(self.anchors),
-                          "ledger_size": len(self.ledger)}
+                          "ledger_size": len(self.ledger),
+                          # 結構化指代解析（十二輪：不再只報「成功=True」——
+                          # 解析到什麼、依據什麼、置信多少，全部可審）
+                          "reference_resolution": resolution}
         return out
+
+    def _resolve_reference(self, question: str) -> Dict[str, Any]:
+        """結構化指代解析：mention → 解析對象 + 依據 + 啟發式置信。
+
+        關鍵區分（十二輪「偽成功」修復）：**用戶問句中的主語錨點**優先於
+        回答文本裡順帶出現的方名——「問桂枝湯 → 答文提到附子湯」時，
+        「它」解析為桂枝湯而不是回答裡最後出現的方名。
+        誠實邊界：詞表+錨點啟發式（非語義消解）；無錨點如實報 unresolved。"""
+        m = RE_FOLLOWUP.search(question)
+        if not m or not self.history:
+            return {"mention": None, "resolved": None, "confidence": None,
+                    "status": "no_reference"}
+        mention = m.group(0)
+        subject = next((h["subject"] for h in reversed(self.history)
+                        if h.get("subject")), None)
+        if subject:
+            return {"mention": mention, "resolved": subject,
+                    "candidates": list(self.anchors[-3:]),
+                    "confidence": 0.85, "status": "resolved",
+                    "basis": "最近**問句主語**錨點（優先於回答文本中順帶"
+                             "出現的方名；詞表級，非語義消解）",
+                    "evidence_carried": self.history[-1]["evidence"][:4]}
+        if not self.anchors:
+            return {"mention": mention, "resolved": None, "confidence": 0.0,
+                    "status": "unresolved",
+                    "note": "有指代詞但先前輪次無方名/條文錨點——無從解析"}
+        return {"mention": mention, "resolved": self.anchors[-1],
+                "candidates": list(self.anchors[-3:]),
+                "confidence": 0.4, "status": "resolved",
+                "basis": "回答文本錨點回退（主語未知，置信降檔）",
+                "evidence_carried": self.history[-1]["evidence"][:4]}
 
     # ------------------------------------------------------------------
     def _record_corrections(self, question: str) -> None:
@@ -120,6 +155,12 @@ class AgentSession:
             c = store.get(cid)
             if c and cid not in self.ledger:
                 self.ledger[cid] = c.clean_text[:60]
+        # 問句主語（用戶提到的方名）與回答順帶方名分開記——指代解析
+        # 以主語為準，防「問桂枝湯、答文含附子湯→它=附子湯」的偽解析
+        q_norm = normalize_query(question)
+        subject = next((n for n in sorted(lexicon.FORMULA_SEEDS,
+                                          key=len, reverse=True)
+                        if n in q_norm), None)
         blob = normalize_query(question + " " + out.get("answer", "")[:400])
         for name in sorted(lexicon.FORMULA_SEEDS, key=len, reverse=True):
             if name in blob and name not in self.anchors:
@@ -127,6 +168,7 @@ class AgentSession:
         self.anchors = self.anchors[-6:]
         self.history.append({"question": question,
                              "answer": out.get("answer", "")[:400],
+                             "subject": subject,
                              "evidence": evidence})
         self.history = self.history[-self.max_history:]
 

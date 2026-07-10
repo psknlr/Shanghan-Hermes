@@ -27,6 +27,9 @@ class CitationReport:
     # evidence — exists, yet the agent never retrieved it (嚴格 RAG 接地)
     outside_evidence_ids: List[str] = field(default_factory=list)
     quote_mismatches: List[Dict] = field(default_factory=list)
+    # 歸屬警告（十一輪 五.2）：引文逐字存在於**某個**已引條文，但不在
+    # 位置上最近的那個——甲的文字被錯掛到乙（存在性通過，歸屬存疑）
+    attribution_warnings: List[Dict] = field(default_factory=list)
     has_any_citation: bool = False
 
     @property
@@ -39,6 +42,7 @@ class CitationReport:
                 "unsupported": self.unsupported_ids,
                 "outside_evidence": self.outside_evidence_ids,
                 "quote_mismatches": self.quote_mismatches,
+                "attribution_warnings": self.attribution_warnings,
                 "has_any_citation": self.has_any_citation, "ok": self.ok}
 
 
@@ -79,20 +83,36 @@ class CitationGuard:
             else:
                 rep.verified_ids.append(cid)
 
-        # verify quoted classical text against ALL cited clauses（任一已引
-        # 條文含該引文即通過；不做「最近引用位置」配對——句級歸屬與詞彙
-        # 對齊見 EvidenceBinder，此處只攔「引文在所有引用條文中都不存在」
-        # 的偽造）
-        quotes = RE_QUOTE.findall(answer)
-        if quotes and rep.verified_ids:
-            corpus = {cid: self.store[cid].clean_text for cid in rep.verified_ids}
-            for q in quotes:
-                if any(q in t or similarity(q, t) >= 0.6 for t in corpus.values()):
+        # 引文核驗兩級（十一輪 五.2）：
+        # ① 存在性：引文須逐字/近似存在於**某個**已引條文（否則=偽造）；
+        # ② 歸屬：引文按**位置最近的引用標記**綁定條文——存在於別的已引
+        #    條文但不在被綁定條文者，記 attribution_warning（甲文錯掛乙）
+        if rep.verified_ids:
+            corpus = {cid: self.store[cid].clean_text
+                      for cid in rep.verified_ids}
+            id_positions = [(m.start(), m.group(0))
+                            for m in RE_CLAUSE_ID.finditer(answer)
+                            if m.group(0) in corpus]
+            for qm in RE_QUOTE.finditer(answer):
+                q = qm.group(1)
+                holders = [cid for cid, t in corpus.items()
+                           if q in t or similarity(q, t) >= 0.6]
+                if not holders:
+                    best = max(corpus.values(),
+                               key=lambda t: similarity(q, t), default="")
+                    if similarity(q, best) < 0.45:
+                        rep.quote_mismatches.append({"quote": q,
+                                                     "matched": False})
                     continue
-                # quote not found in any cited clause → possible fabrication
-                best = max(corpus.values(), key=lambda t: similarity(q, t), default="")
-                if similarity(q, best) < 0.45:
-                    rep.quote_mismatches.append({"quote": q, "matched": False})
+                if id_positions:
+                    nearest = min(id_positions,
+                                  key=lambda p: abs(p[0] - qm.start()))[1]
+                    if nearest not in holders:
+                        rep.attribution_warnings.append(
+                            {"quote": q[:40], "bound_to": nearest,
+                             "actually_in": holders[:3],
+                             "note": "引文逐字存在但歸屬存疑：最近引用標記"
+                                     "指向的條文不含此文"})
         return rep
 
     def annotate(self, answer: str, rep: CitationReport) -> str:
@@ -108,6 +128,11 @@ class CitationGuard:
         if rep.quote_mismatches:
             qs = "；".join(m["quote"][:20] for m in rep.quote_mismatches)
             footer.append(f"⚠️ 以下引文未能在所引條文中逐字核對：{qs}")
+        if rep.attribution_warnings:
+            ws = "；".join(f"「{w['quote'][:14]}…」實出 "
+                           f"{'、'.join(w['actually_in'][:2])}"
+                           for w in rep.attribution_warnings[:3])
+            footer.append(f"⚠️ 引文歸屬存疑（文字錯掛條文）：{ws}")
         if not rep.has_any_citation:
             footer.append("⚠️ 本回答未包含可核驗的條文編號，按本系統規則僅供參考。")
         return answer + "\n" + "\n".join(footer)
