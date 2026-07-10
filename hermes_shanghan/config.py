@@ -38,6 +38,7 @@ INDEX_DIR = SHANGHAN_DIR / "index"
 RESEARCH_DIR = SHANGHAN_DIR / "research"
 PAPER_DIR = SHANGHAN_DIR / "papers"
 TRACE_DIR = SHANGHAN_DIR / "trace"
+RUNS_DIR = SHANGHAN_DIR / "runs"        # harness 運行目錄（含時間戳，不入庫）
 
 SKILLS_DIR = DATA_DIR / "skills" / "shanghanlun"
 
@@ -98,6 +99,7 @@ LAYER_LABEL = {
     "C": "注家解釋",
     "D": "後世類方歸納",
     "E": "模型推理",
+    "P": "旁證（全庫/醫案等文獻層，不入經文閘門）",
 }
 
 # ---------------------------------------------------------------------------
