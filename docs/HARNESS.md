@@ -43,7 +43,30 @@ Hermes Harness =
 | 7+. redteam / 多標註者 κ | 對抗提示集與 Cohen's κ 一致率待建（goldset 已有單標註閉環） |
 | Pydantic/OTel SDK | 零依賴約束下不引入；契約/span 為兼容結構，外部可直接轉譯 |
 
-## 三、使用
+## 三、十層目標架構映射（十輪評審 七）
+
+評審給出的十層目標架構逐層對照現狀（落點 / 差距，均如實）：
+
+| # | 目標層 | 現狀落點 | 差距 |
+|---|---|---|---|
+| 1 | Identity & Tenant Gateway | `server/policy.py`：Principal（subject/角色上限/auth_level），HERMES_API_KEYS 綁定 | 多租戶 tenant_id 僅佔位；JWT/OIDC 屬部署層 |
+| 2 | Policy Engine | 端點最低角色矩陣 + 請求體 role 只降不升 + 工具面 ScopedRegistry 硬裁剪 + 紅旗分診/意圖守衛 | 目的限制（purpose_of_use）與逐工具二次審批矩陣未細化 |
+| 3 | Durable Run Controller | 四節點狀態圖 + 原子 checkpoint + run.lock + RunBudget 原子扣減 + resume/replay（環境指紋） | typed DAG 細粒度節點、事務語義、節點級取消在路線 |
+| 4 | Model Gateway | `llm/client.py` 統一後端路由（local 確定性/litellm 增益層），backend 進 RunSpec 指紋 | token/cost 真實計量僅真模型後端有；模型版本 pin 未強制 |
+| 5 | Capability Broker | `ToolRegistry.call()` 管道：默認拒絕→參數校驗→版本化緩存→超時→輸出校驗→大小→審計（契約 enforced 節如實聲明） | idempotency-key 級去重未做（工具全只讀，重試天然安全） |
+| 6 | Evidence Plane | A/B/C/D/E/P 分層 + **EvidenceRecord 逐證據來源對象**（版本指紋/quote_hash/檢索上下文，缺失字段記 null）+ **work_type 分類**（未登記書目 fail-closed 到 P，證據層不由目錄名決定）+ 引文邊質量信號（coverage/modes） | 字符級偏移未保留（切分管道限制，如實記 null）；Support/Contradict 語義關係為詞表級 |
+| 7 | Independent Specialist Agents | Council 多視角 + **argument 論證鏈**（支持/反證/異文分叉/注家共同與爭議/隱含假設/不可裁決七段分層） | 專家獨立 evidence packet（分層檢索隔離+匿名評審）在路線 |
+| 8 | Verification & Guardrail Pipeline | schema（參數/輸出）→ CitationGuard（編號+本輪取證+引文逐字）→ EvidenceBinder（句級詞彙下界）→ 安全治理 → 質量警示 | entailment 級語義核驗需模型後端（verifier 如實標 lexical） |
+| 9 | Human Approval | ApprovalRequest（digest/時間/審批人）+ approve 重跑下游閘門 + reject + blocked 不可批准 | action 級（逐工具調用）批准與有效期（expires_at）未做 |
+| 10 | Release + Observability | 五態發布決策 + span 軌跡（JSONL，OTel 兼容）+ 審計環 + 閉集回歸指標（口徑表見 MATURITY.md） | OTel exporter/retention policy 屬部署層 |
+
+**語料供應鏈**（十輪 六.4）：`library.fetch` 全鏈加固——URL allowlist
+（自定義源須 `HERMES_LIBRARY_ALLOW_CUSTOM=1` + 顯式 SHA-256，fail-closed）、
+下載超時與 200MB 上限、成員名審查（絕對路徑/`..`）、解壓後樹審查
+（symlink/設備文件/3 萬文件/2GB/壓縮比 60×）、臨時目錄解壓 + 結構校驗後
+原子切換、`provenance.json` 全程記錄。
+
+## 四、使用
 
 ```bash
 python3 -m hermes_shanghan run "惡寒發熱，汗出，脈浮緩，用什麼方？" --mode agent --role doctor

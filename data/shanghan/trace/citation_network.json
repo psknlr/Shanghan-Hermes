@@ -2968,7 +2968,7 @@
    "book": "仲景傷寒補亡論",
    "author": "郭雍",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 1415,
    "n_clauses_cited": 602
   },
@@ -2986,7 +2986,7 @@
    "book": "傷寒纘論·傷寒緒論",
    "author": "張璐",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 1280,
    "n_clauses_cited": 594
   },
@@ -2995,7 +2995,7 @@
    "book": "傷寒論條辨",
    "author": "方有執",
    "dynasty": "明",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 713,
    "n_clauses_cited": 591
   },
@@ -3004,7 +3004,7 @@
    "book": "傷寒纘論",
    "author": "張璐",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 994,
    "n_clauses_cited": 575
   },
@@ -3013,7 +3013,7 @@
    "book": "傷寒論綱目",
    "author": "沈金鰲",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 2285,
    "n_clauses_cited": 542
   },
@@ -3031,7 +3031,7 @@
    "book": "傷寒論辯證廣注",
    "author": "汪琥",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 1050,
    "n_clauses_cited": 471
   },
@@ -3058,7 +3058,7 @@
    "book": "傷寒貫珠集",
    "author": "尤怡",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 722,
    "n_clauses_cited": 453
   },
@@ -3067,7 +3067,7 @@
    "book": "曹氏傷寒金匱發微合刊",
    "author": "曹穎甫",
    "dynasty": "民國",
-   "layer": "D",
+   "layer": "P",
    "n_edges": 986,
    "n_clauses_cited": 442
   },
@@ -3094,7 +3094,7 @@
    "book": "傷寒恆論",
    "author": "",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 804,
    "n_clauses_cited": 426
   },
@@ -3103,7 +3103,7 @@
    "book": "傷寒審證表",
    "author": "",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 478,
    "n_clauses_cited": 425
   },
@@ -3130,7 +3130,7 @@
    "book": "傷寒論類方",
    "author": "徐大椿",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 477,
    "n_clauses_cited": 317
   },
@@ -3139,7 +3139,7 @@
    "book": "傷寒尋源",
    "author": "呂震名",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 637,
    "n_clauses_cited": 277
   },
@@ -3148,7 +3148,7 @@
    "book": "傷寒大白",
    "author": "高世栻",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 598,
    "n_clauses_cited": 258
   },
@@ -3157,7 +3157,7 @@
    "book": "傷寒總病論",
    "author": "龐安石",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 279,
    "n_clauses_cited": 233
   },
@@ -3166,7 +3166,7 @@
    "book": "傷寒百證歌",
    "author": "許叔微",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 392,
    "n_clauses_cited": 230
   },
@@ -3175,7 +3175,7 @@
    "book": "傷寒總病論",
    "author": "龐安石",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 288,
    "n_clauses_cited": 227
   },
@@ -3184,7 +3184,7 @@
    "book": "傷寒明理論",
    "author": "成無己",
    "dynasty": "金",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 294,
    "n_clauses_cited": 213
   },
@@ -3193,7 +3193,7 @@
    "book": "傷寒明理論",
    "author": "成無己",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 293,
    "n_clauses_cited": 204
   },
@@ -3202,7 +3202,7 @@
    "book": "傷寒醫訣串解",
    "author": "陳念祖",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 274,
    "n_clauses_cited": 186
   },
@@ -3211,7 +3211,7 @@
    "book": "傷寒六書",
    "author": "陶華",
    "dynasty": "明",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 291,
    "n_clauses_cited": 173
   },
@@ -3220,7 +3220,7 @@
    "book": "傷寒括要",
    "author": "李中梓",
    "dynasty": "明",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 287,
    "n_clauses_cited": 170
   },
@@ -3229,7 +3229,7 @@
    "book": "傷寒指掌",
    "author": "吳坤安",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 181,
    "n_clauses_cited": 134
   },
@@ -3238,7 +3238,7 @@
    "book": "中寒論辯證廣注",
    "author": "丹波元胤",
    "dynasty": "日本",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 199,
    "n_clauses_cited": 101
   },
@@ -3247,7 +3247,7 @@
    "book": "傷寒法祖",
    "author": "任越庵",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 125,
    "n_clauses_cited": 101
   },
@@ -3256,7 +3256,7 @@
    "book": "傷寒論翼",
    "author": "柯琴",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 123,
    "n_clauses_cited": 98
   },
@@ -3265,7 +3265,7 @@
    "book": "傷寒附翼",
    "author": "柯琴",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 88,
    "n_clauses_cited": 76
   },
@@ -3274,7 +3274,7 @@
    "book": "經方實驗錄",
    "author": "曹穎甫",
    "dynasty": "民國",
-   "layer": "D",
+   "layer": "P",
    "n_edges": 119,
    "n_clauses_cited": 70
   },
@@ -3283,7 +3283,7 @@
    "book": "傷寒九十論",
    "author": "許叔微",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 110,
    "n_clauses_cited": 68
   },
@@ -3292,7 +3292,7 @@
    "book": "傷寒發微論",
    "author": "許叔微",
    "dynasty": "宋",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 74,
    "n_clauses_cited": 58
   },
@@ -3301,7 +3301,7 @@
    "book": "傷寒兼證析義",
    "author": "張倬",
    "dynasty": "清",
-   "layer": "D",
+   "layer": "P",
    "n_edges": 50,
    "n_clauses_cited": 47
   },
@@ -3310,7 +3310,7 @@
    "book": "傷寒直格",
    "author": "劉完素",
    "dynasty": "金",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 36,
    "n_clauses_cited": 33
   },
@@ -3319,7 +3319,7 @@
    "book": "傷寒直格",
    "author": "",
    "dynasty": "金",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 35,
    "n_clauses_cited": 32
   },
@@ -3328,7 +3328,7 @@
    "book": "傷寒捷訣",
    "author": "嚴則庵 裘慶元",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 25,
    "n_clauses_cited": 23
   },
@@ -3337,7 +3337,7 @@
    "book": "劉河間傷寒醫鑑",
    "author": "馬宗素",
    "dynasty": "元",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 19,
    "n_clauses_cited": 19
   },
@@ -3346,7 +3346,7 @@
    "book": "敖氏傷寒金鏡錄",
    "author": "杜本",
    "dynasty": "元",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 21,
    "n_clauses_cited": 17
   },
@@ -3355,7 +3355,7 @@
    "book": "傷寒標本心法類萃",
    "author": "劉完素",
    "dynasty": "金",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 16,
    "n_clauses_cited": 16
   },
@@ -3364,7 +3364,7 @@
    "book": "傷寒標本心法類萃",
    "author": "劉完素",
    "dynasty": "金",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 15,
    "n_clauses_cited": 15
   },
@@ -3373,7 +3373,7 @@
    "book": "傷寒補例",
    "author": "周學海",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 15,
    "n_clauses_cited": 15
   },
@@ -3382,7 +3382,7 @@
    "book": "傷寒辨要箋記",
    "author": "程門雪",
    "dynasty": "民國",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 14,
    "n_clauses_cited": 10
   },
@@ -3391,7 +3391,7 @@
    "book": "傷寒舌鑑",
    "author": "張登",
    "dynasty": "清",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 4,
    "n_clauses_cited": 4
   },
@@ -3400,7 +3400,7 @@
    "book": "傷寒心鏡別集",
    "author": "張從正",
    "dynasty": "金",
-   "layer": "C",
+   "layer": "P",
    "n_edges": 1,
    "n_clauses_cited": 1
   }

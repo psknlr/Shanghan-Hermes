@@ -935,13 +935,184 @@ def quote_check(text: str) -> Dict:
                          "僅就傷寒論（含輔助篇章）而言，不排除出自他書。"]}
 
 
+# ---------------------------------------------------------------------------
+# 6f. 反證與爭議論證結構（十輪評審 六.5）
+# ---------------------------------------------------------------------------
+_CAUTION_TOKENS = ("不可", "勿", "禁", "非其治", "難治", "不中與")
+
+
+def argument_chain(ref: str) -> Dict:
+    """方證論證圖：不輸出一個統一結論，而是七段分層陳述——
+
+        宋本直接可見 / 反證與慎用條文 / 版本差異導致的解釋分叉 /
+        注家共同點 / 注家爭議點 / 後世經方家歸納 / 模型綜合（E 層）
+        + 隱含假設（注文依賴而原文未見的病機概念）+ 尚不能裁決的問題
+        + 分層置信
+
+    各段只呈現證據結構；「不能裁決」是正式輸出而非缺陷。"""
+    from ..lexicon import POSTHOC_TERMS
+
+    q = normalize_query(ref)
+    rules = read_jsonl(config.RULES_FORMULA_DIR / "formula_pattern_rules.jsonl")
+    rule = next((r for r in rules if fold_variants(r.get("formula", "")) == q),
+                None) or next((r for r in rules
+                               if q and q in fold_variants(r.get("formula", ""))),
+                              None)
+    if rule is None:
+        clauses = _clauses()
+        c = _resolve_clause(ref, clauses)
+        if c and c.get("formula_names"):
+            return argument_chain(c["formula_names"][0])
+        return {"error": f"argument 以方劑為論證對象，未找到方劑 {ref}；"
+                         "條文級爭議請用 dispute"}
+    formula = rule["formula"]
+    f_folded = fold_variants(formula)
+    supporting = rule.get("supporting_clauses", [])
+    canonical_ids = sorted(c for c in supporting if "AUX" not in c)
+    clauses = _clauses()
+
+    # 1. 宋本直接可見（A）
+    direct = [{"clause_id": cid,
+               "text": (clauses.get(cid) or {}).get("clean_text", "")[:80]}
+              for cid in canonical_ids[:8]]
+
+    # 2. 反證與慎用（A）：含方名且含禁例語氣的條文——結論的邊界證據
+    contra = []
+    for cid, c in clauses.items():
+        text = fold_variants(c.get("clean_text", ""))
+        if f_folded in text and any(t in text for t in
+                                    (fold_variants(t) for t in _CAUTION_TOKENS)):
+            tok = next(t for t in _CAUTION_TOKENS
+                       if fold_variants(t) in text)
+            contra.append({"clause_id": cid, "caution_token": tok,
+                           "text": c.get("clean_text", "")[:80]})
+    contra.sort(key=lambda x: x["clause_id"])
+
+    # 3. 版本差異導致的解釋分叉（B）
+    variant_forks = []
+    for v in read_jsonl(config.RULES_VARIANT_DIR / "variant_rules.jsonl"):
+        if v.get("clause_id") in set(supporting) and v.get("notable_differences"):
+            variant_forks.append({
+                "clause_id": v["clause_id"], "book": v.get("variant_book", ""),
+                "differences": v.get("notable_differences", [])[:4]})
+
+    # 4/5. 注家共同點與爭議點（C）：錨定前 3 條核心條文的注文，
+    # 詞表 = 分歧圖譜的分析術語表（八綱/病機/榮衛…）∪ 後世病機術語表
+    from ..apps.commentary_atlas import analytic_terms
+    vocab = sorted(set(analytic_terms()) | set(POSTHOC_TERMS),
+                   key=lambda t: (-len(t), t))
+    anchor_ids = canonical_ids[:3]
+    term_users: Dict[str, set] = {}
+    commentators: set = set()
+    for r in read_jsonl(config.RULES_COMMENTARY_DIR / "commentary_rules.jsonl"):
+        if r.get("clause_id") not in anchor_ids:
+            continue
+        who = r.get("commentator", "")
+        commentators.add(who)
+        folded = fold_variants(r.get("commentary_text", ""))
+        for t in vocab:
+            if fold_variants(t) in folded:
+                term_users.setdefault(t, set()).add(who)
+    # 只計「解釋性詞彙」：原文自身含有的詞（太陽病/下之…）不是注家的
+    # 解釋貢獻，剔除後剩下的才是各家帶入的概念框架
+    anchor_texts = fold_variants("".join(
+        (clauses.get(cid) or {}).get("clean_text", "") for cid in supporting))
+    interpretive = {t: u for t, u in term_users.items()
+                    if fold_variants(t) not in anchor_texts}
+    half = max(2, len(commentators) // 2)
+    common = sorted((t for t, u in interpretive.items() if len(u) >= half),
+                    key=lambda t: -len(interpretive[t]))
+    disputed = sorted(t for t, u in interpretive.items() if len(u) == 1)
+    common_points = [{"term": t, "commentators": sorted(interpretive[t])}
+                     for t in common[:8]]
+    dispute_points = [{"term": t, "only_used_by": sorted(interpretive[t]),
+                       "silent_commentators":
+                           sorted(commentators - interpretive[t])[:6]}
+                      for t in disputed[:8]]
+
+    # 隱含假設：≥2 家共同依賴、而全部支持條文原文均未見的概念——
+    # 整個解釋傳統賴以成立、卻無文本錨點的前提
+    hidden = [{"term": t, "used_by": sorted(u),
+               "note": "後世解釋概念——原文無此語，解釋依賴的隱含假設"}
+              for t, u in sorted(interpretive.items())
+              if len(u) >= 2][:8]
+
+    # 6. 後世經方家歸納（D）
+    claims = [c for c in builder.load_claims().get("claims", [])
+              if c.get("formula") == formula]
+    posthoc_ind = {
+        "modification_relations": rule.get("modification_relations", [])[:6],
+        "claims": [{"claim_id": c["claim_id"], "claim": c["claim"],
+                    "evidence_grade": c["evidence_grade"]} for c in claims]}
+
+    # 7. 模型綜合（E）——顯式標層，置信最低
+    synthesis = (f"{formula}：核心證 {'、'.join(rule.get('core_pattern', '').split('+')[:4]) or rule.get('core_pattern', '')}"
+                 f"；A 層支持條文 {len(canonical_ids)} 條，慎用/禁例 "
+                 f"{len(contra)} 條，注家共同概念 {len(common_points)} 個，"
+                 f"爭議概念 {len(dispute_points)} 個。此段為系統綜合（E 層），"
+                 "僅在上列各段證據範圍內成立。")
+
+    # 尚不能裁決的問題（正式輸出）
+    undecidable = []
+    if variant_forks:
+        undecidable.append("版本異文是否改變醫義：庫內僅呈現差異，無裁決依據"
+                           f"（{len(variant_forks)} 處）")
+    if dispute_points:
+        undecidable.append("注家範式分歧（訓詁/方證/病機取徑不同）文本層面"
+                           "不可裁決對錯")
+    if hidden:
+        undecidable.append("隱含病機假設無原文錨點，成立與否超出文本證據")
+    if contra:
+        undecidable.append("適用邊界（禁例與主治的張力）屬臨床判斷，"
+                           "系統只列證據")
+
+    return {
+        "chain_type": "方證論證結構",
+        "query": ref,
+        "formula": formula,
+        "songben_direct": direct,
+        "contradicting_or_caution_clauses": contra[:8],
+        "variant_forks": variant_forks[:8],
+        "commentator_common_points": common_points,
+        "commentator_dispute_points": dispute_points,
+        "hidden_assumptions": hidden,
+        "posthoc_induction": posthoc_ind,
+        "model_synthesis": synthesis,
+        "undecidable": undecidable,
+        "confidence_by_layer": {
+            "A": {"n_evidence": len(canonical_ids) + len(contra),
+                  "note": "逐字可回源（支持+反證）"},
+            "B": {"n_evidence": len(variant_forks), "note": "版本對勘"},
+            "C": {"n_evidence": len(commentators),
+                  "note": "注家解釋（共同點置信高於爭議點）"},
+            "D": {"n_evidence": len(claims) + len(posthoc_ind["modification_relations"]),
+                  "note": "後世歸納（posthoc）"},
+            "E": {"n_evidence": 1, "note": "模型綜合，置信最低，不得單獨引用"},
+        },
+        "section_evidence_levels": {
+            "songben_direct": "A 原文直述",
+            "contradicting_or_caution_clauses": "A 原文直述（禁例語氣詞表定位）",
+            "variant_forks": "B 版本異文",
+            "commentator_common_points": "C 注家解釋（跨家共現統計）",
+            "commentator_dispute_points": "C 注家解釋（獨用術語）",
+            "hidden_assumptions": "C→E 邊界（注文概念，原文無錨點）",
+            "posthoc_induction": "D 後世歸納",
+            "model_synthesis": "E 模型綜合",
+        },
+        "warnings": ["反證條文由禁例語氣詞表定位（確定性），語氣≠絕對禁忌，"
+                     "須回源原文；共同點/爭議點為術語共現統計，非語義判定；"
+                     "本鏈不輸出統一結論——多觀點並存，「不能裁決」是正式輸出。"],
+    }
+
+
 def trace_dispatch(query_type: str, ref: str) -> Dict:
     """統一入口（CLI / 工具 / 服務端共用）。"""
     dispatch = {"clause": clause_chain, "formula": formula_chain,
                 "claim": claim_chain, "school": school_chain,
                 "commentator": commentator_chain, "text": text_trace,
                 "quote": quote_check, "term": term_chain,
-                "dispute": dispute_chain, "compare": compare_chain}
+                "dispute": dispute_chain, "compare": compare_chain,
+                "argument": argument_chain}
     fn = dispatch.get(query_type)
     if fn is None:
         return {"error": f"未知溯源對象類型 {query_type}",

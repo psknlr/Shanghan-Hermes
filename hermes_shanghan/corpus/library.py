@@ -81,22 +81,48 @@ def ensure_available(root: Optional[Path] = None, auto: Optional[bool] = None,
 
 # ---------------------------------------------------------------------------
 # Acquisition: download → verify → extract → index
+# 供應鏈安全（十輪 六.4）：URL allowlist、強制 SHA-256、超時、大小上限、
+# 成員枚舉、路徑穿越/symlink/設備文件拒絕、展開體積與文件數上限、
+# 壓縮比上限、臨時目錄解壓 + 結構校驗後原子切換、全程 provenance 記錄。
 # ---------------------------------------------------------------------------
+DOWNLOAD_TIMEOUT_S = 30            # 連接/讀取超時
+MAX_ARCHIVE_BYTES = 200 << 20      # 壓縮包上限 200MB（官方檔 ~69MB）
+MAX_MEMBERS = 30_000               # 解壓文件數上限
+MAX_EXTRACTED_BYTES = 2 << 30      # 展開體積上限 2GB（官方 ~311MB）
+MAX_COMPRESSION_RATIO = 60         # 展開/壓縮比上限（zip-bomb 防護）
+MIN_BOOK_DIRS = 10                 # 結構校驗：至少多少書目目錄才算合法庫
+
+
+class SupplyChainError(RuntimeError):
+    pass
+
+
 def _download(url: str, dest: Path, verbose: bool = True) -> None:
     tmp = dest.with_suffix(dest.suffix + ".part")
     req = urllib.request.Request(url, headers={"User-Agent": "hermes-shanghan/1.0"})
-    with urllib.request.urlopen(req) as resp, tmp.open("wb") as out:
-        total = int(resp.headers.get("Content-Length") or 0)
-        done = 0
-        while True:
-            chunk = resp.read(1 << 20)
-            if not chunk:
-                break
-            out.write(chunk)
-            done += len(chunk)
-            if verbose and total and done % (8 << 20) < (1 << 20):
-                print(f"  下載中 {done / (1 << 20):.0f}/{total / (1 << 20):.0f} MB",
-                      file=sys.stderr)
+    try:
+        with urllib.request.urlopen(req, timeout=DOWNLOAD_TIMEOUT_S) as resp, \
+                tmp.open("wb") as out:
+            total = int(resp.headers.get("Content-Length") or 0)
+            if total > MAX_ARCHIVE_BYTES:
+                raise SupplyChainError(
+                    f"壓縮包聲明體積 {total} 超過上限 {MAX_ARCHIVE_BYTES}")
+            done = 0
+            while True:
+                chunk = resp.read(1 << 20)
+                if not chunk:
+                    break
+                out.write(chunk)
+                done += len(chunk)
+                if done > MAX_ARCHIVE_BYTES:
+                    raise SupplyChainError(
+                        f"下載超過上限 {MAX_ARCHIVE_BYTES} bytes，已中止")
+                if verbose and total and done % (8 << 20) < (1 << 20):
+                    print(f"  下載中 {done / (1 << 20):.0f}/{total / (1 << 20):.0f} MB",
+                          file=sys.stderr)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
     tmp.replace(dest)
 
 
@@ -108,11 +134,47 @@ def _sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def validate_member_names(names: Iterable[str]) -> None:
+    """解壓前成員名審查：拒絕絕對路徑與路徑穿越。"""
+    for name in names:
+        p = name.replace("\\", "/")
+        if p.startswith("/") or re.match(r"^[A-Za-z]:", p):
+            raise SupplyChainError(f"壓縮包成員為絕對路徑：{name}")
+        if ".." in p.split("/"):
+            raise SupplyChainError(f"壓縮包成員含路徑穿越：{name}")
+
+
+def validate_extracted_tree(target: Path) -> Dict:
+    """解壓後樹審查：symlink/設備文件/越界/文件數/展開體積。
+    返回統計（進 provenance）。"""
+    base = target.resolve()
+    n_files = 0
+    total = 0
+    for p in target.rglob("*"):
+        if p.is_symlink():
+            raise SupplyChainError(f"壓縮包含符號鏈接：{p.name}")
+        if not p.resolve().is_relative_to(base):
+            raise SupplyChainError(f"解壓越界：{p}")
+        if p.is_file():
+            import stat as _stat
+            if not _stat.S_ISREG(p.stat().st_mode):     # regular files only
+                raise SupplyChainError(f"非常規文件（設備/管道）：{p.name}")
+            n_files += 1
+            total += p.stat().st_size
+            if n_files > MAX_MEMBERS:
+                raise SupplyChainError(f"文件數超過上限 {MAX_MEMBERS}")
+            if total > MAX_EXTRACTED_BYTES:
+                raise SupplyChainError(f"展開體積超過上限 {MAX_EXTRACTED_BYTES}")
+    return {"n_files": n_files, "extracted_bytes": total}
+
+
 def _extract_7z(archive: Path, target: Path) -> str:
-    """Extract with py7zr if importable, else a system 7z binary."""
+    """Extract with py7zr if importable (成員名先審查), else system 7z
+    （解壓後樹審查兜底——兩條路徑都必須過 validate_extracted_tree）。"""
     try:
         import py7zr  # type: ignore
         with py7zr.SevenZipFile(str(archive)) as z:
+            validate_member_names(f.filename for f in z.list())
             z.extractall(path=str(target))
         return "py7zr"
     except ImportError:
@@ -128,15 +190,32 @@ def _extract_7z(archive: Path, target: Path) -> str:
         "（Debian/Ubuntu: apt install p7zip-full；macOS: brew install p7zip）")
 
 
+def resolve_source(url: Optional[str], sha256: str = "") -> Tuple[str, str]:
+    """來源裁定（fail-closed）：默認 allowlist URL 用固定哈希；自定義 URL
+    必須 (a) 顯式提供 sha256 且 (b) 設 HERMES_LIBRARY_ALLOW_CUSTOM=1。
+    無哈希的來源一律拒絕——不存在「下載了再說」。"""
+    url = url or config.LIBRARY_URL
+    if url == config.LIBRARY_URL:
+        return url, config.LIBRARY_SHA256
+    if os.environ.get("HERMES_LIBRARY_ALLOW_CUSTOM") != "1":
+        raise SupplyChainError(
+            f"非默認庫源 {url} 被拒：自定義來源須設 "
+            "HERMES_LIBRARY_ALLOW_CUSTOM=1 並顯式提供 sha256")
+    if not re.fullmatch(r"[0-9a-f]{64}", sha256 or ""):
+        raise SupplyChainError("自定義庫源必須提供 64 位十六進制 SHA-256")
+    return url, sha256
+
+
 def fetch(url: Optional[str] = None, root: Optional[Path] = None,
           force: bool = False, keep_archive: bool = False,
-          verbose: bool = True) -> Path:
+          verbose: bool = True, sha256: str = "") -> Path:
     """Download + verify + extract + index the full library. Idempotent.
 
-    Reuses an already-downloaded archive at ``<root>/<basename>`` when its
-    checksum matches, so interrupted runs never re-pull 69MB.
+    供應鏈保證：所有來源必須有 SHA-256（見 resolve_source）；解壓進臨時
+    目錄，成員/樹審查 + 結構校驗通過後才原子切換到 books/；全程寫
+    provenance.json（url/哈希/體積/文件數/校驗清單/時間）。
     """
-    url = url or config.LIBRARY_URL
+    url, pinned = resolve_source(url, sha256)
     root = library_root(root)
     if is_available(root) and not force:
         if verbose:
@@ -145,24 +224,54 @@ def fetch(url: Optional[str] = None, root: Optional[Path] = None,
     root.mkdir(parents=True, exist_ok=True)
     archive = root / url.rsplit("/", 1)[-1]
 
-    pinned = config.LIBRARY_SHA256 if url == config.LIBRARY_URL else ""
-    if archive.exists() and pinned and _sha256_file(archive) != pinned:
+    if archive.exists() and _sha256_file(archive) != pinned:
         archive.unlink()
     if not archive.exists():
         if verbose:
             print(f"下載 {url} …", file=sys.stderr)
         _download(url, archive, verbose=verbose)
     digest = _sha256_file(archive)
-    if pinned and digest != pinned:
-        raise RuntimeError(f"sha256 校驗失敗：{digest} ≠ {pinned}（{archive}）")
+    if digest != pinned:
+        raise SupplyChainError(f"sha256 校驗失敗：{digest} ≠ {pinned}（{archive}）")
 
+    # 臨時目錄解壓 → 審查 → 原子切換（books/ 不會出現半解壓狀態）
+    staging = root / (BOOKS_SUBDIR + ".extracting")
+    if staging.exists():
+        shutil.rmtree(staging)
+    staging.mkdir(parents=True)
+    if verbose:
+        print("解壓中（臨時目錄+審查後原子切換）…", file=sys.stderr)
+    try:
+        extractor = _extract_7z(archive, staging)
+        stats = validate_extracted_tree(staging)
+        if stats["extracted_bytes"] > archive.stat().st_size * MAX_COMPRESSION_RATIO:
+            raise SupplyChainError(
+                f"壓縮比異常：展開 {stats['extracted_bytes']} / 壓縮 "
+                f"{archive.stat().st_size} 超過 {MAX_COMPRESSION_RATIO}×")
+        n_dirs = sum(1 for p in staging.iterdir() if p.is_dir())
+        if n_dirs < MIN_BOOK_DIRS:
+            raise SupplyChainError(
+                f"結構校驗失敗：僅 {n_dirs} 個書目目錄（<{MIN_BOOK_DIRS}），"
+                "不似合法全庫，已拒絕切換")
+    except BaseException:
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
     target = books_dir(root)
     if target.exists():
         shutil.rmtree(target)
-    target.mkdir(parents=True)
-    if verbose:
-        print("解壓中…", file=sys.stderr)
-    extractor = _extract_7z(archive, target)
+    staging.replace(target)
+
+    import time as _time
+    (root / "provenance.json").write_text(json.dumps({
+        "source_url": url, "archive_sha256": digest,
+        "archive_bytes": archive.stat().st_size, **stats,
+        "extractor": extractor,
+        "fetched_at": _time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "validations": ["sha256_pinned", "member_names_or_tree",
+                        "no_symlink_no_device", "size_and_count_caps",
+                        f"compression_ratio<= {MAX_COMPRESSION_RATIO}",
+                        "structure_min_dirs", "atomic_switch"],
+    }, ensure_ascii=False, indent=1), encoding="utf-8")
 
     if verbose:
         print("建編目與字符索引…", file=sys.stderr)

@@ -16,7 +16,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "D",
+   "layer": "P",
    "category": "jingui"
   },
   {
@@ -27,7 +27,7 @@
    "dynasty": "日本",
    "dynasty_order": 55,
    "dynasty_overridden": true,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -38,7 +38,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -49,7 +49,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -71,7 +71,7 @@
    "dynasty": "明",
    "dynasty_order": 40,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -82,7 +82,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -93,7 +93,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -104,7 +104,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -115,7 +115,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -126,7 +126,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -137,7 +137,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": true,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -159,7 +159,7 @@
    "dynasty": "明",
    "dynasty_order": 40,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -170,7 +170,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -181,7 +181,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -192,7 +192,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -203,7 +203,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -214,7 +214,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -225,7 +225,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -236,7 +236,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -258,7 +258,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -269,7 +269,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -280,7 +280,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -291,7 +291,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -302,7 +302,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -313,7 +313,7 @@
    "dynasty": "宋",
    "dynasty_order": 20,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -324,7 +324,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -335,7 +335,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -346,7 +346,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -357,7 +357,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -412,7 +412,7 @@
    "dynasty": "明",
    "dynasty_order": 40,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -434,7 +434,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -445,7 +445,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -467,7 +467,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -489,7 +489,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -511,7 +511,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -522,7 +522,7 @@
    "dynasty": "民國",
    "dynasty_order": 60,
    "dynasty_overridden": true,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -533,7 +533,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -544,7 +544,7 @@
    "dynasty": "清",
    "dynasty_order": 50,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -566,7 +566,7 @@
    "dynasty": "元",
    "dynasty_order": 30,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -588,7 +588,7 @@
    "dynasty": "元",
    "dynasty_order": 30,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -599,7 +599,7 @@
    "dynasty": "金",
    "dynasty_order": 25,
    "dynasty_overridden": false,
-   "layer": "C",
+   "layer": "P",
    "category": "shanghan"
   },
   {
@@ -621,7 +621,7 @@
    "dynasty": "民國",
    "dynasty_order": 60,
    "dynasty_overridden": true,
-   "layer": "D",
+   "layer": "P",
    "category": "shanghan_jingui_combined"
   },
   {
@@ -632,7 +632,7 @@
    "dynasty": "民國",
    "dynasty_order": 60,
    "dynasty_overridden": true,
-   "layer": "D",
+   "layer": "P",
    "category": "yian_cases"
   }
  ],

@@ -10,7 +10,7 @@
 | Python | 3.11.15（倉庫最低要求 ≥ 3.9） |
 | 操作系統 | Linux 6.18（x86_64 容器） |
 | 第三方依賴 | 無（純標準庫；`litellm`/`py7zr` 均為可選） |
-| 測試總數 | 327 項 / 22 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
+| 測試總數 | 342 項 / 23 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
 | 全量耗時 | `python3 -m unittest discover -s tests`：**約 20–40 秒**（見下） |
 | 網絡需求 | **零**（默認全部離線） |
 | 7z 需求 | **零**（僅 `library fetch` 可選功能需要 `py7zr` 或系統 p7zip） |
@@ -64,6 +64,7 @@
 | 溯源層 | test_trace | 七模式引文識別/自檢基準/計量網絡/五類鏈/全庫掃描夾具/字節級重建 |
 | 服務端 | test_server | HTTP API + 鑒權 + 限額 |
 | 治理探針 | test_governance, test_harness | 鏡像九輪動態探針：發布閘門 fail-closed/blocked 不可批准、批量調用不破預算、solve 進台賬、角色自提權拒絕、session 隔離、readyz 假健康、契約超時/版本化緩存鍵、planner 圖編譯、研究覆蓋狀態 |
+| 來源治理 | test_provenance | 十輪：work_type 分類（未登記書目 fail-closed 到 P，證據層不由目錄名決定）、全庫供應鏈（URL allowlist/強制哈希/路徑穿越/symlink/壓縮比）、EvidenceRecord 逐證據來源對象、方證論證結構（反證條文/隱含假設/不可裁決） |
 | 文檔同步 | test_notebook | Colab 守衛（nbformat/可編譯/API 存在/溯源節在冊） |
 | 全庫 | test_library | 編目/索引/檢索（合成夾具，不下載） |
 

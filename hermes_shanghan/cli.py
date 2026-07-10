@@ -144,7 +144,8 @@ def cmd_library(args):
     from .corpus import library
     act = args.action
     if act == "fetch":
-        library.fetch(url=args.url or None, force=args.force)
+        library.fetch(url=args.url or None, force=args.force,
+                      sha256=getattr(args, "sha256", "") or "")
         print(json.dumps(library.status(), ensure_ascii=False, indent=1))
         return
     if act == "status":
@@ -775,7 +776,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("--category", default="", help="按分類過濾，如 醫案/本草/溫病")
     sp.add_argument("--section", default="", help="read：只讀某一章節")
     sp.add_argument("--limit", type=int, default=12)
-    sp.add_argument("--url", default="", help="fetch：覆蓋默認庫源 URL")
+    sp.add_argument("--url", default="",
+                    help="fetch：覆蓋默認庫源 URL（須 HERMES_LIBRARY_ALLOW_CUSTOM=1"
+                         " 並提供 --sha256，fail-closed）")
+    sp.add_argument("--sha256", default="",
+                    help="fetch：自定義庫源的 SHA-256（64 位十六進制，必填）")
     sp.add_argument("--force", action="store_true", help="fetch：強制重建")
     sp.set_defaults(func=cmd_library)
 
@@ -793,9 +798,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     sp.add_argument("--type", "-t", default="text",
                     choices=["clause", "formula", "claim", "school",
                              "commentator", "text", "quote", "term",
-                             "dispute", "compare"],
+                             "dispute", "compare", "argument"],
                     help="溯源對象類型（默認 text：任意文本回源；"
-                         "quote：誤引檢測；term：術語譜系；dispute：注家爭議結構化；compare：學派/注家比較（A vs B））")
+                         "quote：誤引檢測；term：術語譜系；dispute：注家爭議結構化；"
+                         "compare：學派/注家比較（A vs B）；"
+                         "argument：方證論證結構（支持/反證/異文分叉/注家共同與"
+                         "爭議/隱含假設/不可裁決，七段分層））")
     sp.set_defaults(func=cmd_trace)
 
     sp = sub.add_parser("trace-build", help="重建溯源層資產（引文邊/計量網絡/學派/觀點）")

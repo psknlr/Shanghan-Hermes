@@ -81,7 +81,10 @@ def discover_books(corpus_root: Path) -> List[Dict]:
             except Exception:
                 meta = {}
         files = sorted(p.name for p in book_dir.glob("*.txt"))
-        layer = config.LAYER_OF_BOOK.get(decoded, "C" if category == "shanghan" else "D")
+        # 證據層不由目錄名默認決定（十輪 六.2）：未註冊書目 fail-closed
+        # 到 P（旁證），推斷類型僅供編目，layer_basis 記錄依據
+        from .worktype import classify
+        work_type, layer, basis, inferred = classify(decoded, category, meta)
         try:
             rel_path = str(book_dir.relative_to(config.REPO_ROOT))
         except ValueError:
@@ -94,8 +97,16 @@ def discover_books(corpus_root: Path) -> List[Dict]:
             "dynasty": meta.get("朝代", ""),
             "year": meta.get("年份", ""),
             "edition": meta.get("版本", ""),
-            "quality": meta.get("品質", ""),
+            # 品質字段語義如實標注：笈成「品質」=校對程度（0%=已錄入未
+            # 校對），不是文本質量評分；缺失記 None（unmeasured ≠ 0）
+            "quality": meta.get("品質", "") or None,
+            "quality_note": ("來源標注的校對程度（0%=未校對，非質量評分）"
+                             if meta.get("品質") else
+                             "來源未提供品質元數據（unmeasured，非 0 分）"),
+            "work_type": work_type,
+            "work_type_inferred": inferred,
             "hermes_layer": layer,
+            "layer_basis": basis,
             "layer_label": config.LAYER_LABEL.get(layer, ""),
             "files": files,
             "file_sha256": {f: file_sha256(book_dir / f) for f in files},

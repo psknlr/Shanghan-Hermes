@@ -875,7 +875,11 @@ class ToolRegistry:
     def _t_search(self, query, top_k=6, six_channel=None, formula=None, expand=False):
         hits = self.clause_rag.search(query, top_k=top_k, six_channel=six_channel,
                                       formula=formula, expand_relations=expand)
-        return {"tool": "shanghan_search", "query": query, "hits": hits}
+        from ..trace.evidence import records_for_hits
+        return {"tool": "shanghan_search", "query": query, "hits": hits,
+                # 逐證據來源對象（十輪 六.1）：命中帶檢索上下文的溯源記錄
+                "evidence_records": records_for_hits(
+                    hits, self.art.clause_store(), query)}
 
     def _t_get_clause(self, ref):
         c = self.clause_rag.get_clause(ref)
@@ -883,12 +887,14 @@ class ToolRegistry:
             return {"tool": "shanghan_get_clause", "error": f"未找到條文 {ref}"}
         rules = [r for r in read_jsonl(config.RULES_INITIAL_DIR / "initial_rules.jsonl")
                  if r["clause_id"] == c.clause_id]
+        from ..trace.evidence import evidence_record
         return {"tool": "shanghan_get_clause",
                 "clause": {"clause_id": c.clause_id, "clause_number": c.clause_number,
                            "chapter": c.chapter, "six_channel": c.six_channel,
                            "clean_text": c.clean_text, "layer_label": "A 原文直述",
                            "symptoms": c.symptoms, "pulse": c.pulse,
                            "formulas": c.formula_names},
+                "evidence_record": evidence_record(c),
                 "initial_rules": [{"id": r["initial_rule_id"], "type": r["rule_type"],
                                    "release": r["autonomous_review"]["release_level"]}
                                   for r in rules],
