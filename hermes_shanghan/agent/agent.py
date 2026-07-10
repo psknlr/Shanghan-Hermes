@@ -232,6 +232,21 @@ class ShanghanAgent:
                                                 for tc in res.tool_calls]}
                 messages.append(assistant_msg)
                 for tc in res.tool_calls:
+                    # 預算逐個檢查：模型單輪返回的批量 tool_calls 不能突破
+                    # 預算（九輪 P0-3）。超限的調用不執行，回 BUDGET_EXHAUSTED
+                    # 信封（協議仍要求每個 tool_call_id 有響應）。
+                    if len(tool_results) >= self.max_tool_calls:
+                        trace.add("tool_budget_denied", tool=tc.name,
+                                  used=len(tool_results),
+                                  budget=self.max_tool_calls)
+                        messages.append({
+                            "role": "tool", "tool_call_id": tc.id,
+                            "name": tc.name,
+                            "content": json.dumps(
+                                {"error": "BUDGET_EXHAUSTED：本問題工具預算"
+                                          "已用盡，該調用未執行；請基於已"
+                                          "取證作答"}, ensure_ascii=False)})
+                        continue
                     result = registry.call(tc.name, tc.arguments)
                     tool_results.append({"tool": tc.name, "arguments": tc.arguments,
                                          "result": result})

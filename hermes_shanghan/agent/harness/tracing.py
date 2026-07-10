@@ -9,12 +9,24 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import time
 import uuid
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from ... import config
 from ..citation_guard import RE_CLAUSE_ID
+
+RE_ABS_PATH = re.compile(r"(/[\w.\-]+){3,}")
+
+
+def sanitize_error(exc: BaseException) -> str:
+    """異常入軌跡前脫敏：截斷 + 去絕對路徑（軌跡可能被導出/共享，
+    不應洩露文件系統佈局或用戶輸入全文）。"""
+    msg = str(exc).replace(str(config.REPO_ROOT), "<repo>")
+    msg = RE_ABS_PATH.sub("<path>", msg)
+    return f"{type(exc).__name__}: {msg[:200]}"
 
 
 def _digest(obj: Any) -> str:
@@ -75,7 +87,7 @@ class Span:
             pass
 
     def set_error(self, exc: BaseException) -> None:
-        self._error = f"{type(exc).__name__}: {exc}"
+        self._error = sanitize_error(exc)
 
     def __enter__(self) -> "Span":
         self._t0 = time.time()
@@ -106,14 +118,18 @@ class Span:
 
 
 class TracedRegistry:
-    """工具註冊表的 tracing 代理：每次 call 產生一個 tool span。"""
+    """工具註冊表的 tracing + 預算代理：每次 call 產生一個 tool span，
+    並在執行前向 RunBudget **原子扣減**——這是 Harness 級統一預算的執行點
+    （九輪 P0-3：子 agent 自己維護的預算可被批量調用突破，控制器兜底）。
+    budget 跨 for_role 副本共享。"""
 
     def __init__(self, base, store: TraceStore, parent_span_id: Optional[str],
-                 state=None):
+                 state=None, budget=None):
         self._base = base
         self._store = store
         self._parent = parent_span_id
         self._state = state
+        self._budget = budget
 
     def names(self):
         return self._base.names()
@@ -123,7 +139,7 @@ class TracedRegistry:
 
     def for_role(self, role):
         return TracedRegistry(self._base.for_role(role), self._store,
-                              self._parent, self._state)
+                              self._parent, self._state, self._budget)
 
     @property
     def art(self):
@@ -137,13 +153,33 @@ class TracedRegistry:
     def clause_rag(self):
         return self._base.clause_rag
 
+    def resolve_formula(self, formula):
+        return self._base.resolve_formula(formula)
+
     def call(self, name, arguments):
         with self._store.span("tool", name, self._parent) as sp:
             sp.set_input(arguments)
+            if self._budget is not None and \
+                    not self._budget.reserve_tool_call(name):
+                out = {"error": "BUDGET_EXHAUSTED：本次運行工具預算已用盡，"
+                                "剩餘調用一律拒絕執行（達到預算即停，"
+                                "請基於已取證作答）",
+                       "budget": self._budget.snapshot()}
+                sp.metadata["budget_denied"] = True
+                sp.set_output(out)
+                if self._state is not None:
+                    self._state.tool_calls.append(
+                        {"tool": name, "span_id": sp.span_id,
+                         "args_hash": sp._input_hash,
+                         "error": out["error"], "budget_denied": True})
+                return out
             out = self._base.call(name, arguments or {})
             sp.set_output(out)
-            if isinstance(out, dict) and out.get("error"):
-                sp.metadata["tool_error"] = out["error"]
+            if isinstance(out, dict):
+                if out.get("error"):
+                    sp.metadata["tool_error"] = out["error"][:200]
+                if out.get("cache_hit"):
+                    sp.metadata["cache_hit"] = True
             if self._state is not None:
                 self._state.tool_calls.append(
                     {"tool": name, "span_id": sp.span_id,

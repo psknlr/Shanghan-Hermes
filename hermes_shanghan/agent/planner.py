@@ -155,44 +155,96 @@ class Planner:
 
     # ------------------------------------------------------------------
     def _plan_llm(self, question: str) -> Optional[Dict]:
+        """LLM 任務圖規劃：輸出必須通過 compile_plan 圖編譯（唯一 ID/依賴
+        存在/無環/類型合法）。編譯失敗先回饋錯誤讓模型修復一次；仍失敗則
+        返回 None——**fail-closed 回退到確定性 local 規劃器**，絕不靜默
+        刪依賴或帶環強行執行（九輪 P1：規劃錯誤不得偽裝成成功執行）。"""
         catalog = "\n".join(f"- {k}：{v['desc']}"
                             for k, v in self.task_types.items())
-        try:
-            plan = self.client.json_complete(
-                EVIDENCE_CONTRACT + "\n\n任務：把複合問題規劃為任務圖（1-6 個"
-                "子任務）。對比類問題應先逐對象取證、再加一個 depends_on 全部"
-                "取證任務的對比任務。嚴格輸出 JSON：{\"goal\":\"…\","
-                "\"subtasks\":[{\"id\":\"T1\",\"kind\":\"…\",\"question\":\"…\","
-                "\"depends_on\":[]}],\"success_criteria\":[\"…\"]}",
-                f"複合問題：{question}\n可用任務類型：\n{catalog}",
-                task="synthesize")
-        except Exception:
-            return None
+        prompt = (EVIDENCE_CONTRACT + "\n\n任務：把複合問題規劃為任務圖（1-6 個"
+                  "子任務）。對比類問題應先逐對象取證、再加一個 depends_on 全部"
+                  "取證任務的對比任務。嚴格輸出 JSON：{\"goal\":\"…\","
+                  "\"subtasks\":[{\"id\":\"T1\",\"kind\":\"…\",\"question\":\"…\","
+                  "\"depends_on\":[]}],\"success_criteria\":[\"…\"]}")
+        user = f"複合問題：{question}\n可用任務類型：\n{catalog}"
+        for attempt in range(2):
+            try:
+                plan = self.client.json_complete(prompt, user, task="synthesize")
+            except Exception:
+                return None
+            candidate = self._normalize_llm_plan(question, plan)
+            errors = compile_plan(candidate, self.task_types,
+                                  self.max_subtasks)
+            if not errors:
+                return candidate
+            if attempt == 0:
+                user += ("\n\n上一版任務圖未通過編譯，請修復後重新輸出完整 "
+                         "JSON。錯誤：" + "；".join(errors))
+        return None
+
+    def _normalize_llm_plan(self, question: str, plan: Dict) -> Dict:
         subtasks = []
-        ids = set()
         for i, t in enumerate(plan.get("subtasks", []), 1):
-            if t.get("kind") not in self.task_types or not t.get("question"):
-                continue
-            tid = str(t.get("id") or f"T{i}")
             subtasks.append({
-                "id": tid, "kind": t["kind"], "question": t["question"],
-                "required_tools": self._tools_for(t["kind"]),
-                "depends_on": [d for d in (t.get("depends_on") or [])]})
-            ids.add(tid)
-        # drop dangling dependencies so the executor cannot deadlock
-        for t in subtasks:
-            t["depends_on"] = [d for d in t["depends_on"] if d in ids]
-        if not subtasks:
-            return None
+                "id": str(t.get("id") or f"T{i}"),
+                "kind": t.get("kind", ""),
+                "question": t.get("question", ""),
+                "required_tools": self._tools_for(t.get("kind", "")),
+                "depends_on": [str(d) for d in (t.get("depends_on") or [])]})
         criteria = [str(c) for c in (plan.get("success_criteria") or [])]
         return {"goal": plan.get("goal", question), "planner": "llm_task_graph",
-                "subtasks": subtasks[:self.max_subtasks],
+                "subtasks": subtasks,
                 "success_criteria": criteria or list(BASE_CRITERIA)}
 
 
+def compile_plan(plan: Dict, task_types: Dict,
+                 max_subtasks: int = 6) -> List[str]:
+    """任務圖編譯器：返回錯誤清單（空=通過）。不做任何靜默修復——
+    唯一 ID / kind 合法 / 問題非空 / 依賴存在 / 無環 / 數量預算。"""
+    errors: List[str] = []
+    subtasks = plan.get("subtasks", [])
+    if not subtasks:
+        errors.append("任務圖為空")
+        return errors
+    ids = [t.get("id", "") for t in subtasks]
+    dupes = {i for i in ids if ids.count(i) > 1}
+    if dupes:
+        errors.append(f"任務 ID 重複：{'、'.join(sorted(dupes))}")
+    if len(subtasks) > max_subtasks:
+        errors.append(f"子任務 {len(subtasks)} 個超過預算 {max_subtasks}")
+    idset = set(ids)
+    for t in subtasks:
+        if task_types and t.get("kind") not in task_types:
+            errors.append(f"{t.get('id')}: 未知任務類型 {t.get('kind')!r}")
+        if not str(t.get("question", "")).strip():
+            errors.append(f"{t.get('id')}: question 為空")
+        dangling = [d for d in t.get("depends_on", []) if d not in idset]
+        if dangling:
+            errors.append(f"{t.get('id')}: 懸空依賴 {'、'.join(dangling)}")
+    # 環路檢測（Kahn）：僅對合法依賴做
+    if not errors:
+        indeg = {t["id"]: len(t.get("depends_on", [])) for t in subtasks}
+        queue = [i for i, d in indeg.items() if d == 0]
+        seen = 0
+        deps_of = {t["id"]: t.get("depends_on", []) for t in subtasks}
+        while queue:
+            n = queue.pop()
+            seen += 1
+            for t in subtasks:
+                if n in deps_of[t["id"]]:
+                    indeg[t["id"]] -= 1
+                    if indeg[t["id"]] == 0:
+                        queue.append(t["id"])
+        if seen < len(subtasks):
+            cyc = sorted(i for i, d in indeg.items() if d > 0)
+            errors.append(f"任務圖存在環路：{'、'.join(cyc)}")
+    return errors
+
+
 def execution_order(subtasks: List[Dict]) -> List[Dict]:
-    """Dependency-respecting order (stable topological sort); cycles are
-    broken by falling back to listed order for the remainder."""
+    """Dependency-respecting order (stable topological sort). 環路直接
+    拋錯——編譯器（compile_plan）應在此之前攔截；帶環強行執行會把規劃
+    錯誤偽裝成成功。"""
     done: set = set()
     ordered: List[Dict] = []
     pending = list(subtasks)
@@ -204,7 +256,7 @@ def execution_order(subtasks: List[Dict]) -> List[Dict]:
                 done.add(t["id"])
                 pending.remove(t)
                 progress = True
-        if not progress:            # cycle: execute remainder as listed
-            ordered.extend(pending)
-            break
+        if not progress:
+            raise ValueError("任務圖存在環路（規劃編譯應已攔截）："
+                             + "、".join(t["id"] for t in pending))
     return ordered

@@ -6,6 +6,7 @@ and shared; the HTTP layer is a thin adapter over this.
 """
 from __future__ import annotations
 
+import os
 from typing import Any, Dict, List, Optional
 
 from .. import config
@@ -230,14 +231,53 @@ class ServiceContext:
         return ComplexAgent(client=self.llm,
                             registry=self.registry).solve(question, role=role)
 
-    def chat(self, question: str, session_id: str = "default",
-             role: str = None) -> Dict:
+    # 會話治理（九輪 P0-6）：無 session_id 不再共用 "default"——服務端生成
+    # 獨立 id 並隨響應回傳；會話鍵含服務端主體命名空間（防 fixation/串話）；
+    # TTL + 容量上限防無界增長
+    SESSION_TTL_S = int(os.environ.get("HERMES_SESSION_TTL", "3600"))
+    SESSION_MAX = 256
+
+    def _gc_sessions(self) -> None:
+        import time
+        now = time.time()
+        stale = [k for k, v in self._sessions.items()
+                 if now - v["last"] > self.SESSION_TTL_S]
+        for k in stale:
+            self._sessions.pop(k, None)
+        while len(self._sessions) >= self.SESSION_MAX:
+            oldest = min(self._sessions, key=lambda k: self._sessions[k]["last"])
+            self._sessions.pop(oldest, None)
+
+    def chat(self, question: str, session_id: str = "",
+             role: str = None, subject: str = "anonymous") -> Dict:
+        import time
+        import uuid
         from ..agent.session import AgentSession
         if not hasattr(self, "_sessions"):
             self._sessions = {}
-        sess = self._sessions.setdefault(
-            session_id, AgentSession(client=self.llm, registry=self.registry))
-        return sess.ask(question, role=role)
+        sid = str(session_id or "").strip()
+        generated = False
+        if not sid or sid == "default":
+            sid = uuid.uuid4().hex[:16]
+            generated = True
+        key = f"{subject}:{sid}"
+        self._gc_sessions()
+        entry = self._sessions.get(key)
+        if entry is None:
+            entry = {"sess": AgentSession(client=self.llm,
+                                          registry=self.registry,
+                                          namespace=subject),
+                     "last": time.time()}
+            self._sessions[key] = entry
+        entry["last"] = time.time()
+        out = entry["sess"].ask(question, role=role)
+        out.setdefault("session", {})
+        out["session"]["session_id"] = sid
+        out["session"]["namespace"] = subject
+        if generated:
+            out["session"]["note"] = ("服務端已生成獨立 session_id；"
+                                      "續接上下文請在後續請求回傳該 id")
+        return out
 
     def deep_research(self, topic: str, rounds: int = 3) -> Dict:
         from ..agent.research_loop import DeepResearcher
@@ -256,11 +296,16 @@ class ServiceContext:
         from ..agent.multi_agent import Council
         return Council(client=self.llm, registry=self.registry).deliberate(question, role=role)
 
-    def tool_call(self, name: str, arguments: Dict, role: str = "") -> Dict:
-        # /api/tool 按角色限權（評審第 12 條）：patient 經 ScopedRegistry
-        # 硬裁剪工具面；默認 researcher（全部只讀工具）
+    def tool_call(self, name: str, arguments: Dict, role: str = "",
+                  subject: str = "") -> Dict:
+        # /api/tool 按角色限權：patient 經 ScopedRegistry 硬裁剪工具面。
+        # role 已由 http 層 Policy 按服務端身份鉗制（請求體不可提權）；
+        # subject 進入審計台賬
         reg = self.registry.for_role(role) if role else self.registry
-        return reg.call(name, arguments or {})
+        out = reg.call(name, arguments or {})
+        if subject and isinstance(out, dict):
+            out.setdefault("_audit", {})["subject"] = subject
+        return out
 
     def trace(self, query_type: str, ref: str) -> Dict:
         from ..trace.chains import trace_dispatch

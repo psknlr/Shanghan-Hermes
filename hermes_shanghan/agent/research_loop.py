@@ -53,6 +53,23 @@ MODULES = {
 DIMENSIONS = ["原文源流", "異文注家", "方證計量", "劑量計量", "客觀評測",
               "醫案例證", "引文傳播"]
 
+# 聚合統計類模塊：合法產出是數字/比例/矩陣而非條文引用（藥量比、頻次、
+# 一致度、計量網絡）——覆蓋要求是「工具成功 + 有數據」（DATA_FOUND），
+# 不強求 clause_id，也不冒充 VERIFIED
+AGGREGATE_MODULES = {"shanghan_corpus_stats", "shanghan_eval_metrics",
+                     "shanghan_divergence_atlas", "shanghan_citation_network",
+                     "shanghan_dose"}
+
+# 發現覆蓋狀態（九輪 P1：「調用過」≠「覆蓋完成」）：
+#   FAILED          工具返回錯誤——不計入覆蓋
+#   EMPTY           無錯誤但無條文證據（非聚合模塊）——不計入覆蓋
+#   DATA_FOUND      聚合模塊有數據（無條文引用要求）
+#   EVIDENCE_FOUND  有本模塊自產的已核實 clause_id
+#   VERIFIED        引用核驗全通過且有引用
+FINDING_STATUSES = ("FAILED", "EMPTY", "DATA_FOUND", "EVIDENCE_FOUND",
+                    "VERIFIED")
+_COVERING = {"DATA_FOUND", "EVIDENCE_FOUND", "VERIFIED"}
+
 # actionable follow-ups per uncovered dimension — a research gap is only
 # useful if it says HOW to close it
 GAP_SUGGESTIONS = {
@@ -123,15 +140,28 @@ class DeepResearcher:
             own = f.pop("_result_ids", None)
             rep = guard.check(f["summary"], allowed_ids=own)
             f["verified_clause_ids"] = rep.verified_ids
-            f["citation_ok"] = rep.ok
+            # citation_ok = 核驗通過 **且** 確有引用（無引用不再默認 ok）；
+            # 聚合統計類發現如實標 aggregate（引用要求不同，不冒充）
+            f["has_citation"] = rep.has_any_citation
+            f["citation_ok"] = rep.ok and rep.has_any_citation
+            f["status"] = self._finding_status(f, rep)
             all_ids += rep.verified_ids
-        coverage = {d: sum(1 for f in state["findings"] if f["dimension"] == d)
+        status_by_dim = {d: self._dimension_status(state["findings"], d)
+                         for d in DIMENSIONS}
+        # coverage 保持計數口徑（只計「真覆蓋」的發現：FAILED/EMPTY 不算）
+        coverage = {d: sum(1 for f in state["findings"]
+                           if f["dimension"] == d
+                           and f.get("status") in _COVERING)
                     for d in DIMENSIONS}
         gaps = self._gaps(state)
         return {"topic": topic, "backend": self.client.backend,
                 "research_questions": refine_questions(topic, formulas),
                 "n_rounds": len(state["rounds"]), "rounds": state["rounds"],
                 "coverage": coverage,
+                "coverage_status": status_by_dim,
+                "coverage_note": "覆蓋=工具成功且有證據（FAILED/EMPTY 不計）；"
+                                 "聚合統計模塊為 DATA_FOUND（無條文引用要求，"
+                                 "如實分層不冒充 VERIFIED）",
                 "uncovered_dimensions": gaps,
                 "gap_report": [{"dimension": d,
                                 "suggestion": GAP_SUGGESTIONS.get(d, "")}
@@ -140,8 +170,35 @@ class DeepResearcher:
                 "findings": state["findings"]}
 
     # ------------------------------------------------------------------
+    @staticmethod
+    def _finding_status(f: Dict, rep=None) -> str:
+        if f.get("error"):
+            return "FAILED"
+        if rep is not None and rep.ok and rep.has_any_citation:
+            return "VERIFIED"
+        # 循環中期 verified_clause_ids 尚未計算，用本模塊自產 id 作證據代理
+        if f.get("verified_clause_ids") or f.get("_result_ids"):
+            return "EVIDENCE_FOUND"
+        if f.get("module") in AGGREGATE_MODULES:
+            return "DATA_FOUND"
+        return "EMPTY"
+
+    @staticmethod
+    def _dimension_status(findings, dim: str) -> Dict:
+        rows = [f for f in findings if f["dimension"] == dim]
+        order = {s: i for i, s in enumerate(FINDING_STATUSES)}
+        best = max((f.get("status", "EMPTY") for f in rows),
+                   key=lambda s: order.get(s, 0), default="NOT_STARTED")
+        return {"n_findings": len(rows), "status": best}
+
     def _gaps(self, state) -> List[str]:
-        covered = {f["dimension"] for f in state["findings"]}
+        """未覆蓋維度：只有「工具成功且有證據/數據」的發現才算覆蓋——
+        工具報錯或空手而歸的維度仍是缺口（九輪 P1：調用過≠覆蓋）。"""
+        covered = set()
+        for f in state["findings"]:
+            status = f.get("status") or self._finding_status(f)
+            if status in _COVERING:
+                covered.add(f["dimension"])
         return [d for d in DIMENSIONS if d not in covered]
 
     def _plan(self, topic: str, formulas: List[str], state) -> List[Dict]:

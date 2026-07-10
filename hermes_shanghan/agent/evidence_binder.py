@@ -71,6 +71,14 @@ class EvidenceBinder:
             "ungrounded_claims": [c["claim"] for c in claims
                                   if c["support_type"] == "ungrounded"][:5],
             "round_evidence_ids": round_ids,
+            # 誠實邊界（九輪 P0-5）：本綁定器的 verifier 是詞彙重合，
+            # 只能證明「句子與條文共享術語」，**不能證明語義蘊含**——
+            # 引用合法 ≠ 結論成立。claim_grounding_rate 是詞彙級下界指標；
+            # supports/contradicts 級 entailment 需模型後端（見路線圖）。
+            "verifier": "lexical_overlap_v1",
+            "verifier_note": "詞彙重合校驗；非語義蘊含。逐句 relation 見 "
+                             "claims[].relation（supports_lexical/mentions/"
+                             "none），均為詞彙級判定。",
         }
 
     # ------------------------------------------------------------------
@@ -112,7 +120,24 @@ class EvidenceBinder:
                       "inferred": 0.5, "ungrounded": 0.2}[support]
         if posthoc:
             confidence = min(confidence, 0.65)
-        return {"claim": sent[:120], "evidence": evidence,
+        # 結構化 Claim–Evidence 記錄（九輪 P0-5 第一步）：關係與核驗狀態
+        # 顯式化且**如實標注核驗手段**——lexical 不冒充 entailment
+        import hashlib
+        relation = ("supports_lexical" if support == "direct"
+                    else "mentions" if support in ("cited_low_overlap",
+                                                   "inferred")
+                    else "none")
+        verification = ("verified_lexical" if support == "direct"
+                        else "weak_lexical" if relation == "mentions"
+                        else "unverified")
+        return {"claim": sent[:120],
+                "claim_id": hashlib.sha256(sent.encode()).hexdigest()[:10],
+                "evidence": evidence,
+                "evidence_links": [{"evidence_id": cid, "relation": relation,
+                                    "entailment_score": round(best_score, 3),
+                                    "verifier": "lexical_overlap_v1",
+                                    "verification_status": verification}
+                                   for cid in evidence],
                 "support_type": support, "evidence_layer": layer,
                 "posthoc_terms": posthoc[:3],
                 "confidence": round(confidence, 2)}

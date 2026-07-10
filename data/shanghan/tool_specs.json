@@ -1,7 +1,7 @@
 {
  "name": "hermes-shanghanlun",
  "description": "《傷寒論》自主規則挖掘與證據回源工具集（只讀、回源 clause_id）。",
- "tool_spec_version": "1.1.0",
+ "tool_spec_version": "1.2.0",
  "openai_tools": [
   {
    "type": "function",
@@ -1187,7 +1187,7 @@
  "contracts": [
   {
    "name": "shanghan_adjudicate",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1202,11 +1202,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "cabff15ab52ef947"
+   "schema_hash": "cabff15ab52ef947",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_case_search",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "旁證",
    "limitations": [],
@@ -1219,11 +1229,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "a23517cb6f507362"
+   "schema_hash": "a23517cb6f507362",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_citation_network",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1238,11 +1258,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "d2cdd596c9680e3e"
+   "schema_hash": "d2cdd596c9680e3e",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_conflict_audit",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1257,11 +1287,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "39cd777ebfdbb2d1"
+   "schema_hash": "39cd777ebfdbb2d1",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_contraindication_check",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [],
@@ -1274,11 +1314,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "157363a01059cb68"
+   "schema_hash": "157363a01059cb68",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_corpus_stats",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "D",
    "limitations": [],
@@ -1291,11 +1341,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "9e2fcd061b033258"
+   "schema_hash": "9e2fcd061b033258",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_differential",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1310,11 +1370,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "1f760b3b2e61eb15"
+   "schema_hash": "1f760b3b2e61eb15",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_divergence_atlas",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "C",
    "limitations": [],
@@ -1327,11 +1397,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "258453fab8e56d6c"
+   "schema_hash": "258453fab8e56d6c",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_dose",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "A",
    "limitations": [
@@ -1346,11 +1426,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "56e52f82ffd2a0fd"
+   "schema_hash": "56e52f82ffd2a0fd",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_dose_convert",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "A",
    "limitations": [],
@@ -1363,11 +1453,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "afb2c7c04deffe0b"
+   "schema_hash": "afb2c7c04deffe0b",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_eval_metrics",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "D",
    "limitations": [],
@@ -1380,11 +1480,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "9e2fcd061b033258"
+   "schema_hash": "9e2fcd061b033258",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_formula_explain",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "mixed",
    "limitations": [
@@ -1399,11 +1509,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "c62a46adef1ac0a6"
+   "schema_hash": "c62a46adef1ac0a6",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_formula_rule",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1418,11 +1538,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "c81aacce1c240819"
+   "schema_hash": "c81aacce1c240819",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_get_clause",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "A",
    "limitations": [],
@@ -1435,11 +1565,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "c64c8e1bb683c72e"
+   "schema_hash": "c64c8e1bb683c72e",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_herb_profile",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "A-derived",
    "limitations": [
@@ -1454,11 +1594,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "56b8fadb821ef205"
+   "schema_hash": "56b8fadb821ef205",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_hypotheses",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1473,11 +1623,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "f4962d2a1cb1fcda"
+   "schema_hash": "f4962d2a1cb1fcda",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_intake",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "D",
    "limitations": [
@@ -1492,11 +1652,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "b189c3c08017d213"
+   "schema_hash": "b189c3c08017d213",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_library",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "旁證",
    "limitations": [],
@@ -1509,11 +1679,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "47048e9f5f5472c2"
+   "schema_hash": "47048e9f5f5472c2",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_list_formulas",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "A",
    "limitations": [],
@@ -1526,11 +1706,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "9e2fcd061b033258"
+   "schema_hash": "9e2fcd061b033258",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_match_formula",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1545,11 +1735,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "448162c3a80fe849"
+   "schema_hash": "448162c3a80fe849",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_mistreatment",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [],
@@ -1562,11 +1762,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "9f1003a97937d7e8"
+   "schema_hash": "9f1003a97937d7e8",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_mistreatment_simulate",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [
@@ -1581,11 +1791,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "f59df6f9139e7c96"
+   "schema_hash": "f59df6f9139e7c96",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_relations",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "D",
    "limitations": [],
@@ -1598,11 +1818,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "b29287def05835f9"
+   "schema_hash": "b29287def05835f9",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_search",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "A",
    "limitations": [],
@@ -1615,11 +1845,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "4c239f1d883d189f"
+   "schema_hash": "4c239f1d883d189f",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_six_channel",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "D",
    "limitations": [
@@ -1634,11 +1874,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "e2a3c05c21ab844f"
+   "schema_hash": "e2a3c05c21ab844f",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_therapy",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "D",
    "limitations": [],
@@ -1651,11 +1901,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "8013db8150672e5e"
+   "schema_hash": "8013db8150672e5e",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_trace",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "doctor_researcher",
    "evidence_level": "mixed",
    "limitations": [
@@ -1670,11 +1930,21 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "9a4a77f6e42d31ad"
+   "schema_hash": "9a4a77f6e42d31ad",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   },
   {
    "name": "shanghan_variants",
-   "version": "1.1.0",
+   "version": "1.2.0",
    "permission_level": "patient_safe",
    "evidence_level": "B",
    "limitations": [],
@@ -1687,7 +1957,17 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "29a1aef1c8826a2f"
+   "schema_hash": "29a1aef1c8826a2f",
+   "enforced": {
+    "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+    "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+    "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+    "output_shape": "runtime（非 dict 輸出視為契約違例）",
+    "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+    "side_effect_read": "by-construction（工具函數無寫路徑；非運行時攔截，見 tests 只讀不變式）",
+    "idempotent": "by-construction（只讀派生，重試安全）",
+    "audit": "runtime（環形審計日誌 audit_tail()；harness 下另有 span 級軌跡）"
+   }
   }
  ],
  "invocation": {

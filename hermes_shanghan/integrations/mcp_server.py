@@ -14,6 +14,9 @@ from __future__ import annotations
 
 import json
 import sys
+import threading
+import time
+import uuid
 from typing import Any, Dict, Optional
 
 from .. import config
@@ -22,7 +25,102 @@ from ..agent.tools import get_registry
 # 版本協商：客戶端請求的版本在支持列表內則回顯，否則回退到基線
 SUPPORTED_PROTOCOL_VERSIONS = ("2025-06-18", "2025-03-26", "2024-11-05")
 PROTOCOL_VERSION = SUPPORTED_PROTOCOL_VERSIONS[-1]
-SERVER_INFO = {"name": "hermes-shanghanlun", "version": "0.2.0"}
+SERVER_INFO = {"name": "hermes-shanghanlun", "version": "0.3.0"}
+
+# ---------------------------------------------------------------------------
+# 實驗性長任務（tasks/*，對齊 MCP 2025-11-25 experimental tasks 形態）：
+# 全庫掃描/深研類長調用 submit 後立即返回 task_id，工作線程執行；
+# status/result/cancel/list 輪詢管理。誠實邊界：取消是協作式的——只讀
+# 工具無中斷點，cancel 生效於「結果丟棄不返回」；stdio 單線程請求循環
+# 不推送進度通知（progress notification 需雙向流，見 HARNESS.md 差距表）。
+# ---------------------------------------------------------------------------
+_TASKS: Dict[str, Dict] = {}
+_TASK_LOCK = threading.Lock()
+MAX_TASKS = 64
+
+
+def _tasks_submit(params: Dict) -> Dict:
+    name = params.get("name", "")
+    args = params.get("arguments") or {}
+    if name not in get_registry().names():
+        raise KeyError(f"unknown tool: {name}")
+    task_id = uuid.uuid4().hex[:16]
+    with _TASK_LOCK:
+        if len(_TASKS) >= MAX_TASKS:      # 只回收已終態的舊任務
+            for k in [k for k, v in _TASKS.items()
+                      if v["status"] in ("completed", "failed", "cancelled")]:
+                _TASKS.pop(k)
+                if len(_TASKS) < MAX_TASKS:
+                    break
+        _TASKS[task_id] = {"task_id": task_id, "tool": name,
+                           "status": "running", "started_at": time.time(),
+                           "cancelled": False, "result": None, "error": None}
+
+    def _work():
+        try:
+            out = get_registry().call(name, args)
+        except Exception as exc:
+            out, err = None, f"{type(exc).__name__}: {exc}"
+        else:
+            err = out.get("error") if isinstance(out, dict) else None
+        with _TASK_LOCK:
+            t = _TASKS.get(task_id)
+            if t is None:
+                return
+            if t["cancelled"]:
+                t["status"] = "cancelled"     # 結果丟棄
+            elif err:
+                t["status"] = "failed"
+                t["error"] = err
+            else:
+                t["status"] = "completed"
+                t["result"] = out
+
+    threading.Thread(target=_work, daemon=True).start()
+    return {"task_id": task_id, "status": "running", "tool": name}
+
+
+def _task_view(t: Dict) -> Dict:
+    return {"task_id": t["task_id"], "tool": t["tool"], "status": t["status"],
+            "elapsed_ms": int((time.time() - t["started_at"]) * 1000),
+            "error": t["error"]}
+
+
+def _tasks_status(params: Dict) -> Dict:
+    with _TASK_LOCK:
+        t = _TASKS.get(params.get("task_id", ""))
+        if t is None:
+            raise KeyError(f"unknown task: {params.get('task_id')}")
+        return _task_view(t)
+
+
+def _tasks_result(params: Dict) -> Dict:
+    with _TASK_LOCK:
+        t = _TASKS.get(params.get("task_id", ""))
+        if t is None:
+            raise KeyError(f"unknown task: {params.get('task_id')}")
+        if t["status"] != "completed":
+            raise KeyError(f"task not finished: status={t['status']}")
+        return _content(t["result"])
+
+
+def _tasks_cancel(params: Dict) -> Dict:
+    with _TASK_LOCK:
+        t = _TASKS.get(params.get("task_id", ""))
+        if t is None:
+            raise KeyError(f"unknown task: {params.get('task_id')}")
+        if t["status"] == "running":
+            t["cancelled"] = True
+            note = "協作式取消：工具無中斷點，完成後結果丟棄"
+        else:
+            note = f"任務已終態 {t['status']}，取消無效果"
+        return {"task_id": t["task_id"], "cancelled": t["cancelled"],
+                "note": note}
+
+
+def _tasks_list() -> Dict:
+    with _TASK_LOCK:
+        return {"tasks": [_task_view(t) for t in _TASKS.values()]}
 
 # ---------------------------------------------------------------------------
 # Resources：把核心資產暴露為 URI（MCP resources/list + resources/read）
@@ -169,7 +267,9 @@ def handle(request: Dict) -> Optional[Dict]:
         return _result(id_, {"protocolVersion": version,
                              "capabilities": {"tools": {"listChanged": False},
                                               "resources": {"listChanged": False},
-                                              "prompts": {"listChanged": False}},
+                                              "prompts": {"listChanged": False},
+                                              "experimental": {"tasks": {
+                                                  "cancel": "cooperative"}}},
                              "serverInfo": SERVER_INFO})
     if method in ("notifications/initialized", "initialized"):
         return None  # notification, no response
@@ -190,6 +290,16 @@ def handle(request: Dict) -> Optional[Dict]:
         try:
             return _result(id_, _prompts_get(params.get("name", ""),
                                              params.get("arguments") or {}))
+        except KeyError as exc:
+            return _error(id_, -32602, str(exc))
+    if method in ("tasks/submit", "tasks/status", "tasks/result",
+                  "tasks/cancel", "tasks/list"):
+        try:
+            fn = {"tasks/submit": _tasks_submit, "tasks/status": _tasks_status,
+                  "tasks/result": _tasks_result, "tasks/cancel": _tasks_cancel,
+                  }.get(method)
+            out = _tasks_list() if method == "tasks/list" else fn(params)
+            return _result(id_, out)
         except KeyError as exc:
             return _error(id_, -32602, str(exc))
     if method == "tools/call":

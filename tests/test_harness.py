@@ -20,7 +20,9 @@ class TestHarnessRun(unittest.TestCase):
         _ensure_artifacts()
         from hermes_shanghan.agent.harness import HarnessRunner
         cls.runner = HarnessRunner()
-        cls.st = cls.runner.start("桂枝湯與麻黃湯如何鑒別？",
+        # 症狀選方問題：local 路由到 shanghan_match_formula → 多假設層
+        # 附着 → **結構化**候選方信號觸發人工審核（不再靠「湯」字關鍵詞）
+        cls.st = cls.runner.start("惡寒發熱，汗出，脈浮緩，應當用什麼方？",
                                   mode="agent", role="doctor")
         cls.run_id = cls.st.spec.run_id
 
@@ -37,22 +39,34 @@ class TestHarnessRun(unittest.TestCase):
         d = json.loads(state_file.read_text(encoding="utf-8"))
         self.assertEqual(d["spec"]["evidence_policy"], "strict_round")
         self.assertTrue(d["spec"]["corpus_version"])   # 語料版本指紋在案
+        self.assertTrue(d["spec"]["python_version"])   # 環境指紋（replay 前提）
+        self.assertTrue(d["trace_id"])                 # trace 跨 resume 延續
 
     def test_doctor_formula_triggers_human_review(self):
-        # 評審第 8 條：醫師端候選方 → 人工審核節點 → paused
+        # 評審第 8 條：醫師端候選方（結構化信號）→ 人工審核 → paused
         self.assertEqual(self.st.status, "paused")
         self.assertIn("doctor_formula_candidates", self.st.pending_review)
-        self.assertEqual(self.st.release["decision"], "needs_human_review")
+        self.assertEqual(self.st.release["decision"], "review_required")
+        # ApprovalRequest 結構化在案（審什麼、證據指紋、時間）
+        req = next(a for a in self.st.approval_requests
+                   if a["trigger"] == "doctor_formula_candidates")
+        for key in ("approval_id", "run_id", "action_digest",
+                    "evidence_digest", "requested_at", "status"):
+            self.assertIn(key, req)
+        self.assertEqual(req["status"], "pending")
 
     def test_resume_with_approval_completes(self):
         from hermes_shanghan.agent.harness import HarnessRunner
         st2 = HarnessRunner().resume(self.run_id, approve=True,
                                      approver="unit-test")
         self.assertEqual(st2.status, "completed")
-        self.assertEqual(st2.release["decision"], "released_after_human_review")
+        # 批准≠改狀態：evidence_audit/release_gate 帶 approved 集合重新執行
+        self.assertEqual(st2.release["decision"], "pass_after_human_review")
         approvals = [e for e in st2.guardrail_events
                      if e["event"] == "human_review_approved"]
         self.assertEqual(approvals[0]["approver"], "unit-test")  # 審批人在案
+        self.assertTrue(all(a["status"] == "approved"
+                            for a in st2.approval_requests))
 
     def test_spans_schema_and_tool_span(self):
         from hermes_shanghan.agent.harness.tracing import TraceStore
@@ -71,13 +85,17 @@ class TestHarnessRun(unittest.TestCase):
 
     def test_evidence_ledger_and_tool_calls_recorded(self):
         self.assertTrue(self.st.evidence_ledger.get("execute"))
-        self.assertIn("shanghan_differential",
+        self.assertIn("shanghan_match_formula",
                       [t["tool"] for t in self.st.tool_calls])
+        self.assertTrue(self.st.budget_snapshot)   # 預算快照在案
 
     def test_replay_deterministic_local(self):
         from hermes_shanghan.agent.harness import HarnessRunner
         out = HarnessRunner().replay(self.run_id)
         self.assertTrue(out["deterministic_match"])
+        # 環境指紋對比：同倉庫同語料同後端 → comparable
+        self.assertEqual(out["fingerprint_mismatches"], {})
+        self.assertIn("comparable", out)
 
     def test_export_md_and_json(self):
         from hermes_shanghan.agent.harness.runner import export_run
@@ -111,9 +129,15 @@ class TestToolContracts(unittest.TestCase):
         for c in cs:
             for key in ("version", "permission_level", "evidence_level",
                         "side_effect", "timeout_s", "cacheable", "idempotent",
-                        "max_result_bytes", "schema_hash", "error_schema"):
+                        "max_result_bytes", "schema_hash", "error_schema",
+                        "enforced"):
                 self.assertIn(key, c)
             self.assertEqual(c["side_effect"], "read")   # 只讀不變式
+            # 契約條款必須聲明執行方式（runtime / by-construction），
+            # 不得只是願望清單（九輪 P0-8）
+            for clause in ("timeout_s", "max_result_bytes", "args_schema",
+                           "cacheable", "side_effect_read"):
+                self.assertIn(clause, c["enforced"])
         intake = next(c for c in cs if c["name"] == "shanghan_intake")
         self.assertEqual(intake["permission_level"], "patient_safe")
 
@@ -164,6 +188,30 @@ class TestMCPExtensions(unittest.TestCase):
                                        "arguments": {"quote": "營衛不和"}})
         msg = g["result"]["messages"][0]["content"]["text"]
         self.assertIn("營衛不和", msg)
+
+    def test_tasks_submit_status_result_cancel(self):
+        # 實驗性長任務：submit → running/completed → result；cancel 協作式
+        import time
+        r = self._call("initialize", {"protocolVersion": "2025-06-18"})
+        self.assertIn("tasks", r["result"]["capabilities"]["experimental"])
+        sub = self._call("tasks/submit", {"name": "shanghan_search",
+                                          "arguments": {"query": "桂枝湯"}})
+        tid = sub["result"]["task_id"]
+        for _ in range(100):
+            st = self._call("tasks/status", {"task_id": tid})["result"]
+            if st["status"] != "running":
+                break
+            time.sleep(0.05)
+        self.assertEqual(st["status"], "completed")
+        res = self._call("tasks/result", {"task_id": tid})["result"]
+        self.assertIn("content", res)
+        lst = self._call("tasks/list")["result"]
+        self.assertIn(tid, [t["task_id"] for t in lst["tasks"]])
+        # 已終態任務 cancel 無效果（如實返回）
+        c = self._call("tasks/cancel", {"task_id": tid})["result"]
+        self.assertFalse(c["cancelled"])
+        err = self._call("tasks/status", {"task_id": "nope"})
+        self.assertIn("error", err)
 
 
 class TestTrajectoryEval(unittest.TestCase):

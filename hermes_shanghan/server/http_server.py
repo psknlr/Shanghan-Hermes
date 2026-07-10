@@ -2,9 +2,15 @@
 
 No third-party dependencies. Serves a single-page app from ./static and a
 JSON API backed by ServiceContext. Concurrency via ThreadingHTTPServer.
+
+治理（九輪）：所有 /api/* 請求先解析服務端 Principal（policy.py），角色
+上限由身份綁定（HERMES_API_KEYS）而非請求體聲明；每條路由帶最低角色，
+臨床類端點（match/differential/formula/mistreatment/deep-research…）與
+/api/tool 走同一策略層。/livez 與 /readyz 分離（假健康防護）。
 """
 from __future__ import annotations
 
+import inspect
 import json
 import mimetypes
 import os
@@ -16,6 +22,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Tuple
 from urllib.parse import parse_qs, urlparse
 
+from . import policy
 from .service import ServiceContext, get_service
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -27,6 +34,11 @@ _RATE_BUCKET: dict = {}
 # optional bearer-token auth for non-localhost deployments:
 #   HERMES_SERVER_TOKEN=... python3 -m hermes_shanghan serve --host 0.0.0.0
 AUTH_TOKEN = os.environ.get("HERMES_SERVER_TOKEN", "")
+# role-bound API keys（token:role[:subject] 逗號分隔）——配置後角色上限由
+# 服務端身份決定，請求體 role 只能降級不可提權
+API_KEYS = policy.parse_api_keys(os.environ.get("HERMES_API_KEYS", ""))
+# 免鑒權探針路徑（負載均衡/監控需要）
+OPEN_PATHS = ("/api/health", "/livez", "/readyz")
 
 
 def _json_body(handler: BaseHTTPRequestHandler) -> Dict:
@@ -37,20 +49,22 @@ def _json_body(handler: BaseHTTPRequestHandler) -> Dict:
         raise ValueError("body_too_large")
     raw = handler.rfile.read(length)
     try:
-        return json.loads(raw.decode("utf-8"))
+        out = json.loads(raw.decode("utf-8"))
+        return out if isinstance(out, dict) else {}
     except Exception:
         return {}
 
 
-# route table: (method, regex) -> handler(service, body, match, query) -> dict
+# route table: (method, regex, handler, min_role, wants_principal)
 ROUTES: list = []
 
 
-def route(method: str, pattern: str):
+def route(method: str, pattern: str, min_role: str = "patient"):
     rx = re.compile(f"^{pattern}$")
 
     def deco(fn):
-        ROUTES.append((method, rx, fn))
+        wants = "principal" in inspect.signature(fn).parameters
+        ROUTES.append((method, rx, fn, min_role, wants))
         return fn
     return deco
 
@@ -103,38 +117,38 @@ def _explain(svc, body, m, q):
     return svc.explain_clause(body.get("ref"), role=body.get("role", "student"))
 
 
-@route("POST", r"/api/match")
+@route("POST", r"/api/match", min_role="student")
 def _match(svc, body, m, q):
     return svc.match(body.get("symptoms", []), pulse=body.get("pulse", []),
                      six_channel=body.get("six_channel"), top_k=int(body.get("top_k", 5)))
 
 
-@route("POST", r"/api/differential")
+@route("POST", r"/api/differential", min_role="student")
 def _diff(svc, body, m, q):
     return svc.differential(body.get("formulas", []))
 
 
-@route("POST", r"/api/teach")
+@route("POST", r"/api/teach", min_role="student")
 def _teach(svc, body, m, q):
     return svc.teach(body.get("channel", "太陽病"))
 
 
-@route("POST", r"/api/mistreatment")
+@route("POST", r"/api/mistreatment", min_role="student")
 def _mistreat(svc, body, m, q):
     return svc.mistreatment(body.get("query"))
 
 
-@route("POST", r"/api/formula")
+@route("POST", r"/api/formula", min_role="student")
 def _formula(svc, body, m, q):
     return svc.formula_rule(body.get("formula", ""))
 
 
-@route("POST", r"/api/research")
+@route("POST", r"/api/research", min_role="researcher")
 def _research(svc, body, m, q):
     return svc.research(body.get("topic", ""), outputs=body.get("outputs"))
 
 
-@route("POST", r"/api/paper")
+@route("POST", r"/api/paper", min_role="researcher")
 def _paper(svc, body, m, q):
     return svc.paper(body.get("type", "formula_pattern"), topic=body.get("topic", ""),
                      use_llm=body.get("use_llm", True))
@@ -146,13 +160,16 @@ def _complex(svc, body, m, q):
 
 
 @route("POST", r"/api/chat")
-def _chat(svc, body, m, q):
+def _chat(svc, body, m, q, principal=None):
+    # session 以服務端主體命名空間隔離（防 fixation/串話）；未帶 session_id
+    # 時服務端生成並隨響應回傳
     return svc.chat(body.get("question", ""),
-                    session_id=str(body.get("session_id", "default")),
-                    role=body.get("role"))
+                    session_id=str(body.get("session_id", "") or ""),
+                    role=body.get("role"),
+                    subject=(principal.subject_id if principal else "anonymous"))
 
 
-@route("POST", r"/api/deep-research")
+@route("POST", r"/api/deep-research", min_role="researcher")
 def _deep_research(svc, body, m, q):
     return svc.deep_research(body.get("topic", ""),
                              rounds=int(body.get("rounds", 3)))
@@ -175,9 +192,10 @@ def _council(svc, body, m, q):
 
 
 @route("POST", r"/api/tool")
-def _tool(svc, body, m, q):
+def _tool(svc, body, m, q, principal=None):
     return svc.tool_call(body.get("name", ""), body.get("arguments", {}),
-                         role=body.get("role", ""))
+                         role=body.get("role", ""),
+                         subject=(principal.subject_id if principal else ""))
 
 
 @route("POST", r"/api/trace")
@@ -191,23 +209,23 @@ def _tools(svc, body, m, q):
     return svc.tools()
 
 
-@route("POST", r"/api/gold-sample")
+@route("POST", r"/api/gold-sample", min_role="student")
 def _gold_sample(svc, body, m, q):
     return svc.gold_sample(n=int(body.get("n", 20)),
                            stratify=bool(body.get("stratify", True)))
 
 
-@route("POST", r"/api/gold-eval")
+@route("POST", r"/api/gold-eval", min_role="student")
 def _gold_eval(svc, body, m, q):
     return svc.gold_eval(body.get("rows", []))
 
 
-@route("POST", r"/api/herb")
+@route("POST", r"/api/herb", min_role="student")
 def _herb(svc, body, m, q):
     return svc.herb(body.get("name", body.get("herb", "")))
 
 
-@route("POST", r"/api/formula-explain")
+@route("POST", r"/api/formula-explain", min_role="student")
 def _formula_explain(svc, body, m, q):
     return svc.formula_explain(body.get("name", body.get("formula", "")))
 
@@ -254,17 +272,33 @@ def make_handler(service: ServiceContext):
         def _dispatch(self, method: str):
             parsed = urlparse(self.path)
             path, query = parsed.path, parse_qs(parsed.query)
+            # 健康探針：/livez 只回進程存活，/readyz 校驗數據能力（假健康防護）
+            if path == "/livez" and method == "GET":
+                from ..health import livez
+                self._send(200, livez())
+                return
+            if path == "/readyz" and method == "GET":
+                from ..health import readyz
+                out = readyz()
+                self._send(200 if out["ready"] else 503, out)
+                return
             if not path.startswith("/api/"):
                 if method == "GET":
                     self._serve_static(path)
                 else:
                     self._send(404, {"error": "not found"})
                 return
-            if AUTH_TOKEN and path != "/api/health":
-                supplied = (self.headers.get("Authorization", "")
-                            .removeprefix("Bearer ").strip()
-                            or self.headers.get("X-Auth-Token", ""))
-                if supplied != AUTH_TOKEN:
+            supplied = (self.headers.get("Authorization", "")
+                        .removeprefix("Bearer ").strip()
+                        or self.headers.get("X-Auth-Token", ""))
+            if (AUTH_TOKEN or API_KEYS) and path in OPEN_PATHS:
+                principal = policy.PrincipalContext(
+                    subject_id="probe", role_ceiling="patient",
+                    auth_level="none")
+            else:
+                principal = policy.resolve_principal(supplied, API_KEYS,
+                                                     AUTH_TOKEN)
+                if principal is None:
                     self._send(401, {"error": "unauthorized"})
                     return
             if RATE_LIMIT_PER_MIN:
@@ -285,13 +319,44 @@ def make_handler(service: ServiceContext):
             except ValueError:
                 self._send(413, {"error": "request body too large"})
                 return
-            for rmethod, rx, fn in ROUTES:
+            for rmethod, rx, fn, min_role, wants_principal in ROUTES:
                 if rmethod != method:
                     continue
                 mt = rx.match(path)
                 if mt:
+                    # 端點能力矩陣：主體上限低於端點最低角色 → 403
+                    if not policy.allow_min_role(principal, min_role):
+                        print(f"[policy-denied] {method} {path} "
+                              f"subject={principal.subject_id} "
+                              f"ceiling={principal.role_ceiling} "
+                              f"required={min_role}")
+                        self._send(403, {"error": "policy_denied",
+                                         "required_role": min_role,
+                                         "your_ceiling": principal.role_ceiling})
+                        return
+                    # 請求體/查詢串 role 只能降級，不可越過身份上限
                     try:
-                        result = fn(service, body, mt, query)
+                        if "role" in body or "role" in query or \
+                                principal.rank < policy.ROLE_RANK["doctor"]:
+                            requested = body.get("role") or \
+                                (query.get("role", [None])[0])
+                            eff = policy.effective_role(principal, requested)
+                            if "role" in body or eff is not None:
+                                body["role"] = eff
+                            if "role" in query:
+                                query["role"] = [eff or "student"]
+                    except policy.PolicyDenied as pd:
+                        print(f"[policy-denied] {method} {path} "
+                              f"subject={principal.subject_id} {pd.reason}")
+                        self._send(403, {"error": "policy_denied",
+                                         "reason": pd.reason,
+                                         "requested_role": pd.requested,
+                                         "your_ceiling": pd.ceiling})
+                        return
+                    try:
+                        kwargs = {"principal": principal} if wants_principal \
+                            else {}
+                        result = fn(service, body, mt, query, **kwargs)
                         blob = json.dumps(result, ensure_ascii=False,
                                           default=str)
                         if len(blob.encode("utf-8")) > MAX_RESPONSE_BYTES:

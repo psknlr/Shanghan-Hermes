@@ -68,8 +68,10 @@ TASK_TYPES: Dict[str, Dict] = {
 class ComplexAgent:
     def __init__(self, client: Optional[LLMClient] = None,
                  registry: Optional[ToolRegistry] = None,
-                 max_subtasks: int = 4, subagent_steps: int = 4):
+                 max_subtasks: int = 5, subagent_steps: int = 4):
         self.client = client or get_client()
+        # 依賴注入原則：harness 下傳入 TracedRegistry（span/台賬/預算），
+        # 子代理與 ScopedRegistry 一律基於它派生，不得自行 get_registry()
         self.registry = registry or get_registry()
         self.max_subtasks = max_subtasks
         self.subagent_steps = subagent_steps
@@ -85,8 +87,9 @@ class ComplexAgent:
             if guard:
                 return safety.governed(guard, "patient")
 
+        # 配置即契約：max_subtasks 不再被 max(...,5) 靜默覆蓋（九輪 P1）
         plan = Planner(client=self.client, task_types=TASK_TYPES,
-                       max_subtasks=max(self.max_subtasks, 5)).plan(question)
+                       max_subtasks=self.max_subtasks).plan(question)
         ordered = execution_order(plan["subtasks"])
         trace: List[Dict] = [{"step": "decompose",
                               "planner": plan["planner"], "goal": plan["goal"],

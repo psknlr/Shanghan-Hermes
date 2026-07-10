@@ -79,7 +79,10 @@ class CitationGuard:
             else:
                 rep.verified_ids.append(cid)
 
-        # verify quoted classical text against the nearest cited clause
+        # verify quoted classical text against ALL cited clauses（任一已引
+        # 條文含該引文即通過；不做「最近引用位置」配對——句級歸屬與詞彙
+        # 對齊見 EvidenceBinder，此處只攔「引文在所有引用條文中都不存在」
+        # 的偽造）
         quotes = RE_QUOTE.findall(answer)
         if quotes and rep.verified_ids:
             corpus = {cid: self.store[cid].clean_text for cid in rep.verified_ids}

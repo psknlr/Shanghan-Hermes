@@ -9,6 +9,10 @@ from __future__ import annotations
 
 import copy
 import json
+import os
+import threading
+import time
+from collections import deque
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
@@ -16,8 +20,23 @@ from .. import config
 from ..schemas import read_jsonl
 
 
-TOOLS_VERSION = "1.1.0"             # 工具面語義版本（契約隨規格導出）
+TOOLS_VERSION = "1.2.0"             # 工具面語義版本（契約隨規格導出）
 MAX_RESULT_BYTES = 262_144          # 單工具結果上限（外部 harness 穩定集成）
+TOOL_TIMEOUT_S = 30.0               # 契約 timeout_s（HERMES_TOOL_TIMEOUT 可調，0=關）
+
+
+class ToolTimeout(Exception):
+    pass
+
+
+def _tool_timeout() -> float:
+    raw = os.environ.get("HERMES_TOOL_TIMEOUT", "")
+    if raw == "":
+        return TOOL_TIMEOUT_S
+    try:
+        return float(raw)
+    except ValueError:
+        return TOOL_TIMEOUT_S
 
 
 @dataclass
@@ -34,8 +53,9 @@ class Tool:
 
     def contract(self) -> Dict:
         """機器可讀工具契約（評審第 6 條）：版本/權限/副作用/證據層/
-        冪等性/大小限制/schema 指紋。純標準庫實現（無 Pydantic），
-        輸入校驗見 _validate_args，輸出大小護欄見 call()。"""
+        冪等性/大小限制/schema 指紋。純標準庫實現（無 Pydantic）。
+        ``enforced`` 節如實聲明哪些條款由 call() 管道真正執行（九輪
+        P0-8：契約不得只是聲明），哪些屬構造保證。"""
         import hashlib
         meta = TOOL_META.get(self.name, {})
         return {
@@ -46,7 +66,7 @@ class Tool:
             "evidence_level": meta.get("evidence_level", ""),
             "limitations": meta.get("limitations", []),
             "side_effect": "read",          # 全部工具只讀（設計不變式）
-            "timeout_s": 30,
+            "timeout_s": int(TOOL_TIMEOUT_S),
             "cacheable": True,
             "idempotent": True,
             "max_result_bytes": MAX_RESULT_BYTES,
@@ -54,6 +74,20 @@ class Tool:
             "schema_hash": hashlib.sha256(
                 json.dumps(self.parameters, sort_keys=True,
                            ensure_ascii=False).encode()).hexdigest()[:16],
+            # call() 管道逐項執行狀態（不是願望清單）：
+            "enforced": {
+                "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
+                "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤"
+                             "信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",
+                "max_result_bytes": "runtime（超限報錯不靜默截斷）",
+                "output_shape": "runtime（非 dict 輸出視為契約違例）",
+                "cacheable": "runtime（緩存鍵含 tools_version+語料指紋）",
+                "side_effect_read": "by-construction（工具函數無寫路徑；"
+                                    "非運行時攔截，見 tests 只讀不變式）",
+                "idempotent": "by-construction（只讀派生，重試安全）",
+                "audit": "runtime（環形審計日誌 audit_tail()；harness 下"
+                         "另有 span 級軌跡）",
+            },
         }
 
 
@@ -150,13 +184,30 @@ class ToolRegistry:
         self._clause_rag = None
         self._matcher = None
         self._tools: Dict[str, Tool] = {}
-        # (tool, canonical-args) → result cache: repeated retrieval within a
-        # session/orchestration is free and reproducible
+        # (tool, canonical-args, tools_version, corpus_fp) → result cache:
+        # repeated retrieval within a session/orchestration is free and
+        # reproducible; 語料指紋入鍵——語料換版緩存自然失效（九輪 P0-8）
         self._cache: Dict[str, Dict] = {}
         self._cache_size = cache_size
         self.cache_hits = 0
         self.cache_misses = 0
+        self._corpus_fp = self._corpus_fingerprint()
+        # 環形審計日誌：每次調用的 {tool, ok, ms, cache_hit}（輕量常駐；
+        # harness 運行下另有 span 級 JSONL 軌跡）
+        self.audit_log: deque = deque(maxlen=256)
         self._register_all()
+
+    @staticmethod
+    def _corpus_fingerprint() -> str:
+        import hashlib
+        m = config.MANIFEST_DIR / "corpus_manifest.json"
+        try:
+            return hashlib.sha256(m.read_bytes()).hexdigest()[:12]
+        except OSError:
+            return "no-manifest"
+
+    def audit_tail(self, n: int = 20) -> List[Dict]:
+        return list(self.audit_log)[-n:]
 
     # -- lazy resources -------------------------------------------------
     @property
@@ -966,43 +1017,92 @@ class ToolRegistry:
             return ScopedRegistry(self, PATIENT_SAFE_TOOLS)
         return self
 
+    @staticmethod
+    def _run_with_timeout(func: Callable, kwargs: Dict, timeout: float):
+        """契約 timeout_s 的運行時執行：工作線程 + join(timeout)。超時拋
+        ToolTimeout（守護線程繼續完成但結果丟棄——只讀工具無副作用可棄）。
+        timeout<=0 時內聯執行（調試/剖析用）。"""
+        if timeout <= 0:
+            return func(**kwargs)
+        box: Dict[str, Any] = {}
+
+        def _target():
+            try:
+                box["result"] = func(**kwargs)
+            except BaseException as exc:      # 傳回主線程統一走錯誤信封
+                box["exc"] = exc
+
+        th = threading.Thread(target=_target, daemon=True)
+        th.start()
+        th.join(timeout)
+        if th.is_alive():
+            raise ToolTimeout(f"timeout after {timeout}s")
+        if "exc" in box:
+            raise box["exc"]
+        return box.get("result")
+
     def call(self, name: str, arguments: Dict) -> Dict:
+        """Capability-Broker 管道（九輪 P0-8）：
+        默認拒絕（未知工具）→ 參數修復/校驗 → 緩存（版本化鍵）→
+        超時執行 → 輸出形狀/大小校驗 → 分層蓋章 → 審計。"""
+        t0 = time.time()
+
+        def _audit(out: Dict, cache_hit: bool = False) -> Dict:
+            self.audit_log.append(
+                {"tool": name, "ok": "error" not in out, "cache_hit": cache_hit,
+                 "ms": int((time.time() - t0) * 1000),
+                 "at": time.strftime("%Y-%m-%dT%H:%M:%S")})
+            return out
+
         tool = self._tools.get(name)
-        if tool is None:
-            return {"error": f"unknown tool: {name}", "available": self.names()}
+        if tool is None:      # 默認拒絕：不在註冊表=不可調用
+            return _audit({"error": f"unknown tool: {name}",
+                           "available": self.names()})
         arguments = self._coerce_args(tool, dict(arguments or {}))
         problem = self._validate_args(tool, arguments)
         if problem:
-            return {"tool": name, "error": f"參數校驗失敗：{problem}",
-                    "expected_schema": tool.parameters}
-        key = name + "::" + json.dumps(arguments, ensure_ascii=False,
-                                       sort_keys=True, default=str)
+            return _audit({"tool": name, "error": f"參數校驗失敗：{problem}",
+                           "expected_schema": tool.parameters})
+        key = "::".join([name, TOOLS_VERSION, self._corpus_fp,
+                         json.dumps(arguments, ensure_ascii=False,
+                                    sort_keys=True, default=str)])
         cached = self._cache.get(key)
         if cached is not None:
             self.cache_hits += 1
             out = copy.deepcopy(cached)
             out["cache_hit"] = True
-            return out
+            return _audit(out, cache_hit=True)
         self.cache_misses += 1
+        timeout = _tool_timeout()
         try:
-            result = tool.func(**arguments)
+            result = self._run_with_timeout(tool.func, arguments, timeout)
+        except ToolTimeout:
+            return _audit({"tool": name,
+                           "error": f"tool {name} timeout：超過契約 "
+                                    f"timeout_s={timeout:g}s，結果丟棄",
+                           "hint": "縮小參數範圍；長任務走 MCP tasks/submit"})
         except TypeError as exc:
-            return {"error": f"bad arguments for {name}: {exc}"}
+            return _audit({"error": f"bad arguments for {name}: {exc}"})
         except Exception as exc:  # never crash the agent on a tool error
-            return {"error": f"tool {name} failed: {type(exc).__name__}: {exc}"}
+            return _audit({"error": f"tool {name} failed: "
+                                    f"{type(exc).__name__}: {exc}"})
+        # 輸出形狀契約：工具必須返回 dict（非 dict 視為契約違例）
+        if not isinstance(result, dict):
+            return _audit({"tool": name,
+                           "error": f"tool {name} 輸出契約違例：期望 dict，"
+                                    f"得到 {type(result).__name__}"})
         result = self._stamp(name, result)
         # 輸出大小護欄（工具契約 max_result_bytes）：超限如實報錯而非靜默截斷
-        if isinstance(result, dict):
-            blob = json.dumps(result, ensure_ascii=False, default=str)
-            if len(blob.encode("utf-8")) > MAX_RESULT_BYTES:
-                return {"tool": name,
-                        "error": f"結果超過契約上限 {MAX_RESULT_BYTES} bytes",
-                        "hint": "縮小 top_k/limit 參數或分頁調用"}
-        if isinstance(result, dict) and "error" not in result:
+        blob = json.dumps(result, ensure_ascii=False, default=str)
+        if len(blob.encode("utf-8")) > MAX_RESULT_BYTES:
+            return _audit({"tool": name,
+                           "error": f"結果超過契約上限 {MAX_RESULT_BYTES} bytes",
+                           "hint": "縮小 top_k/limit 參數或分頁調用"})
+        if "error" not in result:
             if len(self._cache) >= self._cache_size:
                 self._cache.pop(next(iter(self._cache)))
             self._cache[key] = copy.deepcopy(result)
-        return result
+        return _audit(result)
 
     def contracts(self) -> List[Dict]:
         """全部工具的機器可讀契約（隨 tool_specs.json 導出）。"""
@@ -1127,5 +1227,9 @@ _REGISTRY: Optional[ToolRegistry] = None
 def get_registry() -> ToolRegistry:
     global _REGISTRY
     if _REGISTRY is None:
+        # 資產缺失時響亮失敗而非空運行（九輪 P0-7 假健康）：pip wheel 不含
+        # 語料，獨立安裝後首次構建註冊表即在此被攔截並給出修復指引
+        from ..health import assert_ready
+        assert_ready(context="ToolRegistry")
         _REGISTRY = ToolRegistry()
     return _REGISTRY

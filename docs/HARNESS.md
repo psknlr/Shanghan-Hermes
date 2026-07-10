@@ -1,6 +1,6 @@
 # Agent 執行 Harness（狀態圖 · 可恢復 · 可觀測 · 可審計）
 
-回應「頂級 harness」評審（十二方向）。目標架構（已按此落地/規劃）：
+回應「頂級 harness」評審（八輪十二方向 + 九輪動態審計）。目標架構：
 
 ```text
 Hermes Harness =
@@ -8,44 +8,63 @@ Hermes Harness =
 + CitationGuard + SafetyGate + HumanReviewGate
 + TraceStore + EvalRunner
 + MCP Resources/Prompts/Tools + CorpusLifecycle
++ Policy/Principal + RunBudget + Readyz          ← 九輪新增
 ```
 
-## 一、已落地（v1，純標準庫）
+## 一、已落地（v2，純標準庫）
 
 | 評審方向 | 落點 |
 |---|---|
-| 1. 統一 RunSpec/RunState | `agent/harness/state.py`：RunSpec（含 corpus_version/tool_spec_version 指紋）、NodeSpec（retry/fallback/evidence_requirement/release_condition）、NodeResult、RunState（evidence_ledger/tool_calls/guardrail_events） |
-| 2. 顯式節點圖 | v1 四節點圖（intake→execute→evidence_audit→release_gate），節點帶重試/降級策略、依賴跳過；模式引擎（agent/council/deep-research/solve）作為 execute 節點掛入 |
-| 3. checkpoint/resume/replay | `runs/<run_id>/state.json`（原子寫）+ `events.jsonl`；`run` / `run-list` / `run-resume [--approve]` / `run-replay`（local 後端全確定，對比回答指紋）/ `run-export --format md\|json` |
-| 4. span 級軌跡 | `harness/tracing.py`：OTel 風格 JSONL span（trace/span/parent、時長、輸入輸出哈希、error、evidence_ids；token/cost 在 local 後端如實記 null）；TracedRegistry 使每次工具調用自動成 span |
-| 5. MCP 完整性 | 版本協商（2024-11-05/2025-03-26/2025-06-18）+ **resources**（條文/方證規則/引文網絡/觀點庫/學派/ID註冊表/manifest/全庫編目 8 個 URI）+ **prompts**（方證鑒別/深度溯源/誤引審查/患者安全問診 4 模板） |
-| 6. 工具契約 | `Tool.contract()`：version/permission_level/side_effect(read 不變式)/evidence_level/timeout/cacheable/idempotent/max_result_bytes/error_schema/schema_hash；隨 `tool_specs.json` 導出（`contracts` 節）；輸出超限報錯不靜默截斷 |
-| 7. 軌跡級評測 | `eval/trajectory.py`：tool_name_accuracy / trajectory_validity_rate / refusal_precision + **故障注入**（工具拋異常/空結果）計 recovery_success_rate（實測 1.0：優雅降級不崩潰） |
-| 8. Human-in-the-loop 發布閘門 | `harness/release_gate.py` 五道（evidence/safety/role/uncertainty/human-review）；醫師端候選方、引用核驗失敗、方證未決、論文生成觸發 needs_human_review → run 轉 paused → `run-resume --approve --approver X`（審批人記錄於 guardrail_events） |
-| 10. 語料生命週期 | `corpus/source_registry.py`：source_id/sha256/license/parser_version/質檢/證據層歸屬；新增 **P 層**（旁證）正式入 LAYER_LABEL，與 A–E 嚴格分離 |
-| 12. API 治理 | `/api/tool` 按角色限權（patient 硬裁剪）；響應大小上限（超限回錯誤+trace_id）；每 IP 速率限制（`HERMES_RATE_LIMIT` 選裝）；異常響應附 trace_id（詳情僅留服務端日誌） |
+| 1. 統一 RunSpec/RunState | `agent/harness/state.py`：RunSpec 含**環境指紋**（corpus/tool_spec/python/backend/git HEAD）、NodeSpec（retry/fallback/evidence_requirement/release_condition）、RunState（evidence_ledger/tool_calls/guardrail_events/approval_requests/budget_snapshot） |
+| 2. 顯式節點圖 | v1 四節點圖（intake→execute→evidence_audit→release_gate），重試/降級/依賴跳過；模式引擎作為 execute 節點掛入 |
+| 3. checkpoint/resume/replay | `runs/<run_id>/state.json`（原子寫）+ `events.jsonl` + **run.lock 單寫者鎖**；trace_id **跨 resume 延續**；replay 先對比環境指紋（不一致如實標 comparable=False），再對比回答指紋 |
+| 4. span 級軌跡 | OTel 風格 JSONL span；TracedRegistry 使每次工具調用自動成 span（含 cache_hit/budget_denied/backend 元數據）；**異常入軌跡前脫敏**（去絕對路徑+截斷） |
+| 5. MCP | 版本協商（3 版本）+ resources（8 URI）+ prompts（4 模板）+ **實驗性 tasks**（submit/status/result/cancel/list，長任務不再同步阻塞；取消為協作式——結果丟棄，如實聲明） |
+| 6. 工具契約 | `Tool.contract()` 帶 **enforced 節**：逐條款聲明執行方式。運行時真執行：參數校驗、**超時**（工作線程+join，超時回錯誤信封）、輸出形狀（必須 dict）、大小上限（報錯不截斷）、**版本化緩存鍵**（tools_version+語料指紋入鍵）、環形審計日誌 |
+| 7. 軌跡級評測 | tool_name_accuracy / trajectory_validity_rate / refusal_precision + 故障注入 recovery_success_rate——**均為閉集回歸護欄，非能力宣傳指標**（口徑表見 MATURITY.md） |
+| 8. Human-in-the-loop 發布閘門 | **五態 fail-closed**：pass / pass_with_warning / review_required / **blocked** / **failed_closed**。citation_report 缺失→failed_closed；偽造引用/患者端方藥指令→blocked（**人工批准不可放行**）；候選方檢測用結構化信號（match/hypotheses/adjudicate 在台賬）非「湯」字關鍵詞；review_required 生成 ApprovalRequest（審什麼/證據指紋/時間/審批人）；`run-resume --approve` **重新執行下游閘門**後才放行（pass_after_human_review），`--reject` 駁回 |
+| 9-. 統一預算 | `RunBudget`：Harness 控制器持有、TracedRegistry **原子扣減**（跨 for_role 副本共享），批量 tool_calls 逐個檢查，超限回 BUDGET_EXHAUSTED 不執行；agent 內部 `_react` 同樣逐調用檢查（模型單輪返回 N 個調用不能突破預算） |
+| 10. 語料生命週期 | `corpus/source_registry.py` + P 層；**readyz**（`/livez` `/readyz` 分離 + CLI `readyz`）：manifest/398 條/規則庫/工具規格逐項校驗；資產缺失時 ToolRegistry 構建**響亮失敗**（assert_ready），拒絕 wheel 假健康空運行（數據部署二選一見 pyproject 說明） |
+| 11. 依賴注入 | execute 節點統一注入 TracedRegistry；**solve 模式（ComplexAgent）與子代理不再自行 get_registry()**——複雜任務的工具調用進台賬與 span 樹 |
+| 12. API 治理 | **服務端 Principal**（`server/policy.py`）：HERMES_API_KEYS 綁定 token→角色上限，請求體 role 只可降級、自提權 403（可審計）；全部臨床端點（match/differential/formula/mistreatment/deep-research…）帶最低角色過同一策略層；session 以主體命名空間隔離（無 id 不共用 default，服務端生成回傳；TTL+容量上限）；糾正記憶帶來源與 unverified 信任級 |
+| 13. 規劃編譯 | `planner.compile_plan`：唯一 ID/依賴存在/無環/類型合法/預算——LLM 計劃編譯失敗先回饋修復一次，仍失敗 **fail-closed 回退確定性規劃器**；execution_order 遇環直接拋錯，不再靜默按序執行；max_subtasks 不再被 max(...,5) 覆蓋 |
+| 14. 研究覆蓋狀態 | 深研發現帶狀態 FAILED/EMPTY/DATA_FOUND/EVIDENCE_FOUND/VERIFIED：工具報錯或空手而歸**不算覆蓋**；無引用 finding 不再 citation_ok=True；聚合統計模塊如實標 DATA_FOUND 不冒充 VERIFIED；harness 回答納入全部發現（不截前 4） |
 
 ## 二、規劃中（如實列差距）
 
 | 方向 | 差距與計劃 |
 |---|---|
-| 2+. 圖原生細粒度編排 | v1 把模式引擎整體作為 execute 節點；下一步把檢索/專家/批評/綜合拆成獨立節點（complex_agent 的任務圖已是雛形），失敗恢復到子節點粒度 |
-| 5+. MCP progress/cancellation/sampling | 長任務（全庫掃描/深研）的進度通知與取消需要雙向流；stdio 單線程實現需要任務線程池，列入下輪 |
+| 2+. 圖原生細粒度編排 | v2 仍把模式引擎整體作為 execute 節點；把檢索/專家/批評/綜合拆成獨立 typed 節點（input/output schema、節點級預算/緩存/取消）列下輪 |
+| 3+. durable execution | 現為單進程 JSON checkpoint + 文件鎖：無 lease/心跳/exactly-once/DLQ；副作用工具（現全只讀）加入前必須先補 |
+| 5+. MCP progress notification | tasks 已可輪詢；服務端主動 progress 推送需雙向流改造 |
+| 8+. 身份聯邦 | Principal 已服務端化；JWT/OIDC/反代映射屬部署層，接口留在 policy.resolve_principal |
+| 9. 專家獨立 evidence packet | 見 AGENT_ROADMAP「多智能體專家獨立性」設計（分層檢索隔離+匿名 claim 評審+主動反證） |
+| P0-5+. 語義蘊含核驗 | EvidenceBinder 已輸出結構化 claim/evidence_links，verifier 如實標 lexical_overlap_v1（詞彙級下界）；supports/contradicts 級 entailment 需模型後端 |
 | 7+. redteam / 多標註者 κ | 對抗提示集與 Cohen's κ 一致率待建（goldset 已有單標註閉環） |
-| 9. 專家獨立 evidence packet | 見 AGENT_ROADMAP「多智能體專家獨立性」設計 |
-| 12+. 後台任務隊列 | 全庫掃描/深研改 background job + progress + cancel；當前為同步阻塞（CLI 可 Ctrl-C，run 狀態可恢復） |
 | Pydantic/OTel SDK | 零依賴約束下不引入；契約/span 為兼容結構，外部可直接轉譯 |
 
 ## 三、使用
 
 ```bash
-python3 -m hermes_shanghan run "桂枝湯與麻黃湯如何鑒別？" --mode agent --role doctor
-# → status: paused（醫師端候選方觸發人工審核）
+python3 -m hermes_shanghan run "惡寒發熱，汗出，脈浮緩，用什麼方？" --mode agent --role doctor
+# → status: paused（結構化候選方信號觸發人工審核，附 ApprovalRequest）
 python3 -m hermes_shanghan run-list
-python3 -m hermes_shanghan run-resume <run_id> --approve --approver 張醫師
-python3 -m hermes_shanghan run-replay <run_id>     # local 後端指紋必一致
+python3 -m hermes_shanghan run-resume <run_id> --approve --approver 張醫師   # 重跑下游閘門後放行
+python3 -m hermes_shanghan run-resume <run_id> --reject  --approver 張醫師   # 駁回
+python3 -m hermes_shanghan run-replay <run_id>     # 指紋一致+local 後端 → 回答指紋必一致
 python3 -m hermes_shanghan run-export <run_id> --format md
+python3 -m hermes_shanghan readyz --runtime        # 就緒探針（exit 2=未就緒）
 ```
 
-運行目錄 `data/shanghan/runs/<run_id>/`（state.json + events.jsonl，
-含時間戳故 gitignore，不影響流水線字節級可復現保證）。
+治理部署示例：
+
+```bash
+# 角色綁定 API key：patient key 無法自稱 doctor（403 policy_denied）
+HERMES_API_KEYS="tokA:patient:alice,tokB:doctor:drwang" \
+  python3 -m hermes_shanghan serve --host 0.0.0.0
+# 公網匿名演示：整個匿名面裁到患者安全層
+HERMES_ANON_ROLE=patient python3 -m hermes_shanghan serve --host 0.0.0.0
+```
+
+運行目錄 `data/shanghan/runs/<run_id>/`（state.json + events.jsonl +
+run.lock，含時間戳故 gitignore，不影響流水線字節級可復現保證）。
