@@ -194,12 +194,22 @@ class TracedRegistry:
                      "args_hash": sp._input_hash,
                      "error": (out or {}).get("error") if isinstance(out, dict) else None})
                 if isinstance(out, dict) and not out.get("error"):
-                    self._register_evidence(name, sp.span_id, out)
+                    self._register_evidence(name, sp.span_id, out,
+                                            arguments=arguments)
             return out
 
-    def _register_evidence(self, tool: str, span_id: str, out: Dict) -> None:
+    def _register_evidence(self, tool: str, span_id: str, out: Dict,
+                           arguments: Optional[Dict] = None) -> None:
         """Broker 證據登記：只登記**存在於條文庫**且出自工具結果的 id，
-        每條帶強不變量字段（tool_call_id/span_id/source_hash/語料指紋）。"""
+        每條帶強不變量字段（tool_call_id/span_id/source_hash/語料指紋）。
+
+        十三輪 五：登記時區分證據角色——
+          primary_text_returned  條文正文（≥12 連續字）確實出現在工具輸出
+                                 中（模型可讀到原文）
+          id_mention_only        僅編號出現，正文未返回——「編號出現≠證據
+                                 被返回」，外層審計對此類引用響亮標注
+        並保留 excerpt / retrieval_query 供 UI 逐條複核。逐工具聲明式
+        evidence_records 契約見路線圖（現階段为分類式登記，如實標注）。"""
         try:
             blob = json.dumps(out, ensure_ascii=False, default=str)
         except Exception:
@@ -211,6 +221,11 @@ class TracedRegistry:
             store = self._base.art.clause_store()
         except Exception:
             return
+        query = ""
+        if isinstance(arguments, dict):
+            query = str(arguments.get("query")
+                        or arguments.get("formula")
+                        or arguments.get("ref") or "")[:60]
         ledger = self._state.evidence_ledger.setdefault(self._node, [])
         seen = {(r["clause_id"], r["tool"]) for r in ledger}
         for cid in ids:
@@ -219,12 +234,19 @@ class TracedRegistry:
                 continue    # 庫中不存在的 id 不得成為證據（fail-closed）
             if len(ledger) >= self.MAX_LEDGER_RECORDS:
                 break
+            text = getattr(c, "clean_text", "") or ""
+            probe = text[:12]
+            text_returned = bool(probe) and probe in blob
             ledger.append({
                 "clause_id": cid,
                 "tool": tool,
                 "tool_call_id": span_id,
                 "span_id": span_id,
-                "source_hash": _digest(getattr(c, "clean_text", "")),
+                "source_hash": _digest(text),
+                "evidence_role": ("primary_text_returned" if text_returned
+                                  else "id_mention_only"),
+                "excerpt": text[:40] if text_returned else None,
+                "retrieval_query": query or None,
                 "corpus_fingerprint": self._state.spec.corpus_version,
                 "registered_by": "capability_broker",
             })

@@ -2,7 +2,18 @@
 
 回應「頂級 harness」評審（八輪十二方向 + 九輪動態審計 + 十一輪 P0 復現）。
 
-## 〇、十一輪 P0 修復（部署前必須項，全部落地 + 對抗回歸測試）
+## 〇-1、十三輪 P0 修復（不變量閉環，tests/test_invariants.py 鏡像守衛）
+
+| P0 | 修復 |
+|---|---|
+| 外層信任業務自報 citation_report | guard 節點**無條件獨立複核**（允許集=Broker 台賬）；業務自報降級為 agent_self_report 存檔，分歧記 guardrail 事件；strict_round 非拒答 + 空台賬 + 有引用 → ok=False。偽造 ok=True 空台賬的探針現在 review_required 且批准後重跑閘門仍不 pass |
+| 審批覆蓋技術失敗 | 發布不變量：pass* 必須有答案（或拒答）+ 必經節點無 failed/degraded；技術失敗 → **failed_closed 且 approve 被拒**（guardrail 記 approval_refused_technical_failure）。失敗節點的普通 resume=合法重試（重跑後下游 guard/release 隨之失效重算——恢復≠覆蓋，兩者測試對照） |
+| 幽靈 run / 非法請求 | prepare() 先落盤 queued 再返回；mode/預算/查詢長度創建前校驗（HTTP 400）；`?limit=abc` → 400 非 500 |
+| 台賬粗登記 | 證據角色分類：`primary_text_returned`（條文正文確在工具輸出中）vs `id_mention_only`（僅編號——「編號出現≠證據被返回」）+ excerpt/retrieval_query；外層審計對引用了僅編號證據的回答響亮標注（id_only_cited）；逐工具聲明式 ToolResult.evidence_records 契約在路線 |
+| 會話「元數據對、答案錯」 | 指代解析結果作**硬約束**注入：代詞直接改寫為主語方名、不再注入多方名錨點列表——端到端測試斷言工具參數 formula=桂枝湯 且答案主實體不被類方污染 |
+| 長節點鎖失效 | run.lock 獨立**心跳線程**（30s 刷新，與節點時長解耦）；取消=節點邊界協作式（cancel.flag）；有界任務池（HERMES_RUN_WORKERS）替代裸 daemon 線程；SQLite lease/CAS 列研究版路線 |
+
+## 〇-2、十一輪 P0 修復（部署前必須項，全部落地 + 對抗回歸測試）
 
 | P0 | 修復 |
 |---|---|

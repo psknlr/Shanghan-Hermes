@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -27,8 +28,8 @@ from typing import Any, Dict, List, Optional
 from ... import config
 from ..citation_guard import CitationGuard, RE_CLAUSE_ID
 from .release_gate import HUMAN_REVIEW_TRIGGERS, evaluate as gate_evaluate
-from .state import (NodeResult, NodeSpec, RunBudget, RunSpec, RunState,
-                    new_run_id, spec_versions)
+from .state import (RUN_MODES, NodeResult, NodeSpec, RunBudget, RunSpec,
+                    RunState, new_run_id, spec_versions)
 from .tracing import TracedRegistry, TraceStore, _digest
 
 LOCK_STALE_S = 600      # run.lock 超過此秒數視為殘留（進程崩潰未清理）
@@ -36,6 +37,25 @@ LOCK_STALE_S = 600      # run.lock 超過此秒數視為殘留（進程崩潰未
 
 def run_dir(run_id: str) -> Path:
     return config.RUNS_DIR / run_id
+
+
+def _technical_failures(state) -> List[str]:
+    """不可審批覆蓋的技術失敗（十三輪 P0-四）：非法模式/節點異常/
+    輸出為空/降級執行——這些是系統完整性問題，人工批准不能把它們變成
+    「成功完成」。"""
+    problems: List[str] = []
+    exec_out = state.node_outputs.get("execute", {}) or {}
+    refused = bool(exec_out.get("refused"))
+    for node_id in ("intake", "execute"):
+        res = state.nodes.get(node_id)
+        if res and res.status in ("failed", "degraded"):
+            problems.append(f"必經節點 {node_id} 狀態 {res.status}"
+                            + (f"（{res.error}）" if res.error else ""))
+    if not refused and not (state.final_answer or "").strip():
+        problems.append("final_answer 為空且非拒答——空輸出不可發布")
+    if exec_out.get("error") and not refused:
+        problems.append(f"execute 錯誤：{str(exec_out['error'])[:120]}")
+    return problems
 
 
 def _ledger_ids_verified(state) -> List[str]:
@@ -113,6 +133,8 @@ class _RunLock:
     def __init__(self, d: Path):
         self.path = d / "run.lock"
         self._fd = None
+        self._hb = None
+        self._stop = threading.Event()
 
     def __enter__(self):
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -130,16 +152,29 @@ class _RunLock:
                                os.O_CREAT | os.O_EXCL | os.O_WRONLY)
         os.write(self._fd, f"pid={os.getpid()} at={time.strftime('%FT%T')}"
                  .encode())
+        self._stop = threading.Event()
+        self._hb = threading.Thread(target=self._heartbeat_loop, daemon=True)
+        self._hb.start()
         return self
 
+    HEARTBEAT_S = 30
+
     def touch(self) -> None:
-        """心跳：長運行逐節點刷新鎖 mtime，600s 殘留判定不會誤傷活運行。"""
         try:
             os.utime(self.path)
         except OSError:
             pass
 
+    def _heartbeat_loop(self) -> None:
+        # 獨立心跳線程（十三輪 七）：節點執行 10 分鐘也不會被殘留判定
+        # 接管——心跳與節點時長解耦；CAS/lease 版本號屬 SQLite 路線
+        while not self._stop.wait(self.HEARTBEAT_S):
+            self.touch()
+
     def __exit__(self, *exc):
+        self._stop.set()
+        if self._hb is not None:
+            self._hb.join(timeout=2)
         if self._fd is not None:
             os.close(self._fd)
         self.path.unlink(missing_ok=True)
@@ -154,22 +189,50 @@ class HarnessRunner:
         self.client = client
 
     # ------------------------------------------------------------------
-    def start(self, query: str, mode: str = "agent", role: str = "researcher",
-              max_steps: int = 6, max_tool_calls: int = 12,
-              run_id: str = "") -> RunState:
+    def prepare(self, query: str, mode: str = "agent",
+                role: str = "researcher", max_steps: int = 6,
+                max_tool_calls: int = 12, run_id: str = "") -> RunState:
+        """建立 queued 狀態並**同步落盤**（十三輪 十一：幽靈 run 根除——
+        API 返回前狀態必須已持久化）。非法模式在此 fail-fast，
+        不創建注定失敗的後台任務。"""
+        if mode not in RUN_MODES:
+            raise ValueError(f"未知模式 {mode!r}（可用：{RUN_MODES}）")
         versions = spec_versions()
-        # run_id 可由調用方預生成（運行中心異步啟動：先拿 id 再後台執行）
         spec = RunSpec(run_id=run_id or new_run_id(query), user_query=query,
                        role=role, mode=mode, max_steps=max_steps,
                        max_tool_calls=max_tool_calls, **versions)
-        state = RunState(spec=spec, plan=_default_plan(mode))
+        state = RunState(spec=spec, plan=_default_plan(mode), status="queued")
         state.nodes = {n.node_id: NodeResult(node_id=n.node_id)
                        for n in state.plan}
         save_state(state)
+        return state
+
+    def start(self, query: str, mode: str = "agent", role: str = "researcher",
+              max_steps: int = 6, max_tool_calls: int = 12,
+              run_id: str = "") -> RunState:
+        return self._execute(self.prepare(query, mode=mode, role=role,
+                                          max_steps=max_steps,
+                                          max_tool_calls=max_tool_calls,
+                                          run_id=run_id))
+
+    def execute_prepared(self, run_id: str) -> Optional[RunState]:
+        state = load_run(run_id)
+        if state is None or state.status not in ("queued", "created"):
+            return state
         return self._execute(state)
 
+    @staticmethod
+    def request_cancel(run_id: str) -> bool:
+        """協作式取消：寫 cancel.flag，執行器在節點邊界檢查（工具只讀
+        原子，無中斷點——與 MCP tasks 同一誠實口徑）。"""
+        d = run_dir(run_id)
+        if not (d / "state.json").exists():
+            return False
+        (d / "cancel.flag").write_text("cancel", encoding="utf-8")
+        return True
+
     def resume(self, run_id: str, approve: bool = False, reject: bool = False,
-               approver: str = "") -> Optional[RunState]:
+               approver: str = "", reason: str = "") -> Optional[RunState]:
         state = load_run(run_id)
         if state is None:
             return None
@@ -177,6 +240,7 @@ class HarnessRunner:
             state.guardrail_events.append(
                 {"event": "human_review_rejected",
                  "approver": approver or "cli",
+                 "reason": reason or "（未填理由）",
                  "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                  "review_items": state.pending_review})
             for a in state.approval_requests:
@@ -186,9 +250,27 @@ class HarnessRunner:
             save_state(state)
             return state
         if state.status == "paused" and approve:
-            # 批准 ≠ 改狀態：記錄審批人，然後**重新執行**下游閘門
+            # 審批邊界（十三輪 P0-四）：技術失敗不可經 approve 洗白——
+            # 審批通道只裁決學術/臨床審核項，不豁免系統完整性約束
+            failures = _technical_failures(state)
+            if failures:
+                state.guardrail_events.append(
+                    {"event": "approval_refused_technical_failure",
+                     "approver": approver or "cli",
+                     "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                     "failures": failures})
+                state.release = {**state.release,
+                                 "decision": "failed_closed",
+                                 "reasons": state.release.get("reasons", [])
+                                 + ["審批被拒：存在不可覆蓋的技術失敗——"
+                                    + "；".join(failures)]}
+                state.status = "failed"
+                save_state(state)
+                return state
+            # 批准 ≠ 改狀態：記錄審批人與理由，然後**重新執行**下游閘門
             state.guardrail_events.append(
                 {"event": "human_review_approved", "approver": approver or "cli",
+                 "reason": reason or "（未填理由）",
                  "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                  "review_items": state.pending_review})
             state.approved_items = sorted(
@@ -203,7 +285,7 @@ class HarnessRunner:
                     state.nodes[node_id] = NodeResult(node_id=node_id)
             save_state(state)
             return self._execute(state)
-        if state.status in ("completed", "blocked", "rejected"):
+        if state.status in ("completed", "blocked", "rejected", "cancelled"):
             return state
         return self._execute(state)
 
@@ -252,8 +334,14 @@ class HarnessRunner:
                 [t for t in state.tool_calls if not t.get("budget_denied")])
             with trace.span("run", f"{spec.mode}:{spec.run_id}") as root:
                 root.set_input(spec.to_dict())
+                upstream_reran = False
                 for node in state.plan:
                     res = state.nodes[node.node_id]
+                    # 上游節點在本次恢復中重跑過 → 下游舊結果失效必須重算
+                    # （否則失敗節點重試成功後，guard/release 仍持舊報告）
+                    if upstream_reran and res.status == "ok":
+                        res = state.nodes[node.node_id] = \
+                            NodeResult(node_id=node.node_id)
                     # resume：已完成節點跳過；triage 分支標記的節點不執行
                     if res.status in ("ok", "skipped_by_triage"):
                         continue
@@ -263,9 +351,16 @@ class HarnessRunner:
                         res.status = "skipped"
                         save_state(state)
                         continue
+                    if (run_dir(spec.run_id) / "cancel.flag").exists():
+                        state.status = "cancelled"
+                        state.guardrail_events.append(
+                            {"event": "run_cancelled",
+                             "at": time.strftime("%Y-%m-%dT%H:%M:%S")})
+                        save_state(state)
+                        break
                     self._run_node(state, node, res, trace, root.span_id,
                                    budget)
-                    lock.touch()          # 心跳：活運行不被殘留判定接管
+                    upstream_reran = True
                     state.budget_snapshot = budget.snapshot()
                     save_state(state)
                     # 圖分支（十一輪 P0-4）：intake 的控制決策說停就停——
@@ -415,19 +510,49 @@ class HarnessRunner:
             return out
 
         if node.node_type == "guard":
+            # 十三輪 P0：外層 Harness **無條件獨立複核**——被審計對象
+            # （業務智能體）提交的 citation_report 只能作 agent_self_report，
+            # 不得作為發布依據（否則偽造 ok=True 即可空台賬過閘）。
+            # 權威報告 = CitationGuard(最終回答, 允許集=Broker 台賬)。
             exec_out = state.node_outputs.get("execute", {})
-            report = exec_out.get("citation_report")
-            if not report:
-                # 允許引用集 = 台賬（僅 Broker 寫入）中通過完整性校驗的
-                # 記錄——每條必須綁定 tool_call/span/source_hash/語料指紋
-                allowed = _ledger_ids_verified(state)
-                guard = CitationGuard(self.base_registry.art.clause_store())
-                rep = guard.check(state.final_answer or "", allowed_ids=allowed)
-                report = {"ok": rep.ok, "has_any_citation": rep.has_any_citation,
-                          "verified": rep.verified_ids,
-                          "unsupported": rep.unsupported_ids}
-                exec_out["citation_report"] = report
-            return {"citation_report": report,
+            inner = exec_out.get("citation_report")
+            refused = bool(exec_out.get("refused"))
+            allowed = _ledger_ids_verified(state)
+            guard = CitationGuard(self.base_registry.art.clause_store())
+            rep = guard.check(state.final_answer or "", allowed_ids=allowed)
+            outer = {"ok": rep.ok, "has_any_citation": rep.has_any_citation,
+                     "verified": rep.verified_ids,
+                     "unsupported": rep.unsupported_ids,
+                     "outside_evidence": rep.outside_evidence_ids,
+                     "attribution_warnings": rep.attribution_warnings,
+                     "authority": "harness_independent_audit"}
+            disagreement = bool(inner) and (
+                bool(inner.get("ok")) != rep.ok
+                or set(inner.get("verified") or []) != set(rep.verified_ids))
+            if disagreement:
+                state.guardrail_events.append(
+                    {"event": "citation_report_disagreement",
+                     "detail": "業務智能體自報與外層獨立複核不一致——"
+                               "以外層為準（自報僅存檔）",
+                     "inner_ok": bool(inner.get("ok")),
+                     "outer_ok": rep.ok})
+            # 強不變量：strict_round 下非拒答回答必須有 Broker 台賬證據
+            if spec.evidence_policy == "strict_round" and not refused \
+                    and not allowed and rep.has_any_citation:
+                outer["ok"] = False
+            exec_out["agent_self_report"] = inner
+            exec_out["citation_report"] = outer      # 權威報告覆蓋
+            # 台賬中被引用證據若僅以編號出現（正文未返回），響亮標注
+            cited = set(rep.verified_ids)
+            id_only = sorted({r["clause_id"]
+                              for recs in state.evidence_ledger.values()
+                              for r in recs
+                              if r.get("evidence_role") == "id_mention_only"
+                              and r["clause_id"] in cited})
+            if id_only:
+                outer["id_only_cited"] = id_only
+            return {"citation_report": outer, "agent_self_report": inner,
+                    "disagreement": disagreement,
                     "ledger_records": sum(len(v) for v in
                                           state.evidence_ledger.values())}
 
@@ -438,6 +563,18 @@ class HarnessRunner:
                 approved=frozenset(state.approved_items),
                 tool_names=[t["tool"] for t in state.tool_calls
                             if not t.get("budget_denied")])
+            # 發布不變量（十三輪 P0-四）：pass* 必須 (a) 有答案或明確拒答
+            # (b) 必經節點無 failed/degraded (c) 證據閘通過或屬拒答。
+            # 技術失敗不進人工審核隊列（那是「裁決學術爭議」的通道，
+            # 不是「豁免系統故障」的通道）——一律 failed_closed，
+            # **審批集合對其無效**
+            failures = _technical_failures(state)
+            if failures and verdict["decision"] != "blocked":
+                verdict = {**verdict, "decision": "failed_closed",
+                           "reasons": verdict.get("reasons", []) + [
+                               "發布不變量違例（不可審批覆蓋）：" +
+                               "；".join(failures)],
+                           "technical_failures": failures}
             state.release = verdict
             decision = verdict["decision"]
             if decision == "review_required":

@@ -10,7 +10,7 @@
 | Python | 3.11.15（倉庫最低要求 ≥ 3.9） |
 | 操作系統 | Linux 6.18（x86_64 容器） |
 | 第三方依賴 | 無（純標準庫；`litellm`/`py7zr` 均為可選） |
-| 測試總數 | 370 項 / 25 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
+| 測試總數 | 391 項 / 26 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
 | 全量耗時 | `python3 -m unittest discover -s tests`：**約 20–40 秒**（見下） |
 | 網絡需求 | **零**（默認全部離線） |
 | 7z 需求 | **零**（僅 `library fetch` 可選功能需要 `py7zr` 或系統 p7zip） |
@@ -64,6 +64,7 @@
 | 溯源層 | test_trace | 七模式引文識別/自檢基準/計量網絡/五類鏈/全庫掃描夾具/字節級重建 |
 | 服務端 | test_server | HTTP API + 鑒權 + 限額 |
 | 治理探針 | test_governance, test_harness | 鏡像九輪動態探針：發布閘門 fail-closed/blocked 不可批准、批量調用不破預算、solve 進台賬、角色自提權拒絕、session 隔離、readyz 假健康、契約超時/版本化緩存鍵、planner 圖編譯、研究覆蓋狀態 |
+| 不變量 | test_invariants | 十三輪：外層獨立複核（偽造自報不過閘+分歧記錄）、審批不可覆蓋技術失敗（failed_closed）與失敗節點合法重試對照、queued 先落盤、取消、心跳線程、台賬角色分類（僅編號≠正文）、指代控制工具參數與答案主實體、400 參數校驗、分頁、下載附件頭、會話持久化往返、Colab 守衛（19工具變體/全庫下載opt-in/readiness raise/cell id/Harness 演示） |
 | 控制面 | test_console | 十二輪：運行中心 API（異步啟動/輪詢/審批/導出）、Artifact 防穿越、評測端點、雙 UI 在位與認證頭、結構化指代解析（主語優先防偽成功）、Colab P0 守衛（固定版本/ensure_server/冪等克隆/零硬編碼統計） |
 | 證據完整性 | test_evidence_integrity | 十一輪對抗回歸：零檢索猜編號不過閘、台賬 Broker 強不變量、患者 key 全鏈路（clause 不回退 student+出口投影）、intake 圖分支、結構化臨床動作、引文歸屬綁定、無引用不放行、參數深校驗、版本單源 |
 | 來源治理 | test_provenance | 十輪：work_type 分類（未登記書目 fail-closed 到 P，證據層不由目錄名決定）、全庫供應鏈（URL allowlist/強制哈希/路徑穿越/symlink/壓縮比）、EvidenceRecord 逐證據來源對象、方證論證結構（反證條文/隱含假設/不可裁決） |

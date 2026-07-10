@@ -11,3 +11,5 @@ data/library/
 
 # harness runs（run_id/時間戳，按需導出，不入庫）
 data/shanghan/runs/
+# 會話持久化（含用戶輸入，不入庫）
+data/shanghan/sessions/

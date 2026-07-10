@@ -81,7 +81,11 @@ let WHO={};
 async function whoami(){try{WHO=await GET("/api/whoami");$("#who").textContent=`主體 ${WHO.principal_id} · 上限 ${WHO.role_ceiling} · 生效 ${WHO.effective_role||"（按問題推斷）"}`;}catch(e){$("#who").textContent="未授權（請輸入 token）";}}
 $("#token").value=localStorage.getItem("hermes_token")||"";
 const views={};
-function nav(v){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.v===v));views[v]();}
+let DISPOSERS=[];
+function onDispose(fn){DISPOSERS.push(fn);}
+function nav(v){
+  DISPOSERS.forEach(f=>{try{f();}catch(e){}});DISPOSERS=[];   // 路由生命週期：離開即銷毀定時器
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.v===v));views[v]();}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>nav(b.dataset.v));
 const tag=s=>`<span class="tag ${esc(s)}">${esc(s)}</span>`;
 
@@ -102,6 +106,7 @@ views.overview=async()=>{
 let RUN_TIMER=null;
 views.runs=async()=>{
   clearInterval(RUN_TIMER);
+  onDispose(()=>clearInterval(RUN_TIMER));
   $("#main").innerHTML=`<div class="card"><h2>發起運行（Harness：intake→execute→evidence_audit→release_gate）</h2>
     <div class="row"><input id="rq" size="42" placeholder="查詢，如：惡寒發熱，汗出，脈浮緩，應當用什麼方？">
     <select id="rm"><option>agent</option><option>council</option><option>deep-research</option><option>solve</option></select>
@@ -130,43 +135,71 @@ async function showRun(id){
   const nodes=Object.entries(d.nodes||{}).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${tag(v.status)}</td><td>${v.attempts}次/${v.duration_ms}ms</td><td class="dim">${esc(v.error||"")}</td></tr>`).join("");
   const tools=(d.tool_calls||[]).map(t=>`<tr><td>${esc(t.tool)}</td><td class="kv">${esc(t.span_id)}</td><td class="dim">${esc(t.error||"—")}</td></tr>`).join("");
   const ledger=Object.values(d.evidence_ledger||{}).flat();
-  const led=ledger.map(r=>`<tr><td class="kv">${esc(r.clause_id)}</td><td class="kv">${esc(r.tool)}</td><td class="kv">${esc((r.source_hash||"").slice(0,8))}</td></tr>`).join("");
+  const led=ledger.map(r=>`<tr><td class="kv">${esc(r.clause_id)}</td><td class="kv">${esc(r.tool)}</td>
+    <td>${r.evidence_role==="primary_text_returned"?"<span class='tag pass'>正文</span>":"<span class='tag paused'>僅編號</span>"}</td>
+    <td class="dim">${esc(r.excerpt||"—")}</td><td class="kv">${esc(r.retrieval_query||"")}</td>
+    <td class="kv" title="tool_call ${esc(r.tool_call_id||"")}">${esc((r.source_hash||"").slice(0,8))}</td></tr>`).join("");
+  const spans=(d.spans||[]).filter(x=>x.span_type!=="run");
+  const maxms=Math.max(1,...spans.map(x=>x.duration_ms||0));
+  const water=spans.map(x=>{const w=Math.max(2,Math.round((x.duration_ms||0)/maxms*140));
+    const ind=x.span_type==="tool"?18:0;
+    return `<div style="margin:1px 0 1px ${ind}px"><span class="kv">${esc(x.span_type)}·${esc(x.name)}</span>
+    <span style="display:inline-block;height:8px;width:${w}px;background:${x.error?"var(--bad)":"var(--acc)"};border-radius:3px;vertical-align:middle;margin:0 6px"></span>
+    <span class="dim">${x.duration_ms}ms${x.metadata&&x.metadata.cache_hit?" ·緩存":""}${x.error?" ·"+esc(String(x.error).slice(0,40)):""}</span></div>`;}).join("");
   const appr=(d.approval_requests||[]).map(a=>`<tr><td>${esc(a.trigger)}</td><td>${tag(a.status)}</td><td class="dim">${esc(a.reason)}</td></tr>`).join("");
   c.innerHTML=`<h2>Run ${esc(id)} ${tag(d.status)} · 發布：${tag((d.release||{}).decision||"—")}</h2>
     <div class="row">
-      <button onclick="runAct('${esc(id)}','approve')">✓ 批准（重跑下游閘門）</button>
-      <button class="warn" onclick="runAct('${esc(id)}','reject')">✗ 駁回</button>
+      <button onclick="runActReason('${esc(id)}','approve')">✓ 批准（填理由，重跑下游閘門）</button>
+      <button class="warn" onclick="runActReason('${esc(id)}','reject')">✗ 駁回（填理由）</button>
+      <button class="warn" onclick="runAct('${esc(id)}','cancel')">⊘ 取消</button>
       <button onclick="runAct('${esc(id)}','replay')">重放</button>
       <button onclick="runExport('${esc(id)}')">導出 MD</button></div>
+    <div class="dim">技術失敗（空輸出/節點降級/非法請求）不可經批准洗白——審批僅裁決學術/臨床審核項。</div>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <div><h2>節點軌跡（DAG）</h2><table><tr><th>節點</th><th>狀態</th><th>耗時</th><th>錯誤</th></tr>${nodes}</table>
         <h2 style="margin-top:10px">審批請求</h2><table>${appr||"<tr><td class='dim'>（無）</td></tr>"}</table></div>
       <div><h2>工具調用（${(d.tool_calls||[]).length}）· 預算 ${esc(JSON.stringify(d.budget_snapshot||{}))}</h2><table>${tools||"<tr><td class='dim'>（無）</td></tr>"}</table>
-        <h2 style="margin-top:10px">證據台賬（Broker 登記 ${ledger.length} 條）</h2><table><tr><th>clause</th><th>tool</th><th>hash</th></tr>${led||"<tr><td class='dim'>（空）</td></tr>"}</table></div></div>
+        <h2 style="margin-top:10px">Span 瀑布（父子/耗時/錯誤/緩存）</h2><div style="max-height:220px;overflow:auto">${water||"<span class='dim'>（無）</span>"}</div>
+        <h2 style="margin-top:10px">證據台賬（Broker 登記 ${ledger.length} 條 · 正文/僅編號分列）</h2>
+        <div style="max-height:240px;overflow:auto"><table><tr><th>clause</th><th>tool</th><th>角色</th><th>摘錄</th><th>query</th><th>hash</th></tr>${led||"<tr><td class='dim'>（空）</td></tr>"}</table></div></div></div>
     <h2 style="margin-top:10px">最終回答</h2><pre>${esc(d.final_answer||"（無）")}</pre>
     <h2>發布裁定</h2><pre>${esc(JSON.stringify(d.release||{},null,1))}</pre>`;
   c.scrollIntoView({behavior:"smooth"});
 }
-async function runAct(id,act){try{const o=await POST(`/api/runs/${id}/${act}`,{approver:WHO.principal_id||"console"});alert(JSON.stringify(o,null,1).slice(0,600));showRun(id);loadRuns();}catch(e){alert(e.message);}}
+async function runAct(id,act,reason){try{const o=await POST(`/api/runs/${id}/${act}`,{approver:WHO.principal_id||"console",reason:reason||""});alert(JSON.stringify(o,null,1).slice(0,600));showRun(id);loadRuns();}catch(e){alert(e.message);}}
+function runActReason(id,act){const r=prompt(act==="approve"?"審批理由（記錄於 guardrail 審計）":"駁回理由");if(r===null)return;runAct(id,act,r);}
 async function runExport(id){const o=await POST(`/api/runs/${id}/export`,{});const w=window.open("");w.document.write("<pre>"+esc(o.markdown||o.error)+"</pre>");}
 
 // ─── 會話（真多輪：session_id 回傳續接 + 結構化指代解析）─────────────────
-let SESSION_ID="";
+let SESSION_ID=localStorage.getItem("hermes_session")||"";
 views.chat=async()=>{
-  $("#main").innerHTML=`<div class="card"><h2>多輪會話（/api/chat · session_id 服務端生成並續接）</h2>
+  $("#main").innerHTML=`<div class="card"><h2>多輪會話（/api/chat · session_id 服務端生成並續接，逐輪持久化）</h2>
     <div class="chat" id="chatlog"></div>
     <div class="row"><input id="cq" size="46" placeholder="如：桂枝湯的方證要點？——追問：它的劑量比呢？">
     <button class="pri" onclick="sendChat()">發送</button>
-    <button onclick="SESSION_ID='';$('#chatlog').innerHTML='';$('#sess').textContent='（新會話）'">新會話</button></div>
-    <div class="dim" id="sess">（新會話）</div></div>`;
+    <button onclick="SESSION_ID='';localStorage.removeItem('hermes_session');$('#chatlog').innerHTML='';$('#sess').textContent='（新會話）'">新會話</button></div>
+    <div class="dim" id="sess">${SESSION_ID?("續接 "+SESSION_ID):"（新會話）"}</div></div>
+    <div class="card"><h2>歷史會話（持久化，可複核逐輪指代解析）</h2><div id="sesslist" class="dim">載入中…</div></div>`;
   $("#cq").addEventListener("keydown",e=>{if(e.key==="Enter")sendChat();});
+  try{const o=await GET("/api/sessions");
+    $("#sesslist").innerHTML=o.sessions.length?`<table><tr><th>session</th><th>輪數</th><th>最後</th><th>預覽</th><th></th></tr>`+
+      o.sessions.map(x=>`<tr><td class="kv">${esc(x.session_id)}</td><td>${x.n_turns}</td><td class="dim">${esc(x.last_at)}</td><td class="dim">${esc(x.preview)}</td>
+      <td><button onclick="resumeSession('${esc(x.session_id)}')">續接</button>
+      <button onclick="viewTurns('${esc(x.session_id)}')">逐輪</button>
+      <button class="warn" onclick="delSession('${esc(x.session_id)}')">刪</button></td></tr>`).join("")+"</table>":"（無歷史會話）";
+  }catch(e){$("#sesslist").textContent=e.message;}
 };
+function resumeSession(id){SESSION_ID=id;localStorage.setItem("hermes_session",id);$("#sess").textContent="續接 "+id;}
+async function viewTurns(id){const o=await GET("/api/sessions/"+id);
+  const w=window.open("");w.document.write("<pre>"+esc(JSON.stringify(o,null,1))+"</pre>");}
+async function delSession(id){await POST(`/api/sessions/${id}/delete`,{});views.chat();}
 async function sendChat(){
   const q=$("#cq").value.trim();if(!q)return;$("#cq").value="";
   const log=$("#chatlog");log.insertAdjacentHTML("beforeend",`<div class="msg u">${esc(q)}</div>`);
   log.insertAdjacentHTML("beforeend",`<div class="msg a" id="pending">…</div>`);log.scrollTop=1e9;
   try{const o=await POST("/api/chat",{question:q,session_id:SESSION_ID});
     const s=o.session||{};SESSION_ID=s.session_id||SESSION_ID;
+    if(SESSION_ID)localStorage.setItem("hermes_session",SESSION_ID);
     const rr=s.reference_resolution||{};
     let meta=`回合 ${s.turn} · 錨點 ${(s.anchors||[]).join("、")||"—"}`;
     if(rr.status==="resolved")meta+=` · 指代「${rr.mention}」→ ${rr.resolved}（置信 ${rr.confidence}）`;
@@ -209,7 +242,8 @@ views.artifacts=async()=>{
   try{const o=await GET("/api/artifacts");
     $("#arts").innerHTML=o.artifacts.length?`<table><tr><th>類型</th><th>路徑</th><th>大小</th><th></th></tr>`+
       o.artifacts.map(a=>`<tr><td>${esc(a.kind)}</td><td class="kv">${esc(a.path)}</td><td>${a.bytes}B</td>
-      <td><button onclick="viewArt('${esc(a.path)}')">查看</button></td></tr>`).join("")+"</table>":
+      <td><button onclick="viewArt('${esc(a.path)}')">查看</button>
+      <a href="/api/artifact/download?path=${encodeURIComponent(a.path)}" download><button>下載</button></a></td></tr>`).join("")+"</table>":
       "<span class='dim'>（暫無——生成論文或運行 Harness 後出現）</span>";
   }catch(e){$("#arts").innerHTML=esc(e.message);}
 };

@@ -255,9 +255,39 @@ def _whoami(svc, body, m, q, ctx=None):
             "request_id": ctx.request_id}
 
 
+def _qint(q, key, default, lo, hi):
+    """查詢串整數容錯：非數字/越界 → 400 級錯誤對象（不拋 500）。"""
+    raw = (q.get(key, [str(default)]))[0]
+    try:
+        return max(lo, min(hi, int(raw)))
+    except (TypeError, ValueError):
+        return None
+
+
 @route("GET", r"/api/runs", min_role="student")
 def _runs(svc, body, m, q, ctx=None):
-    return svc.runs_list(limit=int((q.get("limit", ["30"]))[0]))
+    limit = _qint(q, "limit", 30, 1, 100)
+    if limit is None:
+        return {"error": "limit 必須是 1-100 的整數", "_status": 400}
+    return svc.runs_list(limit=limit)
+
+
+@route("GET", r"/api/runs/([A-Za-z0-9_\-]+)/spans", min_role="student")
+def _run_spans(svc, body, m, q, ctx=None):
+    offset = _qint(q, "offset", 0, 0, 100000)
+    limit = _qint(q, "limit", 60, 1, 200)
+    if offset is None or limit is None:
+        return {"error": "offset/limit 必須是整數", "_status": 400}
+    return svc.run_spans(m.group(1), offset=offset, limit=limit)
+
+
+@route("GET", r"/api/runs/([A-Za-z0-9_\-]+)/evidence", min_role="student")
+def _run_evidence(svc, body, m, q, ctx=None):
+    offset = _qint(q, "offset", 0, 0, 100000)
+    limit = _qint(q, "limit", 100, 1, 400)
+    if offset is None or limit is None:
+        return {"error": "offset/limit 必須是整數", "_status": 400}
+    return svc.run_evidence(m.group(1), offset=offset, limit=limit)
 
 
 @route("GET", r"/api/runs/([A-Za-z0-9_\-]+)", min_role="student")
@@ -275,12 +305,13 @@ def _run_start(svc, body, m, q, ctx=None):
                          max_tool_calls=int(body.get("max_tool_calls", 12)))
 
 
-@route("POST", r"/api/runs/([A-Za-z0-9_\-]+)/(approve|reject|resume|replay|export)",
+@route("POST", r"/api/runs/([A-Za-z0-9_\-]+)/(approve|reject|resume|cancel|replay|export)",
        min_role="doctor")
 def _run_action(svc, body, m, q, ctx=None):
     return svc.run_action(m.group(1), m.group(2),
                           approver=str(body.get("approver", ""))
-                          or ctx.principal_id)
+                          or ctx.principal_id,
+                          reason=str(body.get("reason", ""))[:400])
 
 
 @route("POST", r"/api/eval/trajectory", min_role="researcher")
@@ -301,6 +332,36 @@ def _artifacts(svc, body, m, q, ctx=None):
 @route("GET", r"/api/artifact", min_role="student")
 def _artifact(svc, body, m, q, ctx=None):
     return svc.artifact_read((q.get("path", [""]))[0])
+
+
+@route("GET", r"/api/artifact/meta", min_role="student")
+def _artifact_meta(svc, body, m, q, ctx=None):
+    return svc.artifact_meta((q.get("path", [""]))[0])
+
+
+@route("GET", r"/api/artifact/download", min_role="student")
+def _artifact_download(svc, body, m, q, ctx=None):
+    out = svc.artifact_download((q.get("path", [""]))[0])
+    if out is None:
+        return {"error": "路徑不合法/文件不存在/超過 8MB 下載上限",
+                "_status": 404}
+    filename, mime, data = out
+    return {"_file": {"filename": filename, "mime": mime}, "_bytes": data}
+
+
+@route("GET", r"/api/sessions", min_role="student")
+def _sessions(svc, body, m, q, ctx=None):
+    return svc.sessions_list(ctx.principal_id)
+
+
+@route("GET", r"/api/sessions/([A-Za-z0-9_\-]+)", min_role="student")
+def _session_turns(svc, body, m, q, ctx=None):
+    return svc.session_turns(ctx.principal_id, m.group(1))
+
+
+@route("POST", r"/api/sessions/([A-Za-z0-9_\-]+)/delete", min_role="student")
+def _session_delete(svc, body, m, q, ctx=None):
+    return svc.session_delete(ctx.principal_id, m.group(1))
 
 
 @route("GET", r"/api/governance", min_role="student")
@@ -447,6 +508,22 @@ def make_handler(service: ServiceContext):
                     try:
                         kwargs = {"ctx": ctx} if wants_ctx else {}
                         result = fn(service, body, mt, query, **kwargs)
+                        # 文件下載：附件頭 + 原始字節（十三輪 十三）
+                        if isinstance(result, dict) and "_file" in result:
+                            meta = result["_file"]
+                            self.send_response(200)
+                            self.send_header("Content-Type", meta["mime"])
+                            self.send_header(
+                                "Content-Disposition",
+                                f'attachment; filename="{meta["filename"]}"')
+                            data = result["_bytes"]
+                            self.send_header("Content-Length", str(len(data)))
+                            self.end_headers()
+                            self.wfile.write(data)
+                            return
+                        status = 200
+                        if isinstance(result, dict) and "_status" in result:
+                            status = int(result.pop("_status"))
                         # 患者投影在序列化出口再次執行（不只依賴業務函數）
                         result = policy.project_for_role(result,
                                                          ctx.effective_role)
@@ -460,7 +537,7 @@ def make_handler(service: ServiceContext):
                                              "trace_id": tid,
                                              "hint": "縮小 top_k/limit 或分頁"})
                             return
-                        self._send(200, result)
+                        self._send(status, result)
                     except Exception as exc:
                         tid = _uuid.uuid4().hex[:12]
                         print(f"[error trace_id={tid}] {method} {path}")

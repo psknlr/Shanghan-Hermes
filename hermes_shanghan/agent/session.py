@@ -50,7 +50,7 @@ class AgentSession:
         role = role or self.role
         self._record_corrections(question)
         resolution = self._resolve_reference(question)
-        contextual = self._contextualize(question)
+        contextual = self._contextualize(question, resolution)
         if RE_COMPOUND.search(question):
             agent = ComplexAgent(client=self.client, registry=self.registry)
             out = agent.solve(contextual, role=role)
@@ -134,11 +134,35 @@ class AgentSession:
                           for c in self.corrections[-3:])
         return f"（用戶已糾正，請勿再犯：{pairs}）"
 
-    def _contextualize(self, question: str) -> str:
+    # 可被直接替換為主語的代詞（呢/上面 等語氣與方位詞不可直替）
+    _SUBSTITUTABLE = ("它", "此方", "該方", "這個", "那個", "其")
+
+    def _contextualize(self, question: str, resolution: Optional[Dict] = None
+                       ) -> str:
+        """把指代解析結果作為**硬約束**注入改寫問題（十三輪 P0-六：
+        「元數據解析對、答案答錯方」的根因是舊實現只給模型看歷史錨點
+        列表——第一輪回答裡順帶出現的類方（桂枝加芍藥湯…）會污染路由。
+        現在：解析成功時直接把代詞改寫為主語方名，且**不再**注入多方名
+        錨點列表，路由只能看到主語。"""
         note = self._correction_note()
         if not self.history or not RE_FOLLOWUP.search(question):
             return (note + "\n" + question) if note else question
         last = self.history[-1]
+        if resolution and resolution.get("status") == "resolved":
+            subject = resolution["resolved"]
+            mention = resolution.get("mention") or ""
+            rewritten = question
+            if mention in self._SUBSTITUTABLE and mention in question:
+                rewritten = question.replace(mention, subject, 1)
+            elif subject not in question:
+                rewritten = f"{subject}{question}" if question.startswith(
+                    ("的", "之")) else f"{subject}：{question}"
+            ctx = (f"（指代解析：「{mention}」={subject}。請圍繞{subject}"
+                   f"本方作答，勿切換到其加減方或類方")
+            if last["evidence"]:
+                ctx += f"；上輪已核實條文：{'、'.join(last['evidence'][:4])}"
+            ctx += "）"
+            return ctx + (note or "") + "\n當前追問：" + rewritten
         ctx = [f"（先前對話：問「{last['question'][:40]}」，"
                f"答及 {'、'.join(self.anchors[:3]) or '（無方名）'}"]
         if last["evidence"]:

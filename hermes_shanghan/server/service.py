@@ -281,6 +281,10 @@ class ServiceContext:
         out.setdefault("session", {})
         out["session"]["session_id"] = sid
         out["session"]["namespace"] = subject
+        try:
+            self._persist_turn(subject, sid, question, out)
+        except Exception:
+            pass          # 持久化盡力而為，不阻斷回答
         if generated:
             out["session"]["note"] = ("服務端已生成獨立 session_id；"
                                       "續接上下文請在後續請求回傳該 id")
@@ -355,43 +359,73 @@ class ServiceContext:
                       for e in events][-120:]
         return d
 
+    # 有界執行器（十三輪 九：後台線程→受控任務池；隊列/lease/多 worker
+    # 屬 SQLite 路線，見 PLATFORM.md）
+    RUN_WORKERS = int(os.environ.get("HERMES_RUN_WORKERS", "2"))
+    MAX_QUERY_CHARS = 20_000
+
+    def _run_executor(self):
+        if not hasattr(self, "_executor"):
+            from concurrent.futures import ThreadPoolExecutor
+            self._executor = ThreadPoolExecutor(
+                max_workers=self.RUN_WORKERS,
+                thread_name_prefix="hermes-run")
+        return self._executor
+
     def run_start(self, query: str, mode: str = "agent",
                   role: str = "researcher", max_steps: int = 6,
                   max_tool_calls: int = 12) -> Dict:
-        """異步啟動：先返回 run_id，後台線程執行；前端輪詢 run_detail。"""
-        import threading
+        """創建前校驗（十三輪 十：非法請求 400，不創建注定失敗的任務）→
+        queued 狀態**同步落盤**（幽靈 run 根除）→ 提交有界任務池 →
+        前端輪詢 run_detail。"""
         from ..agent.harness import HarnessRunner
-        from ..agent.harness.state import new_run_id
+        from ..agent.harness.state import RUN_MODES
         if not (query or "").strip():
-            return {"error": "query 不能為空"}
-        rid = new_run_id(query)
+            return {"error": "query 不能為空", "_status": 400}
+        if len(query) > self.MAX_QUERY_CHARS:
+            return {"error": f"query 超長（>{self.MAX_QUERY_CHARS}）",
+                    "_status": 400}
+        if mode not in RUN_MODES:
+            return {"error": f"未知模式 {mode!r}", "supported": RUN_MODES,
+                    "_status": 400}
+        max_steps = max(1, min(50, int(max_steps)))
+        max_tool_calls = max(0, min(100, int(max_tool_calls)))
+        runner = HarnessRunner()
+        state = runner.prepare(query, mode=mode, role=role,
+                               max_steps=max_steps,
+                               max_tool_calls=max_tool_calls)
+        rid = state.spec.run_id           # 此刻 state.json 已持久化（queued）
 
         def _work():
             try:
-                HarnessRunner().start(query, mode=mode, role=role,
-                                      max_steps=max_steps,
-                                      max_tool_calls=max_tool_calls,
-                                      run_id=rid)
+                runner.execute_prepared(rid)
             except Exception:
                 import traceback
                 traceback.print_exc()
 
-        threading.Thread(target=_work, daemon=True).start()
-        return {"run_id": rid, "status": "started",
+        self._run_executor().submit(_work)
+        return {"run_id": rid, "status": "queued",
                 "hint": "輪詢 GET /api/runs/<run_id> 查看節點軌跡與發布裁定"}
 
-    def run_action(self, run_id: str, action: str,
-                   approver: str = "") -> Dict:
+    def run_action(self, run_id: str, action: str, approver: str = "",
+                   reason: str = "") -> Dict:
         from ..agent.harness import HarnessRunner
         from ..agent.harness.runner import export_run
         if action == "approve":
             st = HarnessRunner().resume(run_id, approve=True,
-                                        approver=approver or "console")
+                                        approver=approver or "console",
+                                        reason=reason)
         elif action == "reject":
             st = HarnessRunner().resume(run_id, reject=True,
-                                        approver=approver or "console")
+                                        approver=approver or "console",
+                                        reason=reason)
         elif action == "resume":
             st = HarnessRunner().resume(run_id)
+        elif action == "cancel":
+            ok = HarnessRunner.request_cancel(run_id)
+            return {"run_id": run_id, "cancel_requested": ok,
+                    "note": "協作式取消：節點邊界生效（節點內工具只讀原子）"} \
+                if ok else {"error": f"未找到 run {run_id}"}
         elif action == "replay":
             out = HarnessRunner().replay(run_id)
             return out or {"error": f"未找到 run {run_id}"}
@@ -401,12 +435,36 @@ class ServiceContext:
                 {"error": f"未找到 run {run_id}"}
         else:
             return {"error": f"未知動作 {action}",
-                    "supported": ["approve", "reject", "resume", "replay",
-                                  "export"]}
+                    "supported": ["approve", "reject", "resume", "cancel",
+                                  "replay", "export"]}
         if st is None:
             return {"error": f"未找到 run {run_id}"}
         return {"run_id": run_id, "status": st.status,
                 "release": st.release, "pending_review": st.pending_review}
+
+    def run_spans(self, run_id: str, offset: int = 0,
+                  limit: int = 60) -> Dict:
+        """span 分頁讀取（十三輪 十二：大運行詳情不可一次性全量返回）。"""
+        from ..agent.harness.runner import run_dir
+        from ..agent.harness.tracing import TraceStore
+        events = TraceStore(run_dir(run_id)).read()
+        offset = max(0, int(offset)); limit = max(1, min(200, int(limit)))
+        return {"run_id": run_id, "total": len(events),
+                "offset": offset, "limit": limit,
+                "spans": events[offset:offset + limit]}
+
+    def run_evidence(self, run_id: str, offset: int = 0,
+                     limit: int = 100) -> Dict:
+        from ..agent.harness.runner import load_run
+        st = load_run(run_id)
+        if st is None:
+            return {"error": f"未找到 run {run_id}"}
+        recs = [dict(r, node=n) for n, v in st.evidence_ledger.items()
+                for r in v]
+        offset = max(0, int(offset)); limit = max(1, min(400, int(limit)))
+        return {"run_id": run_id, "total": len(recs),
+                "offset": offset, "limit": limit,
+                "records": recs[offset:offset + limit]}
 
     # -- 評測（十二輪：評測運行進 UI）------------------------------------
     def eval_trajectory(self) -> Dict:
@@ -434,19 +492,125 @@ class ServiceContext:
                 "note": "下載走 /api/artifact?path=…（僅限 papers/ 與 runs/，"
                         "路徑穿越一律拒絕）"}
 
-    def artifact_read(self, rel_path: str) -> Dict:
+    def _artifact_target(self, rel_path: str):
         base = config.SHANGHAN_DIR.resolve()
         target = (base / (rel_path or "")).resolve()
         allowed = (base / "papers", base / "runs")
         if not any(str(target).startswith(str(a.resolve()) + os.sep)
                    or target == a.resolve() for a in allowed) \
                 or not target.is_file():
+            return None
+        return target
+
+    def artifact_read(self, rel_path: str) -> Dict:
+        target = self._artifact_target(rel_path)
+        if target is None:
             return {"error": "路徑不合法或文件不存在（僅限 papers/ 與 runs/）"}
         if target.stat().st_size > 1_500_000:
             return {"error": "文件超過下載上限 1.5MB，請用倉庫/磁盤方式獲取"}
         return {"path": rel_path,
                 "content": target.read_text(encoding="utf-8",
                                             errors="replace")}
+
+    def artifact_meta(self, rel_path: str) -> Dict:
+        """Artifact 元數據（十三輪 十三）：哈希/大小/MIME/語料指紋。"""
+        import hashlib
+        import mimetypes
+        target = self._artifact_target(rel_path)
+        if target is None:
+            return {"error": "路徑不合法或文件不存在（僅限 papers/ 與 runs/）"}
+        from ..agent.harness.state import spec_versions
+        return {"path": rel_path, "filename": target.name,
+                "bytes": target.stat().st_size,
+                "mime_type": mimetypes.guess_type(target.name)[0]
+                or "text/plain",
+                "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
+                "corpus_fingerprint": spec_versions()["corpus_version"]}
+
+    def artifact_download(self, rel_path: str):
+        """返回 (filename, mime, bytes)——http 層以 Content-Disposition:
+        attachment 下發；None = 不合法。"""
+        import mimetypes
+        target = self._artifact_target(rel_path)
+        if target is None or target.stat().st_size > 8_000_000:
+            return None
+        return (target.name,
+                mimetypes.guess_type(target.name)[0]
+                or "application/octet-stream", target.read_bytes())
+
+    # -- 會話持久化（十三輪 十五：刷新不丟、可列可刪可複核逐輪解析）------
+    def _session_file(self, subject: str, sid: str):
+        import re as _re
+        safe = _re.sub(r"[^A-Za-z0-9_\-]", "_", f"{subject}__{sid}")[:80]
+        d = config.SHANGHAN_DIR / "sessions"
+        d.mkdir(parents=True, exist_ok=True)
+        return d / f"{safe}.json"
+
+    def _persist_turn(self, subject: str, sid: str, question: str,
+                      out: Dict) -> None:
+        import json
+        import time
+        p = self._session_file(subject, sid)
+        doc = {"session_id": sid, "namespace": subject, "turns": []}
+        if p.exists():
+            try:
+                doc = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        s = out.get("session", {})
+        doc["turns"].append({
+            "turn_id": len(doc["turns"]) + 1,
+            "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "user_message": question[:2000],
+            "reference_resolution": s.get("reference_resolution"),
+            "anchors": s.get("anchors", []),
+            "answer": (out.get("answer") or out.get("message", ""))[:2000],
+            "evidence_ids": out.get("evidence_clause_ids", [])[:12],
+        })
+        doc["turns"] = doc["turns"][-50:]
+        tmp = p.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=1),
+                       encoding="utf-8")
+        tmp.replace(p)
+
+    def sessions_list(self, subject: str) -> Dict:
+        import json
+        d = config.SHANGHAN_DIR / "sessions"
+        out = []
+        if d.exists():
+            for p in sorted(d.glob("*.json"), reverse=True):
+                try:
+                    doc = json.loads(p.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                if doc.get("namespace") != subject:
+                    continue        # 命名空間隔離：只列本主體的會話
+                turns = doc.get("turns", [])
+                out.append({"session_id": doc.get("session_id"),
+                            "n_turns": len(turns),
+                            "last_at": turns[-1]["at"] if turns else "",
+                            "preview": (turns[-1]["user_message"][:40]
+                                        if turns else "")})
+        return {"sessions": out[:50]}
+
+    def session_turns(self, subject: str, sid: str) -> Dict:
+        import json
+        p = self._session_file(subject, sid)
+        if not p.exists():
+            return {"error": f"未找到會話 {sid}"}
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        if doc.get("namespace") != subject:
+            return {"error": "會話不屬於當前主體"}
+        return doc
+
+    def session_delete(self, subject: str, sid: str) -> Dict:
+        p = self._session_file(subject, sid)
+        if not p.exists():
+            return {"error": f"未找到會話 {sid}"}
+        p.unlink()
+        if hasattr(self, "_sessions"):
+            self._sessions.pop(f"{subject}:{sid}", None)
+        return {"deleted": sid}
 
     # -- 治理面板 ---------------------------------------------------------
     def governance(self) -> Dict:
