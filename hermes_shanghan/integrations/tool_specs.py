@@ -35,11 +35,14 @@ def dispatch(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
 
 def export_specs(out_path: Path) -> Path:
     """Write a portable spec bundle (OpenAI + Anthropic + MCP-style) to disk."""
+    from ..agent.tools import TOOLS_VERSION, get_registry
     bundle = {
         "name": "hermes-shanghanlun",
         "description": "《傷寒論》自主規則挖掘與證據回源工具集（只讀、回源 clause_id）。",
+        "tool_spec_version": TOOLS_VERSION,
         "openai_tools": openai_tool_specs(),
         "anthropic_tools": anthropic_tool_specs(),
+        "contracts": get_registry().contracts(),
         "invocation": {
             "cli": "python3 -m hermes_shanghan tool-call <name> --args '<json>'",
             "mcp": "python3 -m hermes_shanghan serve-mcp",

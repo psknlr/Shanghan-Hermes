@@ -256,8 +256,11 @@ class ServiceContext:
         from ..agent.multi_agent import Council
         return Council(client=self.llm, registry=self.registry).deliberate(question, role=role)
 
-    def tool_call(self, name: str, arguments: Dict) -> Dict:
-        return self.registry.call(name, arguments or {})
+    def tool_call(self, name: str, arguments: Dict, role: str = "") -> Dict:
+        # /api/tool 按角色限權（評審第 12 條）：patient 經 ScopedRegistry
+        # 硬裁剪工具面；默認 researcher（全部只讀工具）
+        reg = self.registry.for_role(role) if role else self.registry
+        return reg.call(name, arguments or {})
 
     def trace(self, query_type: str, ref: str) -> Dict:
         from ..trace.chains import trace_dispatch

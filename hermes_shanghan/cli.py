@@ -312,6 +312,65 @@ def cmd_formula_explain(args):
     _print(safety.governed(formula_explain(args.name), args.role or "doctor"))
 
 
+def cmd_run(args):
+    """Harness 運行：顯式節點圖 + checkpoint + span 軌跡 + 發布閘門。"""
+    _need_pipeline()
+    from .agent.harness import HarnessRunner
+    st = HarnessRunner().start(args.query, mode=args.mode, role=args.role or
+                               ("doctor" if args.mode != "deep-research"
+                                else "researcher"),
+                               max_steps=args.max_steps)
+    _print({"run_id": st.spec.run_id, "status": st.status,
+            "release": st.release, "pending_review": st.pending_review,
+            "answer": st.final_answer,
+            "nodes": {k: v.status for k, v in st.nodes.items()},
+            "n_tool_calls": len(st.tool_calls),
+            "hint": (f"人工審核：python3 -m hermes_shanghan run-resume "
+                     f"{st.spec.run_id} --approve" if st.status == "paused"
+                     else "")})
+
+
+def cmd_run_list(args):
+    from .agent.harness import list_runs
+    _print({"runs": list_runs()})
+
+
+def cmd_run_resume(args):
+    _need_pipeline()
+    from .agent.harness import HarnessRunner
+    st = HarnessRunner().resume(args.run_id, approve=args.approve,
+                                approver=args.approver)
+    if st is None:
+        print(f"未找到 run {args.run_id}", file=sys.stderr)
+        sys.exit(1)
+    _print({"run_id": st.spec.run_id, "status": st.status,
+            "release": st.release, "answer": st.final_answer})
+
+
+def cmd_run_replay(args):
+    _need_pipeline()
+    from .agent.harness import HarnessRunner
+    out = HarnessRunner().replay(args.run_id)
+    if out is None:
+        print(f"未找到 run {args.run_id}", file=sys.stderr)
+        sys.exit(1)
+    _print(out)
+
+
+def cmd_run_export(args):
+    from .agent.harness.runner import export_run
+    out = export_run(args.run_id, fmt=args.format)
+    if out is None:
+        print(f"未找到 run {args.run_id}", file=sys.stderr)
+        sys.exit(1)
+    if args.out:
+        from pathlib import Path
+        Path(args.out).write_text(out, encoding="utf-8")
+        print(f"已導出 {args.out}")
+    else:
+        print(out)
+
+
 def cmd_intake(args):
     """四診信息採集：自然敘述 → 結構化四診表（信息整理，非診斷）。"""
     _need_pipeline()
@@ -766,6 +825,34 @@ def main(argv: Optional[List[str]] = None) -> int:
                         help="引文識別金標準：讀回人工標註計 P/R/F1 與模式一致率")
     sp.add_argument("--file", required=True, help="已標註 CSV 路徑")
     sp.set_defaults(func=cmd_trace_gold_eval)
+
+    sp = sub.add_parser("run",
+                        help="Harness 運行：節點圖+checkpoint+span 軌跡+發布閘門（可恢復）")
+    sp.add_argument("query")
+    sp.add_argument("--mode", default="agent",
+                    choices=["agent", "council", "deep-research", "solve"])
+    sp.add_argument("--role", choices=list(safety.ROLES))
+    sp.add_argument("--max-steps", type=int, default=6)
+    sp.set_defaults(func=cmd_run)
+
+    sp = sub.add_parser("run-list", help="列出 harness 運行")
+    sp.set_defaults(func=cmd_run_list)
+
+    sp = sub.add_parser("run-resume", help="恢復中斷的運行 / --approve 人工審核放行")
+    sp.add_argument("run_id")
+    sp.add_argument("--approve", action="store_true")
+    sp.add_argument("--approver", default="")
+    sp.set_defaults(func=cmd_run_resume)
+
+    sp = sub.add_parser("run-replay", help="重放運行（local 後端全確定，對比回答指紋）")
+    sp.add_argument("run_id")
+    sp.set_defaults(func=cmd_run_replay)
+
+    sp = sub.add_parser("run-export", help="導出運行報告（md/json：節點軌跡+工具span+證據台賬）")
+    sp.add_argument("run_id")
+    sp.add_argument("--format", default="md", choices=["md", "json"])
+    sp.add_argument("--out", default="")
+    sp.set_defaults(func=cmd_run_export)
 
     sp = sub.add_parser("intake",
                         help="四診信息採集：自然敘述→結構化四診表+缺失信息+追問（非診斷）")

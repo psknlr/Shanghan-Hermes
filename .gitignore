@@ -8,3 +8,6 @@ dist/
 
 # full jicheng library (69MB archive / 311MB extracted) — fetched on demand
 data/library/
+
+# harness runs（run_id/時間戳，按需導出，不入庫）
+data/shanghan/runs/

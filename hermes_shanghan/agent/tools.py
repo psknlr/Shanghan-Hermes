@@ -16,6 +16,10 @@ from .. import config
 from ..schemas import read_jsonl
 
 
+TOOLS_VERSION = "1.1.0"             # 工具面語義版本（契約隨規格導出）
+MAX_RESULT_BYTES = 262_144          # 單工具結果上限（外部 harness 穩定集成）
+
+
 @dataclass
 class Tool:
     name: str
@@ -27,6 +31,30 @@ class Tool:
         return {"type": "function", "function": {
             "name": self.name, "description": self.description,
             "parameters": self.parameters}}
+
+    def contract(self) -> Dict:
+        """機器可讀工具契約（評審第 6 條）：版本/權限/副作用/證據層/
+        冪等性/大小限制/schema 指紋。純標準庫實現（無 Pydantic），
+        輸入校驗見 _validate_args，輸出大小護欄見 call()。"""
+        import hashlib
+        meta = TOOL_META.get(self.name, {})
+        return {
+            "name": self.name,
+            "version": TOOLS_VERSION,
+            "permission_level": ("patient_safe" if self.name in PATIENT_SAFE_TOOLS
+                                 else "doctor_researcher"),
+            "evidence_level": meta.get("evidence_level", ""),
+            "limitations": meta.get("limitations", []),
+            "side_effect": "read",          # 全部工具只讀（設計不變式）
+            "timeout_s": 30,
+            "cacheable": True,
+            "idempotent": True,
+            "max_result_bytes": MAX_RESULT_BYTES,
+            "error_schema": {"error": "string", "hint": "string?"},
+            "schema_hash": hashlib.sha256(
+                json.dumps(self.parameters, sort_keys=True,
+                           ensure_ascii=False).encode()).hexdigest()[:16],
+        }
 
 
 # —— uniform result envelope ————————————————————————————————————
@@ -963,11 +991,22 @@ class ToolRegistry:
         except Exception as exc:  # never crash the agent on a tool error
             return {"error": f"tool {name} failed: {type(exc).__name__}: {exc}"}
         result = self._stamp(name, result)
+        # 輸出大小護欄（工具契約 max_result_bytes）：超限如實報錯而非靜默截斷
+        if isinstance(result, dict):
+            blob = json.dumps(result, ensure_ascii=False, default=str)
+            if len(blob.encode("utf-8")) > MAX_RESULT_BYTES:
+                return {"tool": name,
+                        "error": f"結果超過契約上限 {MAX_RESULT_BYTES} bytes",
+                        "hint": "縮小 top_k/limit 參數或分頁調用"}
         if isinstance(result, dict) and "error" not in result:
             if len(self._cache) >= self._cache_size:
                 self._cache.pop(next(iter(self._cache)))
             self._cache[key] = copy.deepcopy(result)
         return result
+
+    def contracts(self) -> List[Dict]:
+        """全部工具的機器可讀契約（隨 tool_specs.json 導出）。"""
+        return [self._tools[n].contract() for n in sorted(self._tools)]
 
     # -- envelope helpers -------------------------------------------------
     @staticmethod

@@ -1,6 +1,7 @@
 {
  "name": "hermes-shanghanlun",
  "description": "《傷寒論》自主規則挖掘與證據回源工具集（只讀、回源 clause_id）。",
+ "tool_spec_version": "1.1.0",
  "openai_tools": [
   {
    "type": "function",
@@ -1181,6 +1182,512 @@
     },
     "required": []
    }
+  }
+ ],
+ "contracts": [
+  {
+   "name": "shanghan_adjudicate",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "三態裁決為確定性規則（評分差距+反證+禁忌），核心是說明「為什麼還不能定方」；不替代臨床判斷"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "cabff15ab52ef947"
+  },
+  {
+   "name": "shanghan_case_search",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "旁證",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "a23517cb6f507362"
+  },
+  {
+   "name": "shanghan_citation_network",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "計量指標由逐字引文邊確定性推導；語料最晚傳播層為民國，現代引用需經 modern 接口導入"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "d2cdd596c9680e3e"
+  },
+  {
+   "name": "shanghan_conflict_audit",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "衝突判定基於互斥證對與方證規則，條文可回源；改判候選僅為定位提示，不構成處方建議"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "39cd777ebfdbb2d1"
+  },
+  {
+   "name": "shanghan_contraindication_check",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "157363a01059cb68"
+  },
+  {
+   "name": "shanghan_corpus_stats",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "D",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "9e2fcd061b033258"
+  },
+  {
+   "name": "shanghan_differential",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "鑒別軸為跨條歸納（D層），關鍵鑒別點須回源 supporting_clauses"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "1f760b3b2e61eb15"
+  },
+  {
+   "name": "shanghan_divergence_atlas",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "C",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "258453fab8e56d6c"
+  },
+  {
+   "name": "shanghan_dose",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "A",
+   "limitations": [
+    "藥量比為銖當量原文換算；折算克數依三家學派假設"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "56e52f82ffd2a0fd"
+  },
+  {
+   "name": "shanghan_dose_convert",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "A",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "afb2c7c04deffe0b"
+  },
+  {
+   "name": "shanghan_eval_metrics",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "D",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "9e2fcd061b033258"
+  },
+  {
+   "name": "shanghan_formula_explain",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "mixed",
+   "limitations": [
+    "一站式檔案混合 A/C/D 層與引文邊，逐節層級見 section_evidence_levels；四層症狀口徑見 symptom_layers.note"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "c62a46adef1ac0a6"
+  },
+  {
+   "name": "shanghan_formula_rule",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "方證規則為跨條歸納，組成/服法屬 A 層原文"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "c81aacce1c240819"
+  },
+  {
+   "name": "shanghan_get_clause",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "A",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "c64c8e1bb683c72e"
+  },
+  {
+   "name": "shanghan_herb_profile",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "A-derived",
+   "limitations": [
+    "原始事實取自 A 層（組成/條文/劑量寫法），配伍共現與頻次排序屬確定性派生統計，非原文直述；藥性功效解釋屬本草層未隨庫，不編造"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "56b8fadb821ef205"
+  },
+  {
+   "name": "shanghan_hypotheses",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "多假設分析為規則歸納（D層），置信度為啟發式評分；不替代臨床判斷"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "f4962d2a1cb1fcda"
+  },
+  {
+   "name": "shanghan_intake",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "D",
+   "limitations": [
+    "僅為就診信息整理（確定性詞表抽取），不構成診斷；現代口語映射表透明可審"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "b189c3c08017d213"
+  },
+  {
+   "name": "shanghan_library",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "旁證",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "47048e9f5f5472c2"
+  },
+  {
+   "name": "shanghan_list_formulas",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "A",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "9e2fcd061b033258"
+  },
+  {
+   "name": "shanghan_match_formula",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "匹配分數為規則歸納（D層），證據錨定 A 層條文；不替代臨床判斷"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "448162c3a80fe849"
+  },
+  {
+   "name": "shanghan_mistreatment",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "9f1003a97937d7e8"
+  },
+  {
+   "name": "shanghan_mistreatment_simulate",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [
+    "單步路徑逐條錨定原文；多步鏈為組合視圖（假設路徑），非原文連續敘述"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "f59df6f9139e7c96"
+  },
+  {
+   "name": "shanghan_relations",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "D",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "b29287def05835f9"
+  },
+  {
+   "name": "shanghan_search",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "A",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "4c239f1d883d189f"
+  },
+  {
+   "name": "shanghan_six_channel",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "D",
+   "limitations": [
+    "篇章級歸納，提綱原文屬 A 層"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "e2a3c05c21ab844f"
+  },
+  {
+   "name": "shanghan_therapy",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "D",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "8013db8150672e5e"
+  },
+  {
+   "name": "shanghan_trace",
+   "version": "1.1.0",
+   "permission_level": "doctor_researcher",
+   "evidence_level": "mixed",
+   "limitations": [
+    "溯源鏈混合 A 原文/B 異文/C 注家/D 歸納/引文邊/計量，整體標 mixed，逐節層級見 section_evidence_levels；學派歸屬與方證觀點命題屬後世歸納（posthoc_induction）"
+   ],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "9a4a77f6e42d31ad"
+  },
+  {
+   "name": "shanghan_variants",
+   "version": "1.1.0",
+   "permission_level": "patient_safe",
+   "evidence_level": "B",
+   "limitations": [],
+   "side_effect": "read",
+   "timeout_s": 30,
+   "cacheable": true,
+   "idempotent": true,
+   "max_result_bytes": 262144,
+   "error_schema": {
+    "error": "string",
+    "hint": "string?"
+   },
+   "schema_hash": "29a1aef1c8826a2f"
   }
  ],
  "invocation": {
