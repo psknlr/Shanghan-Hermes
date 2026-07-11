@@ -110,12 +110,13 @@ def paper_user_prompt(paper_type: str, title_root: str, topic: str,
 【計量摘要（唯一可用事實來源，clause_id 僅可取自其中）】
 {_json.dumps(digest, ensure_ascii=False, indent=1)}
 
-請輸出 JSON：
+請輸出 JSON（十九輪：成稿目標 5000–8000 字，增益層四節須充分展開、
+分段成文，不得以要點列表敷衍）：
 {{
-  "introduction": "引言：研究動機與問題（≥150字）",
-  "quant_interpretation": "計量結果解讀：逐項分析上述統計並引用 clause_id（≥300字）",
-  "discussion": "討論：計量結果的學術含義、與條文結構的互證、侷限（≥200字）",
-  "conclusion": "結論（≥80字）"
+  "introduction": "引言：研究動機、問題與貢獻（≥500字，2-3 個自然段）",
+  "quant_interpretation": "計量結果解讀：逐榜逐項分析並引用 clause_id（≥1500字，按統計主題分段）",
+  "discussion": "討論：學術含義、與條文結構的互證、方法邊界與侷限（≥1000字，分點成段）",
+  "conclusion": "結論與展望（≥250字）"
 }}"""
 
 

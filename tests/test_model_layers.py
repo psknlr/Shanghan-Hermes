@@ -458,3 +458,145 @@ class TestClauseAgentQA(unittest.TestCase):
         rep = r["citation_report"]
         self.assertTrue(rep["ok"])
         self.assertIn("SHL_SONGBEN_0271", rep["verified"])
+
+
+# ---------------------------------------------------------------------------
+# 十九輪：簡繁檢索修復 · 主題感知挖掘 · 長論文與導出 · 點閱端點 · 勘誤 ·
+#        推薦處方列表 · 口語映射最長優先
+# ---------------------------------------------------------------------------
+class TestJijiSearchFix(unittest.TestCase):
+    def test_fold_unifies_ji(self):
+        from hermes_shanghan.textutil import fold_variants, normalize_query
+        self.assertEqual(fold_variants(normalize_query("项背强几几")),
+                         "項背強几几")
+
+    def test_short_query_resolves(self):
+        from hermes_shanghan.trace.chains import text_trace
+        r = text_trace("项背强几几")
+        ids = [m["clause_id"] for m in r.get("matches", [])]
+        self.assertIn("SHL_SONGBEN_0031", ids)
+        self.assertIn("SHL_SONGBEN_0014", ids)
+
+
+class TestTopicAwareResearch(unittest.TestCase):
+    def test_scoped_stats_vary_by_topic(self):
+        svc = ServiceContext()
+        r = svc.research("少陰病寒化證研究")
+        self.assertTrue(r["topic_analysis"]["scoped"])
+        self.assertIn("少陰病", r["topic_analysis"]["channels"])
+        tops = [f for f, _ in r["statistics"]["top_formulas"][:5]]
+        self.assertIn("四逆湯", tops)
+        self.assertNotIn("桂枝湯", tops[:1],
+                         "少陰主題不得再以桂枝湯居榜首")
+
+    def test_unparsable_topic_falls_back_honestly(self):
+        svc = ServiceContext()
+        r = svc.research("量子區塊鏈")
+        self.assertFalse(r["topic_analysis"]["scoped"])
+        self.assertIn("回退全書", r["topic_analysis"]["note"])
+
+
+class TestPaperLengthAndExport(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        svc = ServiceContext()
+        cls.r = svc.paper("formula_pattern", topic="桂枝湯類方證",
+                          use_llm=False)
+
+    def test_manuscript_length_target(self):
+        self.assertGreaterEqual(self.r["manuscript_chars"], 5000)
+        for sec in ("方證各論", "計量結果分述", "誤治傳變分述"):
+            self.assertIn(sec, self.r["manuscript"])
+
+    def test_downloads_present_and_valid(self):
+        import zipfile
+        from pathlib import Path
+        dl = self.r["downloads"]
+        for k in ("md", "docx", "zip"):
+            self.assertIn(k, dl)
+        rev = Path(self.r["manuscript_path"]).parent
+        with zipfile.ZipFile(rev / "manuscript.docx") as z:
+            names = z.namelist()
+            self.assertIn("word/document.xml", names)
+            doc = z.read("word/document.xml").decode()
+            self.assertIn("Heading1", doc)
+        with zipfile.ZipFile(rev / "paper_bundle.zip") as z:
+            self.assertTrue(any(n.endswith(".svg") for n in z.namelist()))
+            self.assertIn("manuscript.md", z.namelist())
+
+    def test_docx_xml_escapes(self):
+        from hermes_shanghan.paper.exporter import markdown_to_docx_xml
+        xml = markdown_to_docx_xml("# T\n\nA<B&C\n\n- 項目")
+        self.assertIn("A&lt;B&amp;C", xml)
+        self.assertIn("• 項目", xml)
+
+
+class TestClickThroughEndpoints(unittest.TestCase):
+    def test_name_mentions_paginated(self):
+        svc = ServiceContext()
+        p1 = svc.trace_mentions("桂枝湯", "傷寒溯源集", limit=2)
+        self.assertGreater(p1["n_paragraphs"], 10)
+        self.assertTrue(p1["has_more"])
+        p2 = svc.trace_mentions("桂枝湯", "傷寒溯源集", offset=2, limit=2)
+        self.assertNotEqual(p1["passages"][0]["para_seq"],
+                            p2["passages"][0]["para_seq"])
+
+    def test_term_passages_anchor_clauses(self):
+        svc = ServiceContext()
+        t = svc.term_passages("榮衛", "註解傷寒論", limit=3)
+        self.assertGreater(t["n_passages"], 0)
+        for p in t["passages"]:
+            self.assertTrue(p["clause_id"].startswith("SHL_"))
+
+    def test_formula_explain_admin_source(self):
+        svc = ServiceContext()
+        fe = svc.formula_explain("桂枝湯")
+        src = fe["administration"]["source"]
+        self.assertEqual(src["clause_id"], "SHL_SONGBEN_0012")
+        self.assertIn("宋本", src["book"])
+
+
+class TestErrata(unittest.TestCase):
+    def test_submit_and_list_roundtrip(self):
+        import tempfile
+        from unittest import mock
+        from pathlib import Path
+        from hermes_shanghan import config
+        svc = ServiceContext()
+        with tempfile.TemporaryDirectory() as td:
+            with mock.patch.object(config, "SHANGHAN_DIR", Path(td)):
+                r = svc.errata_submit("12", "陽浮而陰弱", "測試建議", note="n")
+                self.assertTrue(r["ok"])
+                self.assertTrue(r["quote_found_in_clause"])
+                bad = svc.errata_submit("12", "此片段絕不在條文中", "x")
+                self.assertTrue(bad["ok"])
+                self.assertFalse(bad["quote_found_in_clause"])
+                miss = svc.errata_submit("12", "", "x")
+                self.assertIn("error", miss)
+                lst = svc.errata_list()
+                self.assertEqual(lst["n_total"], 2)
+
+class TestAdjudicateRecommendations(unittest.TestCase):
+    def test_ranked_with_followups(self):
+        svc = ServiceContext()
+        r = svc.adjudicate(["發熱", "惡寒", "無汗", "身疼痛"],
+                           pulse=["浮緊"], use_llm=False)
+        recs = r["recommendations"]
+        self.assertGreaterEqual(len(recs), 2)
+        self.assertEqual(recs[0]["rank"], 1)
+        self.assertEqual(recs[0]["recommendation_pct"], 100)
+        pcts = [x["recommendation_pct"] for x in recs]
+        self.assertEqual(pcts, sorted(pcts, reverse=True))
+        self.assertTrue(any(x["follow_up_questions"] for x in recs))
+        for x in recs:
+            self.assertIn("support", x)
+            self.assertIn("against", x)
+            self.assertIn("missing_key_findings", x)
+
+
+class TestModernizeLongestFirst(unittest.TestCase):
+    def test_negated_sweat_not_hijacked(self):
+        from hermes_shanghan.apps.bianzheng import intake_parse
+        r = intake_parse("发热，怕冷，不出汗，身疼痛")
+        self.assertIn("無汗", r["sweating"])
+        self.assertNotIn("汗出", r["sweating"])

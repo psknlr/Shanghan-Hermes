@@ -286,8 +286,21 @@ class ServiceContext:
         if meta_path.exists():
             import json
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        # 導出（十九輪）：docx（純標準庫 OOXML）+ 全件 zip（稿+SVG+CSV），
+        # 經 /api/artifact/download 下載（papers/ 在允許集內）
+        downloads = {}
+        try:
+            from ..paper.exporter import export_bundle
+            names = export_bundle(path)
+            rel = path.parent.relative_to(config.SHANGHAN_DIR)
+            downloads = {fmt: str(rel / name) for fmt, name in names.items()}
+        except Exception as exc:
+            downloads = {"error": type(exc).__name__}
+        manuscript = path.read_text(encoding="utf-8")
         return {"manuscript_path": str(path),
-                "manuscript": path.read_text(encoding="utf-8"),
+                "manuscript": manuscript,
+                "manuscript_chars": len(manuscript),
+                "downloads": downloads,
                 "meta": meta}
 
     def complex(self, question: str, role: str = None) -> Dict:
@@ -474,6 +487,92 @@ class ServiceContext:
         return book_citing_passages(book_dir, clause_ids or [],
                                     offset=offset, limit=limit)
 
+    # -- 勘誤提交（十九輪：用戶對原文/轉寫錯誤的反饋閉環）----------------
+    def errata_submit(self, clause_ref: str, quote: str, suggestion: str,
+                      note: str = "", subject: str = "anonymous") -> Dict:
+        """勘誤落盤 data/shanghan/errata/errata.jsonl（不入庫，人工複核）。
+        提交不改動語料——語料以 manifest sha256 為版本錨，勘誤經維護者
+        審定後才進入下一版底本。"""
+        import json as _json
+        import time
+        import uuid
+        clause_ref = str(clause_ref or "").strip()[:40]
+        quote = str(quote or "").strip()[:400]
+        suggestion = str(suggestion or "").strip()[:400]
+        note = str(note or "").strip()[:400]
+        if not quote or not suggestion:
+            return {"error": "須同時提供原文片段（quote）與勘誤建議（suggestion）"}
+        c = self.clause_rag.get_clause(clause_ref) if clause_ref else None
+        from ..textutil import contains_verbatim
+        rec = {
+            "erratum_id": "ERR_" + uuid.uuid4().hex[:10],
+            "submitted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "subject": str(subject)[:60],
+            "clause_ref": clause_ref,
+            "clause_id": c.clause_id if c else "",
+            "quote": quote,
+            "suggestion": suggestion,
+            "note": note,
+            # 逐字核驗：片段是否真在所指條文中（在=可定位；不在=如實標記）
+            "quote_found_in_clause": bool(c and contains_verbatim(
+                c.clean_text, quote)),
+            "status": "pending",
+        }
+        d = config.SHANGHAN_DIR / "errata"
+        d.mkdir(parents=True, exist_ok=True)
+        with (d / "errata.jsonl").open("a", encoding="utf-8") as fh:
+            fh.write(_json.dumps(rec, ensure_ascii=False) + "\n")
+        return {"ok": True, "erratum_id": rec["erratum_id"],
+                "quote_found_in_clause": rec["quote_found_in_clause"],
+                "note": "已登記，待人工複核；勘誤不即時改動語料"
+                        "（語料版本以 manifest sha256 為錨）。"
+                        + ("" if rec["quote_found_in_clause"] else
+                           "提示：所引片段未能在該條文中逐字定位，"
+                           "複核時將優先人工核對。")}
+
+    def errata_list(self, limit: int = 50) -> Dict:
+        from ..schemas import read_jsonl
+        rows = read_jsonl(config.SHANGHAN_DIR / "errata" / "errata.jsonl")
+        return {"n_total": len(rows), "errata": rows[-max(1, limit):][::-1],
+                "note": "僅維護者（doctor 角色）可查閱；status 由人工複核更新"}
+
+    def trace_mentions(self, name: str, book_dir: str,
+                       offset: int = 0, limit: int = 6) -> Dict:
+        """方名傳播的點閱：某書中該方名的逐字提及段落（十九輪）。"""
+        from ..trace.passages import name_mention_passages
+        return name_mention_passages(name, book_dir, offset=offset,
+                                     limit=limit)
+
+    def term_passages(self, term: str, book: str,
+                      offset: int = 0, limit: int = 6) -> Dict:
+        """注家使用譜的點閱：某注本中含該術語的注文用例（十九輪）。"""
+        from ..textutil import fold_variants, normalize_query
+        t = fold_variants(normalize_query(term))
+        if len(t) < 2:
+            return {"error": "術語至少 2 字"}
+        rows = []
+        for r in self.art.commentary_rules:
+            if book and r.book != book:
+                continue
+            folded = fold_variants(r.commentary_text)
+            pos = folded.find(t)
+            if pos < 0:
+                continue
+            lo, hi = max(0, pos - 40), min(len(r.commentary_text),
+                                           pos + len(t) + 40)
+            rows.append({"clause_id": r.clause_id,
+                         "commentator": r.commentator,
+                         "book": r.book, "chapter": r.chapter,
+                         "excerpt": ("…" if lo else "")
+                         + r.commentary_text[lo:hi]
+                         + ("…" if hi < len(r.commentary_text) else "")})
+        total = len(rows)
+        page = rows[max(0, offset):max(0, offset) + max(1, limit)]
+        return {"term": term, "book": book, "n_passages": total,
+                "offset": offset, "has_more": offset + len(page) < total,
+                "passages": page,
+                "evidence_layer": "C 注家解釋（用例逐字檢出，所注條文可回源）"}
+
     def source_passage(self, book: str, ref: str) -> Dict:
         """讀取語料書的原始段落（十八輪：條文關係目標可點閱）。
 
@@ -529,7 +628,7 @@ class ServiceContext:
         base = self.registry.call("shanghan_intake", {"text": text})
         if not (use_llm and self.llm.available):
             return base
-        from ..apps.bianzheng import MODERN_TO_CLASSICAL
+        from ..apps.bianzheng import modernize
         from ..llm.prompts import (intake_extract_system_prompt,
                                    intake_extract_user_prompt)
         from ..textutil import fold_variants, normalize_query
@@ -541,10 +640,7 @@ class ServiceContext:
             base["model_extraction"] = {"backend": "error",
                                         "error": type(exc).__name__}
             return base
-        mapped = normalize_query(text)
-        for modern, classical in MODERN_TO_CLASSICAL.items():
-            mapped = mapped.replace(modern, classical)
-        haystack = fold_variants(mapped) + "\n" + fold_variants(
+        haystack = fold_variants(modernize(text)) + "\n" + fold_variants(
             normalize_query(text))
         already = {fold_variants(s) for key in
                    ("cold_heat", "sweating", "thirst_drinking", "stool_urine",

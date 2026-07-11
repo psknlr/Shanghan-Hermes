@@ -56,11 +56,19 @@ RE_MED_RESPONSE = re.compile(
     r"([服吃][^，。；]{0,10}?(藥|湯|丸|散)[^，。；]{0,4}?[後后][^，。；]{0,12})")
 
 
+def modernize(text: str) -> str:
+    """口語→古籍術語映射（**最長優先**——十九輪修復：「不出汗」必須先於
+    「出汗」匹配，否則被劫持為陽性「汗出」）。"""
+    out = normalize_query(text)
+    for modern, classical in sorted(MODERN_TO_CLASSICAL.items(),
+                                    key=lambda kv: -len(kv[0])):
+        out = out.replace(modern, classical)
+    return out
+
+
 def intake_parse(text: str) -> Dict:
     """自然敘述 → 結構化四診表。只整理信息，不做任何診斷/方證匹配。"""
-    raw = normalize_query(text)
-    for modern, classical in MODERN_TO_CLASSICAL.items():
-        raw = raw.replace(modern, classical)
+    raw = modernize(text)
     folded = fold_variants(raw)
 
     found: List[str] = []
@@ -150,9 +158,37 @@ def adjudicate(symptoms: List[str], pulse: Optional[List[str]] = None,
         else:
             verdict = "不能裁決"
             rationale = "候選評分接近或均有缺失關鍵證，須補充四診後再判。"
+    # 推薦處方列表（十九輪）：歸一化推薦度 + 各候選的支持/反證/缺失
+    # 證據 + 該方專屬追問點——「為什麼是它、還差什麼、該問什麼」一屏呈現
+    max_s = max((_score(h) for h in hyps), default=0.0) or 1.0
+    recommendations = []
+    for rank, h in enumerate(hyps, 1):
+        penal = 0.0
+        if h.get("against"):
+            penal += 0.25
+        if h.get("contraindication_hits"):
+            penal += 0.35
+        pct = max(0.0, round(_score(h) / max_s * (1 - penal) * 100))
+        questions = [f"是否見「{m}」？（{h.get('formula', '')} 的關鍵指徵）"
+                     for m in h.get("missing_key_findings", [])[:3]]
+        for a in h.get("against", [])[:1]:
+            questions.append(f"「{a}」是否確切？此為該方反證，須再核。")
+        recommendations.append({
+            "rank": rank,
+            "formula": h.get("formula", ""),
+            "recommendation_pct": pct,
+            "support": h.get("support", []),
+            "against": h.get("against", []),
+            "missing_key_findings": h.get("missing_key_findings", []),
+            "contraindication_hits": h.get("contraindication_hits", []),
+            "supporting_clauses": (h.get("supporting_clauses")
+                                   or h.get("evidence_clauses") or [])[:4],
+            "follow_up_questions": questions[:4],
+        })
     return {
         "input": base.get("input", {}),
         "candidates": hyps,
+        "recommendations": recommendations,
         "verdict": verdict,
         "rationale": rationale,
         "why_not_prescribe": [
@@ -161,7 +197,8 @@ def adjudicate(symptoms: List[str], pulse: Optional[List[str]] = None,
             for h in hyps if h.get("missing_key_findings")][:3],
         "key_questions": base.get("clarifying_questions", [])[:3],
         "note": "裁決為 D 層確定性規則（評分差距+反證+禁忌），核心目的是"
-                "說明「為什麼還不能定方」；不替代臨床判斷。",
+                "說明「為什麼還不能定方」；推薦度為域內歸一化排序值，"
+                "非療效概率；不替代臨床判斷、不構成處方。",
     }
 
 

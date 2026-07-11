@@ -53,7 +53,7 @@ class TestPaperAugmentationOffline(unittest.TestCase):
 
     def test_quant_interpretation_from_research_assets(self):
         text, meta = self._generate("formula_pattern", topic="桂枝湯類方證")
-        self.assertIn("## 5 計量結果解讀", text)
+        self.assertIn("### 6.9 計量結果增益層解讀", text)
         # real numbers from the mined data, not placeholders
         self.assertIn("桂枝湯", text)
         self.assertIn("共現", text)
@@ -67,11 +67,13 @@ class TestPaperAugmentationOffline(unittest.TestCase):
 
     def test_no_llm_flag_skips_augmentation(self):
         text, meta = self._generate("formula_pattern", use_llm=False)
-        self.assertNotIn("## 5 計量結果解讀", text)
+        self.assertNotIn("計量結果增益層解讀", text)
         self.assertEqual(meta["llm_backend"], "disabled")
-        # deterministic skeleton still complete
-        self.assertIn("## 6 討論", text)
-        self.assertIn("## 7 結論", text)
+        # deterministic skeleton still complete（十九輪：新增敘述層章節）
+        self.assertIn("## 5 方證各論", text)
+        self.assertIn("## 6 計量結果分述", text)
+        self.assertIn("## 8 討論", text)
+        self.assertIn("## 9 結論", text)
 
     def test_mistreatment_table_no_longer_leaks_into_all_types(self):
         text, _ = self._generate("formula_pattern")
@@ -125,8 +127,8 @@ class TestPaperScriptedModel(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = w.generate(paper_type="formula_pattern", out_dir=Path(tmp))
             text = path.read_text(encoding="utf-8")
-        self.assertNotIn("## 5 計量結果解讀", text)
-        self.assertIn("## 6 討論", text)  # template fallback intact
+        self.assertNotIn("計量結果增益層解讀", text)
+        self.assertIn("## 8 討論", text)  # template fallback intact
 
 
 class TestModelPerformanceUnlocks(unittest.TestCase):

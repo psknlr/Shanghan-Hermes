@@ -17,3 +17,5 @@ data/shanghan/trace/citation_edges_full.jsonl
 data/shanghan/sessions/
 # LLM 響應磁盤緩存（按內容尋址，不入庫）
 data/shanghan/llm_cache/
+# 用戶勘誤提交（人工複核後才進底本，不入庫）
+data/shanghan/errata/

@@ -261,6 +261,37 @@ def _source_passage(svc, body, m, q, ctx=None):
     return svc.source_passage(body.get("book", ""), body.get("ref", ""))
 
 
+@route("POST", r"/api/trace/mentions", min_role="student")
+def _trace_mentions(svc, body, m, q, ctx=None):
+    return svc.trace_mentions(str(body.get("name", ""))[:40],
+                              str(body.get("book_dir", ""))[:60],
+                              offset=int(body.get("offset", 0) or 0),
+                              limit=int(body.get("limit", 6) or 6))
+
+
+@route("POST", r"/api/errata")
+def _errata_submit(svc, body, m, q, ctx=None):
+    return svc.errata_submit(body.get("clause_ref", ""),
+                             body.get("quote", ""),
+                             body.get("suggestion", ""),
+                             note=body.get("note", ""),
+                             subject=(ctx.principal_id if ctx else "anonymous"))
+
+
+@route("GET", r"/api/errata", min_role="doctor")
+def _errata_list(svc, body, m, q, ctx=None):
+    limit = _qint(q, "limit", 50, 1, 200)
+    return svc.errata_list(limit=limit or 50)
+
+
+@route("POST", r"/api/trace/term-passages", min_role="student")
+def _term_passages(svc, body, m, q, ctx=None):
+    return svc.term_passages(str(body.get("term", ""))[:40],
+                             str(body.get("book", ""))[:60],
+                             offset=int(body.get("offset", 0) or 0),
+                             limit=int(body.get("limit", 6) or 6))
+
+
 @route("POST", r"/api/quiz", min_role="student")
 def _quiz(svc, body, m, q, ctx=None):
     return svc.quiz(channel=str(body.get("channel", ""))[:12],

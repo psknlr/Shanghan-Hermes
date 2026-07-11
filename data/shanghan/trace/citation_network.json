@@ -1,17 +1,17 @@
 {
  "note": "全部指標由引文邊確定性推導；「未詳」朝代為 vendor 元數據缺失且無書志補注者。現代切片需經 modern 接口導入，不隨庫捏造。",
  "overview": {
-  "n_edges_total": 40660,
-  "n_clause_edges": 25601,
+  "n_edges_total": 40666,
+  "n_clause_edges": 25607,
   "n_relay_edges": 15059,
   "n_clauses_cited": 668,
   "n_citing_works": 51,
   "mode_distribution": {
    "化用": 13053,
-   "改寫": 754,
-   "明引": 1099,
-   "暗引": 9346,
-   "節引": 1349,
+   "改寫": 753,
+   "明引": 1100,
+   "暗引": 9351,
+   "節引": 1350,
    "轉引注文": 15059
   },
   "n_marker_unresolved": 11477
@@ -3068,7 +3068,7 @@
    "author": "曹穎甫",
    "dynasty": "民國",
    "layer": "P",
-   "n_edges": 986,
+   "n_edges": 988,
    "n_clauses_cited": 442
   },
   {
@@ -3095,8 +3095,8 @@
    "author": "",
    "dynasty": "清",
    "layer": "P",
-   "n_edges": 804,
-   "n_clauses_cited": 426
+   "n_edges": 807,
+   "n_clauses_cited": 427
   },
   {
    "book_dir": "傷寒審證表",
@@ -3122,7 +3122,7 @@
    "author": "徐靈胎",
    "dynasty": "清",
    "layer": "D",
-   "n_edges": 520,
+   "n_edges": 521,
    "n_clauses_cited": 330
   },
   {
@@ -3757,8 +3757,8 @@
   {
    "a": "傷寒論輯義",
    "b": "傷寒恆論",
-   "shared_clauses": 421,
-   "jaccard": 0.892
+   "shared_clauses": 422,
+   "jaccard": 0.894
   },
   {
    "a": "註解傷寒論",
@@ -3811,8 +3811,8 @@
   {
    "a": "曹氏傷寒金匱發微合刊",
    "b": "傷寒恆論",
-   "shared_clauses": 404,
-   "jaccard": 0.871
+   "shared_clauses": 405,
+   "jaccard": 0.873
   },
   {
    "a": "傷寒貫珠集_1",
@@ -3845,6 +3845,12 @@
    "jaccard": 0.863
   },
   {
+   "a": "傷寒貫珠集",
+   "b": "傷寒恆論",
+   "shared_clauses": 408,
+   "jaccard": 0.863
+  },
+  {
    "a": "傷寒論輯義",
    "b": "傷寒貫珠集_1",
    "shared_clauses": 426,
@@ -3857,12 +3863,6 @@
    "jaccard": 0.86
   },
   {
-   "a": "傷寒貫珠集",
-   "b": "傷寒恆論",
-   "shared_clauses": 407,
-   "jaccard": 0.86
-  },
-  {
    "a": "傷寒直格_1",
    "b": "傷寒直格",
    "shared_clauses": 30,
@@ -3871,8 +3871,8 @@
   {
    "a": "傷寒貫珠集_1",
    "b": "傷寒恆論",
-   "shared_clauses": 404,
-   "jaccard": 0.851
+   "shared_clauses": 405,
+   "jaccard": 0.853
   },
   {
    "a": "仲景傷寒補亡論",
@@ -4258,7 +4258,7 @@
   },
   {
    "dynasty": "清",
-   "n_edges": 16025,
+   "n_edges": 16029,
    "n_works": 25,
    "top_canonical": [
     {
@@ -4282,7 +4282,7 @@
      "n": 74
     }
    ],
-   "n_edges_canonical": 11518,
+   "n_edges_canonical": 11522,
    "top_auxiliary": [
     {
      "clause_id": "SHL_SONGBEN_AUX_0222",
@@ -4328,7 +4328,7 @@
      "n": 128
     }
    ],
-   "n_edges_all": 16025
+   "n_edges_all": 16029
   },
   {
    "dynasty": "日本",
@@ -4406,7 +4406,7 @@
   },
   {
    "dynasty": "民國",
-   "n_edges": 1119,
+   "n_edges": 1121,
    "n_works": 3,
    "top_canonical": [
     {
@@ -4430,7 +4430,7 @@
      "n": 7
     }
    ],
-   "n_edges_canonical": 858,
+   "n_edges_canonical": 860,
    "top_auxiliary": [
     {
      "clause_id": "SHL_SONGBEN_AUX_0222",
@@ -4476,7 +4476,7 @@
      "n": 18
     }
    ],
-   "n_edges_all": 1119
+   "n_edges_all": 1121
   }
  ],
  "bursts": [
@@ -4484,7 +4484,7 @@
    "clause_id": "SHL_SONGBEN_AUX_0102",
    "dynasty": "元",
    "n": 2,
-   "lift": 42.67
+   "lift": 42.68
   },
   {
    "clause_id": "SHL_SONGBEN_0167",
@@ -4508,19 +4508,19 @@
    "clause_id": "SHL_SONGBEN_AUX_0107",
    "dynasty": "元",
    "n": 1,
-   "lift": 25.6
+   "lift": 25.61
   },
   {
    "clause_id": "SHL_SONGBEN_AUX_0108",
    "dynasty": "元",
    "n": 1,
-   "lift": 25.6
+   "lift": 25.61
   },
   {
    "clause_id": "SHL_SONGBEN_AUX_0148",
    "dynasty": "元",
    "n": 2,
-   "lift": 23.7
+   "lift": 23.71
   },
   {
    "clause_id": "SHL_SONGBEN_0397",
@@ -4532,7 +4532,7 @@
    "clause_id": "SHL_SONGBEN_0343",
    "dynasty": "元",
    "n": 1,
-   "lift": 21.33
+   "lift": 21.34
   },
   {
    "clause_id": "SHL_SONGBEN_AUX_0105",
@@ -4544,19 +4544,19 @@
    "clause_id": "SHL_SONGBEN_0337",
    "dynasty": "元",
    "n": 1,
-   "lift": 19.39
+   "lift": 19.4
   },
   {
    "clause_id": "SHL_SONGBEN_AUX_0104",
    "dynasty": "元",
    "n": 1,
-   "lift": 19.39
+   "lift": 19.4
   },
   {
    "clause_id": "SHL_SONGBEN_0304",
    "dynasty": "元",
    "n": 1,
-   "lift": 18.82
+   "lift": 18.83
   },
   {
    "clause_id": "SHL_SONGBEN_0129",
@@ -4568,13 +4568,13 @@
    "clause_id": "SHL_SONGBEN_AUX_0099",
    "dynasty": "元",
    "n": 1,
-   "lift": 16.84
+   "lift": 16.85
   },
   {
    "clause_id": "SHL_SONGBEN_AUX_0275",
    "dynasty": "元",
    "n": 1,
-   "lift": 16.84
+   "lift": 16.85
   },
   {
    "clause_id": "SHL_SONGBEN_0230",
@@ -4592,7 +4592,7 @@
    "clause_id": "SHL_SONGBEN_AUX_0112",
    "dynasty": "元",
    "n": 1,
-   "lift": 14.22
+   "lift": 14.23
   },
   {
    "clause_id": "SHL_SONGBEN_0026",
@@ -4628,7 +4628,7 @@
    "clause_id": "SHL_SONGBEN_0061",
    "dynasty": "元",
    "n": 1,
-   "lift": 11.85
+   "lift": 11.86
   },
   {
    "clause_id": "SHL_SONGBEN_0279",
@@ -5592,6 +5592,11 @@
      "n": 19
     },
     {
+     "a": "SHL_SONGBEN_0014",
+     "b": "SHL_SONGBEN_0031",
+     "n": 18
+    },
+    {
      "a": "SHL_SONGBEN_0222",
      "b": "SHL_SONGBEN_0223",
      "n": 18
@@ -5649,11 +5654,6 @@
     {
      "a": "SHL_SONGBEN_0131",
      "b": "SHL_SONGBEN_0134",
-     "n": 13
-    },
-    {
-     "a": "SHL_SONGBEN_0221",
-     "b": "SHL_SONGBEN_0223",
      "n": 13
     }
    ],
@@ -5917,12 +5917,6 @@
      "jaccard": 0.959
     },
     {
-     "a": "傷寒論條辨",
-     "b": "傷寒恆論",
-     "shared_clauses": 376,
-     "jaccard": 0.959
-    },
-    {
      "a": "傷寒纘論",
      "b": "傷寒論輯義",
      "shared_clauses": 377,
@@ -5932,6 +5926,12 @@
      "a": "傷寒纘論_傷寒緒論",
      "b": "傷寒論辯證廣注",
      "shared_clauses": 377,
+     "jaccard": 0.957
+    },
+    {
+     "a": "傷寒論條辨",
+     "b": "傷寒恆論",
+     "shared_clauses": 376,
      "jaccard": 0.957
     },
     {
@@ -5982,19 +5982,19 @@
      "clause_id": "SHL_SONGBEN_0343",
      "dynasty": "元",
      "n": 1,
-     "lift": 21.33
+     "lift": 21.34
     },
     {
      "clause_id": "SHL_SONGBEN_0337",
      "dynasty": "元",
      "n": 1,
-     "lift": 19.39
+     "lift": 19.4
     },
     {
      "clause_id": "SHL_SONGBEN_0304",
      "dynasty": "元",
      "n": 1,
-     "lift": 18.82
+     "lift": 18.83
     },
     {
      "clause_id": "SHL_SONGBEN_0129",
@@ -6048,7 +6048,7 @@
      "clause_id": "SHL_SONGBEN_0061",
      "dynasty": "元",
      "n": 1,
-     "lift": 11.85
+     "lift": 11.86
     },
     {
      "clause_id": "SHL_SONGBEN_0279",
@@ -6078,13 +6078,13 @@
      "clause_id": "SHL_SONGBEN_0369",
      "dynasty": "民國",
      "n": 2,
-     "lift": 4.16
+     "lift": 4.15
     },
     {
      "clause_id": "SHL_SONGBEN_0018",
      "dynasty": "民國",
      "n": 4,
-     "lift": 3.98
+     "lift": 3.97
     },
     {
      "clause_id": "SHL_SONGBEN_0252",
@@ -6096,13 +6096,13 @@
      "clause_id": "SHL_SONGBEN_0081",
      "dynasty": "民國",
      "n": 4,
-     "lift": 3.66
+     "lift": 3.65
     },
     {
      "clause_id": "SHL_SONGBEN_0335",
      "dynasty": "民國",
      "n": 6,
-     "lift": 3.35
+     "lift": 3.34
     },
     {
      "clause_id": "SHL_SONGBEN_0022",
@@ -6114,7 +6114,7 @@
      "clause_id": "SHL_SONGBEN_0122",
      "dynasty": "民國",
      "n": 4,
-     "lift": 3.27
+     "lift": 3.26
     },
     {
      "clause_id": "SHL_SONGBEN_0308",
@@ -6123,22 +6123,22 @@
      "lift": 3.23
     },
     {
+     "clause_id": "SHL_SONGBEN_0031",
+     "dynasty": "民國",
+     "n": 5,
+     "lift": 3.17
+    },
+    {
      "clause_id": "SHL_SONGBEN_0296",
      "dynasty": "日本",
      "n": 2,
-     "lift": 3.14
+     "lift": 3.15
     },
     {
      "clause_id": "SHL_SONGBEN_0281",
      "dynasty": "民國",
      "n": 4,
      "lift": 2.95
-    },
-    {
-     "clause_id": "SHL_SONGBEN_0306",
-     "dynasty": "日本",
-     "n": 9,
-     "lift": 2.93
     }
    ],
    "main_paths": [
@@ -7444,7 +7444,7 @@
      "clause_id": "SHL_SONGBEN_AUX_0102",
      "dynasty": "元",
      "n": 2,
-     "lift": 42.67
+     "lift": 42.68
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0109",
@@ -7456,19 +7456,19 @@
      "clause_id": "SHL_SONGBEN_AUX_0107",
      "dynasty": "元",
      "n": 1,
-     "lift": 25.6
+     "lift": 25.61
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0108",
      "dynasty": "元",
      "n": 1,
-     "lift": 25.6
+     "lift": 25.61
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0148",
      "dynasty": "元",
      "n": 2,
-     "lift": 23.7
+     "lift": 23.71
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0105",
@@ -7480,25 +7480,25 @@
      "clause_id": "SHL_SONGBEN_AUX_0104",
      "dynasty": "元",
      "n": 1,
-     "lift": 19.39
+     "lift": 19.4
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0099",
      "dynasty": "元",
      "n": 1,
-     "lift": 16.84
+     "lift": 16.85
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0275",
      "dynasty": "元",
      "n": 1,
-     "lift": 16.84
+     "lift": 16.85
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0112",
      "dynasty": "元",
      "n": 1,
-     "lift": 14.22
+     "lift": 14.23
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0122",
@@ -7540,7 +7540,7 @@
      "clause_id": "SHL_SONGBEN_AUX_0200",
      "dynasty": "民國",
      "n": 2,
-     "lift": 4.58
+     "lift": 4.57
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0098",
@@ -7558,7 +7558,7 @@
      "clause_id": "SHL_SONGBEN_AUX_0018",
      "dynasty": "民國",
      "n": 3,
-     "lift": 4.29
+     "lift": 4.28
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0228",
@@ -7570,7 +7570,7 @@
      "clause_id": "SHL_SONGBEN_AUX_0231",
      "dynasty": "民國",
      "n": 2,
-     "lift": 4.16
+     "lift": 4.15
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0101",
@@ -8707,8 +8707,8 @@
     {
      "a": "傷寒論輯義",
      "b": "傷寒恆論",
-     "shared_clauses": 421,
-     "jaccard": 0.892
+     "shared_clauses": 422,
+     "jaccard": 0.894
     },
     {
      "a": "註解傷寒論",
@@ -8761,8 +8761,8 @@
     {
      "a": "曹氏傷寒金匱發微合刊",
      "b": "傷寒恆論",
-     "shared_clauses": 404,
-     "jaccard": 0.871
+     "shared_clauses": 405,
+     "jaccard": 0.873
     },
     {
      "a": "傷寒貫珠集_1",
@@ -8795,6 +8795,12 @@
      "jaccard": 0.863
     },
     {
+     "a": "傷寒貫珠集",
+     "b": "傷寒恆論",
+     "shared_clauses": 408,
+     "jaccard": 0.863
+    },
+    {
      "a": "傷寒論輯義",
      "b": "傷寒貫珠集_1",
      "shared_clauses": 426,
@@ -8807,12 +8813,6 @@
      "jaccard": 0.86
     },
     {
-     "a": "傷寒貫珠集",
-     "b": "傷寒恆論",
-     "shared_clauses": 407,
-     "jaccard": 0.86
-    },
-    {
      "a": "傷寒直格_1",
      "b": "傷寒直格",
      "shared_clauses": 30,
@@ -8821,8 +8821,8 @@
     {
      "a": "傷寒貫珠集_1",
      "b": "傷寒恆論",
-     "shared_clauses": 404,
-     "jaccard": 0.851
+     "shared_clauses": 405,
+     "jaccard": 0.853
     },
     {
      "a": "仲景傷寒補亡論",
@@ -8914,7 +8914,7 @@
      "clause_id": "SHL_SONGBEN_AUX_0102",
      "dynasty": "元",
      "n": 2,
-     "lift": 42.67
+     "lift": 42.68
     },
     {
      "clause_id": "SHL_SONGBEN_0167",
@@ -8938,19 +8938,19 @@
      "clause_id": "SHL_SONGBEN_AUX_0107",
      "dynasty": "元",
      "n": 1,
-     "lift": 25.6
+     "lift": 25.61
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0108",
      "dynasty": "元",
      "n": 1,
-     "lift": 25.6
+     "lift": 25.61
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0148",
      "dynasty": "元",
      "n": 2,
-     "lift": 23.7
+     "lift": 23.71
     },
     {
      "clause_id": "SHL_SONGBEN_0397",
@@ -8962,7 +8962,7 @@
      "clause_id": "SHL_SONGBEN_0343",
      "dynasty": "元",
      "n": 1,
-     "lift": 21.33
+     "lift": 21.34
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0105",
@@ -8974,19 +8974,19 @@
      "clause_id": "SHL_SONGBEN_0337",
      "dynasty": "元",
      "n": 1,
-     "lift": 19.39
+     "lift": 19.4
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0104",
      "dynasty": "元",
      "n": 1,
-     "lift": 19.39
+     "lift": 19.4
     },
     {
      "clause_id": "SHL_SONGBEN_0304",
      "dynasty": "元",
      "n": 1,
-     "lift": 18.82
+     "lift": 18.83
     },
     {
      "clause_id": "SHL_SONGBEN_0129",
@@ -8998,13 +8998,13 @@
      "clause_id": "SHL_SONGBEN_AUX_0099",
      "dynasty": "元",
      "n": 1,
-     "lift": 16.84
+     "lift": 16.85
     },
     {
      "clause_id": "SHL_SONGBEN_AUX_0275",
      "dynasty": "元",
      "n": 1,
-     "lift": 16.84
+     "lift": 16.85
     },
     {
      "clause_id": "SHL_SONGBEN_0230",
@@ -9022,7 +9022,7 @@
      "clause_id": "SHL_SONGBEN_AUX_0112",
      "dynasty": "元",
      "n": 1,
-     "lift": 14.22
+     "lift": 14.23
     },
     {
      "clause_id": "SHL_SONGBEN_0026",
@@ -9058,7 +9058,7 @@
      "clause_id": "SHL_SONGBEN_0061",
      "dynasty": "元",
      "n": 1,
-     "lift": 11.85
+     "lift": 11.86
     },
     {
      "clause_id": "SHL_SONGBEN_0279",
