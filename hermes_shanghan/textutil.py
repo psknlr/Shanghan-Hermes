@@ -107,7 +107,11 @@ def similarity(a: str, b: str) -> float:
 # and evidence containment work; 「逐字」 is preserved modulo 異體字 — the
 # standard collation convention — and clause clean_text keeps original glyphs.
 # Single-char translate preserves string length, so match offsets stay valid.
-_VARIANT_MAP = str.maketrans({"脇": "脅", "鞕": "硬", "欬": "咳", "濇": "澀"})
+#（十九輪）幾→几：宋本作「項背強几几」，簡體輸入「几几」經 s2t 誤升為
+# 「幾幾」而失配——兩側折疊統一到「几」，簡繁輸入皆可命中；真「幾」字
+#（幾日等）兩側同折，比較仍一致。
+_VARIANT_MAP = str.maketrans({"脇": "脅", "鞕": "硬", "欬": "咳", "濇": "澀",
+                              "幾": "几"})
 
 
 def fold_variants(text: str) -> str:

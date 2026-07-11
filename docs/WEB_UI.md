@@ -73,6 +73,38 @@ python3 -m hermes_shanghan serve
 - **界面語言（繁/简/EN）與條文簡繁切換**（十八輪）：頂欄切換；簡體＝
   顯示層字級自動轉換（`GET /api/charmap` 領域字表，原文以繁體為準），
   EN＝界面骨架詞典翻譯（古籍內容保持中文）。
+- **主題感知挖掘**（十九輪）：科研挖掘解析主題中的方/證/脈/藥/六經詞，
+  統計域收斂到命中條文子集——不同主題產出不同榜單；無法解析時如實標注
+  回退全書。論文成稿 5000–8000 字（新增方證各論/計量分述/誤治分述三個
+  確定性敘述章節），可導出 **md / docx / 全件 zip**（稿+SVG 圖+CSV 表）。
+- **全鏈路點閱**（十九輪）：方名傳播逐書展開提及段落
+  （`POST /api/trace/mentions`）；注家使用譜逐行展開注文用例
+  （`POST /api/trace/term-passages`）；方解煎服法/組成/類方鑒別附
+  《書》·章節·條文出處芯片；笈成全庫全文命中可點開該節全文。
+  簡繁互通：「项背强几几」等簡體/短句均可回源（幾/几折疊 + 短查詢
+  子串掃描）。
+- **勘誤閉環**（十九輪）：條文抽屜「原文勘誤提交」——片段逐字定位核驗後
+  落盤待人工複核（`POST /api/errata`；doctor 角色 `GET /api/errata` 查閱），
+  勘誤不即時改動語料（版本以 manifest sha256 為錨）。
+- **推薦處方列表**（十九輪）：多假設裁決輸出歸一化推薦度（反證/禁忌
+  懲罰後排序）+ 各候選的支持/反證/缺失證據與該方專屬追問點；
+  明示「推薦度為域內排序值，非療效概率，不構成處方」。
+- **非模態條文抽屜**（二十輪）：查閱右側條文時**左側界面保持可滾動可交互**
+  （桌面端不再全屏遮擋；≤820px 移動端全寬抽屜仍保留遮罩），Esc 可關閉；
+  抽屜右上角新增 **⤓ 一鍵跳到最下方**——直達「AI 解讀與對話」卡。
+- **方證匹配 AI 解讀 / 方證鑒別多輪對話**（二十輪）：兩視圖結果下方掛接
+  AI 對話面板——一鍵送智能體解讀本次匹配/鑒別，並可**多輪追問**（走
+  `POST /api/chat`，服務端 AgentSession 續接上下文，支持「它/該方」指代；
+  回答條文號逐一過 CitationGuard）。
+- **誤治傳變教學案例**（二十輪）：路徑表每行「生成教學案例」——確定性骨架
+  （虛構情景聲明+教學要點+討論題+證據條文逐字回源）恆有；接真模型另附
+  敘事層病案（引用核驗，`POST /api/teaching-case`）。
+- **笈成全庫章節全文點閱**（二十輪）：全文命中**點標題**在右側抽屜讀取
+  該章節全文，長章節分頁續讀（`POST /api/library/read`，body.start 為
+  續讀游標；旁證層，不進證據閘門）。
+- **四診採集多輪追問**（二十輪）：追問卡新增回答輸入——每輪回答併入
+  敘述**重新整理**（顯示敘述累積輪次），追問隨信息補齊逐輪收斂；
+  仍為患者端安全口徑（只整理不診斷）。裁決按鈕的「裁決中…」殘留已修復。
 - **多智能體可視化**：合議模式把「調度規劃師 → 原文取證師 → 方證/鑒別/六經/
   誤治專家 → 安全治理官 → 合議綜合官」逐步呈現為時間線，每步附其證據條文。
 - **引用核驗橫幅**：每條回答下方顯示綠色「✓ 證據核驗通過」或紅色
@@ -84,8 +116,8 @@ python3 -m hermes_shanghan serve
 
 `GET /api/stats`、`/api/llm/status`、`/api/skills`、`/api/formulas`、`/api/channels`、
 `GET /api/clause/<ref>`；`POST /api/search|match|differential|teach|mistreatment|`
-`research|paper|agent|council|patient|tool|trace|herb|formula-explain|`
-`gold-sample|gold-eval`；`GET /api/tools`（28 工具規格，工具台數據源）。全部返回 JSON，結構與 CLI 一致。
+`research|paper|agent|council|chat|patient|tool|trace|herb|formula-explain|`
+`gold-sample|gold-eval|teaching-case|library/read`；`GET /api/tools`（28 工具規格，工具台數據源）。全部返回 JSON，結構與 CLI 一致。
 `POST /api/trace {"type": "clause|formula|claim|school|commentator|text",
 "ref": "…"}` 返回五類溯源鏈報告（詳見 [`docs/TRACE.md`](TRACE.md)）。
 

@@ -128,5 +128,40 @@ class TestMistreatmentSimulate(unittest.TestCase):
         self.assertIn("available_types", out)
 
 
+class TestTeachingCase(unittest.TestCase):
+    """二十輪：誤治傳變 → 教學案例（確定性骨架 + 條文逐字回源）。"""
+
+    @classmethod
+    def setUpClass(cls):
+        _ensure_artifacts()
+        from hermes_shanghan.server.service import ServiceContext
+        cls.svc = ServiceContext()
+
+    def test_case_skeleton_anchored(self):
+        out = self.svc.teaching_case("誤下", "結胸", use_llm=False)
+        self.assertNotIn("error", out)
+        case = out["case"]
+        # 虛構教學情景須明示，不冒充真實病案
+        self.assertIn("【教學案例·虛構】", case["scenario"])
+        self.assertTrue(case["teaching_points"])
+        self.assertEqual(len(case["discussion_questions"]), 3)
+        # 證據條文逐字回源（clause_id + 原文都在）
+        self.assertTrue(out["evidence"])
+        for e in out["evidence"]:
+            self.assertTrue(e["clause_id"].startswith("SHL_SONGBEN"))
+            self.assertTrue(e["text"])
+        self.assertIn("不構成診療建議", out["note"])
+
+    def test_unknown_path_lists_available(self):
+        out = self.svc.teaching_case("不存在的誤治", use_llm=False)
+        self.assertIn("error", out)
+        self.assertTrue(out["available_types"])
+
+    def test_filter_by_resulting_pattern(self):
+        out = self.svc.teaching_case("誤下", "痞", use_llm=False)
+        if "error" not in out:      # 規則庫中存在該變證時必須命中對應規則
+            self.assertIn("痞", out["resulting_pattern"])
+
+
 if __name__ == "__main__":
     unittest.main()

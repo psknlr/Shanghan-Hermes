@@ -1,0 +1,103 @@
+{
+ "paper_type": "formula_pattern",
+ "plan": [
+  "channel_formula",
+  "formula_family",
+  "formula_freq",
+  "clause_topics"
+ ],
+ "figures": [
+  {
+   "figure_id": "Fig.1",
+   "key": "channel_formula",
+   "file": "fig_channel_formula.mmd.md",
+   "title": "六經—方劑分佈圖",
+   "scientific_question": "六經各自以哪些方劑為主治骨幹？",
+   "main_message": "六經—主方的隸屬結構呈強分化：太陽方最多、厥陰最少",
+   "renderer": "mermaid-source",
+   "width_mm": 183.0,
+   "panels": [
+    "a"
+   ],
+   "uncertainty": [
+    ""
+   ],
+   "data_sha256": "571a0c8b54b1ac89",
+   "spec_sha256": "8ed097166f60",
+   "source_data": [
+    "Fig1a_channel_formula.csv"
+   ],
+   "extra_assets": []
+  },
+  {
+   "figure_id": "Fig.2",
+   "key": "formula_family",
+   "file": "fig_formula_family.dot",
+   "title": "方劑家族樹",
+   "scientific_question": "經方加減關係構成怎樣的家族樹？",
+   "main_message": "桂枝湯/麻黃湯等基方輻射出多層加減家族",
+   "renderer": "dot-source+graphml",
+   "width_mm": 183.0,
+   "panels": [
+    "a"
+   ],
+   "uncertainty": [
+    ""
+   ],
+   "data_sha256": "d8b81c2f19797572",
+   "spec_sha256": "8bb7c1348293",
+   "source_data": [
+    "Fig2a_family_edges.csv"
+   ],
+   "extra_assets": [
+    "fig_formula_family.graphml",
+    "fig_formula_family.layout.json"
+   ]
+  },
+  {
+   "figure_id": "Fig.3",
+   "key": "formula_freq",
+   "file": "fig_formula_frequency.svg",
+   "title": "宋本正文中各方劑的載方條文數（前 10）",
+   "scientific_question": "哪些方劑在宋本正文中載方條文最多？",
+   "main_message": "桂枝湯類獨大；前 10 方覆蓋大部分載方條文",
+   "renderer": "hermes-stdlib-svg/1",
+   "width_mm": 89.0,
+   "panels": [
+    "a"
+   ],
+   "uncertainty": [
+    ""
+   ],
+   "data_sha256": "7ebabe421c375de9",
+   "spec_sha256": "f0ec57350546",
+   "source_data": [
+    "Fig3a_formula_frequency.csv"
+   ],
+   "extra_assets": []
+  },
+  {
+   "figure_id": "Fig.4",
+   "key": "clause_topics",
+   "file": "fig_clause_topics.mmd.md",
+   "title": "條文主題聚類圖",
+   "scientific_question": "條文主題在六經內如何分佈？",
+   "main_message": "方證條文為主體，誤治/禁忌/脈證/預後構成次級主題",
+   "renderer": "mermaid-source",
+   "width_mm": 183.0,
+   "panels": [
+    "a"
+   ],
+   "uncertainty": [
+    ""
+   ],
+   "data_sha256": "ba5c1ef43f747739",
+   "spec_sha256": "a56154459c6f",
+   "source_data": [
+    "Fig4a_clause_topics.csv"
+   ],
+   "extra_assets": []
+  }
+ ],
+ "note": "網絡圖投稿級渲染：用隨附 GraphML+layout.json 經 Graphviz/Gephi/Cytoscape 導出 SVG/PDF（stdlib 不做低質量佈局冒充投稿圖）"
+}

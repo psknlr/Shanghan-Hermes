@@ -1,0 +1,62 @@
+{
+ "paper_type": "formula_pattern",
+ "title": "基於條文級規則挖掘與自主審核的《傷寒論》方證規律挖掘：以桂枝湯類方證為例",
+ "topic": "桂枝湯類方證",
+ "revision": "rev_13691a661479",
+ "generated_at": "2026-07-11T16:31:57",
+ "figures": [
+  "Fig.1 六經—方劑分佈圖 (fig_channel_formula.mmd.md)",
+  "Fig.2 方劑家族樹 (fig_formula_family.dot)",
+  "Fig.3 宋本正文中各方劑的載方條文數（前 10） (fig_formula_frequency.svg)",
+  "Fig.4 條文主題聚類圖 (fig_clause_topics.mmd.md)"
+ ],
+ "tables": [
+  "Table 1 規則分級統計 (table1_rule_levels.csv)",
+  "Table 2 方劑頻次表 (table2_formula_frequency.csv)",
+  "Table 3 規則類型統計 (table3_rule_types.csv)",
+  "Table 4 版本異文對比表 (table4_variant_comparison.csv)"
+ ],
+ "figure_plan": [
+  "channel_formula",
+  "formula_family",
+  "formula_freq",
+  "clause_topics"
+ ],
+ "figure_qa": {
+  "ok": true,
+  "soft_issues": [],
+  "palette_cvd_ok": true
+ },
+ "llm_backend": "disabled",
+ "llm_sections": [],
+ "citation_report": null,
+ "statistics": {
+  "n_clauses": 398,
+  "n_initial_rules": 1501,
+  "levels": {
+   "gold": 579,
+   "silver": 861,
+   "bronze": 61
+  },
+  "rule_types": {
+   "six_channel_definition_rule": 6,
+   "disease_pattern_rule": 36,
+   "pulse_symptom_rule": 89,
+   "transformation_rule": 14,
+   "mistreatment_rule": 134,
+   "therapy_selection_rule": 236,
+   "prognosis_rule": 212,
+   "formula_pattern_rule": 303,
+   "formula_composition_rule": 112,
+   "dosage_processing_rule": 112,
+   "administration_rule": 113,
+   "contraindication_rule": 69,
+   "differential_rule": 34,
+   "rescue_reverse_rule": 23,
+   "recurrence_rule": 8
+  },
+  "n_formula_rules": 113,
+  "n_mistreatment": 60,
+  "n_differential": 64
+ }
+}

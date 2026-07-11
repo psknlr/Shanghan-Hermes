@@ -312,7 +312,7 @@
    "dynasty": "清",
    "layer": "P",
    "n_paragraphs": 1750,
-   "n_edges": 1299,
+   "n_edges": 1302,
    "n_marker_unresolved": 195,
    "unresolved_examples": [
     {
@@ -1058,7 +1058,7 @@
    "dynasty": "清",
    "layer": "D",
    "n_paragraphs": 684,
-   "n_edges": 857,
+   "n_edges": 858,
    "n_marker_unresolved": 21,
    "unresolved_examples": [
     {
@@ -1382,7 +1382,7 @@
    "dynasty": "民國",
    "layer": "P",
    "n_paragraphs": 2030,
-   "n_edges": 1399,
+   "n_edges": 1401,
    "n_marker_unresolved": 248,
    "unresolved_examples": [
     {

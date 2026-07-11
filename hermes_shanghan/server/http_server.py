@@ -160,6 +160,14 @@ def _mistreat(svc, body, m, q, ctx=None):
     return svc.mistreatment(body.get("query"))
 
 
+@route("POST", r"/api/teaching-case", min_role="student")
+def _teaching_case(svc, body, m, q, ctx=None):
+    return svc.teaching_case(str(body.get("mistreatment", ""))[:40],
+                             resulting_pattern=str(
+                                 body.get("resulting_pattern", ""))[:40],
+                             use_llm=bool(body.get("use_llm", True)))
+
+
 @route("POST", r"/api/formula", min_role="student")
 def _formula(svc, body, m, q, ctx=None):
     return svc.formula_rule(body.get("formula", ""))
@@ -259,6 +267,51 @@ def _trace_passages(svc, body, m, q, ctx=None):
 @route("POST", r"/api/source/passage", min_role="student")
 def _source_passage(svc, body, m, q, ctx=None):
     return svc.source_passage(body.get("book", ""), body.get("ref", ""))
+
+
+@route("POST", r"/api/trace/mentions", min_role="student")
+def _trace_mentions(svc, body, m, q, ctx=None):
+    return svc.trace_mentions(str(body.get("name", ""))[:40],
+                              str(body.get("book_dir", ""))[:60],
+                              offset=int(body.get("offset", 0) or 0),
+                              limit=int(body.get("limit", 6) or 6))
+
+
+@route("POST", r"/api/library/read", min_role="student")
+def _library_read(svc, body, m, q, ctx=None):
+    # 分頁游標用 body["start"]（不叫 offset——通用 _INT_CAPS 會把 offset
+    # 鉗到 10 萬字以內，長書全文續讀會被截斷）
+    try:
+        start = max(0, int(body.get("start", 0) or 0))
+    except (TypeError, ValueError):
+        start = 0
+    return svc.library_read(body.get("book", ""),
+                            section=body.get("section", ""),
+                            offset=start,
+                            max_chars=int(body.get("max_chars", 3000) or 3000))
+
+
+@route("POST", r"/api/errata")
+def _errata_submit(svc, body, m, q, ctx=None):
+    return svc.errata_submit(body.get("clause_ref", ""),
+                             body.get("quote", ""),
+                             body.get("suggestion", ""),
+                             note=body.get("note", ""),
+                             subject=(ctx.principal_id if ctx else "anonymous"))
+
+
+@route("GET", r"/api/errata", min_role="doctor")
+def _errata_list(svc, body, m, q, ctx=None):
+    limit = _qint(q, "limit", 50, 1, 200)
+    return svc.errata_list(limit=limit or 50)
+
+
+@route("POST", r"/api/trace/term-passages", min_role="student")
+def _term_passages(svc, body, m, q, ctx=None):
+    return svc.term_passages(str(body.get("term", ""))[:40],
+                             str(body.get("book", ""))[:60],
+                             offset=int(body.get("offset", 0) or 0),
+                             limit=int(body.get("limit", 6) or 6))
 
 
 @route("POST", r"/api/quiz", min_role="student")

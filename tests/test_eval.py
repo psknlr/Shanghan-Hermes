@@ -145,7 +145,7 @@ class TestBenchmarkPaper(unittest.TestCase):
         self.assertIn("醫案回放", text)
         self.assertIn("完全接地率", text)
         # the augmentation layer interprets the benchmark numbers
-        self.assertIn("遮方預測基準", text.split("計量結果解讀")[1])
+        self.assertIn("遮方預測基準", text.split("計量結果增益層解讀")[1])
 
 
 if __name__ == "__main__":

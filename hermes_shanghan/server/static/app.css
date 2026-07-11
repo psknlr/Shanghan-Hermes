@@ -149,12 +149,19 @@ pre.md{white-space:pre-wrap;font-family:var(--serif);font-size:13.5px;line-heigh
   border-bottom:1px solid var(--border);background:var(--panel2)}
 .drawer-head span{font-family:var(--serif);font-size:16px;color:var(--accent)}
 .drawer-head button{border:none;background:transparent;font-size:18px;color:var(--muted);cursor:pointer}
+.drawer-head button:hover{color:var(--accent)}
+.drawer-head-btns{display:flex;gap:2px;align-items:center}
 #drawer-back{margin-right:6px;font-weight:700}
+#drawer-bottom{font-weight:700}
 select#lang-select{cursor:pointer;font-size:12px;padding:3px 6px;border-radius:10px;
   border:1px solid var(--border2);background:var(--panel2);color:var(--ink2)}
-.drawer-body{padding:16px 18px;overflow-y:auto}
+.drawer-body{padding:16px 18px;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
+/* 非模態抽屜：查閱條文時左側界面保持可滾動/可交互（不再全屏遮擋）。
+   scrim 僅在 ≤820px 移動端全寬抽屜下啟用（此時左側本就不可見） */
 .drawer-scrim{position:fixed;inset:0;background:rgba(40,30,15,.28);opacity:0;pointer-events:none;transition:.25s;z-index:39}
-.drawer-scrim.open{opacity:1;pointer-events:auto}
+@media (max-width: 820px){
+  .drawer-scrim.open{opacity:1;pointer-events:auto}
+}
 
 /* footer (研發來源) */
 .footbar{padding:8px 20px;border-top:1px solid var(--border2);background:var(--panel2);

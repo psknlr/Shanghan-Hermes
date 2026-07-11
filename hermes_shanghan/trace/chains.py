@@ -577,6 +577,10 @@ def formula_explain(name: str) -> Dict:
                                 for fb in first_c.get("formula_blocks", [])
                                 if formula in fb.get("formula_name", "")), []),
             "rule_notes": rule.get("administration_notes", [])[:5],
+            # 出處錨點（十九輪）：煎法/服法皆出自首見條文的 <F> 方塊
+            "source": {"clause_id": first_id,
+                       "book": "傷寒論（宋本，趙開美本）",
+                       "chapter": first_c.get("chapter", "")},
             "warning": "古籍煎服法 ≠ 現代可直接執行醫囑：劑量制式、藥材炮製與"
                        "服藥調護均需專業醫師按現代規範轉換。",
         },

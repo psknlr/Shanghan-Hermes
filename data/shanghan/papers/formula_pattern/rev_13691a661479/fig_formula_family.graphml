@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<graphml xmlns='http://graphml.graphdrawing.org/xmlns'>
+<key id='label' for='node' attr.name='label' attr.type='string'/>
+<key id='kind' for='edge' attr.name='kind' attr.type='string'/>
+<graph edgedefault='directed'>
+<node id='n_0d6d785f21e1'><data key='label'>四逆湯</data></node>
+<node id='n_3adea1dc669f'><data key='label'>四逆加人參湯</data></node>
+<node id='n_3146dea11bbd'><data key='label'>桂枝加芍藥湯</data></node>
+<node id='n_00d0737498db'><data key='label'>桂枝加芍藥生薑各一兩人參三兩新加湯</data></node>
+<node id='n_ab43f52dc674'><data key='label'>桂枝去芍藥湯</data></node>
+<node id='n_fa4cd595a568'><data key='label'>桂枝去芍藥加蜀漆牡蠣龍骨救逆湯</data></node>
+<node id='n_7b74b45f951c'><data key='label'>桂枝去芍藥加附子湯</data></node>
+<node id='n_2199a346eade'><data key='label'>桂枝湯</data></node>
+<node id='n_2a2406fd32de'><data key='label'>桂枝加厚朴杏子湯</data></node>
+<node id='n_ba2f63b082e8'><data key='label'>桂枝加大黃湯</data></node>
+<node id='n_630ae2bb4c74'><data key='label'>桂枝加桂湯</data></node>
+<node id='n_694d6021467a'><data key='label'>桂枝加葛根湯</data></node>
+<node id='n_a84679118895'><data key='label'>桂枝加附子湯</data></node>
+<node id='n_7a62536a07d1'><data key='label'>桂枝去桂加茯苓白朮湯</data></node>
+<node id='n_5b6fc161a769'><data key='label'>當歸四逆湯</data></node>
+<node id='n_f1adee415218'><data key='label'>當歸四逆加吳茱萸生薑湯</data></node>
+<node id='n_dfc8196d5055'><data key='label'>白虎湯</data></node>
+<node id='n_fdafd0ccc62d'><data key='label'>白虎加人參湯</data></node>
+<node id='n_52c28d7ffa47'><data key='label'>白通湯</data></node>
+<node id='n_ffe2e3178ffa'><data key='label'>白通加豬膽汁湯</data></node>
+<node id='n_f1b5be2e0880'><data key='label'>葛根湯</data></node>
+<node id='n_b4969431f3a8'><data key='label'>葛根加半夏湯</data></node>
+<node id='n_8870ff29a5a2'><data key='label'>通脈四逆湯</data></node>
+<node id='n_082cd6a974d6'><data key='label'>通脈四逆加豬膽汁湯</data></node>
+<node id='n_7e0922305edc'><data key='label'>黃芩湯</data></node>
+<node id='n_2a5edbbc18da'><data key='label'>黃芩加半夏生薑湯</data></node>
+<edge source='n_0d6d785f21e1' target='n_3adea1dc669f'><data key='kind'>modification</data></edge>
+<edge source='n_3146dea11bbd' target='n_00d0737498db'><data key='kind'>modification</data></edge>
+<edge source='n_ab43f52dc674' target='n_fa4cd595a568'><data key='kind'>modification</data></edge>
+<edge source='n_ab43f52dc674' target='n_7b74b45f951c'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_2a2406fd32de'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_ba2f63b082e8'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_630ae2bb4c74'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_3146dea11bbd'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_00d0737498db'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_694d6021467a'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_a84679118895'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_7a62536a07d1'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_fa4cd595a568'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_7b74b45f951c'><data key='kind'>modification</data></edge>
+<edge source='n_2199a346eade' target='n_ab43f52dc674'><data key='kind'>modification</data></edge>
+<edge source='n_5b6fc161a769' target='n_f1adee415218'><data key='kind'>modification</data></edge>
+<edge source='n_dfc8196d5055' target='n_fdafd0ccc62d'><data key='kind'>modification</data></edge>
+<edge source='n_52c28d7ffa47' target='n_ffe2e3178ffa'><data key='kind'>modification</data></edge>
+<edge source='n_f1b5be2e0880' target='n_b4969431f3a8'><data key='kind'>modification</data></edge>
+<edge source='n_8870ff29a5a2' target='n_082cd6a974d6'><data key='kind'>modification</data></edge>
+<edge source='n_7e0922305edc' target='n_2a5edbbc18da'><data key='kind'>modification</data></edge>
+</graph>
+</graphml>

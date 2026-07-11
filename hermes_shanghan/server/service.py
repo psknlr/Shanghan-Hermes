@@ -246,6 +246,104 @@ class ServiceContext:
     def mistreatment(self, query: str = None) -> Dict:
         return self.registry.call("shanghan_mistreatment", {"query": query or ""})
 
+    def teaching_case(self, mistreatment: str, resulting_pattern: str = "",
+                      use_llm: bool = True) -> Dict:
+        """誤治傳變 → 教學案例（二十輪）：確定性骨架（規則+證據條文逐字
+        取證）恆有；接真模型時另生成敘事層病案，所引 clause_id 過
+        CitationGuard。案例為虛構教學情景，不構成診療建議。"""
+        from ..textutil import fold_variants, normalize_query
+        mt = normalize_query(mistreatment or "")
+        rp = normalize_query(resulting_pattern or "")
+        rules = [m for m in self.art.mistreatment_rules
+                 if (not mt or fold_variants(mt)
+                     in fold_variants(m.mistreatment_type))
+                 and (not rp or fold_variants(rp)
+                      in fold_variants(m.resulting_pattern))]
+        if not rules:
+            return {"error": f"未找到誤治規則：{mistreatment}"
+                             + (f" → {resulting_pattern}" if rp else ""),
+                    "available_types": sorted(
+                        {m.mistreatment_type
+                         for m in self.art.mistreatment_rules})}
+        r = rules[0]
+        store = self.art.clause_store()
+        evidence = []
+        for cid in r.supporting_clauses[:6]:
+            c = store.get(cid)
+            if c is not None:
+                evidence.append({"clause_id": cid, "chapter": c.chapter,
+                                 "text": c.clean_text})
+        channel = (r.six_channel_scope or ["太陽病"])[0]
+        rescue = "、".join(r.rescue_formulas) or "（無明文救逆方）"
+        manifest = "、".join(r.manifestations[:6]) or "（原文未列具體表現）"
+        path_desc = (f"{channel} 誤用「{r.mistreatment_type}」→ 變證"
+                     f"「{r.resulting_pattern}」（見證：{manifest}）"
+                     f"→ 救逆：{rescue}")
+        # 確定性骨架：情景/要點/思考題全部由規則字段拼裝，條文逐字附後
+        case = {
+            "title": f"{r.mistreatment_type}致{r.resulting_pattern}案（教學）",
+            "scenario": (f"【教學案例·虛構】患者初患{channel}，醫者誤用"
+                         f"「{r.mistreatment_type}」；隨後出現{manifest}，"
+                         f"轉為「{r.resulting_pattern}」。"
+                         f"救逆方向：{rescue}。"),
+            "key_manifestations": r.manifestations[:6],
+            "rescue_formulas": r.rescue_formulas,
+            "teaching_points": [
+                f"誤治環節：{channel}不當施以「{r.mistreatment_type}」",
+                f"變證辨識：{r.resulting_pattern}——關鍵見證 {manifest}",
+                f"救逆思路：{rescue}（依據見證據條文）"],
+            "discussion_questions": [
+                f"本案誤用「{r.mistreatment_type}」為何不當？"
+                "請從證據條文中找出原文依據。",
+                f"變證「{r.resulting_pattern}」與原證如何鑒別？"
+                "哪些表現是轉變的信號？",
+                f"為何以 {rescue} 救逆？其方證核心指徵是什麼？"],
+        }
+        out = {"mistreatment": r.mistreatment_type,
+               "resulting_pattern": r.resulting_pattern,
+               "channel": channel,
+               "release_level": r.release_level,
+               "n_matched_rules": len(rules),
+               "case": case,
+               "evidence": evidence,
+               "note": "教學案例為虛構情景：骨架由誤治規則（D 層）確定性"
+                       "拼裝、條文逐字回源；不構成診療建議。"}
+        if use_llm and self.llm.available:
+            out["model_narrative"] = self._teaching_case_narrative(
+                path_desc, evidence)
+        return out
+
+    def _teaching_case_narrative(self, path_desc: str,
+                                 evidence: List[Dict]) -> Dict:
+        """模型敘事層病案（E 層）：事實只取規則路徑與證據條文，引用核驗。"""
+        from ..agent.citation_guard import CitationGuard
+        from ..llm.prompts import (teaching_case_system_prompt,
+                                   teaching_case_user_prompt)
+        allowed = [e["clause_id"] for e in evidence]
+        block = "\n".join(f"- [{e['clause_id']}] {e['text'][:200]}"
+                          for e in evidence)
+        try:
+            res = self.llm.json_complete(teaching_case_system_prompt(),
+                                         teaching_case_user_prompt(path_desc,
+                                                                   block),
+                                         task="synthesize")
+        except Exception as exc:
+            return {"backend": "error", "error": type(exc).__name__}
+        narrative = str(res.get("narrative", ""))[:2500]
+        analysis = str(res.get("analysis", ""))[:2000]
+        guard = CitationGuard(self.art.clause_store())
+        rep = guard.check(narrative + "\n" + analysis, allowed_ids=allowed)
+        return {"backend": self.llm.backend,
+                "title": str(res.get("title", ""))[:60],
+                "narrative": narrative,
+                "analysis": analysis,
+                "discussion_questions":
+                    [str(q)[:160] for q in
+                     (res.get("discussion_questions") or [])[:4]],
+                "citation_report": rep.to_dict(),
+                "note": "敘事層屬 E 層模型生成；引用已逐一過 CitationGuard，"
+                        "未核實編號請勿採信。"}
+
     def patient(self, question: str) -> Dict:
         from ..apps.patient import PatientEducator
         edu = PatientEducator(self.art.six_channel_rules, self.art.clause_store())
@@ -286,8 +384,21 @@ class ServiceContext:
         if meta_path.exists():
             import json
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        # 導出（十九輪）：docx（純標準庫 OOXML）+ 全件 zip（稿+SVG+CSV），
+        # 經 /api/artifact/download 下載（papers/ 在允許集內）
+        downloads = {}
+        try:
+            from ..paper.exporter import export_bundle
+            names = export_bundle(path)
+            rel = path.parent.relative_to(config.SHANGHAN_DIR)
+            downloads = {fmt: str(rel / name) for fmt, name in names.items()}
+        except Exception as exc:
+            downloads = {"error": type(exc).__name__}
+        manuscript = path.read_text(encoding="utf-8")
         return {"manuscript_path": str(path),
-                "manuscript": path.read_text(encoding="utf-8"),
+                "manuscript": manuscript,
+                "manuscript_chars": len(manuscript),
+                "downloads": downloads,
                 "meta": meta}
 
     def complex(self, question: str, role: str = None) -> Dict:
@@ -474,6 +585,112 @@ class ServiceContext:
         return book_citing_passages(book_dir, clause_ids or [],
                                     offset=offset, limit=limit)
 
+    # -- 勘誤提交（十九輪：用戶對原文/轉寫錯誤的反饋閉環）----------------
+    def errata_submit(self, clause_ref: str, quote: str, suggestion: str,
+                      note: str = "", subject: str = "anonymous") -> Dict:
+        """勘誤落盤 data/shanghan/errata/errata.jsonl（不入庫，人工複核）。
+        提交不改動語料——語料以 manifest sha256 為版本錨，勘誤經維護者
+        審定後才進入下一版底本。"""
+        import json as _json
+        import time
+        import uuid
+        clause_ref = str(clause_ref or "").strip()[:40]
+        quote = str(quote or "").strip()[:400]
+        suggestion = str(suggestion or "").strip()[:400]
+        note = str(note or "").strip()[:400]
+        if not quote or not suggestion:
+            return {"error": "須同時提供原文片段（quote）與勘誤建議（suggestion）"}
+        c = self.clause_rag.get_clause(clause_ref) if clause_ref else None
+        from ..textutil import contains_verbatim
+        rec = {
+            "erratum_id": "ERR_" + uuid.uuid4().hex[:10],
+            "submitted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "subject": str(subject)[:60],
+            "clause_ref": clause_ref,
+            "clause_id": c.clause_id if c else "",
+            "quote": quote,
+            "suggestion": suggestion,
+            "note": note,
+            # 逐字核驗：片段是否真在所指條文中（在=可定位；不在=如實標記）
+            "quote_found_in_clause": bool(c and contains_verbatim(
+                c.clean_text, quote)),
+            "status": "pending",
+        }
+        d = config.SHANGHAN_DIR / "errata"
+        d.mkdir(parents=True, exist_ok=True)
+        with (d / "errata.jsonl").open("a", encoding="utf-8") as fh:
+            fh.write(_json.dumps(rec, ensure_ascii=False) + "\n")
+        return {"ok": True, "erratum_id": rec["erratum_id"],
+                "quote_found_in_clause": rec["quote_found_in_clause"],
+                "note": "已登記，待人工複核；勘誤不即時改動語料"
+                        "（語料版本以 manifest sha256 為錨）。"
+                        + ("" if rec["quote_found_in_clause"] else
+                           "提示：所引片段未能在該條文中逐字定位，"
+                           "複核時將優先人工核對。")}
+
+    def errata_list(self, limit: int = 50) -> Dict:
+        from ..schemas import read_jsonl
+        rows = read_jsonl(config.SHANGHAN_DIR / "errata" / "errata.jsonl")
+        return {"n_total": len(rows), "errata": rows[-max(1, limit):][::-1],
+                "note": "僅維護者（doctor 角色）可查閱；status 由人工複核更新"}
+
+    def library_read(self, book: str, section: str = "", offset: int = 0,
+                     max_chars: int = 3000) -> Dict:
+        """笈成全庫章節全文點閱（二十輪）：全文命中標題點擊 → 分頁續讀
+        該章節（或全書）原文。旁證層，僅供文獻查閱，不進入證據閘門。"""
+        from ..corpus import library
+        if not library.ensure_available(verbose=False):
+            return {"available": False,
+                    "error": "全庫未下載：運行 `python3 -m hermes_shanghan "
+                             "library fetch`（約 69MB）"}
+        lib = library.Library()
+        out = lib.read(str(book or "").strip()[:80],
+                       section=str(section or "").strip()[:80],
+                       max_chars=max(400, min(8000, int(max_chars or 3000))),
+                       offset=max(0, int(offset or 0)))
+        if "error" in out:
+            return {"available": True, **out}
+        return {"available": True, **out,
+                "evidence_layer": "文獻旁證層（非經文層）：出處僅供文獻查閱，"
+                                  "不進入證據閘門"}
+
+    def trace_mentions(self, name: str, book_dir: str,
+                       offset: int = 0, limit: int = 6) -> Dict:
+        """方名傳播的點閱：某書中該方名的逐字提及段落（十九輪）。"""
+        from ..trace.passages import name_mention_passages
+        return name_mention_passages(name, book_dir, offset=offset,
+                                     limit=limit)
+
+    def term_passages(self, term: str, book: str,
+                      offset: int = 0, limit: int = 6) -> Dict:
+        """注家使用譜的點閱：某注本中含該術語的注文用例（十九輪）。"""
+        from ..textutil import fold_variants, normalize_query
+        t = fold_variants(normalize_query(term))
+        if len(t) < 2:
+            return {"error": "術語至少 2 字"}
+        rows = []
+        for r in self.art.commentary_rules:
+            if book and r.book != book:
+                continue
+            folded = fold_variants(r.commentary_text)
+            pos = folded.find(t)
+            if pos < 0:
+                continue
+            lo, hi = max(0, pos - 40), min(len(r.commentary_text),
+                                           pos + len(t) + 40)
+            rows.append({"clause_id": r.clause_id,
+                         "commentator": r.commentator,
+                         "book": r.book, "chapter": r.chapter,
+                         "excerpt": ("…" if lo else "")
+                         + r.commentary_text[lo:hi]
+                         + ("…" if hi < len(r.commentary_text) else "")})
+        total = len(rows)
+        page = rows[max(0, offset):max(0, offset) + max(1, limit)]
+        return {"term": term, "book": book, "n_passages": total,
+                "offset": offset, "has_more": offset + len(page) < total,
+                "passages": page,
+                "evidence_layer": "C 注家解釋（用例逐字檢出，所注條文可回源）"}
+
     def source_passage(self, book: str, ref: str) -> Dict:
         """讀取語料書的原始段落（十八輪：條文關係目標可點閱）。
 
@@ -529,7 +746,7 @@ class ServiceContext:
         base = self.registry.call("shanghan_intake", {"text": text})
         if not (use_llm and self.llm.available):
             return base
-        from ..apps.bianzheng import MODERN_TO_CLASSICAL
+        from ..apps.bianzheng import modernize
         from ..llm.prompts import (intake_extract_system_prompt,
                                    intake_extract_user_prompt)
         from ..textutil import fold_variants, normalize_query
@@ -541,10 +758,7 @@ class ServiceContext:
             base["model_extraction"] = {"backend": "error",
                                         "error": type(exc).__name__}
             return base
-        mapped = normalize_query(text)
-        for modern, classical in MODERN_TO_CLASSICAL.items():
-            mapped = mapped.replace(modern, classical)
-        haystack = fold_variants(mapped) + "\n" + fold_variants(
+        haystack = fold_variants(modernize(text)) + "\n" + fold_variants(
             normalize_query(text))
         already = {fold_variants(s) for key in
                    ("cold_heat", "sweating", "thirst_drinking", "stool_urine",

@@ -123,6 +123,29 @@ class TestLibraryParsing(unittest.TestCase):
         self.assertIn("error", out)
         self.assertIn("總論", out["toc"])
 
+    def test_read_offset_pagination(self):
+        # 二十輪：章節全文點閱的「載入更多」——offset 窗口續讀，兩頁拼接
+        # 等於全文；truncated 表示窗口之後仍有餘文
+        full = self.lib.read("乙部方書", max_chars=100000)
+        total = full["total_chars"]
+        half = max(1, total // 2)
+        p1 = self.lib.read("乙部方書", max_chars=half)
+        self.assertTrue(p1["truncated"])
+        self.assertEqual(p1["offset"], 0)
+        p2 = self.lib.read("乙部方書", max_chars=100000,
+                           offset=len(p1["text"]))
+        self.assertEqual(p2["offset"], half)
+        self.assertFalse(p2["truncated"])
+        self.assertEqual(p1["text"] + p2["text"], full["text"])
+        # 章節模式同樣支持 offset；越界 offset 收斂為空窗口
+        sec = self.lib.read("甲乙經考", section="總論", max_chars=100000)
+        paged = self.lib.read("甲乙經考", section="總論",
+                              max_chars=100000, offset=3)
+        self.assertEqual(sec["text"][3:], paged["text"])
+        beyond = self.lib.read("乙部方書", offset=10 ** 9)
+        self.assertEqual(beyond["text"], "")
+        self.assertFalse(beyond["truncated"])
+
     def test_grep_unwraps_lines_folds_variants_locates_section(self):
         # match spans a hard line-wrap（主治中風，\n胸脅苦滿）
         out = self.lib.grep("胸脅苦滿")

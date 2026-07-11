@@ -165,6 +165,20 @@ class ClauseMatcher:
     def match_text(self, text: str, limit: int = 5) -> List[Dict]:
         """把任意輸入文本回源到條文（溯源鏈 / 現代文獻接口入口）。"""
         pchars, _ = self.fold(text)
+        # 短查詢（如「項背強几几」5 字）低於 8-gram 索引窗口：
+        # 直接逐字子串掃描（681 條，毫秒級），十九輪修復
+        if 2 <= len(pchars) < SHINGLE_CLAUSE:
+            rows = []
+            for cid in sorted(self.index.texts):
+                ctext = self.index.texts[cid]
+                if pchars in ctext:
+                    rows.append({"clause_id": cid,
+                                 "longest_run": len(pchars),
+                                 "coverage": round(len(pchars)
+                                                   / max(1, len(ctext)), 3),
+                                 "matched_span": pchars})
+            rows.sort(key=lambda r: (-r["coverage"], r["clause_id"]))
+            return rows[:limit]
         rows = []
         for cid, runs in self.candidate_runs(pchars).items():
             longest = max(ln for _, _, ln in runs)

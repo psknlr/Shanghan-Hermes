@@ -344,14 +344,24 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
             "缺少「規則必須回到原文」的硬性約束。本文提出 Hermes-Shanghanlun 框架，"
             "把每一條原文轉化為可追蹤規則，使每一個方證判斷都能回到條文編號。")
 
+        # 確定性敘述層（十九輪）：方證各論/計量分述/誤治分述——結構化+
+        # 段落化長文，事實直採規則庫並逐處錨定條文；離線同樣生成
+        from .narrative import (formula_monographs, mistreatment_narrative,
+                                quant_narrative)
+        store = {c.clause_id: c for c in self.all_clauses}
+        monographs = formula_monographs(topic, s, self.formula_rules,
+                                        store, self.differential_rules)
+        quant_narr = quant_narrative(s, digest)
+        mist_narr = mistreatment_narrative(self.mistreatment_rules)
+
         quant_body = drafted.get("quant_interpretation", "")
         quant_section = ""
         if quant_body:
-            quant_section = ("## 5 計量結果解讀\n\n"
+            quant_section = ("### 6.9 計量結果增益層解讀\n\n"
                              "（本節由增益層基於 research/ 計量資產撰寫，屬 D/E 層歸納，"
                              "引用已過 CitationGuard 核驗。）\n\n" + quant_body)
 
-        discussion = "## 6 討論\n\n" + (drafted.get("discussion") or
+        discussion = "## 8 討論\n\n" + (drafted.get("discussion") or
             """（1）證據邊界。本研究嚴格區分原文直述與後世歸納：如「營衛不和」屬後世
 病機術語，批評器將其攔截出規則主體並降級為模型解釋層；「可與」與「主之」
 的證據強度差異被顯式建模，避免將斟酌之辭讀作必用之訓。
@@ -364,7 +374,7 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
 可服務醫師輔助（標註輔助性質）、科研挖掘（共現網絡、知識圖譜）與教學練習；
 患者端嚴格禁用診斷與處方功能。""")
 
-        conclusion = "## 7 結論\n\n" + (drafted.get("conclusion") or
+        conclusion = "## 9 結論\n\n" + (drafted.get("conclusion") or
             """以條文為最小證據單位、以自主審核為質量閘門的 Hermes 流水線，能夠將
 《傷寒論》整書轉化為層級化、可回源、可調用的規則系統；所有方證判斷
 均可回到條文，所有歸納均標明證據層級，為中醫古籍的可計算化提供了
@@ -412,10 +422,12 @@ MistreatmentTransformationRule → MergedShanghanRule；另建 ClauseRelation
             "## 1 引言\n\n" + intro_body,
             "## 2 數據\n\n" + self._data_section(s),
             methods, results,
+            monographs, quant_narr,
         ]
         if quant_section:
             parts.append(quant_section)
         parts += [
+            mist_narr,
             discussion, conclusion,
             self._legends_section(fig_out["legends"]),
             "## 圖表清單\n\n" + "\n".join(f"- {f}" for f in figures + tables),

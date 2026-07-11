@@ -1,0 +1,62 @@
+{
+ "channel_formula": {
+  "fig_no": "Fig.1",
+  "title": "六經—方劑分佈圖",
+  "panels": {
+   "a": "每經列其主方（按載方條文數，前 4）"
+  },
+  "n": "n=六經規則全部主方邊（見 source data）",
+  "data_source": "six_channel_rules（D 層歸納，錨定 A 層條文）",
+  "error_definition": "無誤差條（確定性計數）",
+  "evidence_level": "D（錨定 A）",
+  "abbreviations": "",
+  "source_data": [
+   "Fig1a_channel_formula.csv"
+  ]
+ },
+ "formula_family": {
+  "fig_no": "Fig.2",
+  "title": "方劑家族樹",
+  "panels": {
+   "a": "有向邊：基方→加減方"
+  },
+  "n": "n=全部加減關係邊（見 source data）",
+  "data_source": "formula_rules（A 層組成派生）",
+  "error_definition": "無誤差條（確定性關係）",
+  "evidence_level": "A-derived",
+  "abbreviations": "",
+  "source_data": [
+   "Fig2a_family_edges.csv"
+  ]
+ },
+ "formula_freq": {
+  "fig_no": "Fig.3",
+  "title": "宋本正文中各方劑的載方條文數（前 10）",
+  "panels": {
+   "a": "橫條=載方條文數；一條條文含多方時分別計數"
+  },
+  "n": "n=398 條正文（分母：全部原文條文）",
+  "data_source": "宋本正文 A 層直計",
+  "error_definition": "無誤差條（全量計數，非抽樣）",
+  "evidence_level": "A",
+  "abbreviations": "",
+  "source_data": [
+   "Fig3a_formula_frequency.csv"
+  ]
+ },
+ "clause_topics": {
+  "fig_no": "Fig.4",
+  "title": "條文主題聚類圖",
+  "panels": {
+   "a": "六經 × 六類主題的條文分桶（樣例條文號）"
+  },
+  "n": "n=398 條正文（每條入唯一主題桶）",
+  "data_source": "宋本正文條文（A 層直計）",
+  "error_definition": "無誤差條（確定性分桶）",
+  "evidence_level": "A-derived",
+  "abbreviations": "",
+  "source_data": [
+   "Fig4a_clause_topics.csv"
+  ]
+ }
+}

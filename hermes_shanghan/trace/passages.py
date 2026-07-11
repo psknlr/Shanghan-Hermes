@@ -144,6 +144,34 @@ def book_citing_passages(book_dir: str, clause_ids: List[str],
             "evidence_layer": "跨書引文邊（逐字回源）"}
 
 
+def name_mention_passages(name: str, book_dir: str, offset: int = 0,
+                          limit: int = 6, radius: int = 46) -> Dict:
+    """某書中一個方名/術語的逐字提及段落（方名傳播的點閱視圖，十九輪）。"""
+    from ..textutil import normalize_query
+    q = fold_variants(normalize_query(name))
+    if len(q) < 2:
+        return {"error": "名稱至少 2 字"}
+    paras = _paragraphs(book_dir)
+    if not paras:
+        return {"error": f"語料中無此書：{book_dir}"}
+    hits = []
+    for seq, (ch, text) in enumerate(paras):
+        pos = fold_variants(text).find(q)
+        if pos < 0:
+            continue
+        lo, hi = max(0, pos - radius), min(len(text), pos + len(q) + radius)
+        hits.append({"para_seq": seq, "chapter": ch,
+                     "excerpt": ("…" if lo else "") + text[lo:hi]
+                     + ("…" if hi < len(text) else "")})
+    total = len(hits)
+    page = hits[max(0, offset):max(0, offset) + max(1, limit)]
+    return {"book_dir": book_dir, "name": name, "n_paragraphs": total,
+            "offset": offset, "has_more": offset + len(page) < total,
+            "passages": page,
+            "note": "方名逐字提及（每段取首次出現的上下文）；"
+                    "提及≠引用原條文，引用段落見「歷代引用」。"}
+
+
 def clause_citing_passages(clause_id: str, per_book: int = 2,
                            max_books: int = 30,
                            with_excerpt: bool = True) -> Dict:

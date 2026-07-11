@@ -506,8 +506,12 @@ class Library:
         return out
 
     def read(self, book_id: str, section: str = "",
-             max_chars: int = 4000) -> Dict:
-        """Read a book (or one section of it, matched on the heading)."""
+             max_chars: int = 4000, offset: int = 0) -> Dict:
+        """Read a book (or one section of it, matched on the heading).
+
+        ``offset`` pages through long texts: ``text`` is the window
+        ``full[offset:offset+max_chars]``；``truncated`` 表示窗口之後仍有
+        餘文（章節全文點閱的「載入更多」據此續讀）。"""
         u = self._resolve(book_id)
         if u is None:
             return {"error": f"全庫查無此書：{book_id}"}
@@ -526,9 +530,11 @@ class Library:
                         if (m := RE_HEADING.match(lines[j].strip()))
                         and len(m.group(1)) >= level), len(lines))
             text = "\n".join(lines[start:end])
-        truncated = len(text) > max_chars
+        offset = max(0, min(int(offset or 0), len(text)))
+        window = text[offset:offset + max_chars]
         return {"book": self._brief(u), "section": section,
-                "text": text[:max_chars], "truncated": truncated,
+                "text": window, "offset": offset,
+                "truncated": offset + len(window) < len(text),
                 "total_chars": len(text)}
 
     # -- full-text search ---------------------------------------------------
