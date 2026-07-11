@@ -83,8 +83,43 @@ async function openClause(ref) {
       ...c.variants.map(v => el("div", { class: "evi" }, [el("div", { class: "ct" }, v.text), el("div", { class: "meta" }, v.book + " · 相似度 " + v.similarity + (v.differences && v.differences.length ? " · " + v.differences.join("；") : ""))]))]));
   }
   if (c.commentaries && c.commentaries.length) {
-    body.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, [el("span", { class: "layer C" }, "C"), " 注家解釋"]),
-      ...c.commentaries.map(v => el("div", { class: "evi" }, [el("div", { class: "ct", style: "font-size:13px" }, v.text), el("div", { class: "meta" }, v.commentator)]))]));
+    // 智能化注家層：貼近原文度/學派/取徑逐家標注（commentary_analysis）
+    const ca = c.commentary_analysis || {};
+    const meta = {};
+    (ca.views || []).forEach(v => meta[v.commentator] = v);
+    body.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, [el("span", { class: "layer C" }, "C"), " 注家解釋",
+        ca.divergence_types_present && ca.divergence_types_present.length ? el("span", { class: "small muted" }, "　分歧取徑：" + ca.divergence_types_present.join("、")) : null]),
+      ...c.commentaries.map(v => {
+        const m = meta[v.commentator] || {};
+        return el("div", { class: "evi" }, [
+          el("div", { class: "ct", style: "font-size:13px" }, v.text),
+          el("div", { class: "meta" }, [
+            el("b", {}, v.commentator), m.dynasty ? "（" + m.dynasty + "）" : "",
+            m.school ? el("span", { class: "pill" }, m.school) : null,
+            m.closeness_to_original != null ? el("span", { class: "pill" }, "貼近原文 " + m.closeness_to_original) : null,
+            (m.analytic_focus || []).length ? el("span", { class: "pill" }, "取徑：" + m.analytic_focus.join("/")) : null,
+            (m.posthoc_terms || []).length ? el("span", { class: "small muted" }, "　後世術語：" + m.posthoc_terms.join("、")) : null,
+          ])]);
+      }),
+      ca.note ? el("p", { class: "small muted" }, ca.note) : null]));
+  }
+  const hc = c.historical_citations;
+  if (hc && hc.n_books) {
+    const wrap = el("div", { class: "card" }, [el("div", { class: "section-title" },
+      "歷代古籍相關條目（" + hc.n_books + " 部書 · " + hc.n_edges + " 段引用，逐字回源）")]);
+    (hc.by_dynasty || []).forEach(d => {
+      const det = el("details", { style: "margin:4px 0", open: d === hc.by_dynasty[0] ? "" : null }, [
+        el("summary", {}, [el("b", {}, d.dynasty), el("span", { class: "muted small" }, "　" + d.books.length + " 部書")]),
+        ...d.books.map(b => el("div", { style: "padding:4px 0 4px 10px" }, [
+          el("div", { class: "small" }, [el("b", {}, "《" + b.book + "》"), el("span", { class: "muted" }, (b.author ? b.author + "　" : "") + b.n_citing_paragraphs + " 段引用")]),
+          ...(b.passages || []).map(p => el("div", { class: "evi" }, [
+            el("div", { class: "ct", style: "font-size:12px" }, p.excerpt || p.matched_span),
+            el("div", { class: "meta" }, [el("span", { class: "pill" }, p.mode), " §" + p.chapter + " · 覆蓋 " + p.coverage,
+              p.via_commentator ? el("span", { class: "muted" }, "　經" + p.via_commentator + "注轉引") : null])]))]))]);
+      wrap.append(det);
+    });
+    wrap.append(el("p", { class: "small muted" }, hc.note || ""));
+    body.append(wrap);
   }
 }
 function closeDrawer() { $("#drawer").classList.remove("open"); $("#drawer-scrim").classList.remove("open"); }
@@ -268,6 +303,35 @@ views.differential = async (main) => {
     (d.contrast_table || []).forEach(row => tbl.append(el("tr", {}, [el("td", {}, el("b", {}, row.axis)), ...d.formulas.map(f => el("td", {}, row[f] || "—"))])));
     out.append(el("div", { class: "card" }, [el("h3", {}, d.formulas.join(" vs ")), tbl]));
     if (d.key_discriminators) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "關鍵鑒別點"), ...d.key_discriminators.map(x => el("div", { class: "kv" }, [el("b", {}, "▸"), el("span", {}, x)]))]));
+    // 十六輪：逐格回源核驗（規則歸類可錯——不再默認規則即正確）
+    const v = r.verification;
+    if (v) {
+      const ok = !(v.flagged || []).length;
+      out.append(el("div", { class: "cite-banner " + (ok ? "cite-ok" : "cite-warn") },
+        ok ? "✓ 回源核驗通過：" + v.n_checked + " 項鑒別表述均可回源到支持條文"
+           : "⚠ " + v.n_checked + " 項核驗中 " + v.flagged.length + " 項存疑（見下）"));
+      if (!ok) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "存疑表述（規則層歸納，未能回源）"),
+        ...v.flagged.map(f => el("div", { class: "kv small" }, [
+          el("b", {}, f.formula + " · " + f.axis),
+          el("span", {}, ["「" + f.term + "」",
+            el("span", { class: "pill warn" }, f.status === "negated_context" ? "僅見否定語境（疑似歸類反了）" : "支持條文無此表述"),
+            ...(f.clauses || []).map(clauseChip)])]))],
+      ));
+      if (v.note) out.append(el("p", { class: "small muted" }, v.note));
+    }
+    // 模型審校層（真模型：語義級對抗審校；local：確定性審校）
+    const mr = r.model_review;
+    if (mr) {
+      const card = el("div", { class: "card" }, [
+        el("div", { class: "section-title" }, ["模型審校 ", el("span", { class: "pill" }, mr.backend), el("span", { class: "pill " + (mr.verdict === "pass" ? "" : "warn") }, mr.verdict)]),
+        el("p", { class: "small" }, mr.summary || "")]);
+      (mr.issues || []).forEach(it => card.append(el("div", { class: "evi" }, [
+        el("div", { class: "ct", style: "font-size:13px" }, (it.formula ? it.formula + " · " : "") + (it.axis ? it.axis + "：" : "") + it.problem),
+        el("div", { class: "meta" }, [...(it.clause_ids || []).map(clauseChip),
+          (it.unverified_clause_ids || []).length ? el("span", { class: "pill warn" }, "未核實引用：" + it.unverified_clause_ids.join("、")) : null])])));
+      if (mr.note) card.append(el("p", { class: "small muted" }, mr.note));
+      out.append(card);
+    }
     if (d.supporting_clauses) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "證據條文"), clauseChips(d.supporting_clauses)]));
   }
   main.append(el("div", { class: "card" }, [sel.node, el("button", { class: "btn", style: "margin-top:10px", onclick: run }, "生成鑒別表")]));
@@ -316,13 +380,48 @@ views.research = async (main) => {
     out.innerHTML = '<div class="loading">挖掘中…</div>';
     const r = await api.post("/api/research", { topic: topic.value || "全書方證" });
     out.innerHTML = "";
-    const st = r.statistics || {};
-    out.append(el("div", { class: "grid cols-2" }, [
-      el("div", { class: "card" }, [el("div", { class: "section-title" }, "高頻方劑"), ...(st.top_formulas || []).map(([f, n]) => el("div", { class: "kv small" }, [el("b", {}, f), el("span", {}, n + " 條")]))]),
-      el("div", { class: "card" }, [el("div", { class: "section-title" }, "高頻症狀"), ...(st.top_symptoms || []).map(([f, n]) => el("div", { class: "kv small" }, [el("b", {}, f), el("span", {}, n + " 條")]))]),
+    // 頻次統計（真實數據，權重條視圖）
+    const fq = r.frequency || {};
+    const freqCol = (title, rows, unit) => {
+      const max = rows.length ? rows[0][1] : 1;
+      return el("div", { class: "card" }, [el("div", { class: "section-title" }, title),
+        ...rows.slice(0, 15).map(([t, n]) => el("div", { style: "margin:3px 0" }, [
+          el("div", { class: "row small" }, [el("b", {}, t), el("span", { class: "spacer" }), el("span", { class: "muted" }, n + unit)]),
+          el("div", { class: "bar" }, el("span", { class: "lvl-gold", style: "width:" + Math.max(3, Math.round(n / max * 100)) + "%" }))]))]);
+    };
+    out.append(el("div", { class: "grid cols-3" }, [
+      freqCol("高頻症狀", fq.symptom_frequency || [], " 條"),
+      freqCol("高頻脈象", fq.pulse_frequency || [], " 條"),
+      freqCol("高頻方劑", fq.formula_frequency || [], " 條"),
     ]));
-    if (r.networks) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "共現網絡"), el("p", { class: "small" }, "方-症共現邊 " + r.networks.formula_symptom_edges + " · 方-脈共現邊 " + r.networks.formula_pulse_edges), el("p", { class: "small muted" }, "已導出：" + (r.networks.files || []).join("、") + "（data/shanghan/research/）")]));
-    if (r.paper_outline) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "論文大綱：" + r.paper_outline.title), ...(r.paper_outline.sections || []).map(s => el("div", { class: "small" }, s)), el("p", { class: "small muted" }, "圖：" + (r.paper_outline.figures || []).join("、"))]));
+    // 共現網絡（真實邊列表；主題聚焦時只看聚焦方）
+    const nw = r.networks || {};
+    const edges = (nw.focus_edges && nw.focus_edges.length ? nw.focus_edges : (nw.top_symptom_edges || [])).slice(0, 30);
+    if (edges.length) {
+      const maxW = edges[0].weight || 1;
+      out.append(el("div", { class: "card" }, [
+        el("div", { class: "section-title" }, "方-症共現網絡" + (nw.focus_formulas ? "（聚焦：" + nw.focus_formulas.join("、") + "）" : "（全書 Top 邊）")),
+        el("p", { class: "small muted" }, "共 " + nw.formula_symptom_edges + " 條方-症邊 · " + nw.formula_pulse_edges + " 條方-脈邊；完整網絡已導出 " + (nw.files || []).join("、")),
+        ...edges.map(e2 => el("div", { style: "margin:3px 0" }, [
+          el("div", { class: "row small" }, [el("b", {}, e2.formula), el("span", { class: "muted" }, "——" + e2.symptom), el("span", { class: "spacer" }), el("span", { class: "muted" }, "共現 " + e2.weight + " 條")]),
+          el("div", { class: "bar" }, el("span", { class: "lvl-silver", style: "width:" + Math.max(3, Math.round(e2.weight / maxW * 100)) + "%" }))]))]));
+      if ((nw.top_pulse_edges || []).length) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "方-脈共現（Top）"),
+        el("div", {}, nw.top_pulse_edges.slice(0, 16).map(e2 => el("span", { class: "pill" }, e2.formula + "×" + e2.pulse + " " + e2.weight)))]));
+    }
+    // 家族樹（加減方演化）
+    const ft = r.family_tree || {};
+    if ((ft.families || []).length) out.append(el("div", { class: "card" }, [
+      el("div", { class: "section-title" }, "方劑家族樹（" + ft.n_families + " 族" + (nw.focus_formulas ? " · 聚焦視圖" : "") + "）"),
+      ...ft.families.map(fam => el("div", { style: "margin:6px 0" }, [
+        el("b", {}, fam.base),
+        ...(fam.modifications || []).map(m => el("div", { class: "kv small", style: "padding-left:14px" }, [
+          el("b", {}, "└ " + m.modified_formula),
+          el("span", { class: "muted" }, (m.added_herbs ? "＋" + m.added_herbs : "") + (m.removed_herbs ? "　－" + m.removed_herbs : "") || m.relation)]))])),
+      el("p", { class: "small muted" }, ft.note || "")]));
+    if (r.paper_outline) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "論文大綱：" + r.paper_outline.title),
+      ...(r.paper_outline.sections || []).map(s => el("div", { class: "small" }, s)),
+      el("p", { class: "small muted" }, "圖：" + (r.paper_outline.figures || []).join("、")),
+      el("p", { class: "small muted" }, "表：" + (r.paper_outline.tables || []).join("、"))]));
     out.append(el("p", { class: "notice" }, r.safety_notice || ""));
   }
   main.append(el("div", { class: "card" }, [el("div", { class: "row" }, [el("div", { style: "flex:1" }, topic), el("button", { class: "btn", onclick: run }, "開始挖掘")])]));
@@ -425,7 +524,45 @@ views.trace = async (main) => {
   main.append(out);
 };
 function secBadge(t) { return el("span", { class: "pill" }, t); }
+// 全庫候選出處可點閱：點擊即調 shanghan_library 讀取該書該章節原文
+function libCandidateCard(h) {
+  const body = el("div", { class: "lib-passage", style: "display:none" });
+  let loaded = false;
+  const head = el("div", { class: "kv small", style: "cursor:pointer", onclick: async () => {
+    if (body.style.display === "none") {
+      body.style.display = "";
+      if (!loaded) {
+        body.innerHTML = '<div class="loading">讀取《' + esc(h.title) + "》…</div>";
+        try {
+          const r = await api.post("/api/tool", { name: "shanghan_library", arguments: { book: h.book_id || h.title, section: h.section || "" } });
+          body.innerHTML = "";
+          if (r.error) body.append(el("p", { class: "muted small" }, r.error + (r.toc ? "　可用章節：" + r.toc.slice(0, 8).join("、") : "")));
+          else {
+            body.append(el("pre", { class: "md", style: "max-height:34vh;font-size:12.5px" }, r.text || ""));
+            body.append(el("p", { class: "small muted" }, (r.truncated ? "（節選 " + (r.text || "").length + "/" + r.total_chars + " 字）" : "") + "　" + (r.evidence_layer || "")));
+          }
+          loaded = true;
+        } catch (e) { body.innerHTML = '<p class="muted small">讀取失敗：' + esc(e.message) + "</p>"; }
+      }
+    } else body.style.display = "none";
+  } }, [el("b", {}, "▸ " + h.title), el("span", {}, (h.author || "") + "·" + (h.dynasty || "") + (h.section ? " §" + h.section : "") + "　"),
+    h.excerpt ? el("span", { class: "muted" }, "…" + h.excerpt.slice(0, 40) + "…") : null]);
+  return el("div", {}, [head, body]);
+}
+function renderModelSynthesis(out, r) {
+  const ms = r.model_synthesis;
+  if (!ms || ms.error) return;
+  const cr = ms.citation_report;
+  out.append(el("div", { class: "card" }, [
+    el("div", { class: "section-title" }, ["模型綜合 ", el("span", { class: "pill" }, ms.backend), el("span", { class: "pill" }, ms.evidence_layer || "")]),
+    el("div", { class: "answer-text", style: "font-size:13.5px" }, ms.synthesis || ""),
+    cr ? el("div", { class: "cite-banner " + (cr.ok ? "cite-ok" : "cite-warn") },
+      cr.ok ? "✓ 綜合中引用已全部核驗（" + (cr.verified || []).length + " 條）"
+            : "⚠ 引用核驗未全部通過：" + [...(cr.unsupported || []), ...(cr.outside_evidence || [])].join("、")) : null,
+    ms.note ? el("p", { class: "small muted" }, ms.note) : null]));
+}
 function renderTrace(out, mode, r) {
+  renderModelSynthesis(out, r);
   if (mode === "quote") {
     const ok = (r.verdict || "").includes("可作原文直引");
     out.append(el("div", { class: "cite-banner " + (ok ? "cite-ok" : "cite-warn") }, r.verdict || ""));
@@ -472,7 +609,15 @@ function renderTrace(out, mode, r) {
   } else { // text / claim / fallback
     if (r.matches) {
       out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "回源命中"), ...r.matches.map(m => el("div", { class: "kv small" }, [clauseChip(m.clause_id), el("span", {}, "片段 " + (m.longest_run || 0) + " 字 · 覆蓋 " + (m.coverage || 0))]))]));
-      if (!r.matches.length) { out.append(el("p", { class: "muted" }, r.note || "")); if (r.library_candidates && r.library_candidates.hits) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, "全庫候選出處（旁證）"), ...r.library_candidates.hits.map(h => el("div", { class: "kv small" }, [el("b", {}, h.title), el("span", {}, h.author + "·" + h.dynasty + " §" + h.section)]))])); }
+      if (!r.matches.length) {
+        out.append(el("p", { class: "muted" }, r.note || ""));
+        const lc = r.library_candidates;
+        if (lc && (lc.hits || []).length) out.append(el("div", { class: "card" }, [
+          el("div", { class: "section-title" }, "全庫候選出處（旁證 · 點擊展開原文）"),
+          ...lc.hits.map(libCandidateCard),
+          el("p", { class: "small muted" }, lc.note || "")]));
+        else if (lc && lc.available === false) out.append(el("p", { class: "small muted" }, lc.note || "全庫未下載"));
+      }
     }
     if (r.clause) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, [clauseChip(r.clause.clause_id), " 原文"]), el("p", { class: "classical" }, r.clause.text)]));
     if (r.claim) out.append(el("div", { class: "card" }, [el("div", { class: "section-title" }, r.claim_id || "方證觀點"), el("p", {}, r.claim), el("span", { class: "pill" }, r.evidence_grade)]));

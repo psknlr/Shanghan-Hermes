@@ -60,6 +60,12 @@ class ServiceContext:
 
     def warm(self):
         _ = self.clause_rag, self.art.formula_rules, self.registry
+        # 段落級引文邊（歷代引用條目用）：啟動時預建，首個抽屜點擊不再等掃描
+        try:
+            from ..trace.passages import load_full_edges
+            load_full_edges()
+        except Exception:
+            pass
 
     @staticmethod
     def ready() -> bool:
@@ -149,6 +155,32 @@ class ServiceContext:
             "commentaries": [{"commentator": v.commentator,
                               "text": v.commentary_text[:400]} for v in comments],
         }
+        # 十六輪：注家解釋智能化——貼近原文度/學派/分析取徑逐家標注
+        #（複用注家爭議鏈的確定性指標），另附歷代古籍段落級引用。
+        # 患者端不附：引用段落多含方藥劑量原文（可執行診療信息不出患者面），
+        # 序列化出口的 PATIENT_FORBIDDEN_KEYS 投影亦兜底
+        if comments and role != "patient":
+            try:
+                from ..trace.chains import dispute_chain
+                dc = dispute_chain(c.clause_id)
+                if "error" not in dc:
+                    payload["commentary_analysis"] = {
+                        "views": dc.get("views", []),
+                        "divergence_types_present":
+                            dc.get("divergence_types_present", []),
+                        "term_divergence": dc.get("term_divergence"),
+                        "note": "貼近原文度=注文與條文字二元組重合率；"
+                                "學派歸屬為 posthoc_induction；只呈現結構，"
+                                "不裁決對錯。"}
+            except Exception:
+                pass
+        if role != "patient":
+            try:
+                from ..trace.passages import clause_citing_passages
+                payload["historical_citations"] = clause_citing_passages(
+                    c.clause_id, per_book=2, max_books=30)
+            except Exception as exc:
+                payload["historical_citations"] = {"error": type(exc).__name__}
         return safety.governed(payload, role)
 
     # -- apps -----------------------------------------------------------
@@ -157,7 +189,7 @@ class ServiceContext:
         return self.matcher.match(symptoms=symptoms, pulse=pulse or [],
                                   six_channel=six_channel or None, top_k=top_k)
 
-    def differential(self, formulas: List[str]) -> Dict:
+    def differential(self, formulas: List[str], use_llm: bool = True) -> Dict:
         from .. import safety
         from ..textutil import normalize_query
         names = [normalize_query(f) for f in formulas]
@@ -171,7 +203,17 @@ class ServiceContext:
             cands = [one] if one else []
         if not cands:
             return {"error": "無法構建該鑒別對"}
-        return safety.governed({"differential": cands[0].to_dict()}, "doctor")
+        d = cands[0].to_dict()
+        # 十六輪：規則歸類可錯——逐格回源核驗 + 模型對抗審校（引用過核驗）
+        from ..apps.differential_audit import model_review, verify_differential
+        store = self.art.clause_store()
+        verification = verify_differential(d, self.art.formula_rules, store)
+        payload = {"differential": d, "verification": verification}
+        if use_llm:
+            payload["model_review"] = model_review(
+                d, self.art.formula_rules, store, self.llm,
+                verification=verification)
+        return safety.governed(payload, "doctor")
 
     def teach(self, channel: str) -> Dict:
         from ..apps.teaching import TeachingBuilder
@@ -327,9 +369,66 @@ class ServiceContext:
             out.setdefault("_audit", {})["subject"] = subject
         return out
 
-    def trace(self, query_type: str, ref: str) -> Dict:
+    def trace(self, query_type: str, ref: str, synthesize: bool = True) -> Dict:
         from ..trace.chains import trace_dispatch
-        return trace_dispatch(query_type, ref)
+        out = trace_dispatch(query_type, ref)
+        # 十六輪：規則檢索之上加模型綜合層（引用過 CitationGuard；
+        # local 後端給確定性摘要，同一出口離線可測）
+        if synthesize and isinstance(out, dict) and "error" not in out:
+            try:
+                out["model_synthesis"] = self._trace_synthesis(query_type, out)
+            except Exception as exc:
+                out["model_synthesis"] = {"backend": "error",
+                                          "error": type(exc).__name__}
+        return out
+
+    @staticmethod
+    def _report_clause_ids(report: Dict) -> List[str]:
+        import re
+        blob = __import__("json").dumps(report, ensure_ascii=False, default=str)
+        ids = re.findall(r"SHL_SONGBEN_(?:AUX_)?\d{4}", blob)
+        return sorted(set(ids))
+
+    def _trace_synthesis(self, query_type: str, report: Dict) -> Dict:
+        """溯源報告 → 綜述。真模型：撰寫並核驗引用；local：確定性摘要。"""
+        from ..agent.citation_guard import CitationGuard
+        allowed = self._report_clause_ids(report)
+        chain_type = report.get("chain_type", query_type)
+        if not self.llm.available:
+            bits = []
+            clause = report.get("clause") or {}
+            if clause.get("clause_id"):
+                bits.append(f"本鏈錨定條文 {clause['clause_id']}")
+            cit = report.get("citations") or {}
+            if cit.get("n_citing_books"):
+                bits.append(f"歷代 {cit['n_citing_books']} 部著作存在引用")
+            if report.get("commentaries"):
+                bits.append(f"{len(report['commentaries'])} 家注家有對齊注文")
+            if report.get("variants"):
+                bits.append(f"{len(report['variants'])} 部異文本可對勘")
+            if report.get("matches"):
+                bits.append(f"文本回源命中 {len(report['matches'])} 條")
+            text = (f"【確定性摘要】{chain_type}：" + "；".join(bits) + "。"
+                    if bits else f"【確定性摘要】{chain_type}：見結構化報告各節。")
+            return {"backend": "local", "synthesis": text,
+                    "evidence_layer": "D 計量/檢索歸納",
+                    "note": "未接真實模型；接入後將生成引用經核驗的溯源綜述。"}
+        import json as _json
+        from ..llm.prompts import (trace_synth_system_prompt,
+                                   trace_synth_user_prompt)
+        compact = {k: v for k, v in report.items()
+                   if k not in ("model_synthesis",)}
+        blob = _json.dumps(compact, ensure_ascii=False, default=str)[:6000]
+        text = self.llm.complete(trace_synth_system_prompt(),
+                                 trace_synth_user_prompt(chain_type, blob),
+                                 task="synthesize")
+        guard = CitationGuard(self.art.clause_store())
+        rep = guard.check(text, allowed_ids=allowed)
+        if not rep.ok:
+            text = guard.annotate(text, rep)
+        return {"backend": self.llm.backend, "synthesis": text,
+                "evidence_layer": "E 模型綜合（事實僅取結構化報告）",
+                "citation_report": rep.to_dict()}
 
     def tools(self) -> Dict:
         from ..integrations.tool_specs import openai_tool_specs

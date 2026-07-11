@@ -145,7 +145,8 @@ def _match(svc, body, m, q, ctx=None):
 
 @route("POST", r"/api/differential", min_role="student")
 def _diff(svc, body, m, q, ctx=None):
-    return svc.differential(body.get("formulas", []))
+    return svc.differential(body.get("formulas", []),
+                            use_llm=bool(body.get("use_llm", True)))
 
 
 @route("POST", r"/api/teach", min_role="student")
@@ -221,7 +222,8 @@ def _tool(svc, body, m, q, ctx=None):
 @route("POST", r"/api/trace")
 def _trace(svc, body, m, q, ctx=None):
     return svc.trace(body.get("type", body.get("query_type", "text")),
-                     body.get("ref", ""))
+                     body.get("ref", ""),
+                     synthesize=bool(body.get("synthesize", True)))
 
 
 @route("GET", r"/api/tools")

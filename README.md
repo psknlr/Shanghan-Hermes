@@ -165,8 +165,9 @@ python3 -m hermes_shanghan llm-status            # 查看 LLM 後端
 python3 -m hermes_shanghan classics "「奔豚」最早見於哪部醫書？"
 python3 -m hermes_shanghan library audit         # 全庫驗收審計（--sample N 抽樣金標準）
 
-# 測試（446 項：對抗性審核 + 智能體架構 + 36 工具 + 評測 + 七維研究循環 + 全庫接入 + 治理探針
-#       + 可復現性/證據鏈硬化 + 溯源層（引文識別/計量網絡/五類溯源鏈）+ Colab守衛）
+# 測試（460 項：對抗性審核 + 智能體架構 + 36 工具 + 評測 + 七維研究循環 + 全庫接入 + 治理探針
+#       + 可復現性/證據鏈硬化 + 溯源層（引文識別/計量網絡/五類溯源鏈）+ Colab守衛
+#       + 模型增益層（鑒別回源核驗/審校、溯源綜合、歷代引用條目））
 python3 -m unittest discover -s tests
 
 # 中醫笈成全庫（800+ 部醫籍）：配置完成後一條命令自動下載（69MB，
@@ -475,7 +476,7 @@ hermes_shanghan/
 ├─ integrations/ tool_specs(OpenAI/Anthropic) · mcp_server(Claude Code) · AGENTS.md
 ├─ server/      service(API面) · http_server(stdlib) · static(SPA: index/css/js)
 ├─ orchestrator.py（五大 Workflow 總調度，可選 --llm-extract/--llm-critic）· cli.py
-tests/          446 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
+tests/          460 項測試 ｜ notebooks/ Colab 全功能演示（守衛測試保證與代碼同步）
 data/corpus_raw/   69 部古籍語料（含 manifest）
 data/library/      中醫笈成全庫（803 部，`library fetch` 自動下載，不入庫）
 data/shanghan/     全部生成資產（規則庫/審計/關係/科研/溯源/論文）

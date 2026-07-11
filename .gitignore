@@ -11,5 +11,9 @@ data/library/
 
 # harness runs（run_id/時間戳，按需導出，不入庫）
 data/shanghan/runs/
+# 段落級引文邊全量緩存（4萬+，數秒內確定性重建，不入庫）
+data/shanghan/trace/citation_edges_full.jsonl
 # 會話持久化（含用戶輸入，不入庫）
 data/shanghan/sessions/
+# LLM 響應磁盤緩存（按內容尋址，不入庫）
+data/shanghan/llm_cache/

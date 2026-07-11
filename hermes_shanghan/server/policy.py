@@ -140,6 +140,8 @@ PATIENT_FORBIDDEN_KEYS = frozenset({
     "formula_blocks", "composition", "administration_notes", "dose_ratios",
     "dose", "family_dose_evolution", "modification_relations",
     "matched_formula_patterns", "hypotheses", "rescue_formulas",
+    # 歷代引用段落多含方藥劑量原文（十六輪）——患者面一律移除
+    "historical_citations",
 })
 
 

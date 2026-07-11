@@ -121,13 +121,45 @@ class ResearchMiner:
             for ch, f, n in freq["channel_formula"]:
                 w.writerow(["channel_formula", f"{ch}|{f}", n])
 
+        # 主題聚焦（十六輪）：主題中出現的方名決定網絡/家族樹的聚焦視圖
+        focus = sorted({r.formula for r in self.formula_rules
+                        if r.formula and r.formula in topic})
+
         if "network" in outputs:
             payload["networks"] = {
                 "formula_symptom_edges": len(sym_net["edges"]),
                 "formula_pulse_edges": len(pulse_net["edges"]),
+                # 真實數據隨響應返回（十六輪：UI 不再只有計數與文件名）
+                "top_symptom_edges": sym_net["edges"][:60],
+                "top_pulse_edges": pulse_net["edges"][:24],
                 "files": ["formula_symptom_network.json", "formula_symptom_network.dot",
                           "formula_pulse_network.json"],
             }
+            if focus:
+                payload["networks"]["focus_formulas"] = focus
+                payload["networks"]["focus_edges"] = [
+                    e for e in sym_net["edges"] if e["formula"] in focus][:40]
+        payload["frequency"] = {
+            "symptom_frequency": freq["symptom_frequency"][:30],
+            "pulse_frequency": freq["pulse_frequency"][:20],
+            "formula_frequency": freq["formula_frequency"][:30],
+            "channel_formula": [
+                {"six_channel": ch, "formula": f, "n_clauses": n}
+                for ch, f, n in freq["channel_formula"][:24]],
+            "note": "頻次以宋本 398 條正文為口徑（D 層計量，證據錨定 A 層條文）",
+        }
+        fam = tree["families"]
+        if focus:
+            fam = [f for f in fam
+                   if f["base"] in focus
+                   or any(f["base"] in x for x in focus)
+                   or any(m.get("modified_formula", "") in focus
+                          for m in f["modifications"])] or tree["families"]
+        payload["family_tree"] = {
+            "n_families": len(tree["families"]),
+            "families": fam[:20],
+            "note": "加減方家族樹（modification_relations，D 層歸納）",
+        }
         if "rules" in outputs:
             topic_formulas = [r for r in self.formula_rules if r.formula in topic
                               or (r.formula_family and r.formula_family in topic)]

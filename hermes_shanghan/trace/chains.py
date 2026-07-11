@@ -474,11 +474,15 @@ def _library_candidates(text: str, limit: int = 6) -> Dict:
             "query": q,
             "n_hits": res.get("n_hits", 0),
             "scan_capped": res.get("scan_capped", False),
+            # book_id/section/excerpt 隨返回（十六輪）：候選出處可經
+            # shanghan_library(book=…, section=…) 直接點閱章節原文
             "hits": [{k: h.get(k, "") for k in
-                      ("title", "author", "dynasty", "category", "section")}
+                      ("book_id", "title", "author", "dynasty", "category",
+                       "section", "excerpt")}
                      for h in res.get("hits", [])],
-            "note": "文獻旁證層：按書·章節定位候選出處，需人工核對；"
-                    "全庫檢索不臆斷「最早出處」（庫外文獻與版本先後未覆蓋）。"}
+            "note": "文獻旁證層：按書·章節定位候選出處，可點閱原文、"
+                    "需人工核對；全庫檢索不臆斷「最早出處」"
+                    "（庫外文獻與版本先後未覆蓋）。"}
 
 
 # ---------------------------------------------------------------------------

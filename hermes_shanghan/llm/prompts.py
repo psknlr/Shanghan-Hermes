@@ -119,6 +119,57 @@ def paper_user_prompt(paper_type: str, title_root: str, topic: str,
 }}"""
 
 
+def diff_review_system_prompt() -> str:
+    return (EVIDENCE_CONTRACT + "\n\n任務：作為對抗式審稿人，審查一張由規則庫"
+            "自動歸納的【方證鑒別對比表】是否忠於支持條文。重點找錯：\n"
+            "1. 軸值錯掛（某方標了「渴」，但其條文只有「不渴」或根本未言渴）；\n"
+            "2. 規則歸納混入（條文沒有的表述被當作鑒別依據）；\n"
+            "3. 漏掉條文明載的關鍵鑒別軸（如桂枝湯「汗出」vs 麻黃湯「無汗」"
+            "必須成軸）；\n"
+            "4. 鑒別點與條文原意相反。\n"
+            "只允許引用【支持條文】中給出的 clause_id；嚴格輸出 JSON。")
+
+
+def diff_review_user_prompt(table_json: str, evidence_block: str) -> str:
+    return f"""【待審鑒別表（規則庫自動歸納，可能有錯）】
+{table_json}
+
+【支持條文（唯一可用事實來源，clause_id 僅可取自其中）】
+{evidence_block}
+
+請輸出 JSON：
+{{
+  "verdict": "pass|warn|fail",
+  "issues": [
+    {{"formula": "方名", "axis": "鑒別軸", "problem": "問題描述（引用原文）",
+      "clause_ids": ["支持該判定的條文編號"]}}
+  ],
+  "missing_axes": ["條文明載但表中缺失的鑒別軸", ...],
+  "summary": "總體審校意見（每處論斷附 clause_id）"
+}}
+無問題時 issues 為空數組、verdict=pass。"""
+
+
+def trace_synth_system_prompt() -> str:
+    return (EVIDENCE_CONTRACT + "\n\n任務：基於一份【結構化溯源報告】（原文/"
+            "異文/注家/歷代引用/計量等，均為確定性檢索所得）撰寫簡明的溯源"
+            "綜述。要求：\n"
+            "1. 只使用報告中的事實，不得補充庫外知識；\n"
+            "2. 涉及條文處附 clause_id（僅可取報告中出現的編號）；\n"
+            "3. 區分原文直述（A）與注家/後世/計量歸納（C/D）；\n"
+            "4. 「」引號只用於逐字引用原文；\n"
+            "5. 200–400 字，學術中文。直接輸出正文。")
+
+
+def trace_synth_user_prompt(chain_type: str, report_json: str) -> str:
+    return f"""溯源類型：{chain_type}
+
+【結構化溯源報告（唯一可用事實來源）】
+{report_json}
+
+請撰寫溯源綜述正文。"""
+
+
 def synth_system_prompt(role: str) -> str:
     return (EVIDENCE_CONTRACT + "\n\n" + ROLE_GUIDANCE.get(role, ROLE_GUIDANCE["doctor"])
             + "\n\n任務：基於【已檢索證據】生成自然語言回答。只能使用證據中的事實；"
