@@ -47,7 +47,8 @@ _RATE_LOCK = threading.Lock()
 
 # 請求體整數參數的統一上下限（計算型 DoS 防護：算完才檢查響應大小為時已晚）
 _INT_CAPS = {"top_k": (1, 50), "rounds": (1, 6), "max_steps": (1, 12),
-             "n": (1, 200), "limit": (1, 100), "per_book": (1, 10)}
+             "n": (1, 200), "limit": (1, 100), "per_book": (1, 10),
+             "offset": (0, 100000)}
 
 
 def _clamp_body(body: Dict) -> None:
@@ -245,6 +246,46 @@ def _gold_eval(svc, body, m, q, ctx=None):
 @route("POST", r"/api/herb", min_role="student")
 def _herb(svc, body, m, q, ctx=None):
     return svc.herb(body.get("name", body.get("herb", "")))
+
+
+@route("POST", r"/api/trace/passages", min_role="student")
+def _trace_passages(svc, body, m, q, ctx=None):
+    return svc.trace_passages(str(body.get("book_dir", ""))[:80],
+                              body.get("clause_ids", []),
+                              offset=int(body.get("offset", 0) or 0),
+                              limit=int(body.get("limit", 8) or 8))
+
+
+@route("POST", r"/api/source/passage", min_role="student")
+def _source_passage(svc, body, m, q, ctx=None):
+    return svc.source_passage(body.get("book", ""), body.get("ref", ""))
+
+
+@route("POST", r"/api/quiz", min_role="student")
+def _quiz(svc, body, m, q, ctx=None):
+    return svc.quiz(channel=str(body.get("channel", ""))[:12],
+                    n=int(body.get("n", 8) or 8),
+                    seed=int(body.get("seed", 1) or 1),
+                    use_llm=bool(body.get("use_llm", False)))
+
+
+@route("GET", r"/api/charmap")
+def _charmap(svc, body, m, q, ctx=None):
+    return svc.charmap()
+
+
+@route("POST", r"/api/intake")
+def _intake(svc, body, m, q, ctx=None):
+    return svc.intake(body.get("text", ""),
+                      use_llm=bool(body.get("use_llm", True)))
+
+
+@route("POST", r"/api/adjudicate", min_role="student")
+def _adjudicate(svc, body, m, q, ctx=None):
+    return svc.adjudicate(body.get("symptoms", []),
+                          pulse=body.get("pulse", []),
+                          six_channel=body.get("six_channel", ""),
+                          use_llm=bool(body.get("use_llm", True)))
 
 
 # -- 運行中心 / 評測 / Artifact / 治理（十二輪新控制面）---------------------

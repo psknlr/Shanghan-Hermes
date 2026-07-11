@@ -10,7 +10,7 @@
 | Python | 3.11.15（倉庫最低要求 ≥ 3.9） |
 | 操作系統 | Linux 6.18（x86_64 容器） |
 | 第三方依賴 | 無（純標準庫；`litellm`/`py7zr` 均為可選） |
-| 測試總數 | 460 項 / 29 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
+| 測試總數 | 483 項 / 29 個模塊（實測值由 tests/test_docs_sync.py 守衛強制與文檔一致） |
 | 全量耗時 | `python3 -m unittest discover -s tests`：**約 20–40 秒**（見下） |
 | 網絡需求 | **零**（默認全部離線） |
 | 7z 需求 | **零**（僅 `library fetch` 可選功能需要 `py7zr` 或系統 p7zip） |

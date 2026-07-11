@@ -578,7 +578,10 @@ class TestTraceTools(unittest.TestCase):
             self.assertIn(f"views.{view}", js)
         self.assertIn("@media (max-width: 820px)", css)
         self.assertIn("/api/trace", js)
-        self.assertIn("shanghan_intake", js)
+        # 十七輪：辨證閉環走 /api/intake（服務端封裝 shanghan_intake
+        # 並加模型輔助抽取層）；裁決走 /api/adjudicate
+        self.assertIn("/api/intake", js)
+        self.assertIn("/api/adjudicate", js)
 
     def test_scan_library_with_fixture(self):
         # 全庫掃描（引用方=任意醫籍）：合成最小庫驗證端到端，不依賴真實下載

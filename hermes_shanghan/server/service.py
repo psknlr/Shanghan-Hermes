@@ -153,6 +153,7 @@ class ServiceContext:
                           "similarity": v.similarity,
                           "differences": v.notable_differences} for v in variants],
             "commentaries": [{"commentator": v.commentator,
+                              "book": v.book, "chapter": v.chapter,
                               "text": v.commentary_text[:400]} for v in comments],
         }
         # 十六輪：注家解釋智能化——貼近原文度/學派/分析取徑逐家標注
@@ -220,6 +221,27 @@ class ServiceContext:
         tb = TeachingBuilder(self.art.clauses, self.art.six_channel_rules,
                              self.art.formula_rules, self.art.mistreatment_rules)
         return tb.lesson(channel)
+
+    def quiz(self, channel: str = "", n: int = 8, seed: int = 1,
+             use_llm: bool = False) -> Dict:
+        """練習題（十八輪）：多題型確定性題庫（seed 換批）；
+        use_llm=True 且接真模型時由模型自主命題（證據強制綁定給定條文）。"""
+        from ..apps.quiz import QuizBuilder, model_quiz
+        qb = QuizBuilder(self.art.clauses, self.art.six_channel_rules,
+                         self.art.formula_rules, self.art.mistreatment_rules,
+                         self.art.differential_rules)
+        if use_llm:
+            return model_quiz(qb, self.llm, channel=channel, n=n, seed=seed)
+        out = qb.build(channel=channel, n=n, seed=seed)
+        out["backend"] = "bank"
+        return out
+
+    def charmap(self) -> Dict:
+        """繁→簡顯示映射（十八輪 UI 簡繁切換；顯示層轉換，原文以繁體為準）。"""
+        from ..textutil import T2S
+        return {"t2s": T2S,
+                "note": "顯示層自動轉換（領域字表，非全量簡繁轉換）；"
+                        "古籍原文以繁體為準。"}
 
     def mistreatment(self, query: str = None) -> Dict:
         return self.registry.call("shanghan_mistreatment", {"query": query or ""})
@@ -444,6 +466,194 @@ class ServiceContext:
 
     def herb(self, name: str) -> Dict:
         return self.registry.call("shanghan_herb_profile", {"herb": name})
+
+    def trace_passages(self, book_dir: str, clause_ids: List[str],
+                       offset: int = 0, limit: int = 8) -> Dict:
+        """歷代引用的段落級點閱（方劑源流/原文溯源的「某書引用」展開）。"""
+        from ..trace.passages import book_citing_passages
+        return book_citing_passages(book_dir, clause_ids or [],
+                                    offset=offset, limit=limit)
+
+    def source_passage(self, book: str, ref: str) -> Dict:
+        """讀取語料書的原始段落（十八輪：條文關係目標可點閱）。
+
+        ref 兩種形態：``pN``（第 N 段——注文對齊關係的定位）或章節名
+        （異文關係的定位，返回該章節段落）。只讀 corpus_raw 隨庫語料。"""
+        import re as _re
+        from ..corpus import segmenter
+        from ..textutil import fold_variants
+        book = str(book or "").strip()[:60]
+        ref = str(ref or "").strip()[:80]
+        if not book:
+            return {"error": "缺少書名"}
+        try:
+            paragraphs = segmenter.segment_paragraphs(book)
+        except FileNotFoundError:
+            return {"error": f"語料中無此書：{book}"}
+        m = _re.fullmatch(r"p(\d{1,5})", ref)
+        if m:
+            i = int(m.group(1))
+            if not 0 <= i < len(paragraphs):
+                return {"error": f"段號越界：{ref}（全書 {len(paragraphs)} 段）"}
+            chapter = paragraphs[i][0]
+            rows = [{"para_seq": i, "text": paragraphs[i][1]}]
+            # 注文常跨 1-2 段：同章節緊隨其後的段落一併給出
+            for j in (i + 1, i + 2):
+                if j < len(paragraphs) and paragraphs[j][0] == chapter:
+                    rows.append({"para_seq": j, "text": paragraphs[j][1]})
+            return {"book": book, "chapter": chapter, "ref": ref,
+                    "paragraphs": rows,
+                    "note": "定位段落＋同章節緊隨段（注文可能跨段）"}
+        want = fold_variants(ref)
+        rows, total = [], 0
+        for seq, (ch, text) in enumerate(paragraphs):
+            if want and want not in fold_variants(ch):
+                continue
+            rows.append({"para_seq": seq, "text": text})
+            total += len(text)
+            if total > 2600 or len(rows) >= 12:
+                break
+        if not rows:
+            chapters = sorted({ch for ch, _ in paragraphs})
+            return {"error": f"《{book}》查無章節：{ref}",
+                    "available_chapters": chapters[:20]}
+        return {"book": book, "chapter": ref, "ref": ref,
+                "paragraphs": rows, "truncated": total > 2600,
+                "note": "該章節段落（超長截取前段）"}
+
+    # -- 辨證閉環（十七輪：規則 + 模型雙層，不再全靠規則）----------------
+    def intake(self, text: str, use_llm: bool = True) -> Dict:
+        """四診採集：確定性詞表抽取為底座；真模型補語義層抽取——模型抽出的
+        每個表現都要能在患者敘述（含口語→古籍映射後）中找到依據，找不到
+        進 unverified、不併入。"""
+        base = self.registry.call("shanghan_intake", {"text": text})
+        if not (use_llm and self.llm.available):
+            return base
+        from ..apps.bianzheng import MODERN_TO_CLASSICAL
+        from ..llm.prompts import (intake_extract_system_prompt,
+                                   intake_extract_user_prompt)
+        from ..textutil import fold_variants, normalize_query
+        try:
+            out = self.llm.json_complete(intake_extract_system_prompt(),
+                                         intake_extract_user_prompt(text),
+                                         task="extract_rule")
+        except Exception as exc:
+            base["model_extraction"] = {"backend": "error",
+                                        "error": type(exc).__name__}
+            return base
+        mapped = normalize_query(text)
+        for modern, classical in MODERN_TO_CLASSICAL.items():
+            mapped = mapped.replace(modern, classical)
+        haystack = fold_variants(mapped) + "\n" + fold_variants(
+            normalize_query(text))
+        already = {fold_variants(s) for key in
+                   ("cold_heat", "sweating", "thirst_drinking", "stool_urine",
+                    "chest_hypochondrium", "epigastrium_abdomen",
+                    "pain_location", "sleep", "tongue", "other_findings")
+                   for s in (base.get(key) or [])}
+        added, unverified = [], []
+        for t in (out.get("findings") or [])[:16]:
+            if not isinstance(t, str) or not t.strip():
+                continue
+            tf = fold_variants(normalize_query(t))
+            if tf in already:
+                continue
+            # 驗證線：模型詞須逐字在敘述中，或其肯定/否定核在敘述中
+            core = tf.lstrip("無不")
+            if tf in haystack or (len(core) >= 2 and core in haystack):
+                added.append(t)
+            else:
+                unverified.append(t)
+        base["model_extraction"] = {
+            "backend": self.llm.backend,
+            "added_findings": added,
+            "unverified": unverified,
+            "model_pulse": [p for p in (out.get("pulse") or [])[:4]
+                            if isinstance(p, str)],
+            "notes": str(out.get("notes", ""))[:200],
+            "note": "模型抽取須逐詞回驗患者敘述（含口語→古籍映射）；"
+                    "unverified 中的表現敘述裡找不到依據，未併入四診表。"}
+        return base
+
+    def adjudicate(self, symptoms: List[str], pulse: List[str] = None,
+                   six_channel: str = "", use_llm: bool = True) -> Dict:
+        """多假設裁決：規則三態裁決為底座；真模型作語義級審校（漏診方向/
+        裁決穩妥性/關鍵追問），所引條文過 CitationGuard。local 附確定性說明。"""
+        base = self.registry.call("shanghan_adjudicate",
+                                  {"symptoms": symptoms or [],
+                                   "pulse": pulse or [],
+                                   "six_channel": six_channel or ""})
+        if not use_llm or not isinstance(base, dict) or "error" in base:
+            return base
+        base["model_review"] = self._adjudicate_review(base)
+        return base
+
+    def _adjudicate_review(self, adjudication: Dict) -> Dict:
+        from ..agent.citation_guard import CitationGuard
+        allowed = self._report_clause_ids(adjudication)
+        if not self.llm.available:
+            cands = adjudication.get("candidates", [])
+            return {"backend": "local",
+                    "agrees_with_verdict": True,
+                    "assessment": (f"確定性說明：{len(cands)} 個規則候選，"
+                                   f"裁決「{adjudication.get('verdict', '')}」"
+                                   "由評分差距+反證+禁忌規則得出（D 層詞表"
+                                   "匹配）；接入真實模型後將補語義級審校"
+                                   "（漏診方向/非典型表述）。"),
+                    "missed_patterns": [],
+                    "additional_questions": [],
+                    "citation_report": None}
+        import json as _json
+        from ..llm.prompts import (adjudicate_review_system_prompt,
+                                   adjudicate_review_user_prompt)
+        store = self.art.clause_store()
+        rows, seen = [], set()
+        for cid in allowed[:14]:
+            c = store.get(cid)
+            if c is None or cid in seen:
+                continue
+            seen.add(cid)
+            rows.append(f"- [{cid}] {c.clean_text[:200]}")
+        compact = {k: adjudication.get(k) for k in
+                   ("input", "verdict", "rationale", "why_not_prescribe",
+                    "key_questions")}
+        compact["candidates"] = [
+            {k: h.get(k) for k in ("formula", "support", "against",
+                                   "missing_key_findings",
+                                   "contraindication_hits")}
+            for h in adjudication.get("candidates", [])[:3]]
+        out = self.llm.json_complete(
+            adjudicate_review_system_prompt(),
+            adjudicate_review_user_prompt(
+                _json.dumps(compact, ensure_ascii=False, indent=1)[:4000],
+                "\n".join(rows)),
+            task="critic")
+        guard = CitationGuard(store)
+        missed = []
+        for it in (out.get("missed_patterns") or [])[:6]:
+            if not isinstance(it, dict):
+                continue
+            cids = [c for c in (it.get("clause_ids") or [])
+                    if isinstance(c, str)]
+            rep = guard.check("、".join(cids), allowed_ids=allowed)
+            missed.append({"formula": str(it.get("formula", ""))[:24],
+                           "reason": str(it.get("reason", ""))[:200],
+                           "clause_ids": rep.verified_ids,
+                           "unverified_clause_ids": (rep.unsupported_ids
+                                                     + rep.outside_evidence_ids)})
+        assessment = str(out.get("assessment", ""))[:500]
+        arep = guard.check(assessment, allowed_ids=allowed)
+        return {"backend": self.llm.backend,
+                "agrees_with_verdict": bool(out.get("agrees_with_verdict",
+                                                    True)),
+                "assessment": assessment,
+                "missed_patterns": missed,
+                "additional_questions":
+                    [str(q)[:120] for q in
+                     (out.get("additional_questions") or [])[:4]],
+                "citation_report": arep.to_dict(),
+                "note": "模型審校屬 E 層；漏診方向所引 clause_id 已逐一核驗，"
+                        "unverified_clause_ids 請勿採信；不構成處方建議。"}
 
     def formula_explain(self, name: str) -> Dict:
         return self.registry.call("shanghan_formula_explain", {"formula": name})

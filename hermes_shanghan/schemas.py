@@ -342,6 +342,7 @@ class CommentaryRule(JsonRecord):
     clause_id: str = ""
     commentator: str = ""
     book: str = ""
+    chapter: str = ""                  # 注文在注本中的章節（十七輪：出處可查）
     commentary_text: str = ""
     alignment_similarity: float = 0.0
     source_level: str = "commentary"

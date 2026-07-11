@@ -17,6 +17,11 @@
       </div>
     </div>
     <div class="topbar-meta">
+      <select id="lang-select" class="badge" title="界面語言 / Language">
+        <option value="zh-Hant">繁體</option>
+        <option value="zh-Hans">简体</option>
+        <option value="en">EN</option>
+      </select>
       <span class="badge backend" id="backend-badge" title="LLM 後端">後端…</span>
       <span class="badge stat" id="rules-badge">規則…</span>
     </div>
@@ -53,6 +58,7 @@
 
   <aside class="drawer" id="drawer">
     <div class="drawer-head">
+      <button id="drawer-back" style="display:none" title="返回上一條">←</button>
       <span id="drawer-title">條文</span>
       <button id="drawer-close">✕</button>
     </div>

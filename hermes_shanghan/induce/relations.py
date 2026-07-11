@@ -291,7 +291,7 @@ class RelationBuilder:
             rules.append(CommentaryRule(
                 commentary_rule_id=f"CR_{slug}_{n:04d}",
                 clause_id=clause.clause_id, commentator=commentator,
-                book=book,
+                book=book, chapter=quotes[pi][0],
                 commentary_text="\n".join(commentary_parts),
                 alignment_similarity=round(sim, 3)))
             self._add(clause.clause_id, f"{book}:p{pi}", "commentary_support",

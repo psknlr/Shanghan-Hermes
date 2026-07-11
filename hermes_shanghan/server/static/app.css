@@ -148,7 +148,10 @@ pre.md{white-space:pre-wrap;font-family:var(--serif);font-size:13.5px;line-heigh
 .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;
   border-bottom:1px solid var(--border);background:var(--panel2)}
 .drawer-head span{font-family:var(--serif);font-size:16px;color:var(--accent)}
-.drawer-head button{border:none;background:transparent;font-size:18px;color:var(--muted)}
+.drawer-head button{border:none;background:transparent;font-size:18px;color:var(--muted);cursor:pointer}
+#drawer-back{margin-right:6px;font-weight:700}
+select#lang-select{cursor:pointer;font-size:12px;padding:3px 6px;border-radius:10px;
+  border:1px solid var(--border2);background:var(--panel2);color:var(--ink2)}
 .drawer-body{padding:16px 18px;overflow-y:auto}
 .drawer-scrim{position:fixed;inset:0;background:rgba(40,30,15,.28);opacity:0;pointer-events:none;transition:.25s;z-index:39}
 .drawer-scrim.open{opacity:1;pointer-events:auto}
