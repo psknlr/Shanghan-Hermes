@@ -495,13 +495,29 @@
    "type": "function",
    "function": {
     "name": "shanghan_herb_profile",
-    "description": "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。",
+    "description": "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。條文與本草摘錄支持 offset/limit 分頁續讀。",
     "parameters": {
      "type": "object",
      "properties": {
       "herb": {
        "type": "string",
        "description": "藥名，如 桂枝"
+      },
+      "clause_offset": {
+       "type": "integer",
+       "description": "條文分頁起點（默認 0）"
+      },
+      "clause_limit": {
+       "type": "integer",
+       "description": "條文每頁條數（默認 20，上限 100）"
+      },
+      "bencao_offset": {
+       "type": "integer",
+       "description": "本草摘錄分頁起點（默認 0）"
+      },
+      "bencao_limit": {
+       "type": "integer",
+       "description": "本草摘錄每頁部數（默認 4，上限 12）"
       }
      },
      "required": [
@@ -1286,13 +1302,29 @@
   },
   {
    "name": "shanghan_herb_profile",
-   "description": "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。",
+   "description": "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。條文與本草摘錄支持 offset/limit 分頁續讀。",
    "input_schema": {
     "type": "object",
     "properties": {
      "herb": {
       "type": "string",
       "description": "藥名，如 桂枝"
+     },
+     "clause_offset": {
+      "type": "integer",
+      "description": "條文分頁起點（默認 0）"
+     },
+     "clause_limit": {
+      "type": "integer",
+      "description": "條文每頁條數（默認 20，上限 100）"
+     },
+     "bencao_offset": {
+      "type": "integer",
+      "description": "本草摘錄分頁起點（默認 0）"
+     },
+     "bencao_limit": {
+      "type": "integer",
+      "description": "本草摘錄每頁部數（默認 4，上限 12）"
      }
     },
     "required": [
@@ -2250,7 +2282,7 @@
     "error": "string",
     "hint": "string?"
    },
-   "schema_hash": "56b8fadb821ef205",
+   "schema_hash": "b7bf324609853829",
    "enforced": {
     "args_schema": "runtime（_validate_args：必填/未知參數/類型）",
     "timeout_s": "runtime（工作線程 + join(timeout)；超時回錯誤信封，守護線程結果丟棄；HERMES_TOOL_TIMEOUT=0 關閉）",

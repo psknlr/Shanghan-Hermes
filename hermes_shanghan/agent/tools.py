@@ -479,9 +479,18 @@ class ToolRegistry:
         self._add(
             "shanghan_herb_profile",
             "藥證檔案（藥解）：單味藥的出現方劑、條文、劑量寫法、配伍共現"
-            "網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。",
+            "網絡（同方共現計數）。只含可計算事實，不編造藥性/功效解釋。"
+            "條文與本草摘錄支持 offset/limit 分頁續讀。",
             {"type": "object", "properties": {
-                "herb": {"type": "string", "description": "藥名，如 桂枝"}},
+                "herb": {"type": "string", "description": "藥名，如 桂枝"},
+                "clause_offset": {"type": "integer",
+                                  "description": "條文分頁起點（默認 0）"},
+                "clause_limit": {"type": "integer",
+                                 "description": "條文每頁條數（默認 20，上限 100）"},
+                "bencao_offset": {"type": "integer",
+                                  "description": "本草摘錄分頁起點（默認 0）"},
+                "bencao_limit": {"type": "integer",
+                                 "description": "本草摘錄每頁部數（默認 4，上限 12）"}},
              "required": ["herb"]},
             self._t_herb_profile)
         self._add(
@@ -823,9 +832,14 @@ class ToolRegistry:
                 "n_text_hits": text.get("n_hits", 0),
                 "scan_capped": text.get("scan_capped", False)}
 
-    def _t_herb_profile(self, herb):
+    def _t_herb_profile(self, herb, clause_offset=0, clause_limit=20,
+                        bencao_offset=0, bencao_limit=4):
         from ..apps.herbal import herb_profile
-        return {"tool": "shanghan_herb_profile", **herb_profile(herb)}
+        return {"tool": "shanghan_herb_profile",
+                **herb_profile(herb, clause_offset=clause_offset,
+                               clause_limit=clause_limit,
+                               bencao_offset=bencao_offset,
+                               bencao_limit=bencao_limit)}
 
     def _t_intake(self, text):
         from ..apps.bianzheng import intake_parse

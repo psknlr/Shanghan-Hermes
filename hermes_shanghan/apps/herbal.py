@@ -16,7 +16,10 @@ from ..schemas import read_jsonl
 from ..textutil import fold_variants, normalize_query
 
 
-def herb_profile(name: str) -> Dict:
+def herb_profile(name: str, clause_offset: int = 0, clause_limit: int = 20,
+                 bencao_offset: int = 0, bencao_limit: int = 4) -> Dict:
+    """單味藥檔案。條文與本草摘錄均分頁（offset/limit + has_more），
+    UI「載入更多」即續讀（十七輪）。"""
     q = normalize_query(name)
     formula_rules = read_jsonl(config.RULES_FORMULA_DIR / "formula_pattern_rules.jsonl")
 
@@ -57,14 +60,19 @@ def herb_profile(name: str) -> Dict:
             clause_ids.append(c["clause_id"])
 
     top_partners = sorted(partners.items(), key=lambda kv: (-kv[1], kv[0]))[:10]
-    bencao = bencao_evidence(canonical_name)
+    bencao = bencao_evidence(canonical_name, offset=bencao_offset,
+                             limit=bencao_limit)
     roles = role_evidence(canonical_name)
+    c_off = max(0, int(clause_offset))
+    c_lim = max(1, min(100, int(clause_limit)))
     return {
         "herb": canonical_name,
         "n_formulas": len(formulas),
         "formulas": formulas,
         "n_clauses": len(clause_ids),
-        "clause_ids": clause_ids[:20],
+        "clause_ids": clause_ids[c_off:c_off + c_lim],
+        "clause_offset": c_off,
+        "clauses_has_more": c_off + c_lim < len(clause_ids),
         "dose_variants": weights[:15],
         "n_dose_records": len(dose_rows),
         "top_partners": [{"herb": h, "n_formulas_together": n}
@@ -91,28 +99,34 @@ def herb_profile(name: str) -> Dict:
 BENCAO_BOOKS = ["神農本草經", "名醫別錄", "本草經集注", "證類本草", "本草綱目"]
 
 
-def bencao_evidence(herb: str, max_books: int = 4) -> Dict:
+def bencao_evidence(herb: str, offset: int = 0, limit: int = 4) -> Dict:
     """從中醫笈成全庫的本草類書中取該藥的原文摘錄（書·章節定位）。
 
     嚴格分層：傷寒 A 層=方劑/劑量/配伍事實；本草層=藥性功效（旁證，
-    出處供查閱，不進入經文層證據閘門）。庫未下載時如實返回不可用。"""
+    出處供查閱，不進入經文層證據閘門）。庫未下載時如實返回不可用。
+    摘錄攜帶 book_id/section——UI 可點擊展開該書該節全文；offset/limit
+    分頁續讀更多本草書。"""
     from ..corpus import library
     if not library.is_available():
         return {"available": False,
                 "note": "本草層需先下載全庫（`library fetch`）；"
                         "傷寒 A 層事實不受影響。"}
     lib = library.Library()
-    res = lib.grep(herb, category="本草", limit=max_books * 2, per_book=1)
+    offset = max(0, int(offset))
+    limit = max(1, min(12, int(limit)))
+    res = lib.grep(herb, category="本草", limit=offset + limit * 2, per_book=1)
     wanted = []
     for h in res.get("hits", []):
         rank = next((i for i, b in enumerate(BENCAO_BOOKS)
                      if b in h.get("title", "")), len(BENCAO_BOOKS))
         wanted.append((rank, h))
     wanted.sort(key=lambda x: (x[0], x[1].get("title", "")))
+    page = wanted[offset:offset + limit]
     excerpts = []
-    for _, h in wanted[:max_books]:
+    for _, h in page:
         text = h.get("excerpt", "")
-        entry = {"book": h.get("title", ""), "author": h.get("author", ""),
+        entry = {"book": h.get("title", ""), "book_id": h.get("book_id", ""),
+                 "author": h.get("author", ""),
                  "dynasty": h.get("dynasty", ""), "section": h.get("section", ""),
                  "excerpt": text[:120]}
         # 性味結構化（僅逐字提取「味X…寒/熱/溫/涼/平」句式；提不到不編造）
@@ -124,8 +138,11 @@ def bencao_evidence(herb: str, max_books: int = 4) -> Dict:
         excerpts.append(entry)
     return {"available": True, "n_hits": res.get("n_hits", 0),
             "excerpts": excerpts,
+            "offset": offset,
+            "has_more": offset + len(page) < len(wanted),
             "note": "本草層＝旁證（藥性功效屬本草文獻，非傷寒原文直述）；"
-                    "摘錄按書·章節定位；nature_flavor 僅在原文出現「味X性Y」"
+                    "摘錄按書·章節定位（book_id 可經 shanghan_library 點閱"
+                    "全節原文）；nature_flavor 僅在原文出現「味X性Y」"
                     "句式時逐字提取，提不到不編造。"}
 
 

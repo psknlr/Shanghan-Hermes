@@ -201,3 +201,155 @@ class TestClauseHolism(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ---------------------------------------------------------------------------
+# 十七輪：歷代引用點閱 · 爭議文本檢索 · 藥檔分頁 · 注文出處 · 辨證模型層
+# ---------------------------------------------------------------------------
+class TestBookCitingPassages(unittest.TestCase):
+    def test_passages_paginated(self):
+        from hermes_shanghan.trace import passages
+        p1 = passages.book_citing_passages("傷寒來蘇集",
+                                           ["SHL_SONGBEN_0012"], limit=1)
+        self.assertGreaterEqual(p1["n_passages"], 1)
+        e0 = p1["passages"][0]
+        for key in ("mode", "chapter", "clause_id", "excerpt"):
+            self.assertIn(key, e0)
+        if p1["has_more"]:
+            p2 = passages.book_citing_passages(
+                "傷寒來蘇集", ["SHL_SONGBEN_0012"], offset=1, limit=1)
+            self.assertNotEqual(p1["passages"][0]["excerpt"],
+                                p2["passages"][0]["excerpt"])
+
+    def test_formula_citations_carry_locators(self):
+        svc = ServiceContext()
+        r = svc.trace("formula", "桂枝湯", synthesize=False)
+        cit = r["citations_of_clauses"]
+        self.assertGreater(len(cit["cited_clause_ids"]), 5)
+        b0 = cit["by_dynasty"][0]["books"][0]
+        self.assertIn("book_dir", b0)
+        p = svc.trace_passages(b0["book_dir"], cit["cited_clause_ids"],
+                               limit=3)
+        self.assertGreater(p["n_passages"], 0)
+        self.assertLessEqual(len(p["passages"]), 3)
+
+
+class TestDisputeTextResolution(unittest.TestCase):
+    def test_text_sentence_resolves_to_clause(self):
+        svc = ServiceContext()
+        r = svc.trace("dispute", "觀其脈證，知犯何逆，隨證治之",
+                      synthesize=False)
+        self.assertEqual(r["clause"]["clause_id"], "SHL_SONGBEN_0016")
+        self.assertIn("resolved_from_text", r)
+        self.assertGreater(r["n_commentators"], 0)
+
+    def test_number_still_works_without_resolution_note(self):
+        svc = ServiceContext()
+        r = svc.trace("dispute", "12", synthesize=False)
+        self.assertEqual(r["clause"]["clause_id"], "SHL_SONGBEN_0012")
+        self.assertNotIn("resolved_from_text", r)
+
+    def test_garbage_text_errors_honestly(self):
+        svc = ServiceContext()
+        r = svc.trace("dispute", "quantum blockchain 42", synthesize=False)
+        self.assertIn("error", r)
+
+
+class TestHerbPagination(unittest.TestCase):
+    def test_clause_pages_disjoint(self):
+        from hermes_shanghan.agent.tools import get_registry
+        reg = get_registry()
+        p1 = reg.call("shanghan_herb_profile",
+                      {"herb": "桂枝", "clause_offset": 0, "clause_limit": 5})
+        p2 = reg.call("shanghan_herb_profile",
+                      {"herb": "桂枝", "clause_offset": 5, "clause_limit": 5})
+        self.assertEqual(len(p1["clause_ids"]), 5)
+        self.assertTrue(p1["clauses_has_more"])
+        self.assertFalse(set(p1["clause_ids"]) & set(p2["clause_ids"]))
+        self.assertEqual(p1["n_clauses"], p2["n_clauses"])
+
+    def test_bencao_layer_honest_or_locatable(self):
+        from hermes_shanghan.apps.herbal import bencao_evidence
+        from hermes_shanghan.corpus import library
+        bc = bencao_evidence("桂枝", limit=2)
+        if library.is_available():
+            self.assertTrue(bc["available"])
+            for e in bc["excerpts"]:
+                self.assertIn("book_id", e)
+        else:
+            self.assertFalse(bc["available"])
+
+
+class TestCommentaryProvenance(unittest.TestCase):
+    def test_explain_clause_commentaries_have_book_chapter(self):
+        svc = ServiceContext()
+        r = svc.explain_clause("12", role="student")
+        self.assertGreater(len(r["commentaries"]), 3)
+        for c in r["commentaries"]:
+            self.assertTrue(c["book"], "注文必須帶書名")
+            self.assertTrue(c["chapter"], "注文必須帶章節")
+
+    def test_dispute_views_have_chapter(self):
+        svc = ServiceContext()
+        r = svc.trace("dispute", "12", synthesize=False)
+        self.assertTrue(all(v.get("book") for v in r["views"]))
+        self.assertTrue(any(v.get("chapter") for v in r["views"]))
+
+
+class TestBianzhengModelLayer(unittest.TestCase):
+    NARRATIVE = "发热，怕冷，没有汗，头痛，身上疼，脉浮紧"
+
+    def test_intake_local_unchanged(self):
+        svc = ServiceContext()
+        r = svc.intake(self.NARRATIVE)
+        self.assertNotIn("model_extraction", r)
+        self.assertIn("惡寒", r["cold_heat"])
+
+    def test_intake_model_findings_verified_against_narrative(self):
+        svc = ServiceContext()
+        scripted = ScriptedProvider([json.dumps({
+            "findings": ["頭痛", "潮熱譫語"],   # 後者敘述中無依據
+            "pulse": ["浮緊"],
+            "notes": "測試"}, ensure_ascii=False)])
+        client = LLMClient(provider=scripted)
+        client._backend = "litellm"
+        client.settings.cache = False
+        svc._llm = client
+        r = svc.intake(self.NARRATIVE)
+        mx = r["model_extraction"]
+        self.assertIn("潮熱譫語", mx["unverified"],
+                      "敘述中無依據的模型抽取必須被攔下")
+        self.assertNotIn("潮熱譫語", mx["added_findings"])
+
+    def test_adjudicate_local_review(self):
+        svc = ServiceContext()
+        r = svc.adjudicate(["發熱", "惡寒", "無汗", "身疼痛"],
+                           pulse=["浮緊"])
+        mr = r["model_review"]
+        self.assertEqual(mr["backend"], "local")
+        self.assertIn("assessment", mr)
+
+    def test_adjudicate_scripted_review_guards_citations(self):
+        svc = ServiceContext()
+        base = svc.adjudicate(["發熱", "惡寒", "無汗", "身疼痛"],
+                              pulse=["浮緊"], use_llm=False)
+        allowed = svc._report_clause_ids(base)
+        good = allowed[0] if allowed else "SHL_SONGBEN_0035"
+        scripted = ScriptedProvider([json.dumps({
+            "agrees_with_verdict": False,
+            "assessment": f"依 {good} 當考慮麻黃湯。",
+            "missed_patterns": [{"formula": "大青龍湯", "reason": "測試",
+                                 "clause_ids": [good, "SHL_SONGBEN_9998"]}],
+            "additional_questions": ["有無煩躁？"]}, ensure_ascii=False)])
+        client = LLMClient(provider=scripted)
+        client._backend = "litellm"
+        client.settings.cache = False
+        svc._llm = client
+        r = svc.adjudicate(["發熱", "惡寒", "無汗", "身疼痛"],
+                           pulse=["浮緊"])
+        mr = r["model_review"]
+        self.assertFalse(mr["agrees_with_verdict"])
+        mp = mr["missed_patterns"][0]
+        self.assertIn("SHL_SONGBEN_9998", mp["unverified_clause_ids"])
+        self.assertNotIn("SHL_SONGBEN_9998", mp["clause_ids"])
+        self.assertEqual(mr["additional_questions"], ["有無煩躁？"])

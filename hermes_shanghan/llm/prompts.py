@@ -170,6 +170,60 @@ def trace_synth_user_prompt(chain_type: str, report_json: str) -> str:
 請撰寫溯源綜述正文。"""
 
 
+def intake_extract_system_prompt() -> str:
+    return (EVIDENCE_CONTRACT + "\n\n任務：從患者的自然敘述中抽取四診信息，"
+            "輸出古籍術語（如 惡寒/汗出/下利/不得眠）。鐵律：\n"
+            "1. 只抽取敘述中明確提到的表現，不推斷、不補充；\n"
+            "2. 口語轉古籍術語須語義等值（怕冷→惡寒）；\n"
+            "3. 否定表述保留否定（不出汗→無汗，不得記為汗出）；\n"
+            "4. 不做診斷、不提方藥。嚴格輸出 JSON。")
+
+
+def intake_extract_user_prompt(narrative: str) -> str:
+    return f"""【患者敘述】
+{narrative}
+
+請輸出 JSON：
+{{
+  "findings": ["古籍術語表現", ...],
+  "pulse": ["脈象（若敘述提到）", ...],
+  "prior_mistreatment": ["誤治史（如 發汗後/下之後）", ...],
+  "notes": "抽取依據的一句話說明"
+}}"""
+
+
+def adjudicate_review_system_prompt() -> str:
+    return (EVIDENCE_CONTRACT + "\n\n任務：作為資深傷寒學者，審校一份由規則庫"
+            "生成的【方證多假設裁決】。規則裁決只會做詞表匹配與評分——"
+            "你要補的是語義層：\n"
+            "1. 規則候選之外，症狀組合是否還指向其他方證（漏診方向）？\n"
+            "2. 裁決結論（傾向/不能裁決）是否穩妥？\n"
+            "3. 最該追問哪些鑒別信息？\n"
+            "涉及條文只可引用【證據條文】中給出的 clause_id；"
+            "不得給出劑量。嚴格輸出 JSON。")
+
+
+def adjudicate_review_user_prompt(adjudication_json: str,
+                                  evidence_block: str) -> str:
+    return f"""【規則裁決結果（待審校）】
+{adjudication_json}
+
+【證據條文（clause_id 僅可取自其中）】
+{evidence_block}
+
+請輸出 JSON：
+{{
+  "agrees_with_verdict": true,
+  "assessment": "對裁決的總體審校意見（引用 clause_id）",
+  "missed_patterns": [
+    {{"formula": "候選外還應考慮的方", "reason": "為什麼（引用原文）",
+      "clause_ids": ["支持條文"]}}
+  ],
+  "additional_questions": ["規則未提出但關鍵的追問", ...]
+}}
+無補充時 missed_patterns/additional_questions 為空數組。"""
+
+
 def synth_system_prompt(role: str) -> str:
     return (EVIDENCE_CONTRACT + "\n\n" + ROLE_GUIDANCE.get(role, ROLE_GUIDANCE["doctor"])
             + "\n\n任務：基於【已檢索證據】生成自然語言回答。只能使用證據中的事實；"

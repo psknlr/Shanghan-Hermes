@@ -106,6 +106,44 @@ def _excerpt(edge: Dict, radius: int = 60) -> str:
     return edge.get("matched_span", "")
 
 
+def book_citing_passages(book_dir: str, clause_ids: List[str],
+                         offset: int = 0, limit: int = 8,
+                         with_excerpt: bool = True) -> Dict:
+    """某部書對一組條文的引用段落（方劑源流「歷代引用」的點閱視圖）。
+
+    按覆蓋率降序分頁；每段標所引條文/模式/章節/逐字摘錄。"""
+    load_full_edges()
+    wanted = set(clause_ids or [])
+    rows = [e for e in (_EDGES or [])
+            if e.get("book_dir") == book_dir and e.get("clause_id") in wanted]
+    rows.sort(key=lambda r: (-r.get("coverage", 0.0),
+                             -r.get("longest_run", 0),
+                             r.get("citation_edge_id", "")))
+    total = len(rows)
+    page = rows[max(0, offset):max(0, offset) + max(1, limit)]
+    passages = []
+    for e in page:
+        p = {"clause_id": e.get("clause_id", ""),
+             "mode": e.get("mode", ""), "chapter": e.get("chapter", ""),
+             "coverage": e.get("coverage", 0.0),
+             "matched_span": e.get("matched_span", "")}
+        if e.get("mode") == "轉引注文":
+            p["via_commentator"] = e.get("via_commentator", "")
+            p["via_book"] = e.get("via_book", "")
+        if with_excerpt:
+            p["excerpt"] = _excerpt(e)
+        passages.append(p)
+    meta = next(({"book": e.get("book", book_dir),
+                  "author": e.get("author", ""),
+                  "dynasty": e.get("dynasty", "")} for e in rows),
+                {"book": book_dir, "author": "", "dynasty": ""})
+    return {"book_dir": book_dir, **meta,
+            "n_passages": total, "offset": offset,
+            "has_more": offset + len(page) < total,
+            "passages": passages,
+            "evidence_layer": "跨書引文邊（逐字回源）"}
+
+
 def clause_citing_passages(clause_id: str, per_book: int = 2,
                            max_books: int = 30,
                            with_excerpt: bool = True) -> Dict:

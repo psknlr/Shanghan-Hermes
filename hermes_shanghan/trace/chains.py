@@ -58,7 +58,8 @@ def _citations_by_dynasty(clause_ids: List[str], max_books: int = 6) -> Dict:
                                     "dynasty_order": dynasty_order(dyn),
                                     "books": {}})
         b = s["books"].setdefault(r["book_dir"], {
-            "book": r["book"], "author": r["author"], "n_paragraphs": 0,
+            "book": r["book"], "book_dir": r["book_dir"],
+            "author": r["author"], "n_paragraphs": 0,
             "modes": {}, "max_coverage": 0.0})
         b["n_paragraphs"] += r["n_paragraphs"]
         b["max_coverage"] = max(b["max_coverage"], r["max_coverage"])
@@ -74,6 +75,9 @@ def _citations_by_dynasty(clause_ids: List[str], max_books: int = 6) -> Dict:
                                               for m in sorted(b["modes"])}}
                               for b in books[:max_books]]})
     return {"n_citing_books": len({b for d in by_dyn.values() for b in d["books"]}),
+            # 十七輪：UI 據此把「某書引用」點開為段落級查閱
+            # （POST /api/trace/passages {book_dir, clause_ids}）
+            "cited_clause_ids": sorted(wanted),
             "by_dynasty": out}
 
 
@@ -110,6 +114,7 @@ def _commentaries_for(clause_id: str, schools_reg: Dict) -> List[Dict]:
         seen.add(commentator)
         dyn = dyn_of_dir.get(r.get("book", ""), "")
         rows.append({"commentator": commentator, "book": r.get("book", ""),
+                     "chapter": r.get("chapter", ""),
                      "dynasty": dyn, "dynasty_order": dynasty_order(dyn),
                      "school_id": member_school.get(commentator, ""),
                      "excerpt": r.get("commentary_text", "")[:EXCERPT]})
@@ -616,8 +621,23 @@ def dispute_chain(ref: str) -> Dict:
 
     clauses = _clauses()
     c = _resolve_clause(ref, clauses)
+    resolved_from_text = None
     if c is None:
-        return {"error": f"未找到條文 {ref}"}
+        # 十七輪：不只認序號——文本句子經回源匹配到最佳條文再入爭議鏈
+        matches = builder.get_matcher().match_text(normalize_query(ref),
+                                                   limit=3)
+        if matches:
+            c = clauses.get(matches[0]["clause_id"])
+            resolved_from_text = {
+                "matched_clause_id": matches[0]["clause_id"],
+                "longest_run": matches[0].get("longest_run", 0),
+                "coverage": matches[0].get("coverage", 0.0),
+                "alternatives": [m["clause_id"] for m in matches[1:]],
+                "note": "輸入為文本句子：已回源到最相近條文（片段逐字匹配），"
+                        "備選見 alternatives。"}
+    if c is None:
+        return {"error": f"未找到條文 {ref}（可用條文號 1-398、clause_id "
+                         "或條文文本句子）"}
     cid = c["clause_id"]
     ctext_folded = fold_variants(c.get("clean_text", ""))
     schools_reg = builder.load_schools()
@@ -652,6 +672,7 @@ def dispute_chain(ref: str) -> Dict:
         views.append({
             "commentator": r.get("commentator", ""),
             "book": r.get("book", ""),
+            "chapter": r.get("chapter", ""),
             "dynasty": dyn_of_dir.get(r.get("book", ""), ""),
             "school": school_names.get(sid, ""),
             "excerpt": text[:100],
@@ -662,9 +683,14 @@ def dispute_chain(ref: str) -> Dict:
         })
     views.sort(key=lambda v: (dynasty_order(v["dynasty"]), v["commentator"]))
     focus_types = sorted({f for v in views for f in v["analytic_focus"]})
-    return {
+    out_head: Dict = {
         "chain_type": "注家爭議結構化",
         "query": ref,
+    }
+    if resolved_from_text:
+        out_head["resolved_from_text"] = resolved_from_text
+    return {
+        **out_head,
         "clause": {"clause_id": cid, "text": c.get("clean_text", "")},
         "n_commentators": len(views),
         "term_divergence": atlas_row.get("term_divergence"),
